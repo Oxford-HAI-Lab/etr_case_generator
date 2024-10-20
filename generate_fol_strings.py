@@ -26,7 +26,8 @@ def generate_boolean_formulas(variables, max_depth=2):
     formulas = generate_atomic_formulas(variables)
     all_formulas = set(formulas)
 
-    # We don't need redundant atomic formulas in the final output, but we need them to generate other boolean combinations
+    # We don't need redundant atomic formulas in the final output, but we need them to
+    # generate other boolean combinations
     final_formulas = set(["A()", "~A()"])
 
     # Iteratively combine formulas up to the given depth
@@ -36,8 +37,9 @@ def generate_boolean_formulas(variables, max_depth=2):
             if f1 < f2:
                 new_formulas.update(combine_binary([f1], [f2]))
         all_formulas.update(new_formulas)
+        final_formulas.update(new_formulas)
 
-    return sorted(all_formulas)
+    return sorted(final_formulas)
 
 
 def parse_arguments():
