@@ -101,7 +101,6 @@ def generate_variables(vocab_size: int) -> list[str]:
 
 
 def main(vocab_size: int, depth: int) -> list[str]:
-    args = parse_arguments()
     variables = generate_variables(vocab_size)
     formulas = generate_boolean_formulas(variables, max_depth=depth)
 
