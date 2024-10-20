@@ -46,7 +46,7 @@ def generate_variables(vocab_size):
         variables.append(chr(ord('A') + i % 26) * (i // 26 + 1))
     return variables
 
-if __name__ == '__main__':
+def main():
     args = parse_arguments()
     variables = generate_variables(args.vocab_size)
     formulas = generate_boolean_formulas(variables, max_depth=args.depth)
@@ -54,3 +54,6 @@ if __name__ == '__main__':
     print("Generated Boolean formulas:")
     for formula in formulas:
         print(formula)
+
+if __name__ == '__main__':
+    main()
