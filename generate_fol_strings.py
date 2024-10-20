@@ -2,49 +2,63 @@ import argparse
 
 from itertools import combinations, product
 
+
 def generate_atomic_formulas(variables):
     """Generate atomic formulas including the variables and their negations."""
     atomic_formulas = []
     for var in variables:
         atomic_formulas.append(f"{var}()")
-        atomic_formulas.append(f'~{var}()')
+        atomic_formulas.append(f"~{var}()")
     return atomic_formulas
+
 
 def combine_binary(formulas1, formulas2):
     """Combine two sets of formulas with binary operators AND, OR."""
     combined = []
     for f1, f2 in product(formulas1, formulas2):
-        combined.append(f'({f1} ∧ {f2})')
-        combined.append(f'({f1} ∨ {f2})')
+        combined.append(f"({f1} ∧ {f2})")
+        combined.append(f"({f1} ∨ {f2})")
     return combined
+
 
 def generate_boolean_formulas(variables, max_depth=2):
     """Generate all Boolean formulas for a set of variables up to a given depth."""
     formulas = generate_atomic_formulas(variables)
-    all_formulas = set(formulas)  # Use a set to avoid duplicates
+    all_formulas = set(formulas)
+
+    # We don't need redundant atomic formulas in the final output, but we need them to generate other boolean combinations
+    final_formulas = set(["A()", "~A()"])
 
     # Iteratively combine formulas up to the given depth
     for depth in range(1, max_depth):
         new_formulas = set()
         for f1, f2 in combinations(all_formulas, 2):
-            new_formulas.update(combine_binary([f1], [f2]))
+            if f1 < f2:
+                new_formulas.update(combine_binary([f1], [f2]))
         all_formulas.update(new_formulas)
 
     return sorted(all_formulas)
 
+
 def parse_arguments():
     """Parse command line arguments."""
-    parser = argparse.ArgumentParser(description='Generate Boolean formulas.')
-    parser.add_argument('--vocab_size', type=int, help='Number of variables in the vocabulary')
-    parser.add_argument('--depth', type=int, help='Depth of boolean formulas to generate')
+    parser = argparse.ArgumentParser(description="Generate Boolean formulas.")
+    parser.add_argument(
+        "--vocab_size", type=int, help="Number of variables in the vocabulary"
+    )
+    parser.add_argument(
+        "--depth", type=int, help="Depth of boolean formulas to generate"
+    )
     return parser.parse_args()
+
 
 def generate_variables(vocab_size):
     """Generate a list of variables based on the vocabulary size."""
     variables = []
     for i in range(vocab_size):
-        variables.append(chr(ord('A') + i % 26) * (i // 26 + 1))
+        variables.append(chr(ord("A") + i % 26) * (i // 26 + 1))
     return variables
+
 
 def main():
     args = parse_arguments()
@@ -55,5 +69,6 @@ def main():
     for formula in formulas:
         print(formula)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
