@@ -13,7 +13,7 @@ def generate_atomic_formulas(variables):
     return atomic_formulas
 
 
-def combine_binary(formulas1, formulas2):
+def combine_binary(formulas1, formulas2) -> list[str]:
     """Combine two sets of formulas with binary operators AND, OR."""
     combined = []
     for f1, f2 in product(formulas1, formulas2):
@@ -80,7 +80,7 @@ def generate_boolean_formulas(variables, max_depth=2):
     return sorted(final_formulas_distinct)
 
 
-def parse_arguments():
+def parse_arguments() -> argparse.Namespace:
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description="Generate Boolean formulas.")
     parser.add_argument(
@@ -92,7 +92,7 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def generate_variables(vocab_size):
+def generate_variables(vocab_size: int) -> list[str]:
     """Generate a list of variables based on the vocabulary size."""
     variables = []
     for i in range(vocab_size):
@@ -100,15 +100,15 @@ def generate_variables(vocab_size):
     return variables
 
 
-def main():
+def main(vocab_size: int, depth: int) -> list[str]:
     args = parse_arguments()
-    variables = generate_variables(args.vocab_size)
-    formulas = generate_boolean_formulas(variables, max_depth=args.depth)
+    variables = generate_variables(vocab_size)
+    formulas = generate_boolean_formulas(variables, max_depth=depth)
 
-    print("Generated Boolean formulas:")
-    for formula in formulas:
-        print(formula)
+    print(f"Generated {len(formulas)} Boolean formulas.")
+    return formulas
 
 
 if __name__ == "__main__":
-    main()
+    args = parse_arguments()
+    main(args.vocab_size, args.depth)
