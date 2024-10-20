@@ -1,53 +1,4 @@
-# def generate_all_cases(
-#     cases: list,
-#     vocab_size: int,
-#     negation: bool,
-#     conjuncts: bool,
-#     disjuncts: bool,
-# ) -> list:
-#     """
-#     Recursive subproblem?
-
-#     Iterative problem:
-#     First generate all monadic views, then all possible extensions of these formable with conjoining, disjoining, etc.
-#     If we generate all possible views, then all possible cases of length n are just every possible list of length n drawn from these views.
-#     """
-
-
-# def generate_recursive(n: int, []):
-#     # base case: n is 0
-#     if n == 1:
-#         return
-
-
-#     for connector in ["and", "or"]:
-#         generate_recursive(n - 1)
-
-
-    # Set of length n: for each variable A: { (n-1), A and (n-1), A or (n-1), ~A and (n-1), ~A or (n-1) }
-
-
-# Set of variables V {A, B, C, D}
-# All possible subsets P(V)
-# All possible connections of variables v in P(V) (example of v might be {A, B, C})
-# Take powerset of THAT
-# Now working with e.g. {A, B}, and consider all sentences that include EXACTLY A and B
-# That is: A and B, A or B
-
-# ((A and B) and (C and D)) and (A and B)
-# Start with atoms
-# Combine everything in your set with all connectors
-# Do this iteratively until the largest sequence has length |v|
-
-# [[A, B], [C]]
-# [[A, B, C]]
-# [[A], [B], [C]]
-
-
-# [[A]], [[B]], [[C]]
-# for each monad:
-#     [[A, B]], [[A, C]], [[A], [B]], [[A], [C]]
-
+import argparse
 
 from itertools import combinations, product
 
@@ -55,8 +6,8 @@ def generate_atomic_formulas(variables):
     """Generate atomic formulas including the variables and their negations."""
     atomic_formulas = []
     for var in variables:
-        atomic_formulas.append(var)
-        atomic_formulas.append(f'~{var}')
+        atomic_formulas.append(f"{var}()")
+        atomic_formulas.append(f'~{var}()')
     return atomic_formulas
 
 def combine_binary(formulas1, formulas2):
@@ -81,10 +32,25 @@ def generate_boolean_formulas(variables, max_depth=2):
 
     return sorted(all_formulas)
 
-# Example usage
-variables = ['x', 'y']
-formulas = generate_boolean_formulas(variables, max_depth=3)
+def parse_arguments():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description='Generate Boolean formulas.')
+    parser.add_argument('--vocab_size', type=int, help='Number of variables in the vocabulary')
+    parser.add_argument('--depth', type=int, help='Depth of boolean formulas to generate')
+    return parser.parse_args()
 
-print("Generated Boolean formulas:")
-for formula in formulas:
-    print(formula)
+def generate_variables(vocab_size):
+    """Generate a list of variables based on the vocabulary size."""
+    variables = []
+    for i in range(vocab_size):
+        variables.append(chr(ord('A') + i))
+    return variables
+
+if __name__ == '__main__':
+    args = parse_arguments()
+    variables = generate_variables(args.vocab_size)
+    formulas = generate_boolean_formulas(variables, max_depth=args.depth)
+
+    print("Generated Boolean formulas:")
+    for formula in formulas:
+        print(formula)
