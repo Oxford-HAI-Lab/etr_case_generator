@@ -43,7 +43,7 @@ def generate_variables(vocab_size):
     """Generate a list of variables based on the vocabulary size."""
     variables = []
     for i in range(vocab_size):
-        variables.append(chr(ord('A') + i))
+        variables.append(chr(ord('A') + i % 26) * (i // 26 + 1))
     return variables
 
 if __name__ == '__main__':
