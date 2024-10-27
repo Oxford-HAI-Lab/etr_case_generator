@@ -55,13 +55,13 @@ def generate_views(
         max_conjuncts: int,
         max_disjuncts: int,
     ) -> SetOfStates:
-        _stage = []
+        ret = []
 
         for _ in range(random.randint(1, max_disjuncts)):
             disjunct = random.sample(domain, random.randint(1, max_conjuncts))
-            _stage.append(State(disjunct))
+            ret.append(State(disjunct))
 
-        return SetOfStates(_stage)
+        return SetOfStates(ret)
 
     views = []
 
