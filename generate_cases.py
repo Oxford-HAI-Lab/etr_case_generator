@@ -91,7 +91,9 @@ def view_to_natural_language(view: View) -> str:
             neg = "not "
 
         article = "a"
-        if atom.predicate.name.lower()[0] in ["a", "e", "i", "o", "u"]:
+        # Bit of a hack: only use "an" for "ace" and "eight", since we know the domain
+        # precisely here
+        if atom.predicate.name.lower()[0] in ["a", "e"]:
             article = "an"
 
         return neg + article + " " + atom.predicate.name.lower()
