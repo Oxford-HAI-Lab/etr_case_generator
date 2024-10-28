@@ -33,6 +33,7 @@ def generate_views(
     max_disjuncts: int = 3,
     max_conjuncts: int = 3,
     generate_supposition: bool = False,
+    neg_prob: float = 0.2,
 ):
     """_summary_
 
@@ -51,6 +52,9 @@ def generate_views(
 
         for _ in range(random.randint(1, max_disjuncts)):
             disjunct = random.sample(domain, random.randint(1, max_conjuncts))
+            disjunct = [
+                ~atom if random.random() < neg_prob else atom for atom in disjunct
+            ]
             ret.append(State(disjunct))
 
         return SetOfStates(ret)
