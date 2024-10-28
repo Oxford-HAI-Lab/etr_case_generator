@@ -102,10 +102,12 @@ def view_to_natural_language(view: View) -> str:
         ret = "there is "
         return ret + " and ".join([atom_to_natural_language(atom) for atom in state])
 
-    stage = "either " + ", or ".join(
-        [state_to_natural_language(state) for state in view.stage]
-    )
-    return stage
+    states_for_stage = [state_to_natural_language(state) for state in view.stage]
+    stage_str = ", or ".join(states_for_stage)
+    if len(states_for_stage) > 1:
+        stage_str = "either " + stage_str
+
+    return stage_str
 
 
 if __name__ == "__main__":
