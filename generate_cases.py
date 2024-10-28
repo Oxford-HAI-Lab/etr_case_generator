@@ -74,12 +74,40 @@ def generate_views(
         # First, generate the stage
         stage = generate_set_of_states(domain, max_conjuncts, max_disjuncts)
 
+        # Next, generate the supposition if necessary
         supposition = SetOfStates()
         if generate_supposition:
             supposition = generate_set_of_states(domain, max_conjuncts, max_disjuncts)
 
         views.append(View.with_defaults(stage=stage, supposition=supposition))
     return views
+
+
+def view_to_natural_language(view: View) -> str:
+    """_summary_
+
+    Args:
+        view (View): _description_
+
+    Returns:
+        str: _description_
+    """
+
+    def atom_to_natural_language(atom: PredicateAtom) -> str:
+        if atom.predicate.name.lower()[0] in ["a", "e", "i", "o", "u"]:
+            article = "an"
+        else:
+            article = "a"
+        return article + " " + atom.predicate.name.lower()
+
+    def state_to_natural_language(state: State) -> str:
+        ret = "there is "
+        return ret + " and ".join([atom_to_natural_language(atom) for atom in state])
+
+    stage = "either " + ", or ".join(
+        [state_to_natural_language(state) for state in view.stage]
+    )
+    return stage
 
 
 def generate_cases(
