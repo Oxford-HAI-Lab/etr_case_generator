@@ -107,11 +107,21 @@ def view_to_natural_language(view: View) -> str:
     if len(states_for_stage) > 1:
         stage_str = "either " + stage_str
 
+    # TODO: this SetOfStates object should have an .empty method
+    if len(view.supposition) > 0:
+        states_for_supposition = [
+            state_to_natural_language(state) for state in view.supposition
+        ]
+        supposition_str = ", or ".join(states_for_supposition)
+        if len(states_for_supposition) > 1:
+            supposition_str = "either " + supposition_str
+        stage_str = "if " + stage_str + ", then " + supposition_str
+
     return stage_str
 
 
 if __name__ == "__main__":
-    views = generate_views()
+    views = generate_views(generate_supposition=True)
     for view in views:
         print(view_to_natural_language(view))
         print()
