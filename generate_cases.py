@@ -34,6 +34,7 @@ def generate_views(
     max_conjuncts: int = 3,
     generate_supposition: bool = False,
     neg_prob: float = 0.2,
+    supposition_prob: float = 0.5,
 ):
     """_summary_
 
@@ -73,7 +74,12 @@ def generate_views(
         # Next, generate the supposition if necessary
         supposition = SetOfStates()
         if generate_supposition:
-            supposition = generate_set_of_states(domain, max_conjuncts, max_disjuncts)
+            # Only generate a supposition some of the time, according to
+            # supposition_prob
+            if random.random() < supposition_prob:
+                supposition = generate_set_of_states(
+                    domain, max_conjuncts, max_disjuncts
+                )
 
         views.append(View.with_defaults(stage=stage, supposition=supposition))
     return views
@@ -125,7 +131,7 @@ def view_to_natural_language(view: View) -> str:
         supposition_str = ", or ".join(states_for_supposition)
         if len(states_for_supposition) > 1:
             supposition_str = "either " + supposition_str
-        stage_str = "if " + stage_str + ", then " + supposition_str
+        stage_str = "if " + supposition_str + ", then " + stage_str
 
     return stage_str
 
