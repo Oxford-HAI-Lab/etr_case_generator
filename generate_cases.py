@@ -62,9 +62,12 @@ def generate_views(
 
     views = []
 
+    # Select a subset of cards to work with for this generation call
+    restricted_cards = cards[:max_domain_size]
+
     for _ in range(n_views):
-        domain_size = random.randint(1, min([max_domain_size, len(cards)]))
-        domain = random.sample(cards, domain_size)
+        domain_size = random.randint(1, len(restricted_cards))
+        domain = random.sample(restricted_cards, domain_size)
 
         max_conjuncts = min([max_conjuncts, domain_size])
 
@@ -72,7 +75,7 @@ def generate_views(
         stage = generate_set_of_states(domain, max_conjuncts, max_disjuncts)
 
         # Next, generate the supposition if necessary
-        supposition = SetOfStates()
+        supposition = SetOfStates([State()])
         if generate_supposition:
             # Only generate a supposition some of the time, according to
             # supposition_prob
