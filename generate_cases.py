@@ -104,7 +104,13 @@ def view_to_natural_language(view: View) -> str:
 
     def state_to_natural_language(state: State) -> str:
         ret = "there is "
-        return ret + " and ".join([atom_to_natural_language(atom) for atom in state])
+        atoms = [atom_to_natural_language(atom) for atom in state]
+
+        # Sort atoms so that atoms beginning with "not" come last -- this helps the
+        # natural language not read ambiguous, e.g. like "there is not an ace and a ten"
+        atoms.sort(key=lambda atom: atom.startswith("not"))
+
+        return ret + " and ".join(atoms)
 
     states_for_stage = [state_to_natural_language(state) for state in view.stage]
     stage_str = ", or ".join(states_for_stage)
