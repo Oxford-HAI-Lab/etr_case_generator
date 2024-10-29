@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from dataclasses_json import dataclass_json
 import itertools
 import random
 from pyetr.stateset import SetOfStates, Stage, Supposition, State
@@ -11,11 +12,12 @@ from pyetr.inference import (
 from pyetr.view import View
 
 
+@dataclass_json
 @dataclass
 class ReasoningProblem:
-    premises: list[tuple[View, str]]
-    etr_conclusion: tuple[View, str]
-    valid_conclusion: tuple[View, str]
+    premises: list[tuple[str, str]]
+    etr_conclusion: tuple[str, str]
+    valid_conclusion: tuple[str, str]
     conclusions_match: bool
     vocab_size: int
     max_disjuncts: int
@@ -275,19 +277,23 @@ class ETRCaseGenerator:
 
             if verbose:
                 print(f"Tried {trials} times to get valid problem.")
+
             yield ReasoningProblem(
                 premises=[
                     (
-                        p1,
+                        p1.to_str(),
                         self.view_to_natural_language(p1),
                     ),
                     (
-                        p2,
+                        p2.to_str(),
                         self.view_to_natural_language(p2),
                     ),
                 ],
-                etr_conclusion=(c_etr, self.view_to_natural_language(c_etr)),
-                valid_conclusion=(c_valid, self.view_to_natural_language(c_valid)),
+                etr_conclusion=(c_etr.to_str(), self.view_to_natural_language(c_etr)),
+                valid_conclusion=(
+                    c_valid.to_str(),
+                    self.view_to_natural_language(c_valid),
+                ),
                 conclusions_match=c_etr == c_valid,
                 vocab_size=vocab_size,
                 max_disjuncts=max_disjuncts,
