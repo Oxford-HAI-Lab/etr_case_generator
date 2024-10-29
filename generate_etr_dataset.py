@@ -7,7 +7,7 @@ dataset = []
 
 N_PER_CLASS = 100
 
-# First generate 100 matching conclusions
+# First generate N_PER_CLASS matching conclusions
 while True:
     for p in g.generate_reasoning_problems(
         n_views=20,
@@ -23,7 +23,7 @@ while True:
     if len(dataset) == N_PER_CLASS:
         break
 
-# Then generate 100 non-matching conclusions
+# Then generate N_PER_CLASS non-matching conclusions
 while True:
     for p in g.generate_reasoning_problems(
         n_views=20,
