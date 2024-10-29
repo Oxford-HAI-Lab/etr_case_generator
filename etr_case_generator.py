@@ -270,12 +270,9 @@ class ETRCaseGenerator:
                     get_vocab_size(p1),
                     get_vocab_size(p2),
                     get_vocab_size(c_etr),
-                    get_vocab_size(c_valid),
                 ]
             )
-            max_disjuncts = max(
-                [len(p1.stage), len(p2.stage), len(c_etr.stage), len(c_valid.stage)]
-            )
+            max_disjuncts = max([len(p1.stage), len(p2.stage), len(c_etr.stage)])
 
             if verbose:
                 print(f"Tried {trials} times to get valid problem.")
