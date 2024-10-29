@@ -14,7 +14,9 @@ from pyetr.view import View
 @dataclass
 class ReasoningProblem:
     premises: list[tuple[View, str]]
-    conclusion: tuple[View, str]
+    etr_conclusion: tuple[View, str]
+    valid_conclusion: tuple[View, str]
+    conclusions_match: bool
     vocab_size: int
     max_disjuncts: int
 
@@ -201,6 +203,10 @@ class ETRCaseGenerator:
     def generate_reasoning_problems(
         self,
         n_views: int,
+        require_categorical_etr: bool = False,
+        require_conclusion_match: bool = False,
+        n_trials_timeout: int = 1000,
+        verbose: bool = False,
     ):
         """Generate a list of reasoning problems.
 
@@ -215,23 +221,39 @@ class ETRCaseGenerator:
         # For now, consider just problems with 2 premises. Take all n_views^2 possible
         # pairs of views as premise pairs.
         premises = list(itertools.combinations(views, 2))
+        if verbose:
+            print(f"Generated {len(premises)} premise pairs.")
 
-        # Generate a conclusion for each pair of premises
+        trials = 0
         for p1, p2 in premises:
-            c = default_inference_procedure((p1, p2))
+            if trials == n_trials_timeout:
+                print(f"Timed out after {trials} trials.")
+                return
+
+            c_etr = default_inference_procedure((p1, p2))
 
             # Don't consider trivial conclusions interesting
-            if c.is_verum or c.is_falsum:
+            if c_etr.is_verum or c_etr.is_falsum:
+                trials += 1
                 continue
 
             # Don't consider cases where conclusions contain falsum
-            for state in c.stage:
+            for state in c_etr.stage:
                 # Falsum
                 if len(state) == 0:
+                    trials += 1
                     continue
 
-            # Try considering just categorical conclusions!
-            if not len(c.stage) == 1:
+            # If required, only continue if the ETR conclusion is categorical
+            if require_categorical_etr and not len(c_etr.stage) == 1:
+                trials += 1
+                continue
+
+            c_valid = classically_valid_inference_procedure((p1, p2))
+
+            # Check if we require matching conclusions
+            if require_conclusion_match and c_etr != c_valid:
+                trials += 1
                 continue
 
             def get_vocab_size(view: View) -> int:
@@ -240,10 +262,19 @@ class ETRCaseGenerator:
                 )
 
             vocab_size = max(
-                [get_vocab_size(p1), get_vocab_size(p2), get_vocab_size(c)]
+                [
+                    get_vocab_size(p1),
+                    get_vocab_size(p2),
+                    get_vocab_size(c_etr),
+                    get_vocab_size(c_valid),
+                ]
             )
-            max_disjuncts = max([len(p1.stage), len(p2.stage), len(c.stage)])
+            max_disjuncts = max(
+                [len(p1.stage), len(p2.stage), len(c_etr.stage), len(c_valid.stage)]
+            )
 
+            if verbose:
+                print(f"Tried {trials} times to get valid problem.")
             yield ReasoningProblem(
                 premises=[
                     (
@@ -255,7 +286,9 @@ class ETRCaseGenerator:
                         self.view_to_natural_language(p2),
                     ),
                 ],
-                conclusion=(c, self.view_to_natural_language(c)),
+                etr_conclusion=(c_etr, self.view_to_natural_language(c_etr)),
+                valid_conclusion=(c_valid, self.view_to_natural_language(c_valid)),
+                conclusions_match=c_etr == c_valid,
                 vocab_size=vocab_size,
                 max_disjuncts=max_disjuncts,
             )
@@ -264,7 +297,11 @@ class ETRCaseGenerator:
 if __name__ == "__main__":
     g = ETRCaseGenerator()
     for p in g.generate_reasoning_problems(
-        n_views=10,
+        n_views=20,
+        require_categorical_etr=True,
+        require_conclusion_match=True,
+        n_trials_timeout=1000,
+        verbose=True,
     ):
         print(p)
         print()
