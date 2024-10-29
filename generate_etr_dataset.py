@@ -5,8 +5,10 @@ g = ETRCaseGenerator()
 
 dataset = []
 
+N_PER_CLASS = 100
+
 # First generate 100 matching conclusions
-while len(dataset) <= 10:
+while True:
     for p in g.generate_reasoning_problems(
         n_views=20,
         require_categorical_etr=True,
@@ -15,12 +17,14 @@ while len(dataset) <= 10:
         verbose=True,
     ):
         dataset.append(p.to_dict())
-        if len(dataset) == 10:
+        if len(dataset) == N_PER_CLASS:
             break
-    print("Retrying... Dataset so far: ", len(dataset))
+    print("===> Retrying... Dataset so far: ", len(dataset))
+    if len(dataset) == N_PER_CLASS:
+        break
 
 # Then generate 100 non-matching conclusions
-while len(dataset) <= 20:
+while True:
     for p in g.generate_reasoning_problems(
         n_views=20,
         require_categorical_etr=True,
@@ -29,8 +33,10 @@ while len(dataset) <= 20:
         verbose=True,
     ):
         dataset.append(p.to_dict())
-        if len(dataset) == 20:
+        if len(dataset) == 2 * N_PER_CLASS:
             break
-    print("Retrying... Dataset so far: ", len(dataset))
+    print("===> Retrying... Dataset so far: ", len(dataset))
+    if len(dataset) == 2 * N_PER_CLASS:
+        break
 
-json.dump(dataset, open("etr_dataset.json", "w"))
+json.dump(dataset, open("etr_v0__2024_10_29.json", "w"))

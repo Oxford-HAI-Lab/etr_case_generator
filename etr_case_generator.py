@@ -21,6 +21,8 @@ class ReasoningProblem:
     conclusions_match: bool
     vocab_size: int
     max_disjuncts: int
+    full_prose: str
+    correct_answer: str
 
 
 class ETRCaseGenerator:
@@ -278,6 +280,23 @@ class ETRCaseGenerator:
             if verbose:
                 print(f"Tried {trials} times to get valid problem.")
 
+            full_prose = "Consider the following premises:\n"
+            p1_prose = self.view_to_natural_language(p1)
+            p1_prose = p1_prose[0].upper() + p1_prose[1:] + "."
+
+            full_prose += f"1. {p1_prose}\n"
+
+            p2_prose = self.view_to_natural_language(p2)
+            p2_prose = p2_prose[0].upper() + p2_prose[1:] + "."
+
+            full_prose += f"2. {p2_prose}\n\n"
+
+            etr_prose = self.view_to_natural_language(c_etr)
+
+            full_prose += f"Does it follow that {etr_prose}?\n\n"
+
+            full_prose += "Answer using 'YES' or 'NO' ONLY."
+
             yield ReasoningProblem(
                 premises=[
                     (
@@ -297,6 +316,8 @@ class ETRCaseGenerator:
                 conclusions_match=c_etr == c_valid,
                 vocab_size=vocab_size,
                 max_disjuncts=max_disjuncts,
+                full_prose=full_prose,
+                correct_answer="YES" if c_etr == c_valid else "NO",
             )
 
 
