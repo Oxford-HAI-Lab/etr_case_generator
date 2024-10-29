@@ -27,21 +27,30 @@ cards = [
 ]
 
 
-def generate_views(
-    n_views: int = 10,
+def generate_view(
     max_domain_size: int = 14,
     max_disjuncts: int = 3,
     max_conjuncts: int = 3,
     generate_supposition: bool = False,
     neg_prob: float = 0.2,
-    supposition_prob: float = 0.5,
-):
-    """_summary_
+) -> View:
+    """Generate a view with a random stage and supposition.
 
     Args:
-        n_views (int, optional): _description_. Defaults to 10.
-        max_domain_size (int, optional): _description_. Defaults to 14, the number of
-            cards in a deck.
+        max_domain_size (int, optional): The maximum number of propositional variables
+            to use in the view. Defaults to 14, the number of cards in a deck.
+        max_disjuncts (int, optional): The maximum number of states in the stage.
+            Defaults to 3.
+        max_conjuncts (int, optional): The maximum number of atoms in each state.
+            Defaults to 3.
+        generate_supposition (bool, optional): Whether to generate a supposition.
+            Defaults to False.
+        neg_prob (float, optional): The (independent) probability of negating each atom
+            in the stage. Defaults to 0.2.
+
+    Returns:
+        View: A randomly generated view subject to the specified parameters.
+
     """
 
     def generate_set_of_states(
@@ -60,32 +69,23 @@ def generate_views(
 
         return SetOfStates(ret)
 
-    views = []
-
     # Select a subset of cards to work with for this generation call
     restricted_cards = cards[:max_domain_size]
 
-    for _ in range(n_views):
-        domain_size = random.randint(1, len(restricted_cards))
-        domain = random.sample(restricted_cards, domain_size)
+    domain_size = random.randint(1, len(restricted_cards))
+    domain = random.sample(restricted_cards, domain_size)
 
-        max_conjuncts = min([max_conjuncts, domain_size])
+    max_conjuncts = min([max_conjuncts, domain_size])
 
-        # First, generate the stage
-        stage = generate_set_of_states(domain, max_conjuncts, max_disjuncts)
+    # First, generate the stage
+    stage = generate_set_of_states(domain, max_conjuncts, max_disjuncts)
 
-        # Next, generate the supposition if necessary
-        supposition = SetOfStates([State()])
-        if generate_supposition:
-            # Only generate a supposition some of the time, according to
-            # supposition_prob
-            if random.random() < supposition_prob:
-                supposition = generate_set_of_states(
-                    domain, max_conjuncts, max_disjuncts
-                )
+    # Next, generate the supposition if necessary
+    supposition = SetOfStates([State()])
+    if generate_supposition:
+        supposition = generate_set_of_states(domain, max_conjuncts, max_disjuncts)
 
-        views.append(View.with_defaults(stage=stage, supposition=supposition))
-    return views
+    return View.with_defaults(stage=stage, supposition=supposition)
 
 
 def view_to_natural_language(view: View) -> str:
@@ -140,7 +140,6 @@ def view_to_natural_language(view: View) -> str:
 
 
 if __name__ == "__main__":
-    views = generate_views(generate_supposition=True)
-    for view in views:
-        print(view_to_natural_language(view))
-        print()
+    view = generate_view(generate_supposition=True)
+    print(view_to_natural_language(view))
+    print()
