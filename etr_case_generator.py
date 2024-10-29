@@ -260,6 +260,12 @@ class ETRCaseGenerator:
                 trials += 1
                 continue
 
+            # Also force mismatch in the case we don't set this flag (for balancing the
+            # dataset)
+            if not require_conclusion_match and c_etr == c_valid:
+                trials += 1
+                continue
+
             def get_vocab_size(view: View) -> int:
                 return len(
                     list(set([a if a.predicate.verifier else ~a for a in view.atoms]))
@@ -275,7 +281,7 @@ class ETRCaseGenerator:
             max_disjuncts = max([len(p1.stage), len(p2.stage), len(c_etr.stage)])
 
             if verbose:
-                print(f"Tried {trials} times to get valid problem.")
+                print(f"Tried {trials} times to get a valid problem.")
 
             full_prose = "Consider the following premises:\n"
             p1_prose = self.view_to_natural_language(p1)

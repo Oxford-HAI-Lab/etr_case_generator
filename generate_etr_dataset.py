@@ -9,6 +9,8 @@ N_PER_CLASS = 100
 
 # First generate N_PER_CLASS matching conclusions
 while True:
+    if len(dataset) >= N_PER_CLASS:
+        break
     for p in g.generate_reasoning_problems(
         n_views=20,
         require_categorical_etr=True,
@@ -16,15 +18,15 @@ while True:
         n_trials_timeout=1000,
         verbose=True,
     ):
-        dataset.append(p.to_dict())
-        if len(dataset) == N_PER_CLASS:
+        if len(dataset) >= N_PER_CLASS:
             break
+        dataset.append(p.to_dict())
     print("===> Retrying... Dataset so far: ", len(dataset))
-    if len(dataset) == N_PER_CLASS:
-        break
 
 # Then generate N_PER_CLASS non-matching conclusions
 while True:
+    if len(dataset) >= 2 * N_PER_CLASS:
+        break
     for p in g.generate_reasoning_problems(
         n_views=20,
         require_categorical_etr=True,
@@ -32,11 +34,10 @@ while True:
         n_trials_timeout=1000,
         verbose=True,
     ):
-        dataset.append(p.to_dict())
-        if len(dataset) == 2 * N_PER_CLASS:
+        if len(dataset) >= 2 * N_PER_CLASS:
             break
+        dataset.append(p.to_dict())
     print("===> Retrying... Dataset so far: ", len(dataset))
-    if len(dataset) == 2 * N_PER_CLASS:
-        break
+
 
 json.dump(dataset, open("etr_v0__2024_10_29.json", "w"))
