@@ -1,9 +1,22 @@
 from dataclasses import dataclass
+import itertools
 import random
 from pyetr.stateset import SetOfStates, Stage, Supposition, State
 from pyetr.atoms.predicate import Predicate
 from pyetr.atoms.predicate_atom import PredicateAtom
+from pyetr.inference import (
+    default_inference_procedure,
+    classically_valid_inference_procedure,
+)
 from pyetr.view import View
+
+
+@dataclass
+class ReasoningProblem:
+    premises: list[tuple[View, str]]
+    conclusion: tuple[View, str]
+    vocab_size: int
+    max_disjuncts: int
 
 
 class ETRCaseGenerator:
@@ -133,7 +146,7 @@ class ETRCaseGenerator:
             stage_str = "either " + stage_str
 
         # TODO: this SetOfStates object should have an .empty method
-        if len(view.supposition) > 0:
+        if not view.supposition.is_verum:
             states_for_supposition = [
                 state_to_natural_language(state) for state in view.supposition
             ]
@@ -144,9 +157,114 @@ class ETRCaseGenerator:
 
         return stage_str
 
+    def generate_views(
+        self,
+        n: int,
+        max_domain_size: int = 14,
+        max_disjuncts: int = 3,
+        max_conjuncts: int = 3,
+        supposition_prob: float = 0.2,
+        neg_prob: float = 0.2,
+    ) -> list[View]:
+        """Generate a list of n Views.
+
+        Args:
+            max_domain_size (int, optional): The maximum number of propositional
+                variables to use in the view. Defaults to 14, the number of cards in a
+                deck.
+            max_disjuncts (int, optional): The maximum number of states in the stage.
+                Defaults to 3.
+            max_conjuncts (int, optional): The maximum number of atoms in each state.
+                Defaults to 3.
+            generate_supposition (bool, optional): Whether to generate a supposition.
+                Defaults to False.
+            supposition_prob (float, optional): The probability of generating a
+                supposition for each independently generated View. Defaults to 0.2.
+            neg_prob (float, optional): The (independent) probability of negating each
+                atom in the stage. Defaults to 0.2.
+
+        Returns:
+            list[View]: A list of n randomly generated Views subject to the specified
+                parameters.
+        """
+        return [
+            self.generate_view(
+                max_domain_size=max_domain_size,
+                max_disjuncts=max_disjuncts,
+                max_conjuncts=max_conjuncts,
+                generate_supposition=random.random() < supposition_prob,
+                neg_prob=neg_prob,
+            )
+            for _ in range(n)
+        ]
+
+    def generate_reasoning_problems(
+        self,
+        n_views: int,
+    ):
+        """Generate a list of reasoning problems.
+
+        Returns:
+            list[ReasoningProblem]: A list of reasoning problems.
+        """
+
+        # First generate n_views and their corresponding natural language
+        # representations
+        views = self.generate_views(n=n_views)
+
+        # For now, consider just problems with 2 premises. Take all n_views^2 possible
+        # pairs of views as premise pairs.
+        premises = list(itertools.combinations(views, 2))
+
+        # Generate a conclusion for each pair of premises
+        for p1, p2 in premises:
+            c = default_inference_procedure((p1, p2))
+
+            # Don't consider trivial conclusions interesting
+            if c.is_verum or c.is_falsum:
+                continue
+
+            # Don't consider cases where conclusions contain falsum
+            for state in c.stage:
+                # Falsum
+                if len(state) == 0:
+                    continue
+
+            # Try considering just categorical conclusions!
+            if not len(c.stage) == 1:
+                continue
+
+            def get_vocab_size(view: View) -> int:
+                return len(
+                    list(set([a if a.predicate.verifier else ~a for a in view.atoms]))
+                )
+
+            vocab_size = max(
+                [get_vocab_size(p1), get_vocab_size(p2), get_vocab_size(c)]
+            )
+            max_disjuncts = max([len(p1.stage), len(p2.stage), len(c.stage)])
+
+            yield ReasoningProblem(
+                premises=[
+                    (
+                        p1,
+                        self.view_to_natural_language(p1),
+                    ),
+                    (
+                        p2,
+                        self.view_to_natural_language(p2),
+                    ),
+                ],
+                conclusion=(c, self.view_to_natural_language(c)),
+                vocab_size=vocab_size,
+                max_disjuncts=max_disjuncts,
+            )
+
 
 if __name__ == "__main__":
-    generator = ETRCaseGenerator()
-    view = generator.generate_view(generate_supposition=True)
-    print(generator.view_to_natural_language(view))
-    print()
+    g = ETRCaseGenerator()
+    for p in g.generate_reasoning_problems(
+        n_views=10,
+    ):
+        print(p)
+        print()
