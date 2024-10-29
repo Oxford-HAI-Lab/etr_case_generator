@@ -40,16 +40,17 @@ class ETRCaseGenerator:
         """Generate a view with a random stage and supposition.
 
         Args:
-            max_domain_size (int, optional): The maximum number of propositional variables
-                to use in the view. Defaults to 14, the number of cards in a deck.
+            max_domain_size (int, optional): The maximum number of propositional
+                variables to use in the view. Defaults to 14, the number of cards in a
+                deck.
             max_disjuncts (int, optional): The maximum number of states in the stage.
                 Defaults to 3.
             max_conjuncts (int, optional): The maximum number of atoms in each state.
                 Defaults to 3.
             generate_supposition (bool, optional): Whether to generate a supposition.
                 Defaults to False.
-            neg_prob (float, optional): The (independent) probability of negating each atom
-                in the stage. Defaults to 0.2.
+            neg_prob (float, optional): The (independent) probability of negating each
+                atom in the stage. Defaults to 0.2.
 
         Returns:
             View: A randomly generated view subject to the specified parameters.
@@ -108,8 +109,8 @@ class ETRCaseGenerator:
                 neg = "not "
 
             article = "a"
-            # Bit of a hack: only use "an" for "ace" and "eight", since we know the domain
-            # precisely here
+            # Bit of a hack: only use "an" for "ace" and "eight", since we know the
+            # domain precisely here
             if atom.predicate.name.lower()[0] in ["a", "e"]:
                 article = "an"
 
@@ -120,7 +121,8 @@ class ETRCaseGenerator:
             atoms = [atom_to_natural_language(atom) for atom in state]
 
             # Sort atoms so that atoms beginning with "not" come last -- this helps the
-            # natural language not read ambiguous, e.g. like "there is not an ace and a ten"
+            # natural language not read ambiguous, e.g. like "there is not an ace and a
+            # ten"
             atoms.sort(key=lambda atom: atom.startswith("not"))
 
             return ret + " and ".join(atoms)
