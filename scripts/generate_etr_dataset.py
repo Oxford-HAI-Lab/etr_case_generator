@@ -1,6 +1,8 @@
 import argparse
 import json
+
 from etr_case_generator.generator import ETRCaseGenerator
+from typing import Optional
 
 
 def parse_args():
@@ -32,13 +34,16 @@ def parse_args():
 
 
 def generate_reasoning_problems(
-    generator, n_problems, require_categorical: bool, verbose: bool = False
+    generator: ETRCaseGenerator,
+    n_problems,
+    require_categorical: Optional[bool],
+    verbose: bool = False,
 ):
     problems = []
     while len(problems) < n_problems:
         for p in generator.generate_reasoning_problems(
             n_views=20,
-            require_categorical_etr=require_categorical,
+            categorical_conclusions=require_categorical,
             n_trials_timeout=1000,
             verbose=verbose,
         ):
@@ -66,7 +71,7 @@ def main(
                 verbose=verbose,
             )
     else:
-        require_categorical = False
+        require_categorical = None
         if categorical_conclusions == "all":
             require_categorical = True
 

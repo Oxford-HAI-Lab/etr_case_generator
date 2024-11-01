@@ -1,12 +1,14 @@
-from dataclasses import dataclass
-from dataclasses_json import dataclass_json
 import itertools
 import random
+
+from dataclasses import dataclass
+from dataclasses_json import dataclass_json
 from pyetr.stateset import SetOfStates, Stage, Supposition, State
 from pyetr.atoms.predicate import Predicate
 from pyetr.atoms.predicate_atom import PredicateAtom
 from pyetr.inference import default_inference_procedure
 from pyetr.view import View
+from typing import Optional
 
 
 @dataclass_json
@@ -14,6 +16,7 @@ from pyetr.view import View
 class ReasoningProblem:
     premises: list[tuple[str, str]]
     etr_conclusion: tuple[str, str]
+    etr_conclusion_is_categorical: bool
     vocab_size: int
     max_disjuncts: int
     full_prose: str
@@ -201,11 +204,21 @@ class ETRCaseGenerator:
     def generate_reasoning_problems(
         self,
         n_views: int,
-        require_categorical_etr: bool = False,
+        categorical_conclusions: Optional[bool] = None,
         n_trials_timeout: int = 1000,
         verbose: bool = False,
     ):
         """Generate a list of reasoning problems.
+
+        Args:
+            n_views (int): The number of views to generate for the problem.
+            categorical_conclusions (Optional[bool], optional): Whether to require the
+                ETR conclusion to be categorical. If None, enforce no constraints.
+                Defaults to None.
+            n_trials_timeout (int, optional): The maximum number of trials to attempt
+                before timing out. Defaults to 1000.
+            verbose (bool, optional): Whether to print debugging information. Defaults
+                to False.
 
         Returns:
             list[ReasoningProblem]: A list of reasoning problems.
@@ -242,7 +255,11 @@ class ETRCaseGenerator:
                     continue
 
             # If required, only continue if the ETR conclusion is categorical
-            if require_categorical_etr and not len(c_etr.stage) == 1:
+            if categorical_conclusions == True and not len(c_etr.stage) == 1:
+                trials += 1
+                continue
+
+            if categorical_conclusions == False and len(c_etr.stage) == 1:
                 trials += 1
                 continue
 
@@ -295,19 +312,8 @@ class ETRCaseGenerator:
                     ),
                 ],
                 etr_conclusion=(c_etr.to_str(), self.view_to_natural_language(c_etr)),
+                etr_conclusion_is_categorical=len(c_etr.stage) == 1,
                 vocab_size=vocab_size,
                 max_disjuncts=max_disjuncts,
                 full_prose=full_prose,
             )
-
-
-if __name__ == "__main__":
-    g = ETRCaseGenerator()
-    for p in g.generate_reasoning_problems(
-        n_views=20,
-        require_categorical_etr=True,
-        n_trials_timeout=1000,
-        verbose=True,
-    ):
-        print(p)
-        print()
