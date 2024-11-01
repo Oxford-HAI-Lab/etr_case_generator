@@ -17,7 +17,7 @@ def parse_args():
         "-n",
         "--n_problems",
         type=int,
-        default=100,
+        default=10,
         help="Number of problems to generate",
     )
     parser.add_argument(
