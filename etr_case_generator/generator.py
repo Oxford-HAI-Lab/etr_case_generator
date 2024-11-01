@@ -8,7 +8,7 @@ from pyetr.atoms.predicate import Predicate
 from pyetr.atoms.predicate_atom import PredicateAtom
 from pyetr.inference import default_inference_procedure
 from pyetr.view import View
-from typing import Optional
+from typing import cast, Optional
 
 
 @dataclass_json
@@ -265,7 +265,14 @@ class ETRCaseGenerator:
 
             def get_vocab_size(view: View) -> int:
                 return len(
-                    list(set([a if a.predicate.verifier else ~a for a in view.atoms]))
+                    list(
+                        set(
+                            [
+                                a if cast(PredicateAtom, a).predicate.verifier else ~a
+                                for a in view.atoms
+                            ]
+                        )
+                    )
                 )
 
             vocab_size = max(
