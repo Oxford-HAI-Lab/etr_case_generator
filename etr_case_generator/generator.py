@@ -134,7 +134,9 @@ class ETRCaseGenerator:
 
         def state_to_natural_language(state: State) -> str:
             ret = "there is "
-            atoms = [atom_to_natural_language(atom) for atom in state]
+            atoms = [
+                atom_to_natural_language(cast(PredicateAtom, atom)) for atom in state
+            ]
 
             # Sort atoms so that atoms beginning with "not" come last -- this helps the
             # natural language not read ambiguous, e.g. like "there is not an ace and a
