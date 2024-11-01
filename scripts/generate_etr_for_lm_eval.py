@@ -56,9 +56,9 @@ def generate_reasoning_problems(
         if verbose:
             print("===> Retrying... Dataset so far: ", len(problems))
 
-    print("\n\nPROBLEMS!\n\n")
-    for p in problems:
-        print(json.dumps(p, indent=2))
+    # print("\n\nPROBLEMS!\n\n")
+    # for p in problems:
+    #     print(json.dumps(p, indent=2))
 
     return problems
 
@@ -103,6 +103,7 @@ def main(
                     "answer": "YES" if problem["etr_conclusion_is_categorical"] else "NO"
                 }
             }
+            print(json.dumps(formatted_problem, indent=2))
             f.write(json.dumps(formatted_problem) + "\n")
 
 

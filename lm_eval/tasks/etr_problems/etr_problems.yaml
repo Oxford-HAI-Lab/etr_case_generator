@@ -1,7 +1,7 @@
 dataset_path: json
 dataset_name: null
 dataset_kwargs:
-  data_files: lm_eval/tasks/etr_problems/etr_problems.jsonl
+  data_files: datasets/etr_for_lm_eval.jsonl
 
 task: etr_problems
 
@@ -12,12 +12,6 @@ output_type: generate_until
 
 metric_list:
   - metric: correct
-    aggregation: mean
-    higher_is_better: true
-  - metric: has_explanation
-    aggregation: mean
-    higher_is_better: true
-  - metric: answer_present
     aggregation: mean
     higher_is_better: true
   - metric: len_response

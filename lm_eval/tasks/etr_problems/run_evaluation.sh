@@ -1,4 +1,4 @@
-  #!/bin/bash
+#!/bin/bash
 
 # Help text function
 show_help() {
@@ -18,17 +18,17 @@ show_help() {
 # Default values
 MODEL="gpt-4-turbo"
 EVAL_PATH="/home/keenan/Dev/lm-evaluation-harness/"
-INCLUDE_PATH="/home/keenan/Dev/JSTR/"
+INCLUDE_PATH="/home/keenan/Dev/etr_case_generator/"
 
 # Assert that EVAL_PATH is a real directory
 if [ ! -d "$EVAL_PATH" ]; then
-    echo "Error: $EVAL_PATH is not a valid directory, please rerun with the '--path' option."
+    echo "Error: $EVAL_PATH is not a valid directory, please rerun with the '--path' option. Sorry for hardcoding my own."
     exit 1
 fi
 
 # Assert that INCLUDE_PATH is a real directory
 if [ ! -d "$INCLUDE_PATH" ]; then
-    echo "Error: $INCLUDE_PATH is not a valid directory, please rerun with the '--include' option."
+    echo "Error: $INCLUDE_PATH is not a valid directory, please rerun with the '--include' option. Sorry for hardcoding my own."
     exit 1
 fi
 
