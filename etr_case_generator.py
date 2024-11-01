@@ -5,10 +5,7 @@ import random
 from pyetr.stateset import SetOfStates, Stage, Supposition, State
 from pyetr.atoms.predicate import Predicate
 from pyetr.atoms.predicate_atom import PredicateAtom
-from pyetr.inference import (
-    default_inference_procedure,
-    classically_valid_inference_procedure,
-)
+from pyetr.inference import default_inference_procedure
 from pyetr.view import View
 
 
@@ -17,12 +14,9 @@ from pyetr.view import View
 class ReasoningProblem:
     premises: list[tuple[str, str]]
     etr_conclusion: tuple[str, str]
-    valid_conclusion: tuple[str, str]
-    conclusions_match: bool
     vocab_size: int
     max_disjuncts: int
     full_prose: str
-    correct_answer: str
 
 
 class ETRCaseGenerator:
@@ -208,7 +202,6 @@ class ETRCaseGenerator:
         self,
         n_views: int,
         require_categorical_etr: bool = False,
-        require_conclusion_match: bool = False,
         n_trials_timeout: int = 1000,
         verbose: bool = False,
     ):
@@ -253,19 +246,6 @@ class ETRCaseGenerator:
                 trials += 1
                 continue
 
-            c_valid = classically_valid_inference_procedure((p1, p2))
-
-            # Check if we require matching conclusions
-            if require_conclusion_match and c_etr != c_valid:
-                trials += 1
-                continue
-
-            # Also force mismatch in the case we don't set this flag (for balancing the
-            # dataset)
-            if not require_conclusion_match and c_etr == c_valid:
-                trials += 1
-                continue
-
             def get_vocab_size(view: View) -> int:
                 return len(
                     list(set([a if a.predicate.verifier else ~a for a in view.atoms]))
@@ -300,6 +280,9 @@ class ETRCaseGenerator:
 
             full_prose += "Answer using 'YES' or 'NO' ONLY."
 
+            # Reset trials once we're able to yield a complete problem
+            trials = 0
+
             yield ReasoningProblem(
                 premises=[
                     (
@@ -312,15 +295,9 @@ class ETRCaseGenerator:
                     ),
                 ],
                 etr_conclusion=(c_etr.to_str(), self.view_to_natural_language(c_etr)),
-                valid_conclusion=(
-                    c_valid.to_str(),
-                    self.view_to_natural_language(c_valid),
-                ),
-                conclusions_match=c_etr == c_valid,
                 vocab_size=vocab_size,
                 max_disjuncts=max_disjuncts,
                 full_prose=full_prose,
-                correct_answer="YES" if c_etr == c_valid else "NO",
             )
 
 
@@ -329,7 +306,6 @@ if __name__ == "__main__":
     for p in g.generate_reasoning_problems(
         n_views=20,
         require_categorical_etr=True,
-        require_conclusion_match=True,
         n_trials_timeout=1000,
         verbose=True,
     ):
