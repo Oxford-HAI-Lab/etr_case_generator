@@ -11,7 +11,5 @@ def score_answer(question, answer):
     """
     return {
         "correct": 0.0,
-        "has_explanation": 0.0,
-        "answer_present": 0.0,
         "len_response": 0
     }
