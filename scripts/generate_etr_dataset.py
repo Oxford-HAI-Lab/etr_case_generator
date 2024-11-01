@@ -59,28 +59,28 @@ def main(
 
     if categorical_conclusions == "parity":
         for require_categorical in [True, False]:
-            dataset.append(
-                generate_reasoning_problems(
-                    generator=g,
-                    n_problems=n_problems / 2,
-                    require_categorical=require_categorical,
-                    verbose=verbose,
-                )
+            dataset += generate_reasoning_problems(
+                generator=g,
+                n_problems=n_problems / 2,
+                require_categorical=require_categorical,
+                verbose=verbose,
             )
     else:
         require_categorical = False
         if categorical_conclusions == "all":
             require_categorical = True
 
-        dataset.append(
-            generate_reasoning_problems(
-                generator=g,
-                n_problems=n_problems,
-                require_categorical=require_categorical,
-                verbose=verbose,
-            )
+        dataset += generate_reasoning_problems(
+            generator=g,
+            n_problems=n_problems,
+            require_categorical=require_categorical,
+            verbose=verbose,
         )
 
+    if verbose:
+        print(
+            f"Saving dataset of length {len(dataset)} to datasets/{dataset_name}.json"
+        )
     json.dump(dataset, open(f"datasets/{dataset_name}.json", "w"))
 
 
