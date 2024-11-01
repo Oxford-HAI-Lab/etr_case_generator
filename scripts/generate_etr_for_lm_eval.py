@@ -58,8 +58,7 @@ def generate_reasoning_problems(
 
     print("\n\nPROBLEMS!\n\n")
     for p in problems:
-        print(p)
-        print("\n\n")
+        print(json.dumps(p, indent=2))
 
     return problems
 
