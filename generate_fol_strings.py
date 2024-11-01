@@ -105,6 +105,8 @@ def main(vocab_size: int, depth: int) -> list[str]:
     formulas = generate_boolean_formulas(variables, max_depth=depth)
 
     print(f"Generated {len(formulas)} Boolean formulas.")
+    for f in formulas:
+        print(f)
     return formulas
 
 

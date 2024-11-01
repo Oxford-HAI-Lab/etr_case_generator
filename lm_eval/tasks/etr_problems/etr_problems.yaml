@@ -1,0 +1,40 @@
+dataset_path: json
+dataset_name: null
+dataset_kwargs:
+  data_files: lm_eval/tasks/etr_problems/etr_problems.jsonl
+
+task: etr_problems
+
+doc_to_text: "{{question}}"
+doc_to_target: "{{scoring_guide}}"
+
+output_type: generate_until
+
+metric_list:
+  - metric: correct
+    aggregation: mean
+    higher_is_better: true
+  - metric: has_explanation
+    aggregation: mean
+    higher_is_better: true
+  - metric: answer_present
+    aggregation: mean
+    higher_is_better: true
+  - metric: len_response
+    aggregation: mean
+    higher_is_better: false
+
+test_split: train
+fewshot_split: train
+
+generation_kwargs:
+  until:
+    - "Done."
+  do_sample: false
+  temperature: 0.2
+  max_gen_toks: 2000
+
+process_results: !function scoring.score_answer
+
+metadata:
+  version: 1.0

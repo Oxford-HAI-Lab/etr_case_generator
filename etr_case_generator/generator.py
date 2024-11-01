@@ -198,7 +198,7 @@ class ETRCaseGenerator:
         categorical_conclusions: Optional[bool] = None,
         n_trials_timeout: int = 1000,
         verbose: bool = False,
-    ) -> Generator[ReasoningProblem]:
+    ) -> Generator[ReasoningProblem, object, object]:
         """Generate a list of reasoning problems.
 
         Args:
