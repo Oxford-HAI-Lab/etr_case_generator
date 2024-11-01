@@ -8,7 +8,9 @@ from pyetr.atoms.predicate import Predicate
 from pyetr.atoms.predicate_atom import PredicateAtom
 from pyetr.inference import default_inference_procedure
 from pyetr.view import View
-from typing import cast, Optional
+from typing import cast, Generator, Optional
+
+from etr_case_generator.ontology import Ontology
 
 
 @dataclass_json
@@ -23,26 +25,13 @@ class ReasoningProblem:
 
 
 class ETRCaseGenerator:
-    def __init__(self):
-        # Cards are constants (0-ary predicates) referring to cards in a deck
-        self.card_predicates = [
-            PredicateAtom(predicate=Predicate(name=card, arity=0), terms=())
-            for card in [
-                "Ace",
-                "One",
-                "Two",
-                "Three",
-                "Four",
-                "Five",
-                "Six",
-                "Seven",
-                "Eight",
-                "Nine",
-                "Ten",
-                "Jack",
-                "Queen",
-                "King",
-            ]
+    def __init__(self, ontology: Ontology):
+        self.ontology = Ontology
+
+        # Set up basic objects
+        self.objects = [
+            PredicateAtom(predicate=Predicate(name=o.capitalize(), arity=0), terms=())
+            for o in ontology.objects
         ]
 
     def generate_view(
@@ -90,7 +79,7 @@ class ETRCaseGenerator:
             return SetOfStates(ret)
 
         # Select a subset of cards to work with for this generation call
-        restricted_cards = self.card_predicates[:max_domain_size]
+        restricted_cards = self.objects[:max_domain_size]
 
         domain_size = random.randint(1, len(restricted_cards))
         domain = random.sample(restricted_cards, domain_size)
@@ -209,7 +198,7 @@ class ETRCaseGenerator:
         categorical_conclusions: Optional[bool] = None,
         n_trials_timeout: int = 1000,
         verbose: bool = False,
-    ):
+    ) -> Generator[ReasoningProblem]:
         """Generate a list of reasoning problems.
 
         Args:

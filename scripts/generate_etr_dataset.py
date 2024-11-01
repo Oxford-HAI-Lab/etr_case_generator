@@ -1,8 +1,11 @@
 import argparse
 import json
 
-from etr_case_generator.generator import ETRCaseGenerator
+from etr_case_generator import ETRCaseGenerator
+from etr_case_generator.ontology import CARDS
 from typing import Optional
+from dataclasses_json import dataclass_json
+from dataclasses import dataclass
 
 
 def parse_args():
@@ -59,7 +62,8 @@ def generate_reasoning_problems(
 def main(
     dataset_name: str, n_problems: int, categorical_conclusions: str, verbose: bool
 ):
-    g = ETRCaseGenerator()
+    # For now we're just working with cards (and cards only work with basic objects)
+    g = ETRCaseGenerator(ontology=CARDS)
     dataset = []
 
     if categorical_conclusions == "parity":
