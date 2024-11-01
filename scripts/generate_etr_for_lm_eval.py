@@ -12,7 +12,7 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description="Generate a dataset of reasoning problems using ETRCaseGenerator"
     )
-    parser.add_argument("--dataset_name", type=str, default="etr_for_lm_eval.jsonl", help="Name of the dataset (should end in .jsonl)")
+    parser.add_argument("--dataset_name", type=str, default="etr_for_lm_eval.jsonl", help="Name of the dataset (.jsonl)")
     parser.add_argument(
         "-n",
         "--n_problems",
@@ -55,6 +55,11 @@ def generate_reasoning_problems(
             problems.append(p.to_dict())
         if verbose:
             print("===> Retrying... Dataset so far: ", len(problems))
+
+    print("\n\nPROBLEMS!\n\n")
+    for p in problems:
+        print(p)
+        print("\n\n")
 
     return problems
 
