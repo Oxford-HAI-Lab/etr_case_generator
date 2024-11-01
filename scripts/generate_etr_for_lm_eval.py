@@ -96,7 +96,14 @@ def main(
         )
     with open(f"datasets/{dataset_name}", "w") as f:
         for problem in dataset:
-            f.write(json.dumps(problem) + "\n")
+            formatted_problem = {
+                "question": problem["full_prose"],
+                "scoring_guide": {
+                    **problem,
+                    "answer": "YES" if problem["etr_conclusion_is_categorical"] else "NO"
+                }
+            }
+            f.write(json.dumps(formatted_problem) + "\n")
 
 
 if __name__ == "__main__":
