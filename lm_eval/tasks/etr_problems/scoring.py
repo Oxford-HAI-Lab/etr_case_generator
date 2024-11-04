@@ -36,6 +36,6 @@ def score_answer(question, answer):
     correct_answer = question['scoring_guide']['answer']
     
     return {
-        "correct": float(model_answer == correct_answer),
+        "correct": float(model_answer.lower() == correct_answer.lower()),
         "len_response": len(answer_text)
     }
