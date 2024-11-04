@@ -1,11 +1,15 @@
 import argparse
 import json
 
+from pysmt.fnode import FNode
+
 from etr_case_generator import ETRCaseGenerator
 from etr_case_generator.ontology import CARDS
 from typing import Optional
 from dataclasses_json import dataclass_json
 from dataclasses import dataclass
+
+from smt_interface.smt_encoder import view_to_smt
 
 
 def parse_args():
@@ -35,7 +39,7 @@ def parse_args():
     parser.add_argument(
         "--print-only",
         action="store_true",
-        default=True,
+        default=False,
         help="Print problems to stdout instead of saving to file",
     )
     args = parser.parse_args()
@@ -58,13 +62,20 @@ def generate_reasoning_problems(
         ):
             if len(problems) >= n_problems:
                 break
+
+            # Debugging
+            p_view = p.premise_views[0]
+            # Print all the fields on p_view
+            print(p_view.__dict__)
+            smt: FNode = view_to_smt(p_view)
+            print(smt)
+
+            # Need to check_validity...
+            # Set classically_valid_conclusion on p
+
             problems.append(p.to_dict())
         if verbose:
             print("===> Retrying... Dataset so far: ", len(problems))
-
-    # print("\n\nPROBLEMS!\n\n")
-    # for p in problems:
-    #     print(json.dumps(p, indent=2))
 
     return problems
 
