@@ -23,6 +23,10 @@ class ReasoningProblem:
     max_disjuncts: int
     full_prose: str
 
+    # Structured data which makes of the strings
+    premise_views: list[View]
+    etr_conclusion_view: View
+
 
 class ETRCaseGenerator:
     def __init__(self, ontology: Ontology):
