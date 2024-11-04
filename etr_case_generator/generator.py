@@ -13,6 +13,8 @@ from typing import cast, Generator, Optional
 from etr_case_generator.ontology import Ontology
 
 
+from dataclasses import field
+from dataclasses_json import config, dataclass_json
 @dataclass_json
 @dataclass
 class ReasoningProblem:
@@ -24,8 +26,8 @@ class ReasoningProblem:
     full_prose: str
 
     # Structured data which makes of the strings
-    premise_views: list[View]
-    etr_conclusion_view: View
+    premise_views: list[View] = field(metadata=config(exclude=True))
+    etr_conclusion_view: View = field(metadata=config(exclude=True))
 
 
 class ETRCaseGenerator:
