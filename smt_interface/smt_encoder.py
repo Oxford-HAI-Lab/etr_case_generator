@@ -128,3 +128,35 @@ def check_validity(premises: list[View], conclusions: list[View]) -> bool:
         # If unsatisfiable, the conclusion is valid
         return not solver.solve()
 
+
+def main():
+    """Run some example validity checks using the SMT solver."""
+    # Example 1: King()Ten() |= King()
+    # This should be valid since King()Ten() implies King()
+    v1 = View.from_str('{King()Ten()}^{0}')
+    v2 = View.from_str('{King()}^{0}')
+    print("\nExample 1: King()Ten() |= King()")
+    print("Valid:", check_validity([v1], [v2]))
+
+    # Example 2: King()Ten() |= Ten()
+    # This should be valid since King()Ten() implies Ten()
+    v3 = View.from_str('{Ten()}^{0}')
+    print("\nExample 2: King()Ten() |= Ten()")
+    print("Valid:", check_validity([v1], [v3]))
+
+    # Example 3: King() |= King()Ten()
+    # This should not be valid since King() does not imply King()Ten()
+    print("\nExample 3: King() |= King()Ten()")
+    print("Valid:", check_validity([v2], [v1]))
+
+    # Example 4: King()Ten(), Ten()Jack() |= King()Jack()
+    # This should be valid by transitivity
+    v4 = View.from_str('{Ten()Jack()}^{0}')
+    v5 = View.from_str('{King()Jack()}^{0}')
+    print("\nExample 4: King()Ten(), Ten()Jack() |= King()Jack()")
+    print("Valid:", check_validity([v1, v4], [v5]))
+
+
+if __name__ == "__main__":
+    main()
+
