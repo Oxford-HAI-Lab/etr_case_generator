@@ -88,6 +88,43 @@ def view_to_smt(view: View) -> FNode:
     return formula
 
 
-def check_validity(premises: list[View], conclusions: list[View]):
-    ...
+def check_validity(premises: list[View], conclusions: list[View]) -> bool:
+    """Check if the conclusions logically follow from the premises using SMT solving.
+    
+    Args:
+        premises (list[View]): List of premise Views
+        conclusions (list[View]): List of conclusion Views
+        
+    Returns:
+        bool: True if conclusions are valid given premises, False otherwise
+    """
+    # Convert premises and conclusions to SMT formulas
+    premise_formulas = [view_to_smt(p) for p in premises]
+    conclusion_formulas = [view_to_smt(c) for c in conclusions]
+    
+    # Create solver
+    with Solver(name='z3') as solver:
+        # Add all premises
+        for p in premise_formulas:
+            solver.add_assertion(p)
+            
+        # First check: premises & conclusion should be satisfiable
+        for c in conclusion_formulas:
+            solver.add_assertion(c)
+            
+        if not solver.solve():
+            return False
+            
+        solver.reset_assertions()
+        
+        # Second check: premises & not(conclusion) should be unsatisfiable 
+        for p in premise_formulas:
+            solver.add_assertion(p)
+            
+        # Add negation of all conclusions
+        for c in conclusion_formulas:
+            solver.add_assertion(Not(c))
+            
+        # If unsatisfiable, the conclusion is valid
+        return not solver.solve()
 
