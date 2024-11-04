@@ -9,7 +9,7 @@ from typing import Optional
 from dataclasses_json import dataclass_json
 from dataclasses import dataclass
 
-from smt_interface.smt_encoder import view_to_smt
+from smt_interface.smt_encoder import check_validity
 
 
 def parse_args():
@@ -63,15 +63,10 @@ def generate_reasoning_problems(
             if len(problems) >= n_problems:
                 break
 
-            # Debugging
-            p_view = p.premise_views[0]
-            # Print all the fields on p_view
-            print(p_view.__dict__)
-            smt: FNode = view_to_smt(p_view)
-            print(smt)
-
-            # Need to check_validity...
-            # Set classically_valid_conclusion on p
+            # Check if the conclusion is classically valid
+            p.classically_valid_conclusion = check_validity(p.premise_views, [p.etr_conclusion_view])
+            if verbose:
+                print(f"Classical validity: {p.classically_valid_conclusion}")
 
             problems.append(p.to_dict())
         if verbose:
