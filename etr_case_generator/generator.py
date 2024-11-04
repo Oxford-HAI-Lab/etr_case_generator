@@ -33,6 +33,11 @@ class ReasoningProblem:
 
     classically_valid_conclusion: Optional[bool] = None
 
+    # Annotations about the problem
+    num_variables: Optional[int] = None
+    num_disjuncts: Optional[int] = None
+    num_premises: Optional[int] = None
+
 
 class ETRCaseGenerator:
     def __init__(self, ontology: Ontology):
