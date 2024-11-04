@@ -318,4 +318,6 @@ class ETRCaseGenerator:
                 vocab_size=vocab_size,
                 max_disjuncts=max_disjuncts,
                 full_prose=full_prose,
+                premise_views=[p1, p2],
+                etr_conclusion_view=c_etr,
             )
