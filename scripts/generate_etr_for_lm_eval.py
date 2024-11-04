@@ -32,6 +32,12 @@ def parse_args():
         action="store_true",
         help="Print verbose output",
     )
+    parser.add_argument(
+        "--print-only",
+        action="store_true",
+        default=False,
+        help="Print problems to stdout instead of saving to file",
+    )
     args = parser.parse_args()
     return args
 
@@ -64,7 +70,8 @@ def generate_reasoning_problems(
 
 
 def main(
-    dataset_name: str, n_problems: int, categorical_conclusions: str, verbose: bool
+    dataset_name: str, n_problems: int, categorical_conclusions: str, verbose: bool,
+    print_only: bool = False
 ):
     # For now we're just working with cards (and cards only work with basic objects)
     g = ETRCaseGenerator(ontology=CARDS)
@@ -90,21 +97,23 @@ def main(
             verbose=verbose,
         )
 
-    if verbose:
-        print(
-            f"Saving dataset of length {len(dataset)} to datasets/{dataset_name}"
-        )
-    with open(f"datasets/{dataset_name}", "w") as f:
-        for problem in dataset:
-            formatted_problem = {
-                "question": problem["full_prose"],
-                "scoring_guide": {
-                    **problem,
-                    "answer": "YES" if problem["etr_conclusion_is_categorical"] else "NO"
-                }
+    for problem in dataset:
+        formatted_problem = {
+            "question": problem["full_prose"],
+            "scoring_guide": {
+                **problem,
+                "answer": "YES" if problem["etr_conclusion_is_categorical"] else "NO"
             }
-            print(json.dumps(formatted_problem, indent=2))
-            f.write(json.dumps(formatted_problem) + "\n")
+        }
+        print(json.dumps(formatted_problem, indent=2))
+        
+        if not print_only:
+            if verbose:
+                print(
+                    f"Saving dataset of length {len(dataset)} to datasets/{dataset_name}"
+                )
+            with open(f"datasets/{dataset_name}", "w") as f:
+                f.write(json.dumps(formatted_problem) + "\n")
 
 
 if __name__ == "__main__":
@@ -114,4 +123,5 @@ if __name__ == "__main__":
         n_problems=args.n_problems,
         categorical_conclusions=args.categorical_conclusions,
         verbose=args.verbose,
+        print_only=args.print_only
     )
