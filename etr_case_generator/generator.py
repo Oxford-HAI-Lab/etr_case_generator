@@ -27,9 +27,11 @@ class ReasoningProblem:
     max_disjuncts: int
     full_prose: str
 
-    # Structured data which makes of the strings
-    premise_views: list[View] = field(metadata=config(exclude=True))
-    etr_conclusion_view: View = field(metadata=config(exclude=True))
+    # Structured data which makes of the strings. Exclude them because Views aren't serializable.
+    premise_views: list[View] = field(metadata=config(exclude=lambda x: True))
+    etr_conclusion_view: View = field(metadata=config(exclude=lambda x: True))
+
+    classically_valid_conclusion: Optional[bool] = None
 
 
 class ETRCaseGenerator:
