@@ -8,6 +8,11 @@ from pysmt.shortcuts import Symbol, And, Or, Not, Real, Times, get_env
 from pysmt.typing import BOOL, REAL
 from pysmt.logics import QF_LRA
 
+from typing import Dict
+from pysmt.fnode import FNode
+from pyetr.atoms import Atom
+from pyetr.stateset import State
+
 
 # Example Views:
 # {'_stage': {King()Ten(),Five()Seven(),Ace()Seven()Two()}, '_supposition': {0}, '_dependency_relation': U={} E={}, '_issue_structure': {}, '_weights': {King()Ten(),Five()Seven(),Ace()Seven()Two()}}
@@ -21,11 +26,6 @@ from pysmt.logics import QF_LRA
 # {'_stage': {Ace()Eight()~Five()}, '_supposition': {~Jack()Four()Seven()}, '_dependency_relation': U={} E={}, '_issue_structure': {}, '_weights': {Ace()Eight()~Five()}}
 # {'_stage': {Eight()King()Five(),Eight()King()}, '_supposition': {0}, '_dependency_relation': U={} E={}, '_issue_structure': {}, '_weights': {Eight()King()Five(),Eight()King()}}
 
-
-from typing import Dict
-from pysmt.fnode import FNode
-from pyetr.atoms import Atom
-from pyetr.stateset import State
 
 def view_to_smt(view: View) -> FNode:
     """Convert a View object to SMT formula using PySMT.
@@ -86,3 +86,8 @@ def view_to_smt(view: View) -> FNode:
         formula = supp_formula.Implies(formula)
         
     return formula
+
+
+def check_validity(premises: list[View], conclusions: list[View]):
+    ...
+
