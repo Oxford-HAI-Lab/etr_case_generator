@@ -313,6 +313,15 @@ class ETRCaseGenerator:
             # Reset trials once we're able to yield a complete problem
             trials = 0
 
+            # Count unique variables across all views
+            all_atoms = set()
+            for view in [p1, p2, c_etr]:
+                all_atoms.update(view.atoms)
+            num_variables = len(all_atoms)
+
+            # Count total number of disjuncts across premises
+            num_disjuncts = sum(len(view.stage) for view in [p1, p2])
+
             yield ReasoningProblem(
                 premises=[
                     (
@@ -331,4 +340,8 @@ class ETRCaseGenerator:
                 full_prose=full_prose,
                 premise_views=[p1, p2],
                 etr_conclusion_view=c_etr,
+                # Add the new metadata
+                num_variables=num_variables,
+                num_disjuncts=num_disjuncts,
+                num_premises=2  # Currently hardcoded as we only use 2 premises
             )
