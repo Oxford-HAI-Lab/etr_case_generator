@@ -22,7 +22,12 @@ from pysmt.logics import QF_LRA
 # {'_stage': {Eight()King()Five(),Eight()King()}, '_supposition': {0}, '_dependency_relation': U={} E={}, '_issue_structure': {}, '_weights': {Eight()King()Five(),Eight()King()}}
 
 
-def view_to_smt(view: View):
+from typing import Dict
+from pysmt.fnode import FNode
+from pyetr.atoms import Atom
+from pyetr.stateset import State
+
+def view_to_smt(view: View) -> FNode:
     """Convert a View object to SMT formula using PySMT.
     
     Args:
@@ -32,14 +37,21 @@ def view_to_smt(view: View):
         pysmt.FNode: The SMT formula representing the view
     """
     # Create SMT symbols for each predicate atom in the view
-    symbols = {}
+    symbols: Dict[str, FNode] = {}
     for atom in view.atoms:
         name = str(atom)
         if name not in symbols:
             symbols[name] = Symbol(name, BOOL)
 
-    def state_to_smt(state):
-        """Convert a State to conjunction of literals"""
+    def state_to_smt(state: State) -> FNode:
+        """Convert a State to conjunction of literals
+        
+        Args:
+            state (State): The state to convert
+            
+        Returns:
+            pysmt.FNode: The SMT formula representing the state
+        """
         terms = []
         for atom in state:
             sym = symbols[str(atom)]
