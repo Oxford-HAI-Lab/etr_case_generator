@@ -15,6 +15,8 @@ from etr_case_generator.ontology import Ontology
 
 from dataclasses import field
 from dataclasses_json import config, dataclass_json
+
+
 @dataclass_json
 @dataclass
 class ReasoningProblem:
