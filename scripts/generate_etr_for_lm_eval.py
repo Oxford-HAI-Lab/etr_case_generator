@@ -35,7 +35,7 @@ def parse_args():
     parser.add_argument(
         "--print-only",
         action="store_true",
-        default=False,
+        default=True,
         help="Print problems to stdout instead of saving to file",
     )
     args = parser.parse_args()
@@ -73,7 +73,7 @@ def main(
     dataset_name: str, n_problems: int, categorical_conclusions: str, verbose: bool,
     print_only: bool = False
 ):
-    # For now we're just working with cards (and cards only work with basic objects)
+    # For now, we're just working with cards (and cards only work with basic objects)
     g = ETRCaseGenerator(ontology=CARDS)
     dataset = []
 
@@ -97,6 +97,8 @@ def main(
             verbose=verbose,
         )
 
+
+    formatted_problems = []
     for problem in dataset:
         formatted_problem = {
             "question": problem["full_prose"],
@@ -106,14 +108,16 @@ def main(
             }
         }
         print(json.dumps(formatted_problem, indent=2))
+        formatted_problems.append(formatted_problem)
         
-        if not print_only:
-            if verbose:
-                print(
-                    f"Saving dataset of length {len(dataset)} to datasets/{dataset_name}"
-                )
-            with open(f"datasets/{dataset_name}", "w") as f:
-                f.write(json.dumps(formatted_problem) + "\n")
+    if not print_only:
+        if verbose:
+            print(
+                f"Saving dataset of length {len(dataset)} to datasets/{dataset_name}"
+            )
+        with open(f"datasets/{dataset_name}", "w") as f:
+            for problem in formatted_problems:
+                f.write(json.dumps(problem) + "\n")
 
 
 if __name__ == "__main__":
