@@ -4,6 +4,11 @@ from pysmt.shortcuts import Symbol, ForAll, Exists, Solver, Not, Real, Or, Times
 from pysmt.typing import BOOL, REAL
 from pysmt.logics import QF_LRA
 
+from pysmt.shortcuts import Symbol, And, Or, Not, Real, Times, get_env
+from pysmt.typing import BOOL, REAL
+from pysmt.logics import QF_LRA
+
+
 # Example Views:
 # {'_stage': {King()Ten(),Five()Seven(),Ace()Seven()Two()}, '_supposition': {0}, '_dependency_relation': U={} E={}, '_issue_structure': {}, '_weights': {King()Ten(),Five()Seven(),Ace()Seven()Two()}}
 # {'_stage': {King()Ten(),Five()Seven(),Ace()Seven()Two()}, '_supposition': {0}, '_dependency_relation': U={} E={}, '_issue_structure': {}, '_weights': {King()Ten(),Five()Seven(),Ace()Seven()Two()}}
@@ -26,10 +31,6 @@ def view_to_smt(view: View):
     Returns:
         pysmt.FNode: The SMT formula representing the view
     """
-    from pysmt.shortcuts import Symbol, And, Or, Not, Real, Times, get_env
-    from pysmt.typing import BOOL, REAL
-    from pysmt.logics import QF_LRA
-
     # Create SMT symbols for each predicate atom in the view
     symbols = {}
     for atom in view.atoms:
