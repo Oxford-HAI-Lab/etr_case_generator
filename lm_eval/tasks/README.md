@@ -39,7 +39,7 @@ pip install pprint_problems
 Then, run this command to view the results:
 
 ```bash
-pprint_problems --dir_most_recent ../etr_case_generator/lm_eval/tasks/etr_problems/results/ -p doc/question resps correct doc/scoring_guide/etr_conclusion doc/scoring_guide/etr_conclusion_is_categorical -n 3 -r
+pprint_problems --dir_most_recent lm_eval/tasks/etr_problems/results/ -p doc/question resps correct doc/scoring_guide/etr_conclusion doc/scoring_guide/etr_conclusion_is_categorical -n 3 -r
 ```
 
 This will print out the questions, the model's responses, the correct answers, and the scoring guide for the ETR conclusion. You can adjust the `-n` flag to print out more or fewer results. The `-r` flag will randomize the order of the results. The `--dir_most_recent` flag will tell it to find the most recently modified file in the directory.
@@ -47,7 +47,13 @@ This will print out the questions, the model's responses, the correct answers, a
 You can look at the structure of these problems with this command:
 
 ```bash
-pprint_problems --dir_most_recent ../etr_case_generator/lm_eval/tasks/etr_problems/results/ --structure
+pprint_problems --dir_most_recent lm_eval/tasks/etr_problems/results/ --structure
 ```
 
 You can adjust the `-p` flag to print out different parts of the problems. For example, `-p doc/question resps` will print out the questions and the model's responses, which you should see in the `--structure`.
+
+You can generate some graphs with this command:
+
+```bash
+pprint_problems --dir_most_recent lm_eval/tasks/etr_problems/results/ --graph --parts vocab_size max_disjuncts num_variables num_disjuncts num_premises --min_n 10 --use_multiple_colors
+```
