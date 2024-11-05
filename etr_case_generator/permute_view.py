@@ -99,6 +99,22 @@ def add_novel_disjunction(view: View, max_predicate_arity: int = 3) -> View:
     )
 
 
+def add_disjunction_from_existing_atoms(view: View):
+    pass
+
+
+def remove_disjunct(view: View):
+    pass
+
+
+def add_novel_conjunction(view: View):
+    pass
+
+
+def add_conjunction_with_existing_atom(view: View):
+    pass
+
+
 def permute_view(View) -> View:
     options = [negate_atom, add_novel_disjunction]
 
