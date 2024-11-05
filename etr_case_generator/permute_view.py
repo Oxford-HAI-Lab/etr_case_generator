@@ -14,18 +14,18 @@ def negate_atom(view: View) -> View:
         sos: set[State] = set(set_of_states)
 
         # Pick a random state
-        frozen_state: frozenset[Atom] = sos.pop()
-        state: set[Atom] = set(frozen_state)
+        orig_state: State = random.choice(list(sos))
+        state: set[Atom] = set(orig_state)
 
         # Pick a random atom
-        atom: Atom = state.pop()
+        orig_atom: Atom = random.choice(list(state))
 
         # Negate
-        atom = ~atom
+        atom = ~orig_atom
 
         # Recreate the SetOfStates
-        new_state = State(state | {atom})
-        new_sos = SetOfStates(sos | {new_state})
+        new_state = State(state - {orig_atom} | {atom})
+        new_sos = SetOfStates(sos - {orig_state} | {new_state})
 
         return new_sos
 
@@ -71,5 +71,5 @@ def permute_view(View) -> View:
 
 
 if __name__ == "__main__":
-    v = permute_view(View.from_str("{A()}"))
+    v = permute_view(View.from_str("{A()B()}"))
     print(v)
