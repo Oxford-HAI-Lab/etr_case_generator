@@ -1,5 +1,6 @@
 import argparse
 import json
+from tqdm import tqdm
 
 from pysmt.fnode import FNode
 
@@ -53,6 +54,7 @@ def generate_reasoning_problems(
     verbose: bool = False,
 ):
     problems = []
+    pbar = tqdm(total=n_problems, desc="Generating problems")
     while len(problems) < n_problems:
         for p in generator.generate_reasoning_problems(
             n_views=20,
@@ -69,6 +71,7 @@ def generate_reasoning_problems(
                 print(f"Classical validity: {p.classically_valid_conclusion}")
 
             problems.append(p.to_dict())
+            pbar.update(1)
         # if verbose:
         #     print("===> Retrying... Dataset so far: ", len(problems))
 
