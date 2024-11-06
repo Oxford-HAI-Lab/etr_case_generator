@@ -31,6 +31,11 @@ class ReasoningProblem:
     premise_views: list[View] = field(metadata=config(exclude=lambda x: True))
     etr_conclusion_view: View = field(metadata=config(exclude=lambda x: True))
 
+    # The question may want to ask about a non-ETR conclusion
+    question_conclusion: Optional[tuple[str, str]] = None
+    question_conclusion_is_etr_conclusion: Optional[bool] = None
+
+    question_conclusion_is_logically_correct: Optional[bool] = None
     classically_valid_conclusion: Optional[bool] = None
 
     # Annotations about the problem
@@ -322,6 +327,15 @@ class ETRCaseGenerator:
             # Count total number of disjuncts across premises
             num_disjuncts = sum(len(view.stage) for view in [p1, p2])
 
+            # The conclusion to ask about. Sometimes we randomly negate it in order to get questions where ETR predicts the answer is "no".
+            question_conclusion = c_etr
+            question_conclusion_is_etr_conclusion = random.random() < 0.5
+            if not question_conclusion_is_etr_conclusion:
+                ...  # TODO Negate c_etr
+
+            # @Ryan, what does this mean?
+            etr_conclusion_is_categorical = len(c_etr.stage) == 1
+
             yield ReasoningProblem(
                 premises=[
                     (
@@ -334,12 +348,16 @@ class ETRCaseGenerator:
                     ),
                 ],
                 etr_conclusion=(c_etr.to_str(), self.view_to_natural_language(c_etr)),
-                etr_conclusion_is_categorical=len(c_etr.stage) == 1,
+                etr_conclusion_is_categorical=etr_conclusion_is_categorical,
                 vocab_size=vocab_size,
                 max_disjuncts=max_disjuncts,
                 full_prose=full_prose,
                 premise_views=[p1, p2],
                 etr_conclusion_view=c_etr,
+
+                question_conclusion=question_conclusion,
+                question_conclusion_is_etr=question_conclusion_is_etr_conclusion,
+
                 # Add the new metadata
                 num_variables=num_variables,
                 num_disjuncts=num_disjuncts,

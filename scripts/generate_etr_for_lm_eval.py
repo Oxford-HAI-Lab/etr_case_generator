@@ -69,8 +69,8 @@ def generate_reasoning_problems(
                 print(f"Classical validity: {p.classically_valid_conclusion}")
 
             problems.append(p.to_dict())
-        if verbose:
-            print("===> Retrying... Dataset so far: ", len(problems))
+        # if verbose:
+        #     print("===> Retrying... Dataset so far: ", len(problems))
 
     return problems
 
