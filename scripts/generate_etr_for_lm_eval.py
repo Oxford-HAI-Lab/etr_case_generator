@@ -64,7 +64,7 @@ def generate_reasoning_problems(
                 break
 
             # Check if the conclusion is classically valid
-            p.classically_valid_conclusion = check_validity(p.premise_views, [p.etr_conclusion_view])
+            p.classically_valid_conclusion = check_validity(p.premise_views, [p.question_conclusion])
             if verbose:
                 print(f"Classical validity: {p.classically_valid_conclusion}")
 
@@ -110,7 +110,8 @@ def main(
             "question": problem["full_prose"],
             "scoring_guide": {
                 **problem,
-                "answer": "YES" if problem["etr_conclusion_is_categorical"] else "NO"
+                "etr_answer": "YES" if problem["question_conclusion_is_etr_conclusion"] else "NO",
+                "logically_correct_answer": "YES" if problem["classically_valid_conclusion"] else "NO",
             }
         }
         print(json.dumps(formatted_problem, indent=2))

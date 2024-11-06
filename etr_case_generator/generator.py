@@ -21,24 +21,27 @@ from dataclasses_json import config, dataclass_json
 @dataclass
 class ReasoningProblem:
     premises: list[tuple[str, str]]
+
+    # The actual question
+    full_prose: str  # The premises and the question_conclusion
+    question_conclusion: tuple[str, str]  # Note: this is not necessarily the etr_conclusion
+
+    # The ETR conclusion, which is not necessarily what's being asked about
     etr_conclusion: tuple[str, str]
     etr_conclusion_is_categorical: bool
-    vocab_size: int
-    max_disjuncts: int
-    full_prose: str
 
     # Structured data which makes of the strings. Exclude them because Views aren't serializable.
     premise_views: list[View] = field(metadata=config(exclude=lambda x: True))
     etr_conclusion_view: View = field(metadata=config(exclude=lambda x: True))
+    question_conclusion_view: View = field(metadata=config(exclude=lambda x: True))
 
-    # The question may want to ask about a non-ETR conclusion
-    question_conclusion: Optional[tuple[str, str]] = None
-    question_conclusion_is_etr_conclusion: Optional[bool] = None
-
-    question_conclusion_is_logically_correct: Optional[bool] = None
+    # Is the question conclusion ETR? Is it logically correct?
+    question_conclusion_is_etr_conclusion: Optional[bool] = None  # The conclusion has one state, no disjunction
     classically_valid_conclusion: Optional[bool] = None
 
-    # Annotations about the problem
+    # More information about the problem
+    vocab_size: Optional[int] = None
+    max_disjuncts: Optional[int] = None
     num_variables: Optional[int] = None
     num_disjuncts: Optional[int] = None
     num_premises: Optional[int] = None
@@ -298,23 +301,6 @@ class ETRCaseGenerator:
             if verbose:
                 print(f"Tried {trials} times to get a valid problem.")
 
-            full_prose = "Consider the following premises:\n"
-            p1_prose = self.view_to_natural_language(p1)
-            p1_prose = p1_prose[0].upper() + p1_prose[1:] + "."
-
-            full_prose += f"1. {p1_prose}\n"
-
-            p2_prose = self.view_to_natural_language(p2)
-            p2_prose = p2_prose[0].upper() + p2_prose[1:] + "."
-
-            full_prose += f"2. {p2_prose}\n\n"
-
-            etr_prose = self.view_to_natural_language(c_etr)
-
-            full_prose += f"Does it follow that {etr_prose}?\n\n"
-
-            full_prose += "Answer using 'YES' or 'NO' ONLY."
-
             # Reset trials once we're able to yield a complete problem
             trials = 0
 
@@ -331,12 +317,26 @@ class ETRCaseGenerator:
             question_conclusion = c_etr
             question_conclusion_is_etr_conclusion = random.random() < 0.5
             if not question_conclusion_is_etr_conclusion:
-                ...  # TODO Negate c_etr
+                question_conclusion_is_etr_conclusion = c_etr.negation()
 
-            # @Ryan, what does this mean?
-            etr_conclusion_is_categorical = len(c_etr.stage) == 1
+            # The full prose
+            full_prose = "Consider the following premises:\n"
+
+            p1_prose = self.view_to_natural_language(p1)
+            p1_prose = p1_prose[0].upper() + p1_prose[1:] + "."
+            full_prose += f"1. {p1_prose}\n"
+
+            p2_prose = self.view_to_natural_language(p2)
+            p2_prose = p2_prose[0].upper() + p2_prose[1:] + "."
+            full_prose += f"2. {p2_prose}\n\n"
+
+            etr_prose = self.view_to_natural_language(question_conclusion)
+
+            full_prose += f"Does it follow that {etr_prose}?\n\n"
+            full_prose += "Answer using 'YES' or 'NO' ONLY."
 
             yield ReasoningProblem(
+                full_prose=full_prose,
                 premises=[
                     (
                         p1.to_str(),
@@ -347,18 +347,22 @@ class ETRCaseGenerator:
                         self.view_to_natural_language(p2),
                     ),
                 ],
+                premise_views=[p1, p2],
+
+                # Annotations about the question_conclusion
+                question_conclusion_is_etr_conclusion=question_conclusion_is_etr_conclusion,
+                # classically_valid_conclusion # This will be computed externally
+
+                # Possible conclusions from the premises
+                etr_conclusion_view=c_etr,
+                question_conclusion_view=question_conclusion,
                 etr_conclusion=(c_etr.to_str(), self.view_to_natural_language(c_etr)),
-                etr_conclusion_is_categorical=etr_conclusion_is_categorical,
+                question_conclusion=(question_conclusion.to_str(), self.view_to_natural_language(question_conclusion)),
+
+                # Metadata about the problem
                 vocab_size=vocab_size,
                 max_disjuncts=max_disjuncts,
-                full_prose=full_prose,
-                premise_views=[p1, p2],
-                etr_conclusion_view=c_etr,
-
-                question_conclusion=question_conclusion,
-                question_conclusion_is_etr=question_conclusion_is_etr_conclusion,
-
-                # Add the new metadata
+                etr_conclusion_is_categorical=len(c_etr.stage) == 1,
                 num_variables=num_variables,
                 num_disjuncts=num_disjuncts,
                 num_premises=2  # Currently hardcoded as we only use 2 premises
