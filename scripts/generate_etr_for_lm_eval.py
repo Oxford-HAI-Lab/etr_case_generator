@@ -10,8 +10,6 @@ from typing import Optional
 from dataclasses_json import dataclass_json
 from dataclasses import dataclass
 
-from smt_interface.smt_encoder import check_validity
-
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -64,11 +62,6 @@ def generate_reasoning_problems(
         ):
             if len(problems) >= n_problems:
                 break
-
-            # Check if the conclusion is classically valid
-            p.classically_valid_conclusion = check_validity(p.premise_views, [p.question_conclusion_view])
-            if verbose:
-                print(f"Classical validity: {p.classically_valid_conclusion}")
 
             problems.append(p.to_dict())
             pbar.update(1)

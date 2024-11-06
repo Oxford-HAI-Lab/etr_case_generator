@@ -16,6 +16,8 @@ from etr_case_generator.ontology import Ontology
 from dataclasses import field
 from dataclasses_json import config, dataclass_json
 
+from smt_interface.smt_encoder import check_validity
+
 
 @dataclass_json
 @dataclass
@@ -315,9 +317,12 @@ class ETRCaseGenerator:
 
             # The conclusion to ask about. Sometimes we randomly negate it in order to get questions where ETR predicts the answer is "no".
             question_conclusion_view = c_etr
-            question_conclusion_is_etr_conclusion = random.random() < 0.5
+            question_conclusion_is_etr_conclusion = random.random() < 1.0
             if not question_conclusion_is_etr_conclusion:
                 question_conclusion_view = c_etr.negation()
+
+            # Check classical validity
+            classical_validity = check_validity([p1, p2], [question_conclusion_view])
 
             # The full prose
             full_prose = "Consider the following premises:\n"
@@ -351,7 +356,7 @@ class ETRCaseGenerator:
 
                 # Annotations about the question_conclusion
                 question_conclusion_is_etr_conclusion=question_conclusion_is_etr_conclusion,
-                # classically_valid_conclusion # This will be computed externally
+                classically_valid_conclusion = classical_validity,
 
                 # Possible conclusions from the premises
                 etr_conclusion_view=c_etr,
