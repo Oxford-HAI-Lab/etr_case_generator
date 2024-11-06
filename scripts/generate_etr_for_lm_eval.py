@@ -64,7 +64,7 @@ def generate_reasoning_problems(
                 break
 
             # Check if the conclusion is classically valid
-            p.classically_valid_conclusion = check_validity(p.premise_views, [p.question_conclusion])
+            p.classically_valid_conclusion = check_validity(p.premise_views, [p.question_conclusion_view])
             if verbose:
                 print(f"Classical validity: {p.classically_valid_conclusion}")
 

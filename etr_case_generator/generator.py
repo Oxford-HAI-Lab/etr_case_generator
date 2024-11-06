@@ -314,10 +314,10 @@ class ETRCaseGenerator:
             num_disjuncts = sum(len(view.stage) for view in [p1, p2])
 
             # The conclusion to ask about. Sometimes we randomly negate it in order to get questions where ETR predicts the answer is "no".
-            question_conclusion = c_etr
+            question_conclusion_view = c_etr
             question_conclusion_is_etr_conclusion = random.random() < 0.5
             if not question_conclusion_is_etr_conclusion:
-                question_conclusion_is_etr_conclusion = c_etr.negation()
+                question_conclusion_view = c_etr.negation()
 
             # The full prose
             full_prose = "Consider the following premises:\n"
@@ -330,7 +330,7 @@ class ETRCaseGenerator:
             p2_prose = p2_prose[0].upper() + p2_prose[1:] + "."
             full_prose += f"2. {p2_prose}\n\n"
 
-            etr_prose = self.view_to_natural_language(question_conclusion)
+            etr_prose = self.view_to_natural_language(question_conclusion_view)
 
             full_prose += f"Does it follow that {etr_prose}?\n\n"
             full_prose += "Answer using 'YES' or 'NO' ONLY."
@@ -355,9 +355,9 @@ class ETRCaseGenerator:
 
                 # Possible conclusions from the premises
                 etr_conclusion_view=c_etr,
-                question_conclusion_view=question_conclusion,
+                question_conclusion_view=question_conclusion_view,
                 etr_conclusion=(c_etr.to_str(), self.view_to_natural_language(c_etr)),
-                question_conclusion=(question_conclusion.to_str(), self.view_to_natural_language(question_conclusion)),
+                question_conclusion=(question_conclusion_view.to_str(), self.view_to_natural_language(question_conclusion_view)),
 
                 # Metadata about the problem
                 vocab_size=vocab_size,
