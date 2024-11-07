@@ -147,9 +147,9 @@ def main(
     if not print_only:
         if verbose:
             print(
-                f"Saving dataset of length {len(dataset)} to datasets/{dataset_name}"
+                f"Saving dataset of length {len(dataset)} to datasets/{dataset_name}.jsonl"
             )
-        with open(f"datasets/{dataset_name}", "w") as f:
+        with open(f"datasets/{dataset_name}.jsonl", "w") as f:
             for problem in formatted_problems:
                 f.write(json.dumps(problem) + "\n")
 
