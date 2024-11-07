@@ -55,6 +55,11 @@ def generate_problems_with_set_conclusions(
     verbose: bool = False,
 ):
     problems = []
+    if verbose:
+        print(
+            f"Generating {n_problems} problems. "
+            f"ETR={conclusions_follow_by_etr}; Classical={conclusions_valid}"
+        )
     while len(problems) < n_problems:
         for p in generator.generate_reasoning_problems(
             n_views=20,
@@ -73,6 +78,8 @@ def generate_problems_with_set_conclusions(
                 continue
 
             p.classically_valid_conclusion = valid_conclusion
+
+            if verbose: print(f"Conclusions: ETR={p.etr_conclusion_is_categorical}, classical={p.classically_valid_conclusion}")
 
             problems.append(p.to_dict())
 
@@ -106,7 +113,7 @@ def main(
         for etr, classical in itertools.product([True, False], repeat=2):
             dataset += generate_problems_with_set_conclusions(
                 generator=g,
-                n_problems=n_problems / 4,
+                n_problems=-(-n_problems // 4),  # Round up
                 conclusions_follow_by_etr=etr,
                 conclusions_valid=classical,
                 verbose=verbose,
