@@ -94,6 +94,11 @@ def generate_problems_with_set_conclusions(
                     p.question_conclusion_is_etr_conclusion = (
                         p.question_conclusion_view == p.etr_conclusion_view
                     )
+
+                    # Reset full question text to match the new conclusion
+                    p.full_prose = p.full_prose.split("Does it follow that")[0]
+                    p.full_prose += f"Does it follow that {p.question_conclusion[1]}?\n\n"
+                    p.full_prose += "Answer using 'YES' or 'NO' ONLY."
                 else: continue
             if conclusions_valid == False and valid_conclusion:
                 continue
