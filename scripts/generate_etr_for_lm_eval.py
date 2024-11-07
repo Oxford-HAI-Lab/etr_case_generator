@@ -1,5 +1,6 @@
 import argparse
 import json
+import itertools
 
 from pysmt.fnode import FNode
 
@@ -46,18 +47,18 @@ def parse_args():
     return args
 
 
-def generate_reasoning_problems(
+def generate_problems_with_set_conclusions(
     generator: ETRCaseGenerator,
     n_problems,
-    require_etr_categorical: Optional[bool],
-    require_valid: bool,
+    conclusions_follow_by_etr: Optional[bool],
+    conclusions_valid: Optional[bool],
     verbose: bool = False,
 ):
     problems = []
     while len(problems) < n_problems:
         for p in generator.generate_reasoning_problems(
             n_views=20,
-            categorical_conclusions=require_etr_categorical,
+            categorical_conclusions=conclusions_follow_by_etr,
             n_trials_timeout=1000,
             verbose=verbose,
         ):
@@ -65,13 +66,15 @@ def generate_reasoning_problems(
                 break
 
             # Check if the conclusion is classically valid
-            p.classically_valid_conclusion = check_validity(p.premise_views, [p.question_conclusion_view])
-            if verbose:
-                print(f"Classical validity: {p.classically_valid_conclusion}")
+            valid_conclusion = check_validity(p.premise_views, [p.question_conclusion_view])
+            
+            # If not, and we're enforcing classical validity, skip this problem
+            if conclusions_valid == True and not valid_conclusion:
+                continue
+
+            p.classically_valid_conclusion = valid_conclusion
 
             problems.append(p.to_dict())
-        # if verbose:
-        #     print("===> Retrying... Dataset so far: ", len(problems))
 
     return problems
 
@@ -100,23 +103,20 @@ def main(
     dataset = []
 
     if balance:
-        for require_categorical in [True, False]:
-            dataset += generate_reasoning_problems(
+        for etr, classical in itertools.product([True, False], repeat=2):
+            dataset += generate_problems_with_set_conclusions(
                 generator=g,
-                n_problems=n_problems / 2,
-                require_etr_categorical=require_categorical,
-                require_valid=True,
+                n_problems=n_problems / 4,
+                conclusions_follow_by_etr=etr,
+                conclusions_valid=classical,
                 verbose=verbose,
             )
     else:
-        require_categorical = None
-        if categorical_conclusions == "all":
-            require_categorical = True
-
-        dataset += generate_reasoning_problems(
+        dataset += generate_problems_with_set_conclusions(
             generator=g,
-            n_problems=n_problems,
-            require_etr_categorical=require_categorical,
+            n_problems=n_problems / 4,
+            conclusions_follow_by_etr=None,
+            conclusions_valid=None,
             verbose=verbose,
         )
 
