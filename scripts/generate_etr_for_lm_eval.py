@@ -111,17 +111,15 @@ def generate_problems_with_set_conclusions(
             ):
                 continue
 
-            for state in p.etr_conclusion_view.stage:
-                if len(state) == 0:
-                    if verbose:
-                        print("Skipping problem with empty state in ETR conclusion")
-                    continue
-
             p.classically_valid_conclusion = valid_conclusion
 
             if verbose: print(f"Conclusions: ETR={p.etr_conclusion_is_categorical and p.question_conclusion_is_etr_conclusion}, classical={p.classically_valid_conclusion}")
 
-            problems.append(p.to_dict())
+            if any([len(state) == 0 for state in p.etr_conclusion_view.stage]):
+                if verbose:
+                    print("Skipping problem with empty state in ETR conclusion")
+                continue
+            else: problems.append(p.to_dict())
 
     return problems
 
@@ -186,7 +184,7 @@ def main(
                 "logically_correct_answer": "YES" if problem["classically_valid_conclusion"] else "NO",
             }
         }
-        print(json.dumps(formatted_problem, indent=2))
+        # print(json.dumps(formatted_problem, indent=2))
         formatted_problems.append(formatted_problem)
         
     if not print_only:
