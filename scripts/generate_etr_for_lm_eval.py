@@ -1,6 +1,7 @@
 import argparse
 import json
 import itertools
+import random
 
 from pysmt.fnode import FNode
 
@@ -76,13 +77,38 @@ def generate_problems_with_set_conclusions(
             # If we're enforcing a classical conclusion that mismatches, skip this
             # problem
             if conclusions_valid == True and not valid_conclusion:
-                continue
+                if conclusions_follow_by_etr in (False, None):
+                    # We can cheat here and force the conclusion to be valid by just
+                    # making it one of the premises...
+                    premise_to_use = random.choice(range(len(p.premises)))
+                    p.question_conclusion_view = p.premise_views[premise_to_use]
+                    p.question_conclusion = (
+                        p.question_conclusion_view.to_str(),
+                        p.premises[premise_to_use][1],
+                    )
+                    
+                    # Sanity check
+                    assert check_validity(p.premise_views, [p.question_conclusion_view])
+                    valid_conclusion = True
+
+                    p.question_conclusion_is_etr_conclusion = (
+                        p.question_conclusion_view == p.etr_conclusion_view
+                    )
+                else: continue
             if conclusions_valid == False and valid_conclusion:
+                continue
+
+            # If we want conclusions to follow by ETR, ETR has to predict something
+            # categorical and it also has to match the question being asked
+            if conclusions_follow_by_etr == True and not (
+                p.etr_conclusion_is_categorical and
+                p.question_conclusion_is_etr_conclusion
+            ):
                 continue
 
             p.classically_valid_conclusion = valid_conclusion
 
-            if verbose: print(f"Conclusions: ETR={p.etr_conclusion_is_categorical}, classical={p.classically_valid_conclusion}")
+            if verbose: print(f"Conclusions: ETR={p.etr_conclusion_is_categorical and p.question_conclusion_is_etr_conclusion}, classical={p.classically_valid_conclusion}")
 
             problems.append(p.to_dict())
 
@@ -137,7 +163,15 @@ def main(
             "question": problem["full_prose"],
             "scoring_guide": {
                 **problem,
-                "etr_answer": "YES" if problem["etr_conclusion_is_categorical"] else "NO",
+                "etr_answer": (
+                    # ETR says "yes" if it predicts a categorical conclusion and that
+                    # conclusion is explicitly what we ask about in the question.
+                    "YES" if (
+                        problem["etr_conclusion_is_categorical"] and
+                        problem["question_conclusion_is_etr_conclusion"]
+                    )
+                    else "NO"
+                ),
                 "logically_correct_answer": "YES" if problem["classically_valid_conclusion"] else "NO",
             }
         }
