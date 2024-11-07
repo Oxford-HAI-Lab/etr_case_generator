@@ -73,8 +73,11 @@ def generate_problems_with_set_conclusions(
             # Check if the conclusion is classically valid
             valid_conclusion = check_validity(p.premise_views, [p.question_conclusion_view])
             
-            # If not, and we're enforcing classical validity, skip this problem
+            # If we're enforcing a classical conclusion that mismatches, skip this
+            # problem
             if conclusions_valid == True and not valid_conclusion:
+                continue
+            if conclusions_valid == False and valid_conclusion:
                 continue
 
             p.classically_valid_conclusion = valid_conclusion
@@ -134,7 +137,7 @@ def main(
             "question": problem["full_prose"],
             "scoring_guide": {
                 **problem,
-                "etr_answer": "YES" if problem["question_conclusion_is_etr_conclusion"] else "NO",
+                "etr_answer": "YES" if problem["etr_conclusion_is_categorical"] else "NO",
                 "logically_correct_answer": "YES" if problem["classically_valid_conclusion"] else "NO",
             }
         }
