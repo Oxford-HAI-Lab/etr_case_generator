@@ -106,6 +106,12 @@ def generate_problems_with_set_conclusions(
             ):
                 continue
 
+            for state in p.etr_conclusion_view.stage:
+                if len(state) == 0:
+                    if verbose:
+                        print("Skipping problem with empty state in ETR conclusion")
+                    continue
+
             p.classically_valid_conclusion = valid_conclusion
 
             if verbose: print(f"Conclusions: ETR={p.etr_conclusion_is_categorical and p.question_conclusion_is_etr_conclusion}, classical={p.classically_valid_conclusion}")
