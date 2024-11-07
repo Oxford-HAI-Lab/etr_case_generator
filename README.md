@@ -2,12 +2,23 @@
 
 This is a tool for generating problems to evaluate the erotetic theory of reasoning. 
 
+## Setup
+
+```bash
+pip install -r requirements.txt
+```
+
+Possibly necessary for some scripting:
+```bash
+export PYTHONPATH=/path/to/your/etr_case_generator/etr_case_generator:$PYTHONPATH
+```
+
 ## Generation
 
 Run this command:
 
 ```bash
-python /home/keenan/Dev/etr_case_generator/scripts/generate_etr_for_lm_eval.py -n 10
+python scripts/generate_etr_for_lm_eval.py -n 10
 ```
 
 This will generate 10 problems and save them to a file called `datasets/etr_for_lm_eval.jsonl`. It's important that it be in this location, so that lm_eval can find it. 
