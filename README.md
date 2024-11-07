@@ -8,7 +8,12 @@ This is a tool for generating problems to evaluate the erotetic theory of reason
 pip install -r requirements.txt
 ```
 
-Possibly necessary for some scripting:
+Next, install the PySMT z3 solver:
+```bash
+pysmt-install --z3
+```
+
+Finally: possibly necessary for some scripting:
 ```bash
 export PYTHONPATH=/path/to/your/etr_case_generator/etr_case_generator:$PYTHONPATH
 ```
