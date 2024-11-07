@@ -25,10 +25,10 @@ def parse_args():
         help="Number of problems to generate",
     )
     parser.add_argument(
-        "--categorical_conclusions",
-        choices=["all", "parity", "random"],
-        default="all",
-        help="Enforce ETR conclusions are categorical in all problems, or enforce parity, or nothing",
+        "--balance",
+        action="store_true",
+        default=False,
+        help="Whether to enforce balanced conclusions between ETR and classical validity.",
     )
     parser.add_argument(
         "-v",
@@ -49,14 +49,15 @@ def parse_args():
 def generate_reasoning_problems(
     generator: ETRCaseGenerator,
     n_problems,
-    require_categorical: Optional[bool],
+    require_etr_categorical: Optional[bool],
+    require_valid: bool,
     verbose: bool = False,
 ):
     problems = []
     while len(problems) < n_problems:
         for p in generator.generate_reasoning_problems(
             n_views=20,
-            categorical_conclusions=require_categorical,
+            categorical_conclusions=require_etr_categorical,
             n_trials_timeout=1000,
             verbose=verbose,
         ):
@@ -76,19 +77,35 @@ def generate_reasoning_problems(
 
 
 def main(
-    dataset_name: str, n_problems: int, categorical_conclusions: str, verbose: bool,
+    dataset_name: str,
+    n_problems: int,
+    balance: bool,
+    verbose: bool = False,
     print_only: bool = False
 ):
+    """Generate ETR problems for use in lm_eval.
+
+    Args:
+        dataset_name (str): The name of the dataset to write.
+        n_problems (int): The size of the dataset to generate.
+        balance (bool): Whether the dataset should be balanced between ETR and classical
+            validity. If true, enforces the confusion matrix between "follows by ETR"
+            and "follows classically" to be balanced.
+        verbose (bool, optional): Whether to print debugging info. Defaults to False.
+        print_only (bool, optional): Whether to just print results and not save them to
+            a file. Defaults to False.
+    """
     # For now, we're just working with cards (and cards only work with basic objects)
     g = ETRCaseGenerator(ontology=CARDS)
     dataset = []
 
-    if categorical_conclusions == "parity":
+    if balance:
         for require_categorical in [True, False]:
             dataset += generate_reasoning_problems(
                 generator=g,
                 n_problems=n_problems / 2,
-                require_categorical=require_categorical,
+                require_etr_categorical=require_categorical,
+                require_valid=True,
                 verbose=verbose,
             )
     else:
@@ -99,7 +116,7 @@ def main(
         dataset += generate_reasoning_problems(
             generator=g,
             n_problems=n_problems,
-            require_categorical=require_categorical,
+            require_etr_categorical=require_categorical,
             verbose=verbose,
         )
 
@@ -132,7 +149,7 @@ if __name__ == "__main__":
     main(
         dataset_name=args.dataset_name,
         n_problems=args.n_problems,
-        categorical_conclusions=args.categorical_conclusions,
+        balance=args.balance,
         verbose=args.verbose,
         print_only=args.print_only
     )
