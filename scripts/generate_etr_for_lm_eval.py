@@ -1,6 +1,5 @@
 import argparse
 import json
-from tqdm import tqdm
 import itertools
 import random
 
@@ -12,24 +11,21 @@ from typing import Optional
 from dataclasses_json import dataclass_json
 from dataclasses import dataclass
 
+from smt_interface.smt_encoder import check_validity
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Generate a dataset of reasoning problems using ETRCaseGenerator"
     )
-    parser.add_argument("--dataset_name", type=str, default="etr_for_lm_eval.jsonl", help="Name of the dataset (.jsonl)")
+    parser.add_argument("--dataset_name", type=str, default="etr_for_lm_eval",
+                        help="Name of the dataset.")
     parser.add_argument(
         "-n",
         "--n_problems",
         type=int,
         default=10,
         help="Number of problems to generate",
-    )
-    parser.add_argument(
-        "--balance",
-        action="store_true",
-        default=False,
-        help="Whether to enforce balanced conclusions between ETR and classical validity.",
     )
     parser.add_argument(
         "--balance",
@@ -54,13 +50,11 @@ def parse_args():
 
 
 def generate_problems_with_set_conclusions(
-    generator: ETRCaseGenerator,
-    n_problems,
-    conclusions_follow_by_etr: Optional[bool],
-    conclusions_valid: Optional[bool],
-    verbose: bool = False,
-    balance: bool = False,
-
+        generator: ETRCaseGenerator,
+        n_problems,
+        conclusions_follow_by_etr: Optional[bool],
+        conclusions_valid: Optional[bool],
+        verbose: bool = False,
 ):
     problems = []
     if verbose:
@@ -68,40 +62,18 @@ def generate_problems_with_set_conclusions(
             f"Generating {n_problems} problems. "
             f"ETR={conclusions_follow_by_etr}; Classical={conclusions_valid}"
         )
-    pbar = tqdm(total=n_problems, desc="Generating problems")
-
-    bins = {}
-    if balance:
-        for etr_answer in [True, False]:
-            for classical_answer in [True, False]:
-                bins[(etr_answer, classical_answer)] = 0
-
-    max_overgeneralize = n_problems * 4
-    i = 0
-
-    while len(problems) < n_problems:  # TODO Is this necessary?
-        if i > max_overgeneralize:
-            break
+    while len(problems) < n_problems:
         for p in generator.generate_reasoning_problems(
             n_views=20,
             categorical_conclusions=conclusions_follow_by_etr,
             n_trials_timeout=1000,
             verbose=verbose,
         ):
-            i += 1
-            if i > max_overgeneralize:
-                break
             if len(problems) >= n_problems:
                 break
 
-            if balance:
-                key = (p.question_conclusion_is_etr_conclusion, p.classically_valid_conclusion)
-                if bins[key] >= n_problems / 4:
-                    continue
-                bins[key] += 1
-
-            # # Check if the conclusion is classically valid
-            # valid_conclusion = check_validity(p.premise_views, [p.question_conclusion_view])
+            # Check if the conclusion is classically valid
+            valid_conclusion = check_validity(p.premise_views, [p.question_conclusion_view])
 
             # If we're enforcing a classical conclusion that mismatches, skip this
             # problem
@@ -128,7 +100,8 @@ def generate_problems_with_set_conclusions(
                     p.full_prose = p.full_prose.split("Does it follow that")[0]
                     p.full_prose += f"Does it follow that {p.question_conclusion[1]}?\n\n"
                     p.full_prose += "Answer using 'YES' or 'NO' ONLY."
-                else: continue
+                else:
+                    continue
             if conclusions_valid == False and valid_conclusion:
                 continue
 
@@ -195,7 +168,6 @@ def main(
             verbose=verbose,
         )
 
-
     formatted_problems = []
     for problem in dataset:
         formatted_problem = {
@@ -216,7 +188,7 @@ def main(
         }
         # print(json.dumps(formatted_problem, indent=2))
         formatted_problems.append(formatted_problem)
-        
+
     if not print_only:
         if verbose:
             print(
