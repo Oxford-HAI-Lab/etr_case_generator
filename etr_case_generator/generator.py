@@ -302,8 +302,8 @@ class ETRCaseGenerator:
             )
             max_disjuncts = max([len(p1.stage), len(p2.stage), len(c_etr.stage)])
 
-            if verbose:
-                print(f"Tried {trials} times to get a valid problem.")
+            # if verbose:
+            #     print(f"Tried {trials} times to get a valid problem.")
 
             # Reset trials once we're able to yield a complete problem
             trials = 0
@@ -317,11 +317,14 @@ class ETRCaseGenerator:
             # Count total number of disjuncts across premises
             num_disjuncts = sum(len(view.stage) for view in [p1, p2])
 
-            # The conclusion to ask about. Sometimes we randomly negate it in order to get questions where ETR predicts the answer is "no".
+            # The conclusion to ask about. For now, always use the ETR conclusion. This
+            # is a limitation, as we would like to ask about categorical things where
+            # ETR predicts nothing categorical, as a kind of control problem.
             question_conclusion_view = c_etr
-            question_conclusion_is_etr_conclusion = random.random() < 1.0  # TODO
-            if not question_conclusion_is_etr_conclusion:
-                question_conclusion_view = c_etr.negation()
+            # question_conclusion_is_etr_conclusion = random.random() < 1.0  # TODO
+            # if not question_conclusion_is_etr_conclusion:
+            #     question_conclusion_view = c_etr.negation()
+            question_conclusion_is_etr_conclusion = True
 
             # Check classical validity
             classical_validity = check_validity([p1, p2], [question_conclusion_view])

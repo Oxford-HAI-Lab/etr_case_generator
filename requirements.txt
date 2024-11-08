@@ -3,5 +3,6 @@ pydantic==2.9.2
 pydantic_core==2.23.4
 pyetr @ git+https://github.com/dreamingspires/PyETR@86e4aa15444760d6fe8dc1afee57ff8e95444c67
 pyparsing==3.2.0
+PySMT==0.9.6
 typing_extensions==4.12.2
 tqdm>=4.62.0
