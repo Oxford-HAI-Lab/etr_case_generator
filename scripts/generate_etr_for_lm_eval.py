@@ -36,10 +36,16 @@ def parse_args():
         help="Print verbose output",
     )
     parser.add_argument(
-        "--print-only",
+        "--print_only",
         action="store_true",
         default=False,
         help="Print problems to stdout instead of saving to file",
+    )
+    parser.add_argument(
+        "--balance_set",
+        action="store_true",
+        default=False,
+        help="If true, it requires that the resulting dataset has an equal number of problems where the ETR answer is YES or NO, and within each of those bins, an equal number where the classical answer is YES or NO, in 1/4 splits.",
     )
     args = parser.parse_args()
     return args
@@ -50,18 +56,41 @@ def generate_reasoning_problems(
     n_problems,
     require_categorical: Optional[bool],
     verbose: bool = False,
+    balance: bool = False,
+
 ):
     problems = []
     pbar = tqdm(total=n_problems, desc="Generating problems")
-    while len(problems) < n_problems:
+
+    bins = {}
+    if balance:
+        for etr_answer in [True, False]:
+            for classical_answer in [True, False]:
+                bins[(etr_answer, classical_answer)] = 0
+
+    max_overgeneralize = n_problems * 4
+    i = 0
+
+    while len(problems) < n_problems:  # TODO Is this necessary?
+        if i > max_overgeneralize:
+            break
         for p in generator.generate_reasoning_problems(
             n_views=20,
             categorical_conclusions=require_categorical,
             n_trials_timeout=1000,
             verbose=verbose,
         ):
+            i += 1
+            if i > max_overgeneralize:
+                break
             if len(problems) >= n_problems:
                 break
+
+            if balance:
+                key = (p.question_conclusion_is_etr_conclusion, p.classically_valid_conclusion)
+                if bins[key] >= n_problems / 4:
+                    continue
+                bins[key] += 1
 
             problems.append(p.to_dict())
             pbar.update(1)

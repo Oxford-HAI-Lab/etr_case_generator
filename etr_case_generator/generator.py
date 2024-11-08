@@ -250,6 +250,8 @@ class ETRCaseGenerator:
         if verbose:
             print(f"Generated {len(premises)} premise pairs.")
 
+        random.shuffle(premises)
+
         trials = 0
         for p1, p2 in premises:
             if trials == n_trials_timeout:
@@ -317,7 +319,7 @@ class ETRCaseGenerator:
 
             # The conclusion to ask about. Sometimes we randomly negate it in order to get questions where ETR predicts the answer is "no".
             question_conclusion_view = c_etr
-            question_conclusion_is_etr_conclusion = random.random() < 1.0
+            question_conclusion_is_etr_conclusion = random.random() < 1.0  # TODO
             if not question_conclusion_is_etr_conclusion:
                 question_conclusion_view = c_etr.negation()
 
