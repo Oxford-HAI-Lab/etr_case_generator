@@ -6,7 +6,7 @@ import random
 from pysmt.fnode import FNode
 
 from etr_case_generator import ETRCaseGenerator
-from etr_case_generator.ontology import CARDS
+from etr_case_generator.ontology import ELEMENTS
 from typing import Optional
 from dataclasses_json import dataclass_json
 from dataclasses import dataclass
@@ -18,7 +18,12 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description="Generate a dataset of reasoning problems using ETRCaseGenerator"
     )
-    parser.add_argument("--dataset_name", type=str, default="etr_for_lm_eval.jsonl", help="Name of the dataset (.jsonl)")
+    parser.add_argument(
+        "--dataset_name",
+        type=str,
+        default="etr_for_lm_eval.jsonl",
+        help="Name of the dataset (.jsonl)",
+    )
     parser.add_argument(
         "-n",
         "--n_problems",
@@ -72,8 +77,10 @@ def generate_problems_with_set_conclusions(
                 break
 
             # Check if the conclusion is classically valid
-            valid_conclusion = check_validity(p.premise_views, [p.question_conclusion_view])
-            
+            valid_conclusion = check_validity(
+                p.premise_views, [p.question_conclusion_view]
+            )
+
             # If we're enforcing a classical conclusion that mismatches, skip this
             # problem
             if conclusions_valid == True and not valid_conclusion:
@@ -86,7 +93,7 @@ def generate_problems_with_set_conclusions(
                         p.question_conclusion_view.to_str(),
                         p.premises[premise_to_use][1],
                     )
-                    
+
                     # Sanity check
                     assert check_validity(p.premise_views, [p.question_conclusion_view])
                     valid_conclusion = True
@@ -97,29 +104,36 @@ def generate_problems_with_set_conclusions(
 
                     # Reset full question text to match the new conclusion
                     p.full_prose = p.full_prose.split("Does it follow that")[0]
-                    p.full_prose += f"Does it follow that {p.question_conclusion[1]}?\n\n"
+                    p.full_prose += (
+                        f"Does it follow that {p.question_conclusion[1]}?\n\n"
+                    )
                     p.full_prose += "Answer using 'YES' or 'NO' ONLY."
-                else: continue
+                else:
+                    continue
             if conclusions_valid == False and valid_conclusion:
                 continue
 
             # If we want conclusions to follow by ETR, ETR has to predict something
             # categorical and it also has to match the question being asked
             if conclusions_follow_by_etr == True and not (
-                p.etr_conclusion_is_categorical and
-                p.question_conclusion_is_etr_conclusion
+                p.etr_conclusion_is_categorical
+                and p.question_conclusion_is_etr_conclusion
             ):
                 continue
 
             p.classically_valid_conclusion = valid_conclusion
 
-            if verbose: print(f"Conclusions: ETR={p.etr_conclusion_is_categorical and p.question_conclusion_is_etr_conclusion}, classical={p.classically_valid_conclusion}")
+            if verbose:
+                print(
+                    f"Conclusions: ETR={p.etr_conclusion_is_categorical and p.question_conclusion_is_etr_conclusion}, classical={p.classically_valid_conclusion}"
+                )
 
             if any([len(state) == 0 for state in p.etr_conclusion_view.stage]):
                 if verbose:
                     print("Skipping problem with empty state in ETR conclusion")
                 continue
-            else: problems.append(p.to_dict())
+            else:
+                problems.append(p.to_dict())
 
     return problems
 
@@ -129,7 +143,7 @@ def main(
     n_problems: int,
     balance: bool,
     verbose: bool = False,
-    print_only: bool = False
+    print_only: bool = False,
 ):
     """Generate ETR problems for use in lm_eval.
 
@@ -144,7 +158,9 @@ def main(
             a file. Defaults to False.
     """
     # For now, we're just working with cards (and cards only work with basic objects)
-    g = ETRCaseGenerator(ontology=CARDS)
+    g = ETRCaseGenerator(ontology=ELEMENTS)
+    g.num_constants = 3
+    g.num_predicates = 3
     dataset = []
 
     if balance:
@@ -165,7 +181,6 @@ def main(
             verbose=verbose,
         )
 
-
     formatted_problems = []
     for problem in dataset:
         formatted_problem = {
@@ -175,18 +190,21 @@ def main(
                 "etr_answer": (
                     # ETR says "yes" if it predicts a categorical conclusion and that
                     # conclusion is explicitly what we ask about in the question.
-                    "YES" if (
-                        problem["etr_conclusion_is_categorical"] and
-                        problem["question_conclusion_is_etr_conclusion"]
+                    "YES"
+                    if (
+                        problem["etr_conclusion_is_categorical"]
+                        and problem["question_conclusion_is_etr_conclusion"]
                     )
                     else "NO"
                 ),
-                "logically_correct_answer": "YES" if problem["classically_valid_conclusion"] else "NO",
-            }
+                "logically_correct_answer": (
+                    "YES" if problem["classically_valid_conclusion"] else "NO"
+                ),
+            },
         }
         # print(json.dumps(formatted_problem, indent=2))
         formatted_problems.append(formatted_problem)
-        
+
     if not print_only:
         if verbose:
             print(
@@ -204,5 +222,5 @@ if __name__ == "__main__":
         n_problems=args.n_problems,
         balance=args.balance,
         verbose=args.verbose,
-        print_only=args.print_only
+        print_only=args.print_only,
     )
