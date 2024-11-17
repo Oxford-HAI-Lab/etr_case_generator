@@ -126,8 +126,8 @@ class ETRCaseGenerator:
 
     def view_to_natural_language(self, view: View, obj_map: dict[str, str] = {}) -> str:
         """Take a View and convert it into a natural language string.
-        TODO: For now, we don't consider quantification, and we don't think about
-        predicate arities except for 1.
+        TODO: For now, we don't consider quantification past a single quantifier, and
+        we don't think about predicate arities except for 1.
 
         The natural language string returned has no ending punctuation, and doesn't
         capitalize words except for proper nouns.
