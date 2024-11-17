@@ -10,7 +10,7 @@ from pyetr.inference import default_inference_procedure
 from pyetr.view import View
 from typing import cast, Generator, Optional
 
-from etr_case_generator.ontology import Ontology
+from etr_case_generator.ontology import Ontology, PredicateTypes
 
 
 from dataclasses import field
@@ -24,7 +24,9 @@ class ReasoningProblem:
 
     # The actual question
     full_prose: str  # The premises and the question_conclusion
-    question_conclusion: tuple[str, str]  # Note: this is not necessarily the etr_conclusion
+    question_conclusion: tuple[
+        str, str
+    ]  # Note: this is not necessarily the etr_conclusion
 
     # The ETR conclusion, which is not necessarily what's being asked about
     etr_conclusion: tuple[str, str]
@@ -36,7 +38,9 @@ class ReasoningProblem:
     question_conclusion_view: View = field(metadata=config(exclude=lambda x: True))
 
     # Is the question conclusion ETR? Is it logically correct?
-    question_conclusion_is_etr_conclusion: Optional[bool] = None  # The conclusion has one state, no disjunction
+    question_conclusion_is_etr_conclusion: Optional[bool] = (
+        None  # The conclusion has one state, no disjunction
+    )
     classically_valid_conclusion: Optional[bool] = None
 
     # More information about the problem
@@ -49,7 +53,7 @@ class ReasoningProblem:
 
 class ETRCaseGenerator:
     def __init__(self, ontology: Ontology):
-        self.ontology = Ontology
+        self.ontology = ontology
 
         # Set up basic objects
         self.objects = [
@@ -121,31 +125,53 @@ class ETRCaseGenerator:
 
     def view_to_natural_language(self, view: View) -> str:
         """Take a View and convert it into a natural language string.
+        TODO: For now, we don't consider quantification, and we don't think about
+        predicate arities except for 1.
+        TODO: Also, we currently randomly sample from the ontology, but this should be
+        improved to accept a working vocabulary, basically a map from the variables in
+        use in views to strings in the ontology.
 
         Args:
-            view (View): The view to convert. This method assumes the View is generated
-                by this class, meaning it uses sentential reasoning to talk about cards
-                present in a deck. Arbitrary Views passed will likely have errors.
+            view (View): The view to convert.
 
         Returns:
             str: A string describing the View in natural language.
         """
 
-        def atom_to_natural_language(atom: PredicateAtom) -> str:
+        def atom_to_natural_language(
+            atom: PredicateAtom,
+            predicate_type: PredicateTypes = PredicateTypes.IDENTITY,
+        ) -> str:
+
+            def get_article(name: str) -> str:
+                if name.lower()[0] in ["a", "e", "i", "o", "u"]:
+                    return "an"
+                return "a"
+
             neg = ""
             if not atom.predicate.verifier:
-                neg = "not "
+                neg = "not"
 
-            article = "a"
-            # Bit of a hack: only use "an" for "ace" and "eight", since we know the
-            # domain precisely here
-            if atom.predicate.name.lower()[0] in ["a", "e"]:
-                article = "an"
+            if predicate_type == PredicateTypes.IDENTITY:
+                if self.ontology.identity_predicates is None:
+                    raise ValueError(
+                        "Tried to convert an identity predicate for ontology "
+                        f"{self.ontology.name}, which does not have identity "
+                        "predicates."
+                    )
 
-            return neg + article + " " + atom.predicate.name.lower()
+                # Identity predicate is of the form "x is a P"
+                # TODO currently these are sampled randomly; they should respond to the
+                # actual variable names eventually
+                x = random.sample(self.ontology.objects, k=1)[0]
+                P = random.sample(self.ontology.identity_predicates, k=1)[0]
+                return " ".join(
+                    " ".join([x, "is", neg, get_article(P.name), P.name]).split()
+                )
+            raise ValueError(f"Predicate type f{predicate_type} is not supported.")
 
         def state_to_natural_language(state: State) -> str:
-            ret = "there is "
+            ret = ""
             atoms = [
                 atom_to_natural_language(cast(PredicateAtom, atom)) for atom in state
             ]
@@ -172,7 +198,7 @@ class ETRCaseGenerator:
                 supposition_str = "either " + supposition_str
             stage_str = "if " + supposition_str + ", then " + stage_str
 
-        return stage_str
+        return stage_str + "."
 
     def generate_views(
         self,
@@ -348,22 +374,22 @@ class ETRCaseGenerator:
                     ),
                 ],
                 premise_views=[p1, p2],
-
                 # Annotations about the question_conclusion
                 question_conclusion_is_etr_conclusion=question_conclusion_is_etr_conclusion,
                 # classically_valid_conclusion # This will be computed externally
-
                 # Possible conclusions from the premises
                 etr_conclusion_view=c_etr,
                 question_conclusion_view=question_conclusion_view,
                 etr_conclusion=(c_etr.to_str(), self.view_to_natural_language(c_etr)),
-                question_conclusion=(question_conclusion_view.to_str(), self.view_to_natural_language(question_conclusion_view)),
-
+                question_conclusion=(
+                    question_conclusion_view.to_str(),
+                    self.view_to_natural_language(question_conclusion_view),
+                ),
                 # Metadata about the problem
                 vocab_size=vocab_size,
                 max_disjuncts=max_disjuncts,
                 etr_conclusion_is_categorical=len(c_etr.stage) == 1,
                 num_variables=num_variables,
                 num_disjuncts=num_disjuncts,
-                num_premises=2  # Currently hardcoded as we only use 2 premises
+                num_premises=2,  # Currently hardcoded as we only use 2 premises
             )

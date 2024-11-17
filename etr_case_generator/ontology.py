@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import Enum
 from typing import Optional
 
 
@@ -8,8 +9,15 @@ class Predicate:
     arity: int
 
 
+class PredicateTypes(Enum):
+    IDENTITY = "IDENTITY"
+    ACTION = "ACTION"
+    DESCRIPTION = "DESCRIPTION"
+
+
 @dataclass
 class Ontology:
+    name: str
     # The basic objects in the ontology. In mathematical terms this object is a set, but
     # we will use a list for convenience in python (for example, when restricting the
     # ontology to a subset of objects, order can help us select the same restricted
@@ -28,6 +36,7 @@ class Ontology:
 
 
 CARDS = Ontology(
+    name="Cards",
     objects=[
         "ace",
         "one",
@@ -53,6 +62,7 @@ CARDS = Ontology(
 )
 
 ANIMALS = Ontology(
+    name="Animals",
     objects=[
         "Alice",
         "Bob",
@@ -140,5 +150,5 @@ ANIMALS = Ontology(
         Predicate(name="curious", arity=1),
         Predicate(name="gentle", arity=1),
         Predicate(name="ferocious", arity=1),
-    ]
+    ],
 )
