@@ -168,11 +168,9 @@ class ETRCaseGenerator:
 
             # Check if term is arbitrary or not
             if type(term) == ArbitraryObject:
-                # Now we have to find where it's quantified
-                if term in view.dependency_relation.universals:
-                    term_nl = "everything"
-                elif term in view.dependency_relation.existentials:
-                    term_nl = "something"
+                # For now, for arbitrary terms we just use their variables (uppercased)
+                term_nl = str(term).upper()
+
             else:
                 if term_name in obj_map.keys():
                     term_nl = obj_map[term_name]
@@ -207,6 +205,15 @@ class ETRCaseGenerator:
                 "Currently not considering cases with multiple quantifiers."
             )
 
+        quantifier_str = ""
+        q_name = ""
+        if len(all_quantifiers) > 0:
+            q_name = str(list(all_quantifiers)[0]).upper()
+        if len(universals) > 0:
+            quantifier_str = f"for all {q_name}, "
+        if len(existentials) > 0:
+            quantifier_str = f"there is a(n) {q_name} such that "
+
         states_for_stage = [state_to_natural_language(state) for state in view.stage]
         stage_str = ", or ".join(states_for_stage)
         if len(states_for_stage) > 1:
@@ -222,7 +229,7 @@ class ETRCaseGenerator:
                 supposition_str = "either " + supposition_str
             stage_str = "if " + supposition_str + ", then " + stage_str
 
-        return stage_str
+        return quantifier_str + stage_str
 
     def generate_views(
         self,
