@@ -82,6 +82,7 @@ lm_eval --model openai-chat-completions \
     --output_path lm_eval/tasks/etr_problems/results \
     --apply_chat_template \
     --log_samples \
+    --write_out \
     --verbosity DEBUG
 
 # Uncomment to use Anthropic's Claude model instead
