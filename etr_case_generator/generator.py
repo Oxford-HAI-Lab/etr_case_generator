@@ -55,12 +55,44 @@ class ReasoningProblem:
 class ETRCaseGenerator:
     def __init__(self, ontology: Ontology):
         self.ontology = ontology
+        self._num_constants = len(self.ontology.objects)
+        self._constants = self.ontology.objects
 
-        # Set up basic objects
-        self.objects = [
-            PredicateAtom(predicate=Predicate(name=o.capitalize(), arity=0), terms=())
-            for o in ontology.objects
-        ]
+        # For now, predicates only ever have arity 1
+        self._num_predicates = len(self.ontology.predicates)
+        self._predicates = self.ontology.predicates
+
+    @property
+    def num_constants(self):
+        return self._num_constants
+
+    @num_constants.setter
+    def num_constants(self, value):
+        max_constants = len(self.ontology.objects)
+        if value > max_constants:
+            raise ValueError(
+                f"Ontology {self.ontology.name} is only set up to handle at most "
+                f"{max_constants} distinct constant values."
+            )
+        self._num_constants = value
+        # Reset constants to be only the first `value` constants
+        self._constants = self.ontology.objects[:value]
+
+    @property
+    def num_predicates(self):
+        return self._num_predicates
+
+    @num_predicates.setter
+    def num_predicates(self, value):
+        max_constants = len(self.ontology.objects)
+        if value > max_constants:
+            raise ValueError(
+                f"Ontology {self.ontology.name} is only set up to handle at most "
+                f"{max_constants} distinct constant values."
+            )
+        self._num_predicates = value
+        # Reset constants to be only the first `value` constants
+        self._predicates = self.ontology.predicates[:value]
 
     def generate_view(
         self,
@@ -108,6 +140,10 @@ class ETRCaseGenerator:
                 ret.append(State(disjunct))
 
             return SetOfStates(ret)
+
+        # Since we're only working with unary predicates for now, consider
+        # max_domain_size to refer to the number of possible objects AND the number of
+        # possible predicates...
 
         # Select a subset of cards to work with for this generation call
         restricted_cards = self.objects[:max_domain_size]
