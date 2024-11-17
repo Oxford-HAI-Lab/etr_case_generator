@@ -15,6 +15,7 @@ pysmt-install --z3
 
 Finally: possibly necessary for some scripting:
 ```bash
+# Replace with your path
 export PYTHONPATH=/path/to/your/etr_case_generator/etr_case_generator:$PYTHONPATH
 ```
 
