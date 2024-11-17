@@ -69,6 +69,7 @@ class ETRCaseGenerator:
         max_conjuncts: int = 3,
         generate_supposition: bool = False,
         neg_prob: float = 0.2,
+        quantifier: Optional[str] = None,
     ) -> View:
         """Generate a view with a random stage and supposition.
 
@@ -84,6 +85,8 @@ class ETRCaseGenerator:
                 Defaults to False.
             neg_prob (float, optional): The (independent) probability of negating each
                 atom in the stage. Defaults to 0.2.
+            quantifier: Which quantifier to use. Must be one of "universal",
+                "existential", or None, otherwise we throw an error.
 
         Returns:
             View: A randomly generated view subject to the specified parameters.
@@ -124,7 +127,9 @@ class ETRCaseGenerator:
 
         return View.with_defaults(stage=stage, supposition=supposition)
 
-    def view_to_natural_language(self, view: View, obj_map: dict[str, str] = {}) -> str:
+    def view_to_natural_language(
+        self, view: View, obj_map: dict[str, str] = {}
+    ) -> tuple[str, dict[str, str]]:
         """Take a View and convert it into a natural language string.
         TODO: For now, we don't consider quantification past a single quantifier, and
         we don't think about predicate arities except for 1.
@@ -139,6 +144,9 @@ class ETRCaseGenerator:
 
         Returns:
             str: A string describing the View in natural language.
+            dict[str, str]: The object map transformed as a result of running this new
+                conversion. This can be useful if you want to transform multiple views
+                according to the same variable interpretations.
         """
 
         def atom_to_natural_language(atom: PredicateAtom) -> str:
@@ -237,7 +245,7 @@ class ETRCaseGenerator:
                 supposition_str = "either " + supposition_str
             stage_str = "if " + supposition_str + ", then " + stage_str
 
-        return quantifier_str + stage_str
+        return quantifier_str + stage_str, obj_map
 
     def generate_views(
         self,
