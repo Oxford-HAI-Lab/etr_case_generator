@@ -109,7 +109,7 @@ ELEMENTS = Ontology(
             "acidic",
             "alkaline",
             "liquid at room temperature",
-            "gas under high pressure",
+            "gaseous under high pressure",
             "solid in vacuum",
             "quantum-stable",
             "emotion-reactive",

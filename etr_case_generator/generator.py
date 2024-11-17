@@ -163,7 +163,12 @@ class ETRCaseGenerator:
             else:
                 # For now, since these predicates are all arity 1, we just take the
                 # name property straightaway
-                predicate_nl = random.sample(self.ontology.predicates, k=1)[0].name
+                available_predicates = [
+                    p
+                    for p in self.ontology.predicates
+                    if p.name not in obj_map.values()
+                ]
+                predicate_nl = random.sample(available_predicates, k=1)[0].name
                 obj_map[predicate_name] = predicate_nl
 
             # Check if term is arbitrary or not
@@ -175,7 +180,10 @@ class ETRCaseGenerator:
                 if term_name in obj_map.keys():
                     term_nl = obj_map[term_name]
                 else:
-                    term_nl = random.sample(self.ontology.objects, k=1)[0]
+                    available_terms = [
+                        t for t in self.ontology.objects if t not in obj_map.values()
+                    ]
+                    term_nl = random.sample(available_terms, k=1)[0]
                     obj_map[term_name] = term_nl
 
             return " ".join(" ".join([term_nl, "is", neg, predicate_nl]).split())
