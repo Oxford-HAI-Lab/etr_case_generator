@@ -10,7 +10,7 @@ from pyetr.inference import default_inference_procedure
 from pyetr.view import View
 from typing import cast, Generator, Optional
 
-from etr_case_generator.ontology import Ontology, PredicateTypes
+from etr_case_generator.ontology import Ontology
 
 
 from dataclasses import field
@@ -140,10 +140,7 @@ class ETRCaseGenerator:
             str: A string describing the View in natural language.
         """
 
-        def atom_to_natural_language(
-            atom: PredicateAtom,
-            predicate_type: PredicateTypes = PredicateTypes.IDENTITY,
-        ) -> str:
+        def atom_to_natural_language(atom: PredicateAtom) -> str:
 
             def get_article(name: str) -> str:
                 if name.lower()[0] in ["a", "e", "i", "o", "u"]:
@@ -157,41 +154,30 @@ class ETRCaseGenerator:
             if not atom.predicate.verifier:
                 neg = "not"
 
-            if predicate_type == PredicateTypes.IDENTITY:
-                if self.ontology.identity_predicates is None:
-                    raise ValueError(
-                        "Tried to convert an identity predicate for ontology "
-                        f"{self.ontology.name}, which does not have identity "
-                        "predicates."
-                    )
+            # Identity predicate is of the form "x is P"
+            # Get names for predicate and term, and check if they are already mapped
+            predicate_name = atom.predicate.name
+            term_name = str(atom.terms[0])
 
-                # Identity predicate is of the form "x is a P"
-                # Get names for predicate and term, and check if they are already mapped
-                predicate_name = atom.predicate.name
-                term_name = str(atom.terms[0])
+            if predicate_name in obj_map.keys():
+                predicate_nl = obj_map[predicate_name]
+            else:
+                # For now, since these predicates are all arity 1, we just take the
+                # name property straightaway
+                predicate_nl = random.sample(self.ontology.predicates, k=1)[0].name
+                obj_map[predicate_name] = predicate_nl
 
-                if predicate_name in obj_map.keys():
-                    predicate_nl = obj_map[predicate_name]
-                else:
-                    # For now, since these predicates are all arity 1, we just take the
-                    # name property straightaway
-                    predicate_nl = random.sample(
-                        self.ontology.identity_predicates, k=1
-                    )[0].name
-                    obj_map[predicate_name] = predicate_nl
+            if term_name in obj_map.keys():
+                term_nl = obj_map[term_name]
+            else:
+                term_nl = random.sample(self.ontology.objects, k=1)[0]
+                obj_map[term_name] = term_nl
 
-                if term_name in obj_map.keys():
-                    term_nl = obj_map[term_name]
-                else:
-                    term_nl = random.sample(self.ontology.objects, k=1)[0]
-                    obj_map[term_name] = term_nl
-
-                return " ".join(
-                    " ".join(
-                        [term_nl, "is", neg, get_article(predicate_nl), predicate_nl]
-                    ).split()
-                )
-            raise ValueError(f"Predicate type f{predicate_type} is not supported.")
+            return " ".join(
+                " ".join(
+                    [term_nl, "is", neg, get_article(predicate_nl), predicate_nl]
+                ).split()
+            )
 
         def state_to_natural_language(state: State) -> str:
             ret = ""
