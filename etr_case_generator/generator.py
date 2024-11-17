@@ -127,9 +127,6 @@ class ETRCaseGenerator:
         """Take a View and convert it into a natural language string.
         TODO: For now, we don't consider quantification, and we don't think about
         predicate arities except for 1.
-        TODO: Also, we currently randomly sample from the ontology, but this should be
-        improved to accept a working vocabulary, basically a map from the variables in
-        use in views to strings in the ontology.
 
         The natural language string returned has no ending punctuation, and doesn't
         capitalize words except for proper nouns.
