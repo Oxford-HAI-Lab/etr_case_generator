@@ -3,6 +3,7 @@ import random
 
 from dataclasses import dataclass
 from dataclasses_json import dataclass_json
+from pyetr import ArbitraryObject
 from pyetr.stateset import SetOfStates, Stage, Supposition, State
 from pyetr.atoms.predicate import Predicate
 from pyetr.atoms.predicate_atom import PredicateAtom
@@ -141,23 +142,21 @@ class ETRCaseGenerator:
         """
 
         def atom_to_natural_language(atom: PredicateAtom) -> str:
-
-            def get_article(name: str) -> str:
-                if name.lower()[0] in ["a", "e", "i", "o", "u"]:
-                    return "an"
-                return "a"
-
             if atom.predicate.arity != 1:
-                raise ValueError("Currently only working with uniary predicates.")
+                raise ValueError("Currently only working with unary predicates.")
 
             neg = ""
             if not atom.predicate.verifier:
                 neg = "not"
 
-            # Identity predicate is of the form "x is P"
+            term = atom.terms[
+                0
+            ]  # We can do this because we only consider unary predicates for now
+
+            # Predicate is of the form "x is P"
             # Get names for predicate and term, and check if they are already mapped
             predicate_name = atom.predicate.name
-            term_name = str(atom.terms[0])
+            term_name = str(term)
 
             if predicate_name in obj_map.keys():
                 predicate_nl = obj_map[predicate_name]
@@ -167,17 +166,21 @@ class ETRCaseGenerator:
                 predicate_nl = random.sample(self.ontology.predicates, k=1)[0].name
                 obj_map[predicate_name] = predicate_nl
 
-            if term_name in obj_map.keys():
-                term_nl = obj_map[term_name]
+            # Check if term is arbitrary or not
+            if type(term) == ArbitraryObject:
+                # Now we have to find where it's quantified
+                if term in view.dependency_relation.universals:
+                    term_nl = "everything"
+                elif term in view.dependency_relation.existentials:
+                    term_nl = "something"
             else:
-                term_nl = random.sample(self.ontology.objects, k=1)[0]
-                obj_map[term_name] = term_nl
+                if term_name in obj_map.keys():
+                    term_nl = obj_map[term_name]
+                else:
+                    term_nl = random.sample(self.ontology.objects, k=1)[0]
+                    obj_map[term_name] = term_nl
 
-            return " ".join(
-                " ".join(
-                    [term_nl, "is", neg, get_article(predicate_nl), predicate_nl]
-                ).split()
-            )
+            return " ".join(" ".join([term_nl, "is", neg, predicate_nl]).split())
 
         def state_to_natural_language(state: State) -> str:
             ret = ""
@@ -191,6 +194,18 @@ class ETRCaseGenerator:
             atoms.sort(key=lambda atom: atom.startswith("not"))
 
             return ret + " and ".join(atoms)
+
+        # TODO: first, we'll consider very simple quantifiers where there aren't
+        # suppositions
+        # Universals: "everything is P"
+        # Existentials: "something is P"
+        universals = view.dependency_relation.universals
+        existentials = view.dependency_relation.existentials
+        all_quantifiers = universals | existentials
+        if len(all_quantifiers) > 1:
+            raise ValueError(
+                "Currently not considering cases with multiple quantifiers."
+            )
 
         states_for_stage = [state_to_natural_language(state) for state in view.stage]
         stage_str = ", or ".join(states_for_stage)
