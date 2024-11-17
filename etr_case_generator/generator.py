@@ -123,7 +123,7 @@ class ETRCaseGenerator:
 
         return View.with_defaults(stage=stage, supposition=supposition)
 
-    def view_to_natural_language(self, view: View) -> str:
+    def view_to_natural_language(self, view: View, obj_map: dict[str, str] = {}) -> str:
         """Take a View and convert it into a natural language string.
         TODO: For now, we don't consider quantification, and we don't think about
         predicate arities except for 1.
@@ -131,8 +131,13 @@ class ETRCaseGenerator:
         improved to accept a working vocabulary, basically a map from the variables in
         use in views to strings in the ontology.
 
+        The natural language string returned has no ending punctuation, and doesn't
+        capitalize words except for proper nouns.
+
         Args:
             view (View): The view to convert.
+            obj_map (dict[str, str]): A map from variable names to objects in the
+                ontology. Defaults to {}.
 
         Returns:
             str: A string describing the View in natural language.
@@ -164,12 +169,30 @@ class ETRCaseGenerator:
                     )
 
                 # Identity predicate is of the form "x is a P"
-                # TODO currently these are sampled randomly; they should respond to the
-                # actual variable names eventually
-                x = random.sample(self.ontology.objects, k=1)[0]
-                P = random.sample(self.ontology.identity_predicates, k=1)[0]
+                # Get names for predicate and term, and check if they are already mapped
+                predicate_name = atom.predicate.name
+                term_name = str(atom.terms[0])
+
+                if predicate_name in obj_map.keys():
+                    predicate_nl = obj_map[predicate_name]
+                else:
+                    # For now, since these predicates are all arity 1, we just take the
+                    # name property straightaway
+                    predicate_nl = random.sample(
+                        self.ontology.identity_predicates, k=1
+                    )[0].name
+                    obj_map[predicate_name] = predicate_nl
+
+                if term_name in obj_map.keys():
+                    term_nl = obj_map[term_name]
+                else:
+                    term_nl = random.sample(self.ontology.objects, k=1)[0]
+                    obj_map[term_name] = term_nl
+
                 return " ".join(
-                    " ".join([x, "is", neg, get_article(P.name), P.name]).split()
+                    " ".join(
+                        [term_nl, "is", neg, get_article(predicate_nl), predicate_nl]
+                    ).split()
                 )
             raise ValueError(f"Predicate type f{predicate_type} is not supported.")
 
@@ -201,7 +224,7 @@ class ETRCaseGenerator:
                 supposition_str = "either " + supposition_str
             stage_str = "if " + supposition_str + ", then " + stage_str
 
-        return stage_str + "."
+        return stage_str
 
     def generate_views(
         self,

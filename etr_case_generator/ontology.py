@@ -18,15 +18,23 @@ class PredicateTypes(Enum):
 @dataclass
 class Ontology:
     name: str
-    # The basic objects in the ontology. In mathematical terms this object is a set, but
-    # we will use a list for convenience in python (for example, when restricting the
-    # ontology to a subset of objects, order can help us select the same restricted
-    # subset across different generations).
-    objects: list[str]
 
-    # Predicates, consisting of a name and an arity.
-    # For identity predicates, P(x) is converted to "x is a P"
+    objects: list[str]
+    """
+    The basic objects in the ontology. In mathematical terms this object is a set, but
+    we will use a list for convenience in python (for example, when restricting the
+    ontology to a subset of objects, order can help us select the same restricted
+    subset across different generations).
+    """
+
     identity_predicates: Optional[list[Predicate]]
+    """
+    Predicates, consisting of a name and an arity.
+    For identity predicates, P(x) is converted to "x is a P."
+    When we translate views, we restrict objects to only a single identity predicate.
+    So, we'll never have "x is a P and x is a Q." This does not apply to aciton and
+    descriptive predicates, meaning we can have "x is a P and x is Q and R and x Ss."
+    """
 
     # For action predicates, P(x) is converted to "x Ps"
     action_predicates: Optional[list[Predicate]]
