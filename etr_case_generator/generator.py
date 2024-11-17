@@ -148,6 +148,9 @@ class ETRCaseGenerator:
                     return "an"
                 return "a"
 
+            if atom.predicate.arity != 1:
+                raise ValueError("Currently only working with uniary predicates.")
+
             neg = ""
             if not atom.predicate.verifier:
                 neg = "not"
