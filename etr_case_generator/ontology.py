@@ -1,12 +1,5 @@
 from dataclasses import dataclass
-from enum import Enum
-from typing import Optional
-
-
-@dataclass
-class Predicate:
-    name: str
-    arity: int
+from pyetr.atoms import Predicate
 
 
 @dataclass

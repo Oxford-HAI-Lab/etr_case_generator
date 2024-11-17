@@ -3,7 +3,7 @@ import random
 
 from dataclasses import dataclass
 from dataclasses_json import dataclass_json
-from pyetr import ArbitraryObject
+from pyetr import ArbitraryObject, FunctionalTerm, Function
 from pyetr.stateset import SetOfStates, Stage, Supposition, State
 from pyetr.atoms.predicate import Predicate
 from pyetr.atoms.predicate_atom import PredicateAtom
@@ -96,7 +96,6 @@ class ETRCaseGenerator:
 
     def generate_view(
         self,
-        max_domain_size: int = 14,
         max_disjuncts: int = 3,
         max_conjuncts: int = 3,
         generate_supposition: bool = False,
@@ -106,9 +105,6 @@ class ETRCaseGenerator:
         """Generate a view with a random stage and supposition.
 
         Args:
-            max_domain_size (int, optional): The maximum number of propositional
-                variables to use in the view. Defaults to 14, the number of cards in a
-                deck.
             max_disjuncts (int, optional): The maximum number of states in the stage.
                 Defaults to 3.
             max_conjuncts (int, optional): The maximum number of atoms in each state.
@@ -141,25 +137,35 @@ class ETRCaseGenerator:
 
             return SetOfStates(ret)
 
-        # Since we're only working with unary predicates for now, consider
-        # max_domain_size to refer to the number of possible objects AND the number of
-        # possible predicates...
+        # Predicates are what ultimately constitute atoms, so cap our domain size at the
+        # total number of predicates. Pick a random number to consider for this view.
+        domain_size = random.randint(1, self.num_predicates)
 
-        # Select a subset of cards to work with for this generation call
-        restricted_cards = self.objects[:max_domain_size]
-
-        domain_size = random.randint(1, len(restricted_cards))
-        domain = random.sample(restricted_cards, domain_size)
+        predicates = random.sample(self._predicates, domain_size)
+        atoms = [
+            PredicateAtom(
+                predicate=p,
+                terms=(
+                    FunctionalTerm(
+                        f=Function(
+                            name=random.sample(self._constants, k=1)[0], arity=0
+                        ),
+                        t=(),
+                    ),
+                ),
+            )
+            for p in predicates
+        ]
 
         max_conjuncts = min([max_conjuncts, domain_size])
 
         # First, generate the stage
-        stage = generate_set_of_states(domain, max_conjuncts, max_disjuncts)
+        stage = generate_set_of_states(atoms, max_conjuncts, max_disjuncts)
 
         # Next, generate the supposition if necessary
         supposition = SetOfStates([State()])
         if generate_supposition:
-            supposition = generate_set_of_states(domain, max_conjuncts, max_disjuncts)
+            supposition = generate_set_of_states(atoms, max_conjuncts, max_disjuncts)
 
         return View.with_defaults(stage=stage, supposition=supposition)
 
@@ -286,18 +292,15 @@ class ETRCaseGenerator:
     def generate_views(
         self,
         n: int,
-        max_domain_size: int = 14,
         max_disjuncts: int = 3,
         max_conjuncts: int = 3,
         supposition_prob: float = 0.2,
         neg_prob: float = 0.2,
     ) -> list[View]:
-        """Generate a list of n Views.
+        """Generate a list of n Views. Uses the generator's properties `num_constants`
+        and `num_predicates` to determine the vocabulary domain.
 
         Args:
-            max_domain_size (int, optional): The maximum number of propositional
-                variables to use in the view. Defaults to 14, the number of cards in a
-                deck.
             max_disjuncts (int, optional): The maximum number of states in the stage.
                 Defaults to 3.
             max_conjuncts (int, optional): The maximum number of atoms in each state.
@@ -315,7 +318,6 @@ class ETRCaseGenerator:
         """
         return [
             self.generate_view(
-                max_domain_size=max_domain_size,
                 max_disjuncts=max_disjuncts,
                 max_conjuncts=max_conjuncts,
                 generate_supposition=random.random() < supposition_prob,
@@ -431,11 +433,11 @@ class ETRCaseGenerator:
             # The full prose
             full_prose = "Consider the following premises:\n"
 
-            p1_prose = self.view_to_natural_language(p1)
+            p1_prose, _ = self.view_to_natural_language(p1)
             p1_prose = p1_prose[0].upper() + p1_prose[1:] + "."
             full_prose += f"1. {p1_prose}\n"
 
-            p2_prose = self.view_to_natural_language(p2)
+            p2_prose, _ = self.view_to_natural_language(p2)
             p2_prose = p2_prose[0].upper() + p2_prose[1:] + "."
             full_prose += f"2. {p2_prose}\n\n"
 
