@@ -26,10 +26,22 @@ def parse_args():
     )
     parser.add_argument(
         "-n",
-        "--n_problems",
+        "--n-problems",
         type=int,
         default=10,
         help="Number of problems to generate",
+    )
+    parser.add_argument(
+        "--n-constants",
+        type=int,
+        default=5,
+        help="Maximum number of distinct constant values to consider per problem",
+    )
+    parser.add_argument(
+        "--n-predicates",
+        type=int,
+        default=5,
+        help="Maximum number of distinct predicates to consider per problem",
     )
     parser.add_argument(
         "--balance",
@@ -141,6 +153,8 @@ def generate_problems_with_set_conclusions(
 def main(
     dataset_name: str,
     n_problems: int,
+    n_constants: int,
+    n_predicates: int,
     balance: bool,
     verbose: bool = False,
     print_only: bool = False,
@@ -159,8 +173,8 @@ def main(
     """
     # For now, we're just working with cards (and cards only work with basic objects)
     g = ETRCaseGenerator(ontology=ELEMENTS)
-    g.num_constants = 3
-    g.num_predicates = 3
+    g.num_constants = n_constants
+    g.num_predicates = n_predicates
     dataset = []
 
     if balance:
@@ -220,6 +234,8 @@ if __name__ == "__main__":
     main(
         dataset_name=args.dataset_name,
         n_problems=args.n_problems,
+        n_constants=args.n_constants,
+        n_predicates=args.n_predicates,
         balance=args.balance,
         verbose=args.verbose,
         print_only=args.print_only,
