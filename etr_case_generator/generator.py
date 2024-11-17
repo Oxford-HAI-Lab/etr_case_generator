@@ -441,7 +441,7 @@ class ETRCaseGenerator:
             p2_prose = p2_prose[0].upper() + p2_prose[1:] + "."
             full_prose += f"2. {p2_prose}\n\n"
 
-            etr_prose = self.view_to_natural_language(question_conclusion_view)
+            etr_prose, _ = self.view_to_natural_language(question_conclusion_view)
 
             full_prose += f"Does it follow that {etr_prose}?\n\n"
             full_prose += "Answer using 'YES' or 'NO' ONLY."
@@ -451,11 +451,11 @@ class ETRCaseGenerator:
                 premises=[
                     (
                         p1.to_str(),
-                        self.view_to_natural_language(p1),
+                        self.view_to_natural_language(p1)[0],
                     ),
                     (
                         p2.to_str(),
-                        self.view_to_natural_language(p2),
+                        self.view_to_natural_language(p2)[0],
                     ),
                 ],
                 premise_views=[p1, p2],
@@ -465,10 +465,13 @@ class ETRCaseGenerator:
                 # Possible conclusions from the premises
                 etr_conclusion_view=c_etr,
                 question_conclusion_view=question_conclusion_view,
-                etr_conclusion=(c_etr.to_str(), self.view_to_natural_language(c_etr)),
+                etr_conclusion=(
+                    c_etr.to_str(),
+                    self.view_to_natural_language(c_etr)[0],
+                ),
                 question_conclusion=(
                     question_conclusion_view.to_str(),
-                    self.view_to_natural_language(question_conclusion_view),
+                    self.view_to_natural_language(question_conclusion_view)[0],
                 ),
                 # Metadata about the problem
                 vocab_size=vocab_size,
