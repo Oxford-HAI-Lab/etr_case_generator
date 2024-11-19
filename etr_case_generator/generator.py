@@ -3,7 +3,7 @@ import random
 
 from dataclasses import dataclass
 from dataclasses_json import dataclass_json
-from pyetr import ArbitraryObject, FunctionalTerm, Function
+from pyetr import ArbitraryObject, DependencyRelation, FunctionalTerm, Function
 from pyetr.stateset import SetOfStates, Stage, Supposition, State
 from pyetr.atoms.predicate import Predicate
 from pyetr.atoms.predicate_atom import PredicateAtom
@@ -142,18 +142,24 @@ class ETRCaseGenerator:
         domain_size = random.randint(1, self.num_predicates)
 
         predicates = random.sample(self._predicates, domain_size)
+        terms: list[FunctionalTerm | ArbitraryObject] = [
+            FunctionalTerm(
+                f=Function(name=c, arity=0),
+                t=(),
+            )
+            for c in self._constants
+        ]
+
+        # If we'll be adding a quantifier, add an arbitrary object to the terms
+        if quantifier:
+            terms.append(ArbitraryObject(name="x"))
+
         atoms = [
             PredicateAtom(
                 predicate=p,
-                terms=(
-                    FunctionalTerm(
-                        f=Function(
-                            name=random.sample(self._constants, k=1)[0], arity=0
-                        ),
-                        t=(),
-                    ),
-                ),
+                terms=(random.sample(terms, k=1)[0],),
             )
+            # TODO: this should be a double for including all possible terms, too
             for p in predicates
         ]
 
@@ -167,7 +173,26 @@ class ETRCaseGenerator:
         if generate_supposition:
             supposition = generate_set_of_states(atoms, max_conjuncts, max_disjuncts)
 
-        return View.with_defaults(stage=stage, supposition=supposition)
+        # Finally, add the quantifier if requested
+        dep_rel = DependencyRelation(set(), set(), set())
+        if ArbitraryObject(name="x") in [
+            term for atom in stage.atoms | supposition.atoms for term in atom.terms
+        ]:
+            if quantifier == "existential":
+                dep_rel = DependencyRelation(
+                    universals=[],
+                    existentials=[ArbitraryObject(name="x")],
+                    dependencies=[],
+                )
+            elif quantifier == "universal":
+                dep_rel = DependencyRelation(
+                    universals=[ArbitraryObject(name="x")],
+                    existentials=[],
+                    dependencies=[],
+                )
+        return View.with_defaults(
+            stage=stage, supposition=supposition, dependency_relation=dep_rel
+        )
 
     def view_to_natural_language(
         self, view: View, obj_map: dict[str, str] = {}
@@ -322,6 +347,9 @@ class ETRCaseGenerator:
                 max_conjuncts=max_conjuncts,
                 generate_supposition=random.random() < supposition_prob,
                 neg_prob=neg_prob,
+                # The way this works currently, we sample equally among the three.
+                # This could presumably be tweaked.
+                quantifier=random.sample(["universal", "existential", None], k=1)[0],
             )
             for _ in range(n)
         ]
@@ -441,7 +469,11 @@ class ETRCaseGenerator:
             p2_prose = p2_prose[0].upper() + p2_prose[1:] + "."
             full_prose += f"2. {p2_prose}\n\n"
 
-            etr_prose, _ = self.view_to_natural_language(question_conclusion_view)
+            try:
+                etr_prose, _ = self.view_to_natural_language(question_conclusion_view)
+            except ValueError:
+                # Conclusion is in a form we cannot represent yet; skip this case
+                continue
 
             full_prose += f"Does it follow that {etr_prose}?\n\n"
             full_prose += "Answer using 'YES' or 'NO' ONLY."
