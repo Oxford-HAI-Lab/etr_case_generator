@@ -21,6 +21,19 @@ export PYTHONPATH=/path/to/your/etr_case_generator/etr_case_generator:$PYTHONPAT
 
 ## Generation
 
+## Generating Individual Views
+
+The `etr_case_generator.generator` module exposes a class called `ETRCaseGenerator`,
+which is designed for generating either individual `pyetr.View` objects or entire
+reasoning problems.
+
+`ETRCaseGenerator.generate_view` returns a single random view with some configurable
+number of disjunctions, conjuncts, and a configurable rate of randomly negated atoms. In
+addition, you can specify whether to generate a supposition object and whether to use
+quantification.
+
+## Generating Whole Reasoning Problems
+
 Run this command:
 
 ```bash
@@ -31,7 +44,7 @@ This will generate 10 problems and save them to a file called `datasets/etr_for_
 
 See the [lm_eval documentation](lm_eval/tasks/README.md) for more information on how to use this dataset with lm_eval.
 
-## Inspecting the Dataset
+### Inspecting the Dataset
 
 You can use the `pprint_problems` script to inspect the dataset. 
 
