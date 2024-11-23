@@ -1,23 +1,15 @@
 import itertools
 import random
 
-from dataclasses import dataclass
-from dataclasses_json import dataclass_json
+from dataclasses import dataclass, field
+from dataclasses_json import config, dataclass_json
+from etr_case_generator.ontology import Ontology
 from pyetr import ArbitraryObject, DependencyRelation, FunctionalTerm, Function
-from pyetr.stateset import SetOfStates, Stage, Supposition, State
-from pyetr.atoms.abstract import Atom
-from pyetr.atoms.predicate import Predicate
 from pyetr.atoms.predicate_atom import PredicateAtom
-from pyetr.atoms.terms.term import Term
 from pyetr.inference import default_inference_procedure
+from pyetr.stateset import SetOfStates, State
 from pyetr.view import View
 from typing import cast, Generator, Optional
-
-from etr_case_generator.ontology import Ontology
-
-
-from dataclasses import field
-from dataclasses_json import config, dataclass_json
 
 
 @dataclass_json
