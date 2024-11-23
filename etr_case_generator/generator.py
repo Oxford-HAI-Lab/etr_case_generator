@@ -132,7 +132,7 @@ class ETRCaseGenerator:
 
     def replace_term_in_view(
         self, view: View, term_to_replace, replacement_term
-    ) -> View:
+    ) -> tuple[Stage, Supposition]:
         """Replace a term in a view with another term.
 
         Args:
@@ -141,30 +141,40 @@ class ETRCaseGenerator:
             replacement_term: The term to replace with.
 
         Returns:
-            View: The modified view.
+            tuple[Stage, Supposition]: The modified stage and supposition.
         """
 
         new_stage = Stage(
             [
-                State([replace_term_in_atom(atom) for atom in state])
+                State(
+                    [
+                        self.replace_term_in_atom(
+                            cast(PredicateAtom, atom), replacement_term, term_to_replace
+                        )
+                        for atom in state
+                    ]
+                )
                 for state in view.stage
             ]
         )
         new_supposition = Supposition(
             [
-                State([replace_term_in_atom(atom) for atom in state])
+                State(
+                    [
+                        self.replace_term_in_atom(
+                            cast(PredicateAtom, atom), replacement_term, term_to_replace
+                        )
+                        for atom in state
+                    ]
+                )
                 for state in view.supposition
             ]
         )
-        return View.with_defaults(
-            stage=new_stage,
-            supposition=new_supposition,
-            dependency_relation=view.dependency_relation,
-            issue_structure=view.issue_structure,
-            weights=view.weights,
-        )
+        return new_stage, new_supposition
 
-    def add_quantification_to_view(self, view: View, quantify: str) -> View:
+    def add_quantification_to_view(
+        self, view: View, quantify: str, new_stage: Stage, new_supposition: Supposition
+    ) -> View:
         """Add quantification to a view.
 
         Args:
@@ -182,8 +192,8 @@ class ETRCaseGenerator:
 
         if quantify == "universal":
             return View.with_defaults(
-                stage=view.stage,
-                supposition=view.supposition,
+                stage=new_stage,
+                supposition=new_supposition,
                 dependency_relation=DependencyRelation(
                     universals=[ArbitraryObject(name="x")],
                     existentials=[],
@@ -191,10 +201,10 @@ class ETRCaseGenerator:
                 ),
             )
 
-        if quantify == "existential":
+        else:
             return View.with_defaults(
-                stage=view.stage,
-                supposition=view.supposition,
+                stage=new_stage,
+                supposition=new_supposition,
                 dependency_relation=DependencyRelation(
                     universals=[],
                     existentials=[ArbitraryObject(name="x")],
@@ -219,11 +229,13 @@ class ETRCaseGenerator:
             [term for atom in atoms for term in cast(PredicateAtom, atom).terms]
         )
         term_to_replace = random.sample(list(terms), k=1)[0]
-        view = self.replace_term_in_view(
+        new_stage, new_supposition = self.replace_term_in_view(
             view, term_to_replace, ArbitraryObject(name="x")
         )
-        quantify = random.sample(["universal", "existential"], k=1)[0]
-        return self.add_quantification_to_view(view, quantify)
+        quantify = random.choice(["universal", "existential"])
+        return self.add_quantification_to_view(
+            view, quantify, new_stage, new_supposition
+        )
 
     def generate_view(
         self,
@@ -307,7 +319,9 @@ class ETRCaseGenerator:
         # Finally, add the quantifier if requested
         dep_rel = DependencyRelation(set(), set(), set())
         if ArbitraryObject(name="x") in [
-            term for atom in stage.atoms | supposition.atoms for term in atom.terms
+            term
+            for atom in stage.atoms | supposition.atoms
+            for term in cast(PredicateAtom, atom).terms
         ]:
             if quantifier == "existential":
                 dep_rel = DependencyRelation(
