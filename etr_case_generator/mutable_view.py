@@ -73,11 +73,16 @@ class MutableView:
             View.from_str("{" + f"{predicate_letter}({term_letter}())" + "}")
         )
 
+    def replace_with_unary_predicate(self):
+        """Replace the view with a unary predicate."""
+        self.view = View.from_str("{A(B())}")
+
     def mutate(self):
         """Perform a random mutation on the view."""
         options = [
             self.negate,
             self.factor_random_atom,
             self.merge_random_unary_predicate,
+            self.replace_with_unary_predicate,
         ]
         random.choice(options)()
