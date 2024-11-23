@@ -155,6 +155,20 @@ def merge_random_unary_predicate(view: View) -> View:
     return view.merge(View.from_str("{" + f"{predicate_letter}({term_letter}())" + "}"))
 
 
+def universal_quantify(view: View) -> View:
+    """Pick a random term occurring in the view and replace it with a universally
+    quantified variable."""
+    # Cannot work with an empty view
+    if len(view.atoms) == 0:
+        return view
+
+    # TODO: should be list of terms
+    atom = random.choice(list(view.atoms))
+
+    # TODO
+    return view
+
+
 def add_disjunction_from_existing_atoms(view: View):
     pass
 
