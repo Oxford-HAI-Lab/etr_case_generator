@@ -5,10 +5,6 @@ from pyetr import (
     SetOfStates,
     State,
     View,
-    PredicateAtom,
-    Predicate,
-    FunctionalTerm,
-    Function,
 )
 from pyetr.atoms import Atom
 from typing import cast
@@ -73,15 +69,8 @@ class MutableView:
 
         predicate_letter, term_letter = random.sample(list(ALPHABET), k=2)
 
-        new_predicate = PredicateAtom(
-            predicate=Predicate(name=predicate_letter, arity=1),
-            terms=(FunctionalTerm(f=Function(name=term_letter, arity=0), t=()),),
-        )
-
         self.view = self.view.merge(
-            View.with_defaults(
-                stage=SetOfStates({State({new_predicate})}),
-            )
+            View.from_str("{" + f"{predicate_letter}({term_letter}())" + "}")
         )
 
     def mutate(self):
