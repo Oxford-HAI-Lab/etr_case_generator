@@ -5,8 +5,10 @@ from dataclasses import dataclass
 from dataclasses_json import dataclass_json
 from pyetr import ArbitraryObject, DependencyRelation, FunctionalTerm, Function
 from pyetr.stateset import SetOfStates, Stage, Supposition, State
+from pyetr.atoms.abstract import Atom
 from pyetr.atoms.predicate import Predicate
 from pyetr.atoms.predicate_atom import PredicateAtom
+from pyetr.atoms.terms.term import Term
 from pyetr.inference import default_inference_procedure
 from pyetr.view import View
 from typing import cast, Generator, Optional
@@ -93,6 +95,135 @@ class ETRCaseGenerator:
         self._num_predicates = value
         # Reset constants to be only the first `value` constants
         self._predicates = self.ontology.predicates[:value]
+
+    def replace_term_in_atom(
+        self,
+        atom: PredicateAtom,
+        replacement_term: Term,
+        term_to_replace: FunctionalTerm,
+    ) -> PredicateAtom:
+        new_terms = tuple(
+            [
+                replacement_term if term == term_to_replace else term
+                for term in atom.terms
+            ]
+        )
+        return PredicateAtom(predicate=atom.predicate, terms=new_terms)
+
+    def replace_term_in_set_of_states(
+        self,
+        set_of_states: SetOfStates,
+        replacement_term: Term,
+        term_to_replace: FunctionalTerm,
+    ) -> SetOfStates:
+        return SetOfStates(
+            [
+                State(
+                    [
+                        self.replace_term_in_atom(
+                            cast(PredicateAtom, atom), replacement_term, term_to_replace
+                        )
+                        for atom in state
+                    ]
+                )
+                for state in set_of_states
+            ]
+        )
+
+    def replace_term_in_view(
+        self, view: View, term_to_replace, replacement_term
+    ) -> View:
+        """Replace a term in a view with another term.
+
+        Args:
+            view (View): The view to modify.
+            term_to_replace: The term to replace.
+            replacement_term: The term to replace with.
+
+        Returns:
+            View: The modified view.
+        """
+
+        new_stage = Stage(
+            [
+                State([replace_term_in_atom(atom) for atom in state])
+                for state in view.stage
+            ]
+        )
+        new_supposition = Supposition(
+            [
+                State([replace_term_in_atom(atom) for atom in state])
+                for state in view.supposition
+            ]
+        )
+        return View.with_defaults(
+            stage=new_stage,
+            supposition=new_supposition,
+            dependency_relation=view.dependency_relation,
+            issue_structure=view.issue_structure,
+            weights=view.weights,
+        )
+
+    def add_quantification_to_view(self, view: View, quantify: str) -> View:
+        """Add quantification to a view.
+
+        Args:
+            view (View): The view to add quantification to.
+            quantify (str): The quantification to add. Must be one of "universal" or
+                "existential".
+
+        Returns:
+            View: The view with quantification added.
+        """
+        if quantify not in ["universal", "existential"]:
+            raise ValueError(
+                "Quantification must be one of 'universal' or 'existential'."
+            )
+
+        if quantify == "universal":
+            return View.with_defaults(
+                stage=view.stage,
+                supposition=view.supposition,
+                dependency_relation=DependencyRelation(
+                    universals=[ArbitraryObject(name="x")],
+                    existentials=[],
+                    dependencies=[],
+                ),
+            )
+
+        if quantify == "existential":
+            return View.with_defaults(
+                stage=view.stage,
+                supposition=view.supposition,
+                dependency_relation=DependencyRelation(
+                    universals=[],
+                    existentials=[ArbitraryObject(name="x")],
+                    dependencies=[],
+                ),
+            )
+
+    def add_quantification(self, view: View) -> View:
+        """Add quantification to a view.
+
+        Args:
+            view (View): The view to add quantification to.
+
+        Returns:
+            View: The view with quantification added.
+        """
+
+        # Take all functional terms that appear in the view and choose one at random
+        # to replace with an arbitrary object
+        atoms = view.stage.atoms | view.supposition.atoms
+        terms = set(
+            [term for atom in atoms for term in cast(PredicateAtom, atom).terms]
+        )
+        term_to_replace = random.sample(list(terms), k=1)[0]
+        view = self.replace_term_in_view(
+            view, term_to_replace, ArbitraryObject(name="x")
+        )
+        quantify = random.sample(["universal", "existential"], k=1)[0]
+        return self.add_quantification_to_view(view, quantify)
 
     def generate_view(
         self,
