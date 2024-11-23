@@ -1,6 +1,7 @@
 import random
 
-from pyetr import View, SetOfStates
+from pyetr import SetOfStates, State, View
+from pyetr.atoms import Atom
 
 
 class MutableView:
@@ -31,7 +32,20 @@ class MutableView:
             weights=self.view.weights,
         )
 
+    def factor_atom(self, atom: Atom):
+        atom_view = View.with_defaults(stage=SetOfStates({State({atom})}))
+        self.view = self.view.factor(atom_view)
+        self.remove_noncommital_states()
+
+    def factor_random_atom(self):
+        # Cannot factor from an empty view
+        if len(self.view.atoms) == 0:
+            return
+
+        atom = random.choice(list(self.view.atoms))
+        self.factor_atom(atom)
+
     def mutate(self):
         """Perform a random mutation on the view."""
-        options = [self.negate]
+        options = [self.negate, self.factor_random_atom]
         random.choice(options)()
