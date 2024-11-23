@@ -14,7 +14,7 @@ ALPHABET = list(set(string.ascii_uppercase))
 
 
 def negate_atom(view: View) -> View:
-    # Negates one atom of one state in the view's stage or supposition
+    """Negates one atom of one state in the view's stage or supposition."""
 
     def negate_atom_in_SetOfStates(set_of_states: SetOfStates) -> SetOfStates:
         # Copy supposition to mutable object
@@ -69,6 +69,51 @@ def negate_atom(view: View) -> View:
         issue_structure=view.issue_structure,
         weights=None,
     )
+
+
+def negate_view(view: View) -> View:
+    """Negate the view."""
+    return view.negation()
+
+
+def remove_noncommital_states(view: View) -> View:
+    """Remove noncommital states from the view. E.g., {p, q, 0} becomes {p, q}."""
+    new_stage = set()
+    new_sup = set()
+    for state in view.stage:
+        if len(state) > 0:
+            new_stage.add(state)
+    for state in view.supposition:
+        if len(state) > 0:
+            new_sup.add(state)
+    return View.with_restriction(
+        stage=SetOfStates(new_stage),
+        supposition=SetOfStates(new_sup),
+        dependency_relation=view.dependency_relation,
+        issue_structure=view.issue_structure,
+        weights=view.weights,
+    )
+
+
+def factor_atom(view: View, atom: Atom) -> View:
+    """Factor a specific atom from the view.
+
+    Args:
+        atom (Atom): The atom to factor.
+    """
+    atom_view = View.with_defaults(stage=SetOfStates({State({atom})}))
+    view = view.factor(atom_view)
+    return remove_noncommital_states(view)
+
+
+def factor_random_atom(view: View) -> View:
+    """Choose a random atom from the view and factor it out."""
+    # Cannot factor from an empty view
+    if len(view.atoms) == 0:
+        return view
+
+    atom = random.choice(list(view.atoms))
+    return factor_atom(view, atom)
 
 
 def disjoin_random_unary_predicate(view: View) -> View:
