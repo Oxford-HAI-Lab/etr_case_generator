@@ -140,6 +140,17 @@ def disjoin_random_unary_predicate(view: View) -> View:
     )
 
 
+def merge_random_unary_predicate(view: View) -> View:
+    """Create a random unary predicate and merge it to either the supposition or
+    stage.
+    The letters may correspond to existing predicates / objects in the view, or they
+    may not.
+    """
+    predicate_letter, term_letter = random.sample(list(ALPHABET), k=2)
+
+    return view.merge(View.from_str("{" + f"{predicate_letter}({term_letter}())" + "}"))
+
+
 def add_disjunction_from_existing_atoms(view: View):
     pass
 
@@ -157,7 +168,13 @@ def add_conjunction_with_existing_atom(view: View):
 
 
 def permute_view(View) -> View:
-    options = [negate_atom, disjoin_random_unary_predicate]
+    options = [
+        negate_atom,
+        disjoin_random_unary_predicate,
+        negate_view,
+        factor_random_atom,
+        merge_random_unary_predicate,
+    ]
 
     return random.choice(options)(View)
 
