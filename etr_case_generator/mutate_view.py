@@ -167,7 +167,7 @@ def add_conjunction_with_existing_atom(view: View):
     pass
 
 
-def permute_view(View) -> View:
+def mutate_view(View) -> View:
     options = [
         negate_atom,
         disjoin_random_unary_predicate,
@@ -180,5 +180,5 @@ def permute_view(View) -> View:
 
 
 if __name__ == "__main__":
-    v = permute_view(View.from_str("{A()B()}"))
+    v = mutate_view(View.from_str("{A()B()}"))
     print(v)
