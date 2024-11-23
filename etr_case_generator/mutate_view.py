@@ -36,6 +36,10 @@ def negate_atom(view: View) -> View:
 
         return new_sos
 
+    # Cannot negate anything in an empty view
+    if len(view.atoms) == 0:
+        return view
+
     new_stage = view.stage
     new_supposition = view.supposition
 
