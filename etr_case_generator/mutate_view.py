@@ -249,7 +249,35 @@ def add_quantification_to_view(
     if quantify not in ["universal", "existential"]:
         raise ValueError("Quantification must be one of 'universal' or 'existential'.")
 
+    terms = set(
+        [
+            t
+            for atom in new_stage.atoms | new_supposition.atoms
+            for t in cast(PredicateAtom, atom).terms
+        ]
+    )
+
     if quantify == "universal":
+        print(new_stage)
+        print(terms)
+        print(
+            view.dependency_relation.fusion(
+                DependencyRelation(
+                    universals=[ArbitraryObject(name=arb_obj_name)],
+                    existentials=[],
+                    dependencies=[],
+                )
+            )
+        )
+        print(
+            view.dependency_relation.fusion(
+                DependencyRelation(
+                    universals=[ArbitraryObject(name=arb_obj_name)],
+                    existentials=[],
+                    dependencies=[],
+                )
+            ).restriction(set([t for t in terms if isinstance(t, ArbitraryObject)]))
+        )
         return View.with_defaults(
             stage=new_stage,
             supposition=new_supposition,
@@ -259,7 +287,7 @@ def add_quantification_to_view(
                     existentials=[],
                     dependencies=[],
                 )
-            ),
+            ).restriction(set([t for t in terms if isinstance(t, ArbitraryObject)])),
         )
 
     else:
@@ -272,11 +300,21 @@ def add_quantification_to_view(
                     existentials=[ArbitraryObject(name=arb_obj_name)],
                     dependencies=[],
                 )
+            ).restriction(
+                set(
+                    [
+                        t
+                        for t in terms | set([ArbitraryObject(name=arb_obj_name)])
+                        if isinstance(t, ArbitraryObject)
+                    ]
+                )
             ),
         )
 
 
-def replace_random_term_in_view(view: View) -> tuple[Stage, Supposition, str]:
+def replace_random_term_in_view(
+    view: View,
+) -> tuple[Stage, Supposition, str]:
     """Replace a random term in the view with an arbitrary object.
 
     Args:
