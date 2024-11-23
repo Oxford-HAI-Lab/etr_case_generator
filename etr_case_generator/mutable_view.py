@@ -1,3 +1,5 @@
+import random
+
 from pyetr import View, SetOfStates
 
 
@@ -28,3 +30,8 @@ class MutableView:
             issue_structure=self.view.issue_structure,
             weights=self.view.weights,
         )
+
+    def mutate(self):
+        """Perform a random mutation on the view."""
+        options = [self.negate]
+        random.choice(options)()
