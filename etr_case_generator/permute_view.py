@@ -10,7 +10,7 @@ from pyetr.atoms.terms.term import FunctionalTerm
 from pyetr.view import View
 
 
-ALL_LETTERS = set(string.ascii_uppercase)
+ALPHABET = list(set(string.ascii_uppercase))
 
 
 def negate_atom(view: View) -> View:
@@ -71,22 +71,18 @@ def negate_atom(view: View) -> View:
     )
 
 
-def add_novel_disjunction(view: View, max_predicate_arity: int = 3) -> View:
-    # Add a single novel state, containing one atom, to the View's stage
+def disjoin_random_unary_predicate(view: View) -> View:
+    """Add a single novel state, containing one unary predicate atom with random
+    predicate and term names, to the View's stage.
+    """
     new_stage = set(view.stage)
 
-    # Use an unreserved letter to create a new predicate
-    vocab = set([atom.predicate.name for atom in view.atoms])
-    available_vars = ALL_LETTERS - vocab
-    new_predicate_name = available_vars.pop()
+    predicate_name = random.choice(ALPHABET)
+    object_name = random.choice(ALPHABET)
 
-    # Pick a random arity and populate objects for those places in the new predicate
-    arity = random.randint(1, max_predicate_arity)
-    objects = [available_vars.pop() for _ in range(arity)]
-
-    terms = [FunctionalTerm(f=Function(name=o, arity=0), t=()) for o in objects]
+    term = FunctionalTerm(f=Function(name=object_name, arity=0), t=())
     new_atom = PredicateAtom(
-        predicate=Predicate(new_predicate_name, arity=arity), terms=tuple(terms)
+        predicate=Predicate(predicate_name, arity=1), terms=(term,)
     )
     new_stage.add(State([new_atom]))
 
@@ -116,7 +112,7 @@ def add_conjunction_with_existing_atom(view: View):
 
 
 def permute_view(View) -> View:
-    options = [negate_atom, add_novel_disjunction]
+    options = [negate_atom, disjoin_random_unary_predicate]
 
     return random.choice(options)(View)
 
