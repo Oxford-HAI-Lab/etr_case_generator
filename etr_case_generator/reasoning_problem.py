@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from dataclasses_json import config, dataclass_json
 from etr_case_generator.generator import ETRCaseGenerator
+from etr_case_generator.view_to_natural_language import view_to_natural_language
 from pyetr import View
 from pyetr.inference import (
     default_inference_procedure,
@@ -31,15 +32,15 @@ class ReasoningProblem:
         self.premises = []
         self.obj_map = {}
         for view in premises:
-            nl, self.obj_map = self.generator.view_to_natural_language(
-                view, self.obj_map
+            nl, self.obj_map = view_to_natural_language(
+                self.generator.ontology, view, self.obj_map
             )
             self.premises.append((view, nl))
 
         # Run ETR to get the ETR conclusion
         c_etr = default_inference_procedure([p[0] for p in self.premises])
-        c_nl, self.obj_map = self.generator.view_to_natural_language(
-            c_etr, obj_map=self.obj_map
+        c_nl, self.obj_map = view_to_natural_language(
+            self.generator.ontology, c_etr, obj_map=self.obj_map
         )
         self.etr_conclusion = (
             c_etr,
@@ -66,7 +67,7 @@ class ReasoningProblem:
     def update_query(self, query: View):
         self.query = (
             query,
-            self.generator.view_to_natural_language(query, self.obj_map)[0],
+            view_to_natural_language(self.generator.ontology, query, self.obj_map)[0],
         )
 
         premise_views = [p[0] for p in self.premises]
