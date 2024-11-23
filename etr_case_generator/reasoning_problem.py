@@ -17,9 +17,7 @@ class ReasoningProblem:
         self.etr_conclusion: tuple[View, str] = (View.get_verum(), "")
 
         self.etr_conclusion_is_categorical: bool = False
-        self.etr_conclusion_is_logically_valid: Optional[bool] = (
-            None  # TODO shouldn't be optional
-        )
+        self.etr_conclusion_is_logically_consistent: bool = False
 
         self.generator = generator
         self.obj_map: dict[str, str] = {}
