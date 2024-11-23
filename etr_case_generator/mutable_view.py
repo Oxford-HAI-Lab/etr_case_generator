@@ -1,7 +1,20 @@
 import random
+import string
 
-from pyetr import SetOfStates, State, View
+from pyetr import (
+    SetOfStates,
+    State,
+    View,
+    PredicateAtom,
+    Predicate,
+    FunctionalTerm,
+    Function,
+)
 from pyetr.atoms import Atom
+from typing import cast
+
+
+ALPHABET = set(string.ascii_uppercase)
 
 
 class MutableView:
@@ -51,7 +64,31 @@ class MutableView:
         atom = random.choice(list(self.view.atoms))
         self.factor_atom(atom)
 
+    def merge_random_unary_predicate(self):
+        """Create a random unary predicate and merge it to either the supposition or
+        stage.
+        The letters may correspond to existing predicates / objects in the view, or they
+        may not.
+        """
+
+        predicate_letter, term_letter = random.sample(list(ALPHABET), k=2)
+
+        new_predicate = PredicateAtom(
+            predicate=Predicate(name=predicate_letter, arity=1),
+            terms=(FunctionalTerm(f=Function(name=term_letter, arity=0), t=()),),
+        )
+
+        self.view = self.view.merge(
+            View.with_defaults(
+                stage=SetOfStates({State({new_predicate})}),
+            )
+        )
+
     def mutate(self):
         """Perform a random mutation on the view."""
-        options = [self.negate, self.factor_random_atom]
+        options = [
+            self.negate,
+            self.factor_random_atom,
+            self.merge_random_unary_predicate,
+        ]
         random.choice(options)()
