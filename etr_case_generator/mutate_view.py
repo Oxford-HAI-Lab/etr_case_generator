@@ -230,7 +230,11 @@ def replace_term_in_view(
 
 
 def add_quantification_to_view(
-    quantify: str, new_stage: Stage, new_supposition: Supposition
+    view: View,
+    quantify: str,
+    new_stage: Stage,
+    new_supposition: Supposition,
+    arb_obj_name: str,
 ) -> View:
     """Add quantification to a view.
 
@@ -249,10 +253,12 @@ def add_quantification_to_view(
         return View.with_defaults(
             stage=new_stage,
             supposition=new_supposition,
-            dependency_relation=DependencyRelation(
-                universals=[ArbitraryObject(name="x")],
-                existentials=[],
-                dependencies=[],
+            dependency_relation=view.dependency_relation.fusion(
+                DependencyRelation(
+                    universals=[ArbitraryObject(name=arb_obj_name)],
+                    existentials=[],
+                    dependencies=[],
+                )
             ),
         )
 
@@ -260,15 +266,17 @@ def add_quantification_to_view(
         return View.with_defaults(
             stage=new_stage,
             supposition=new_supposition,
-            dependency_relation=DependencyRelation(
-                universals=[],
-                existentials=[ArbitraryObject(name="x")],
-                dependencies=[],
+            dependency_relation=view.dependency_relation.fusion(
+                DependencyRelation(
+                    universals=[],
+                    existentials=[ArbitraryObject(name=arb_obj_name)],
+                    dependencies=[],
+                )
             ),
         )
 
 
-def replace_random_term_in_view(view: View) -> tuple[Stage, Supposition]:
+def replace_random_term_in_view(view: View) -> tuple[Stage, Supposition, str]:
     """Replace a random term in the view with an arbitrary object.
 
     Args:
@@ -283,7 +291,20 @@ def replace_random_term_in_view(view: View) -> tuple[Stage, Supposition]:
     atoms = view.stage.atoms | view.supposition.atoms
     terms = set([term for atom in atoms for term in cast(PredicateAtom, atom).terms])
     term_to_replace = random.choice(list(terms))
-    return replace_term_in_view(view, term_to_replace, ArbitraryObject(name="x"))
+    arb_obj_name = random.choice(
+        list(
+            set(ALPHABET)
+            - set(
+                [u.name.upper() for u in view.dependency_relation.universals]
+                + [e.name.upper() for e in view.dependency_relation.existentials]
+            )
+        )
+    ).lower()
+    stage, supposition = replace_term_in_view(
+        view, term_to_replace, ArbitraryObject(name=arb_obj_name)
+    )
+
+    return stage, supposition, arb_obj_name
 
 
 def random_universal_quantify(view: View) -> View:
@@ -296,8 +317,14 @@ def random_universal_quantify(view: View) -> View:
     Returns:
         View: The view with quantification added.
     """
-    new_stage, new_supposition = replace_random_term_in_view(view)
-    return add_quantification_to_view("universal", new_stage, new_supposition)
+    new_stage, new_supposition, arb_obj_name = replace_random_term_in_view(view)
+    return add_quantification_to_view(
+        view=view,
+        quantify="universal",
+        new_stage=new_stage,
+        new_supposition=new_supposition,
+        arb_obj_name=arb_obj_name,
+    )
 
 
 def random_existential_quantify(view: View) -> View:
@@ -310,8 +337,14 @@ def random_existential_quantify(view: View) -> View:
     Returns:
         View: The view with quantification added.
     """
-    new_stage, new_supposition = replace_random_term_in_view(view)
-    return add_quantification_to_view("existential", new_stage, new_supposition)
+    new_stage, new_supposition, arb_obj_name = replace_random_term_in_view(view)
+    return add_quantification_to_view(
+        view=view,
+        quantify="existential",
+        new_stage=new_stage,
+        new_supposition=new_supposition,
+        arb_obj_name=arb_obj_name,
+    )
 
 
 def mutate_view(View) -> View:
