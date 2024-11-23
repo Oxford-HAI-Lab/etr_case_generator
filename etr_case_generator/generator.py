@@ -2,7 +2,8 @@ import itertools
 import random
 
 from etr_case_generator.ontology import Ontology
-from etr_case_generator.reasoning_problem import ReasoningProblem
+
+# from etr_case_generator.reasoning_problem import ReasoningProblem
 from pyetr import ArbitraryObject, DependencyRelation, FunctionalTerm, Function
 from pyetr.atoms.predicate_atom import PredicateAtom
 from pyetr.inference import default_inference_procedure
@@ -315,162 +316,162 @@ class ETRCaseGenerator:
             for _ in range(n)
         ]
 
-    def generate_reasoning_problems(
-        self,
-        n_views: int,
-        categorical_conclusions: Optional[bool] = None,
-        n_trials_timeout: int = 1000,
-        verbose: bool = False,
-    ) -> Generator[ReasoningProblem, object, object]:
-        """Generate a list of reasoning problems.
+    # def generate_reasoning_problems(
+    #     self,
+    #     n_views: int,
+    #     categorical_conclusions: Optional[bool] = None,
+    #     n_trials_timeout: int = 1000,
+    #     verbose: bool = False,
+    # ) -> Generator[ReasoningProblem, object, object]:
+    #     """Generate a list of reasoning problems.
 
-        Args:
-            n_views (int): The number of views to generate for the problem.
-            categorical_conclusions (Optional[bool], optional): Whether to require the
-                ETR conclusion to be categorical. If None, enforce no constraints.
-                Defaults to None.
-            n_trials_timeout (int, optional): The maximum number of trials to attempt
-                before timing out. Defaults to 1000.
-            verbose (bool, optional): Whether to print debugging information. Defaults
-                to False.
+    #     Args:
+    #         n_views (int): The number of views to generate for the problem.
+    #         categorical_conclusions (Optional[bool], optional): Whether to require the
+    #             ETR conclusion to be categorical. If None, enforce no constraints.
+    #             Defaults to None.
+    #         n_trials_timeout (int, optional): The maximum number of trials to attempt
+    #             before timing out. Defaults to 1000.
+    #         verbose (bool, optional): Whether to print debugging information. Defaults
+    #             to False.
 
-        Returns:
-            list[ReasoningProblem]: A list of reasoning problems.
-        """
+    #     Returns:
+    #         list[ReasoningProblem]: A list of reasoning problems.
+    #     """
 
-        # First generate n_views and their corresponding natural language
-        # representations
-        views = self.generate_views(n=n_views)
+    #     # First generate n_views and their corresponding natural language
+    #     # representations
+    #     views = self.generate_views(n=n_views)
 
-        # For now, consider just problems with 2 premises. Take all n_views^2 possible
-        # pairs of views as premise pairs.
-        premises = list(itertools.combinations(views, 2))
-        if verbose:
-            print(f"Generated {len(premises)} premise pairs.")
+    #     # For now, consider just problems with 2 premises. Take all n_views^2 possible
+    #     # pairs of views as premise pairs.
+    #     premises = list(itertools.combinations(views, 2))
+    #     if verbose:
+    #         print(f"Generated {len(premises)} premise pairs.")
 
-        trials = 0
-        for p1, p2 in premises:
-            if trials == n_trials_timeout:
-                print(f"Timed out after {trials} trials.")
-                return
+    #     trials = 0
+    #     for p1, p2 in premises:
+    #         if trials == n_trials_timeout:
+    #             print(f"Timed out after {trials} trials.")
+    #             return
 
-            c_etr = default_inference_procedure((p1, p2))
+    #         c_etr = default_inference_procedure((p1, p2))
 
-            # Don't consider trivial conclusions interesting
-            if c_etr.is_verum or c_etr.is_falsum:
-                trials += 1
-                continue
+    #         # Don't consider trivial conclusions interesting
+    #         if c_etr.is_verum or c_etr.is_falsum:
+    #             trials += 1
+    #             continue
 
-            # Don't consider cases where conclusions contain falsum
-            for state in c_etr.stage:
-                # Falsum
-                if len(state) == 0:
-                    trials += 1
-                    continue
+    #         # Don't consider cases where conclusions contain falsum
+    #         for state in c_etr.stage:
+    #             # Falsum
+    #             if len(state) == 0:
+    #                 trials += 1
+    #                 continue
 
-            # If required, only continue if the ETR conclusion is categorical
-            if categorical_conclusions == True and not len(c_etr.stage) == 1:
-                trials += 1
-                continue
+    #         # If required, only continue if the ETR conclusion is categorical
+    #         if categorical_conclusions == True and not len(c_etr.stage) == 1:
+    #             trials += 1
+    #             continue
 
-            if categorical_conclusions == False and len(c_etr.stage) == 1:
-                trials += 1
-                continue
+    #         if categorical_conclusions == False and len(c_etr.stage) == 1:
+    #             trials += 1
+    #             continue
 
-            def get_vocab_size(view: View) -> int:
-                return len(
-                    list(
-                        set(
-                            [
-                                a if cast(PredicateAtom, a).predicate.verifier else ~a
-                                for a in view.atoms
-                            ]
-                        )
-                    )
-                )
+    #         def get_vocab_size(view: View) -> int:
+    #             return len(
+    #                 list(
+    #                     set(
+    #                         [
+    #                             a if cast(PredicateAtom, a).predicate.verifier else ~a
+    #                             for a in view.atoms
+    #                         ]
+    #                     )
+    #                 )
+    #             )
 
-            vocab_size = max(
-                [
-                    get_vocab_size(p1),
-                    get_vocab_size(p2),
-                    get_vocab_size(c_etr),
-                ]
-            )
-            max_disjuncts = max([len(p1.stage), len(p2.stage), len(c_etr.stage)])
+    #         vocab_size = max(
+    #             [
+    #                 get_vocab_size(p1),
+    #                 get_vocab_size(p2),
+    #                 get_vocab_size(c_etr),
+    #             ]
+    #         )
+    #         max_disjuncts = max([len(p1.stage), len(p2.stage), len(c_etr.stage)])
 
-            # if verbose:
-            #     print(f"Tried {trials} times to get a valid problem.")
+    #         # if verbose:
+    #         #     print(f"Tried {trials} times to get a valid problem.")
 
-            # Reset trials once we're able to yield a complete problem
-            trials = 0
+    #         # Reset trials once we're able to yield a complete problem
+    #         trials = 0
 
-            # Count unique variables across all views
-            all_atoms = set()
-            for view in [p1, p2, c_etr]:
-                all_atoms.update(view.atoms)
-            num_variables = len(all_atoms)
+    #         # Count unique variables across all views
+    #         all_atoms = set()
+    #         for view in [p1, p2, c_etr]:
+    #             all_atoms.update(view.atoms)
+    #         num_variables = len(all_atoms)
 
-            # Count total number of disjuncts across premises
-            num_disjuncts = sum(len(view.stage) for view in [p1, p2])
+    #         # Count total number of disjuncts across premises
+    #         num_disjuncts = sum(len(view.stage) for view in [p1, p2])
 
-            # The conclusion to ask about. For now, always use the ETR conclusion. This
-            # is a limitation, as we would like to ask about categorical things where
-            # ETR predicts nothing categorical, as a kind of control problem.
-            question_conclusion_view = c_etr
-            question_conclusion_is_etr_conclusion = True
+    #         # The conclusion to ask about. For now, always use the ETR conclusion. This
+    #         # is a limitation, as we would like to ask about categorical things where
+    #         # ETR predicts nothing categorical, as a kind of control problem.
+    #         question_conclusion_view = c_etr
+    #         question_conclusion_is_etr_conclusion = True
 
-            # The full prose
-            full_prose = "Consider the following premises:\n"
+    #         # The full prose
+    #         full_prose = "Consider the following premises:\n"
 
-            p1_prose, _ = self.view_to_natural_language(p1)
-            p1_prose = p1_prose[0].upper() + p1_prose[1:] + "."
-            full_prose += f"1. {p1_prose}\n"
+    #         p1_prose, _ = self.view_to_natural_language(p1)
+    #         p1_prose = p1_prose[0].upper() + p1_prose[1:] + "."
+    #         full_prose += f"1. {p1_prose}\n"
 
-            p2_prose, _ = self.view_to_natural_language(p2)
-            p2_prose = p2_prose[0].upper() + p2_prose[1:] + "."
-            full_prose += f"2. {p2_prose}\n\n"
+    #         p2_prose, _ = self.view_to_natural_language(p2)
+    #         p2_prose = p2_prose[0].upper() + p2_prose[1:] + "."
+    #         full_prose += f"2. {p2_prose}\n\n"
 
-            try:
-                etr_prose, _ = self.view_to_natural_language(question_conclusion_view)
-            except ValueError:
-                # Conclusion is in a form we cannot represent yet; skip this case
-                continue
+    #         try:
+    #             etr_prose, _ = self.view_to_natural_language(question_conclusion_view)
+    #         except ValueError:
+    #             # Conclusion is in a form we cannot represent yet; skip this case
+    #             continue
 
-            full_prose += f"Does it follow that {etr_prose}?\n\n"
-            full_prose += "Answer using 'YES' or 'NO' ONLY."
+    #         full_prose += f"Does it follow that {etr_prose}?\n\n"
+    #         full_prose += "Answer using 'YES' or 'NO' ONLY."
 
-            yield ReasoningProblem(
-                full_prose=full_prose,
-                premises=[
-                    (
-                        p1.to_str(),
-                        self.view_to_natural_language(p1)[0],
-                    ),
-                    (
-                        p2.to_str(),
-                        self.view_to_natural_language(p2)[0],
-                    ),
-                ],
-                premise_views=[p1, p2],
-                # Annotations about the question_conclusion
-                question_conclusion_is_etr_conclusion=question_conclusion_is_etr_conclusion,
-                # classically_valid_conclusion # This will be computed externally
-                # Possible conclusions from the premises
-                etr_conclusion_view=c_etr,
-                question_conclusion_view=question_conclusion_view,
-                etr_conclusion=(
-                    c_etr.to_str(),
-                    self.view_to_natural_language(c_etr)[0],
-                ),
-                question_conclusion=(
-                    question_conclusion_view.to_str(),
-                    self.view_to_natural_language(question_conclusion_view)[0],
-                ),
-                # Metadata about the problem
-                vocab_size=vocab_size,
-                max_disjuncts=max_disjuncts,
-                etr_conclusion_is_categorical=len(c_etr.stage) == 1,
-                num_variables=num_variables,
-                num_disjuncts=num_disjuncts,
-                num_premises=2,  # Currently hardcoded as we only use 2 premises
-            )
+    #         yield ReasoningProblem(
+    #             full_prose=full_prose,
+    #             premises=[
+    #                 (
+    #                     p1.to_str(),
+    #                     self.view_to_natural_language(p1)[0],
+    #                 ),
+    #                 (
+    #                     p2.to_str(),
+    #                     self.view_to_natural_language(p2)[0],
+    #                 ),
+    #             ],
+    #             premise_views=[p1, p2],
+    #             # Annotations about the question_conclusion
+    #             question_conclusion_is_etr_conclusion=question_conclusion_is_etr_conclusion,
+    #             # classically_valid_conclusion # This will be computed externally
+    #             # Possible conclusions from the premises
+    #             etr_conclusion_view=c_etr,
+    #             question_conclusion_view=question_conclusion_view,
+    #             etr_conclusion=(
+    #                 c_etr.to_str(),
+    #                 self.view_to_natural_language(c_etr)[0],
+    #             ),
+    #             question_conclusion=(
+    #                 question_conclusion_view.to_str(),
+    #                 self.view_to_natural_language(question_conclusion_view)[0],
+    #             ),
+    #             # Metadata about the problem
+    #             vocab_size=vocab_size,
+    #             max_disjuncts=max_disjuncts,
+    #             etr_conclusion_is_categorical=len(c_etr.stage) == 1,
+    #             num_variables=num_variables,
+    #             num_disjuncts=num_disjuncts,
+    #             num_premises=2,  # Currently hardcoded as we only use 2 premises
+    #         )
