@@ -6,6 +6,7 @@ from pyetr.inference import (
     default_inference_procedure,
     default_procedure_does_it_follow,
 )
+from smt_interface.smt_encoder import check_validity
 from typing import Optional
 
 
@@ -24,9 +25,7 @@ class ReasoningProblem:
 
         self.query: tuple[View, str] = self.etr_conclusion
         self.etr_predicts_query_follows: bool = False
-        self.query_is_logically_valid: Optional[bool] = (
-            None  # TODO shouldn't be optional
-        )
+        self.query_is_logically_consistent: bool = False
 
     def update_premises(self, premises: list[View]):
         self.premises = []
@@ -53,11 +52,13 @@ class ReasoningProblem:
             and c_etr.supposition.is_verum
         )
 
+        premise_views = [p[0] for p in self.premises]
         self.etr_predicts_query_follows = default_procedure_does_it_follow(
-            [p[0] for p in self.premises], self.query[0]
+            premise_views, self.query[0]
         )
-        # TODO
-        self.etr_conclusion_is_logically_valid = None
+        self.etr_conclusion_is_logically_consistent = check_validity(
+            premise_views, [self.etr_conclusion[0]]
+        )
 
     def append_premise(self, premise: View):
         self.update_premises([p[0] for p in self.premises] + [premise])
@@ -68,11 +69,14 @@ class ReasoningProblem:
             self.generator.view_to_natural_language(query, self.obj_map)[0],
         )
 
+        premise_views = [p[0] for p in self.premises]
+
         self.etr_predicts_query_follows = default_procedure_does_it_follow(
-            [p[0] for p in self.premises], self.query[0]
+            premise_views, self.query[0]
         )
-        # TODO
-        self.query_is_logically_valid = None
+        self.query_is_logically_consistent = check_validity(
+            premise_views, [self.query[0]]
+        )
 
     def full_prose(self) -> str:
         def punctuate(sentence: str) -> str:
