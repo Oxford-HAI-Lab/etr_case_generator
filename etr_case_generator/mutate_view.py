@@ -1,14 +1,14 @@
 import random
 import string
 
+from pyetr import State, SetOfStates, View, DependencyRelation, ArbitraryObject
 from pyetr.atoms import Atom
 from pyetr.atoms.predicate import Predicate
 from pyetr.atoms.predicate_atom import PredicateAtom
-from pyetr.stateset import State, SetOfStates
+from pyetr.stateset import State, SetOfStates, Stage, Supposition
 from pyetr.atoms.terms.function import Function
-from pyetr.atoms.terms.term import FunctionalTerm
-from pyetr.view import View
-
+from pyetr.atoms.terms.term import FunctionalTerm, Term
+from typing import cast
 
 ALPHABET = list(set(string.ascii_uppercase))
 
@@ -155,34 +155,163 @@ def merge_random_unary_predicate(view: View) -> View:
     return view.merge(View.from_str("{" + f"{predicate_letter}({term_letter}())" + "}"))
 
 
-def universal_quantify(view: View) -> View:
-    """Pick a random term occurring in the view and replace it with a universally
-    quantified variable."""
-    # Cannot work with an empty view
-    if len(view.atoms) == 0:
-        return view
-
-    # TODO: should be list of terms
-    atom = random.choice(list(view.atoms))
-
-    # TODO
-    return view
+def replace_term_in_atom(
+    atom: PredicateAtom,
+    replacement_term: Term,
+    term_to_replace: FunctionalTerm,
+) -> PredicateAtom:
+    new_terms = tuple(
+        [replacement_term if term == term_to_replace else term for term in atom.terms]
+    )
+    return PredicateAtom(predicate=atom.predicate, terms=new_terms)
 
 
-def add_disjunction_from_existing_atoms(view: View):
-    pass
+def replace_term_in_set_of_states(
+    set_of_states: SetOfStates,
+    replacement_term: Term,
+    term_to_replace: FunctionalTerm,
+) -> SetOfStates:
+    return SetOfStates(
+        [
+            State(
+                [
+                    replace_term_in_atom(
+                        cast(PredicateAtom, atom), replacement_term, term_to_replace
+                    )
+                    for atom in state
+                ]
+            )
+            for state in set_of_states
+        ]
+    )
 
 
-def remove_disjunct(view: View):
-    pass
+def replace_term_in_view(
+    view: View, term_to_replace, replacement_term
+) -> tuple[Stage, Supposition]:
+    """Replace a term in a view with another term.
+
+    Args:
+        view (View): The view to modify.
+        term_to_replace: The term to replace.
+        replacement_term: The term to replace with.
+
+    Returns:
+        tuple[Stage, Supposition]: The modified stage and supposition.
+    """
+
+    new_stage = Stage(
+        [
+            State(
+                [
+                    replace_term_in_atom(
+                        cast(PredicateAtom, atom), replacement_term, term_to_replace
+                    )
+                    for atom in state
+                ]
+            )
+            for state in view.stage
+        ]
+    )
+    new_supposition = Supposition(
+        [
+            State(
+                [
+                    replace_term_in_atom(
+                        cast(PredicateAtom, atom), replacement_term, term_to_replace
+                    )
+                    for atom in state
+                ]
+            )
+            for state in view.supposition
+        ]
+    )
+    return new_stage, new_supposition
 
 
-def add_novel_conjunction(view: View):
-    pass
+def add_quantification_to_view(
+    quantify: str, new_stage: Stage, new_supposition: Supposition
+) -> View:
+    """Add quantification to a view.
+
+    Args:
+        view (View): The view to add quantification to.
+        quantify (str): The quantification to add. Must be one of "universal" or
+            "existential".
+
+    Returns:
+        View: The view with quantification added.
+    """
+    if quantify not in ["universal", "existential"]:
+        raise ValueError("Quantification must be one of 'universal' or 'existential'.")
+
+    if quantify == "universal":
+        return View.with_defaults(
+            stage=new_stage,
+            supposition=new_supposition,
+            dependency_relation=DependencyRelation(
+                universals=[ArbitraryObject(name="x")],
+                existentials=[],
+                dependencies=[],
+            ),
+        )
+
+    else:
+        return View.with_defaults(
+            stage=new_stage,
+            supposition=new_supposition,
+            dependency_relation=DependencyRelation(
+                universals=[],
+                existentials=[ArbitraryObject(name="x")],
+                dependencies=[],
+            ),
+        )
 
 
-def add_conjunction_with_existing_atom(view: View):
-    pass
+def replace_random_term_in_view(view: View) -> tuple[Stage, Supposition]:
+    """Replace a random term in the view with an arbitrary object.
+
+    Args:
+        view (View): The view to modify.
+
+    Returns:
+        tuple[Stage, Supposition]: The modified stage and supposition.
+    """
+
+    # Take all functional terms that appear in the view and choose one at random
+    # to replace with an arbitrary object
+    atoms = view.stage.atoms | view.supposition.atoms
+    terms = set([term for atom in atoms for term in cast(PredicateAtom, atom).terms])
+    term_to_replace = random.choice(list(terms))
+    return replace_term_in_view(view, term_to_replace, ArbitraryObject(name="x"))
+
+
+def random_universal_quantify(view: View) -> View:
+    """Replace a random term in the view with an arbitrary object and universally
+    quantify it.
+
+    Args:
+        view (View): The view to add quantification to.
+
+    Returns:
+        View: The view with quantification added.
+    """
+    new_stage, new_supposition = replace_random_term_in_view(view)
+    return add_quantification_to_view("universal", new_stage, new_supposition)
+
+
+def random_existential_quantify(view: View) -> View:
+    """Replace a random term in the view with an arbitrary object and existentially
+    quantify it.
+
+    Args:
+        view (View): The view to add quantification to.
+
+    Returns:
+        View: The view with quantification added.
+    """
+    new_stage, new_supposition = replace_random_term_in_view(view)
+    return add_quantification_to_view("existential", new_stage, new_supposition)
 
 
 def mutate_view(View) -> View:
@@ -192,6 +321,8 @@ def mutate_view(View) -> View:
         negate_view,
         factor_random_atom,
         merge_random_unary_predicate,
+        random_universal_quantify,
+        random_existential_quantify,
     ]
 
     return random.choice(options)(View)
