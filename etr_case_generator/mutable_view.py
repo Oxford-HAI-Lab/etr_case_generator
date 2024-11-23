@@ -33,11 +33,17 @@ class MutableView:
         )
 
     def factor_atom(self, atom: Atom):
+        """Factor a specific atom from the view.
+
+        Args:
+            atom (Atom): The atom to factor.
+        """
         atom_view = View.with_defaults(stage=SetOfStates({State({atom})}))
         self.view = self.view.factor(atom_view)
         self.remove_noncommital_states()
 
     def factor_random_atom(self):
+        """Choose a random atom from the view and factor it out."""
         # Cannot factor from an empty view
         if len(self.view.atoms) == 0:
             return
