@@ -84,7 +84,7 @@ class ReasoningProblem:
             full_prose += f"{i + 1}. {punctuate(p_nl)}\n"
 
         full_prose += "\n"
-        full_prose += f"Does it follow that {punctuate(self.query[1])}?\n\n"
+        full_prose += f"Does it follow that {self.query[1]}?\n\n"
         full_prose += "Answer using 'YES' or 'NO' ONLY."
 
         return full_prose
