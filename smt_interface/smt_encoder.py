@@ -1,6 +1,16 @@
 from pyetr import View
 
-from pysmt.shortcuts import Symbol, ForAll, Exists, Solver, Not, Real, Or, Times, get_env
+from pysmt.shortcuts import (
+    Symbol,
+    ForAll,
+    Exists,
+    Solver,
+    Not,
+    Real,
+    Or,
+    Times,
+    get_env,
+)
 from pysmt.typing import BOOL, REAL
 from pysmt.logics import QF_LRA
 
@@ -29,10 +39,10 @@ from pyetr.stateset import State
 
 def view_to_smt(view: View) -> FNode:
     """Convert a View object to SMT formula using PySMT.
-    
+
     Args:
         view (View): The view to convert
-        
+
     Returns:
         pysmt.FNode: The SMT formula representing the view
     """
@@ -45,10 +55,10 @@ def view_to_smt(view: View) -> FNode:
 
     def state_to_smt(state: State) -> FNode:
         """Convert a State to conjunction of literals
-        
+
         Args:
             state (State): The state to convert
-            
+
         Returns:
             pysmt.FNode: The SMT formula representing the state
         """
@@ -63,7 +73,7 @@ def view_to_smt(view: View) -> FNode:
 
     # Convert stage to disjunction of states
     stage_formula = Or([state_to_smt(state) for state in view.stage])
-    
+
     # Handle weights if present
     weight_constraints = []
     for state, weight in view.weights.items():
@@ -74,57 +84,57 @@ def view_to_smt(view: View) -> FNode:
             weight_constraints.append(
                 state_sym.Iff(Times(weight_sym, Symbol("1", REAL)))
             )
-    
+
     # Combine stage formula with weight constraints
     formula = stage_formula
     if weight_constraints:
         formula = And(formula, And(weight_constraints))
-        
+
     # Handle supposition if not verum
     if not view.supposition.is_verum:
         supp_formula = Or([state_to_smt(state) for state in view.supposition])
         formula = supp_formula.Implies(formula)
-        
+
     return formula
 
 
 def check_validity(premises: list[View], conclusions: list[View]) -> bool:
     """Check if the conclusions logically follow from the premises using SMT solving.
-    
+
     Args:
         premises (list[View]): List of premise Views
         conclusions (list[View]): List of conclusion Views
-        
+
     Returns:
         bool: True if conclusions are valid given premises, False otherwise
     """
     # Convert premises and conclusions to SMT formulas
     premise_formulas = [view_to_smt(p) for p in premises]
     conclusion_formulas = [view_to_smt(c) for c in conclusions]
-    
+
     # Create solver
-    with Solver(name='z3') as solver:
+    with Solver(name="z3") as solver:
         # Add all premises
         for p in premise_formulas:
             solver.add_assertion(p)
-            
+
         # First check: premises & conclusion should be satisfiable
         for c in conclusion_formulas:
             solver.add_assertion(c)
-            
+
         if not solver.solve():
             return False
-            
+
         solver.reset_assertions()
-        
-        # Second check: premises & not(conclusion) should be unsatisfiable 
+
+        # Second check: premises & not(conclusion) should be unsatisfiable
         for p in premise_formulas:
             solver.add_assertion(p)
-            
+
         # Add negation of all conclusions
         for c in conclusion_formulas:
             solver.add_assertion(Not(c))
-            
+
         # If unsatisfiable, the conclusion is valid
         return not solver.solve()
 
@@ -133,14 +143,14 @@ def main():
     """Run some example validity checks using the SMT solver."""
     # Example 1: King()Ten() |= King()
     # This should be valid since King()Ten() implies King()
-    v1 = View.from_str('{King()Ten()}^{0}')
-    v2 = View.from_str('{King()}^{0}')
+    v1 = View.from_str("{King()Ten()}^{0}")
+    v2 = View.from_str("{King()}^{0}")
     print("\nExample 1: King()Ten() |= King()")
     print("Valid:", check_validity([v1], [v2]))
 
     # Example 2: King()Ten() |= Ten()
     # This should be valid since King()Ten() implies Ten()
-    v3 = View.from_str('{Ten()}^{0}')
+    v3 = View.from_str("{Ten()}^{0}")
     print("\nExample 2: King()Ten() |= Ten()")
     print("Valid:", check_validity([v1], [v3]))
 
@@ -151,12 +161,11 @@ def main():
 
     # Example 4: King()Ten(), Ten()Jack() |= King()Jack()
     # This should be valid by transitivity
-    v4 = View.from_str('{Ten()Jack()}^{0}')
-    v5 = View.from_str('{King()Jack()}^{0}')
+    v4 = View.from_str("{Ten()Jack()}^{0}")
+    v5 = View.from_str("{King()Jack()}^{0}")
     print("\nExample 4: King()Ten(), Ten()Jack() |= King()Jack()")
     print("Valid:", check_validity([v1, v4], [v5]))
 
 
 if __name__ == "__main__":
     main()
-
