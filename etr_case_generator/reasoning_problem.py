@@ -1,11 +1,44 @@
 from dataclasses import dataclass, field
 from dataclasses_json import config, dataclass_json
+from etr_case_generator.generator import ETRCaseGenerator
+from pyetr import View
+from pyetr.inference import default_inference_procedure
+from typing import Optional
 
 
-@dataclass_json
 @dataclass
+class Statement:
+    view: View
+    natural_language: str
+
+
 class ReasoningProblem:
-    premises: list[tuple[str, str]]
+    def __init__(self, generator: ETRCaseGenerator):
+        self._premises: list[Statement] = []
+        self.etr_conclusion: Statement = Statement(
+            view=View.get_verum(), natural_language=""
+        )
+        self.generator = generator
+        self.obj_map: dict[str, str] = {}
+
+    @property
+    def premises(self):
+        return self._premises
+
+    @premises.setter
+    def premises(self, value: list[Statement]):
+        self._premises = value
+
+        # Run ETR to get the ETR conclusion
+        conclusion = default_inference_procedure([p.view for p in self._premises])
+        self.etr_conclusion = Statement(
+            view=conclusion,
+            natural_language=self.generator.view_to_natural_language(
+                conclusion, obj_map=self.obj_map
+            ),
+        )
+
+    # premises: list[tuple[str, str]]
 
     # The actual question
     full_prose: str  # The premises and the question_conclusion
