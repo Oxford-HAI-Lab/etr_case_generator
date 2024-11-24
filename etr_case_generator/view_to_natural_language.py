@@ -87,16 +87,15 @@ def view_to_natural_language(
     all_quantifiers = universals | existentials
 
     quantifier_str = ""
-    q_name = ""
     if len(all_quantifiers) > 0:
         delims = r"[ ∃∀]"
         q_order = re.split(delims, view.to_str().split("{")[0])
         q_order = [q for q in q_order if q != ""]  # Drop empty strings
         for q in q_order:
-            if q in universals:
-                quantifier_str += f"for all {q_name.upper()}, "
-            elif q in existentials:
-                quantifier_str += f"there is a(n) {q_name.upper()} such that "
+            if q in [u.name for u in universals]:
+                quantifier_str += f"for all {q.upper()}, "
+            elif q in [e.name for e in existentials]:
+                quantifier_str += f"there is some {q.upper()} such that "
 
     states_for_stage = [state_to_natural_language(state) for state in view.stage]
     stage_str = ", or ".join(states_for_stage)
