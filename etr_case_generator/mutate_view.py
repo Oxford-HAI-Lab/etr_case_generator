@@ -415,6 +415,9 @@ def mutate_view(view: View, max_vocab_size: int = 10, max_stage_size: int = 3) -
     if len(view.stage) > max_stage_size:
         return factor_random_atom(view)
 
+    if len(view.stage) > 0 and max([len(s) for s in view.stage]) > max_stage_size:
+        return factor_random_atom(view)
+
     if vocab_size > max_vocab_size:
         return factor_random_atom(view)
 
