@@ -1,4 +1,5 @@
 import random
+import re
 
 from etr_case_generator.ontology import Ontology
 from pyetr import View, PredicateAtom, ArbitraryObject, State
@@ -81,24 +82,21 @@ def view_to_natural_language(
 
         return ret + " and ".join(atoms)
 
-    # TODO: first, we'll consider very simple quantifiers where there aren't
-    # suppositions
-    # Universals: "everything is P"
-    # Existentials: "something is P"
     universals = view.dependency_relation.universals
     existentials = view.dependency_relation.existentials
     all_quantifiers = universals | existentials
-    if len(all_quantifiers) > 1:
-        raise ValueError("Currently not considering cases with multiple quantifiers.")
 
     quantifier_str = ""
     q_name = ""
     if len(all_quantifiers) > 0:
-        q_name = str(list(all_quantifiers)[0]).upper()
-    if len(universals) > 0:
-        quantifier_str = f"for all {q_name}, "
-    if len(existentials) > 0:
-        quantifier_str = f"there is a(n) {q_name} such that "
+        delims = r"[ ∃∀]"
+        q_order = re.split(delims, view.to_str().split("{")[0])
+        q_order = [q for q in q_order if q != ""]  # Drop empty strings
+        for q in q_order:
+            if q in universals:
+                quantifier_str += f"for all {q_name.upper()}, "
+            elif q in existentials:
+                quantifier_str += f"there is a(n) {q_name.upper()} such that "
 
     states_for_stage = [state_to_natural_language(state) for state in view.stage]
     stage_str = ", or ".join(states_for_stage)
