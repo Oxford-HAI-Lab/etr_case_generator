@@ -355,6 +355,9 @@ def random_universal_quantify(view: View) -> View:
     Returns:
         View: The view with quantification added.
     """
+    if len(view.atoms) == 0:
+        return view
+
     new_stage, new_supposition, arb_obj_name = replace_random_term_in_view(view)
     return add_quantification_to_view(
         view=view,
@@ -375,6 +378,9 @@ def random_existential_quantify(view: View) -> View:
     Returns:
         View: The view with quantification added.
     """
+    if len(view.atoms) == 0:
+        return view
+
     new_stage, new_supposition, arb_obj_name = replace_random_term_in_view(view)
     return add_quantification_to_view(
         view=view,
