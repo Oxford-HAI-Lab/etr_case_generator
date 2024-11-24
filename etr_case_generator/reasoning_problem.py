@@ -79,7 +79,12 @@ class ReasoningProblem:
 
     def full_prose(self) -> str:
         def punctuate(sentence: str) -> str:
+            if len(sentence) == 0:
+                return sentence
             return sentence[0].upper() + sentence[1:] + "."
+
+        if len(self.premises) == 0:
+            return "EMPTY PROBLEM"
 
         full_prose = "Consider the following premises:\n\n"
 
