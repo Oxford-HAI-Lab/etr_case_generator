@@ -145,8 +145,8 @@ def disjoin_random_unary_predicate(view: View) -> View:
     """
     new_stage = set(view.stage)
 
-    predicate_name = random.choice(ALPHABET)
-    object_name = random.choice(ALPHABET)
+    predicate_name = "P" + random.choice(ALPHABET)
+    object_name = "T" + random.choice(ALPHABET)
 
     term = FunctionalTerm(f=Function(name=object_name, arity=0), t=())
     new_atom = PredicateAtom(
@@ -170,6 +170,8 @@ def merge_random_unary_predicate(view: View) -> View:
     may not.
     """
     predicate_letter, term_letter = random.sample(list(ALPHABET), k=2)
+    predicate_letter = "P" + predicate_letter
+    term_letter = "T" + term_letter
 
     return view.merge(View.from_str("{" + f"{predicate_letter}({term_letter}())" + "}"))
 

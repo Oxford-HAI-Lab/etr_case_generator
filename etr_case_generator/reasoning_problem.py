@@ -28,6 +28,7 @@ class ReasoningProblem:
 
     def to_dict(self) -> dict:
         return {
+            "full_prose": self.full_prose(),
             "premises": [(p[0].to_str(), p[1]) for p in self.premises],
             "etr_conclusion": (
                 self.etr_conclusion[0].to_str(),
@@ -65,6 +66,12 @@ class ReasoningProblem:
             )
             self.premises.append((view, nl))
 
+        # Query needs to be updated to the new natural language
+        nl, self.obj_map = view_to_natural_language(
+            self.generator.ontology, self.query[0], self.obj_map
+        )
+        self.query = (self.query[0], nl)
+
         # Run ETR to get the ETR conclusion
         c_etr = default_inference_procedure([p[0] for p in self.premises])
         c_nl, self.obj_map = view_to_natural_language(
@@ -93,12 +100,18 @@ class ReasoningProblem:
         self.update_premises([p[0] for p in self.premises] + [premise])
 
     def update_query(self, query: View):
+        self.obj_map = {}
+        nl, self.obj_map = view_to_natural_language(
+            self.generator.ontology, query, self.obj_map
+        )
         self.query = (
             query,
-            view_to_natural_language(self.generator.ontology, query, self.obj_map)[0],
+            nl,
         )
 
         premise_views = [p[0] for p in self.premises]
+        # Object map has changed, so rewrite the natural language of the premises
+        self.update_premises(premise_views)
 
         self.etr_predicts_query_follows = default_procedure_does_it_follow(
             premise_views, self.query[0]
