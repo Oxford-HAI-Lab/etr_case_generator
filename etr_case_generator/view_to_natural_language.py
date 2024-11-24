@@ -104,7 +104,7 @@ def view_to_natural_language(
         stage_str = "either " + stage_str
 
     # TODO: this SetOfStates object should have an .empty method
-    if not view.supposition.is_verum:
+    if not view.supposition.is_verum and not len(view.supposition) == 0:
         states_for_supposition = [
             state_to_natural_language(state) for state in view.supposition
         ]
