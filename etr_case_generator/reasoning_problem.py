@@ -2,13 +2,13 @@ from dataclasses import dataclass, field
 from dataclasses_json import config, dataclass_json
 from etr_case_generator.generator import ETRCaseGenerator
 from etr_case_generator.view_to_natural_language import view_to_natural_language
-from pyetr import View
+from pyetr import PredicateAtom, View
 from pyetr.inference import (
     default_inference_procedure,
     default_procedure_does_it_follow,
 )
 from smt_interface.smt_encoder import check_validity
-from typing import Optional
+from typing import cast, Optional
 
 
 class ReasoningProblem:
@@ -25,6 +25,21 @@ class ReasoningProblem:
         self.query: tuple[View, str] = self.etr_conclusion
         self.etr_predicts_query_follows: bool = False
         self.query_is_logically_consistent: bool = False
+
+    @property
+    def vocab_size(self) -> int:
+        all_views = [p[0] for p in self.premises] + [self.query[0]]
+        return len(
+            list(
+                set(
+                    [
+                        a if cast(PredicateAtom, a).predicate.verifier else ~a
+                        for view in all_views
+                        for a in view.atoms
+                    ]
+                )
+            )
+        )
 
     def update_premises(self, premises: list[View]):
         self.premises = []
