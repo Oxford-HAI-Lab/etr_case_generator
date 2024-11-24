@@ -390,7 +390,7 @@ def random_existential_quantify(view: View) -> View:
     )
 
 
-def mutate_view(View) -> View:
+def mutate_view(view: View, max_vocab_size: int = 10, max_stage_size: int = 3) -> View:
     options = [
         negate_atom,
         disjoin_random_unary_predicate,
@@ -401,7 +401,24 @@ def mutate_view(View) -> View:
         random_existential_quantify,
     ]
 
-    return random.choice(options)(View)
+    vocab_size = len(
+        list(
+            set(
+                [
+                    a if cast(PredicateAtom, a).predicate.verifier else ~a
+                    for a in view.atoms
+                ]
+            )
+        )
+    )
+
+    if len(view.stage) > max_stage_size:
+        return factor_random_atom(view)
+
+    if vocab_size > max_vocab_size:
+        return factor_random_atom(view)
+
+    return random.choice(options)(view)
 
 
 if __name__ == "__main__":
