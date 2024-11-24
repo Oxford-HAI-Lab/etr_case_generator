@@ -34,6 +34,8 @@ def mutate_reasoning_problem(
 def ignore_problem(r: ReasoningProblem) -> bool:
     if len(r.premises) == 0:
         return True
+    if all([p[0].is_falsum for p in r.premises]):
+        return True
     return len(r.premises) <= 1 and r.premises[0][0].is_falsum
 
 
