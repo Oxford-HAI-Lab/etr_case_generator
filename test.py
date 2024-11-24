@@ -14,21 +14,30 @@ r.update_premises(premises=[View.get_falsum()])
 def mutate_reasoning_problem(
     r: ReasoningProblem, max_premises: int = 3
 ) -> ReasoningProblem:
-    if len(r.premises) > 0 and random.random() < 0.5:
-        # Mutate one of the existing premises
-        i = random.randint(0, len(r.premises) - 1)
-        premises = [p[0] for p in r.premises]
-        premises[i] = mutate_view(premises[i])
-        r.update_premises(premises=premises)
+    def add_premise(r: ReasoningProblem) -> ReasoningProblem:
+        if len(r.premises) < max_premises:
+            r.update_premises(premises=[p[0] for p in r.premises] + [View.get_falsum()])
         return r
-    elif len(r.premises) <= max_premises and random.random() < 0.5:
-        # Add a new premise
-        r.update_premises(premises=[p[0] for p in r.premises] + [View.get_falsum()])
+
+    def remove_premise(r: ReasoningProblem) -> ReasoningProblem:
+        if len(r.premises) > 0:
+            r.update_premises(premises=[p[0] for p in r.premises[:-1]])
         return r
-    else:
-        # Mutate query
+
+    def mutate_premise(r: ReasoningProblem) -> ReasoningProblem:
+        if len(r.premises) > 0:
+            i = random.randint(0, len(r.premises) - 1)
+            premises = [p[0] for p in r.premises]
+            premises[i] = mutate_view(premises[i])
+            r.update_premises(premises=premises)
+        return r
+
+    def mutate_query(r: ReasoningProblem) -> ReasoningProblem:
         r.update_query(query=mutate_view(r.query[0]))
         return r
+
+    mutations = [add_premise, remove_premise, mutate_premise, mutate_query]
+    return random.choice(mutations)(r)
 
 
 def ignore_problem(r: ReasoningProblem) -> bool:
@@ -37,10 +46,8 @@ def ignore_problem(r: ReasoningProblem) -> bool:
     if all([p[0].is_falsum for p in r.premises]):
         return True
 
-    # Hack to ensure that natural language formulations stay short
-    if any([len(p[1]) > 100 for p in r.premises]):
-        return True
-    if len(r.query[1]) > 100:
+    # Ensure that natural language formulations stay short
+    if r.vocab_size > 10:
         return True
 
     return len(r.premises) <= 1 and r.premises[0][0].is_falsum
@@ -59,6 +66,8 @@ def problem_well_formed(r: ReasoningProblem) -> bool:
         return False
     if r.query[0].is_falsum or r.query[0].is_verum:
         return False
+    if r.vocab_size > 10:
+        return False
 
     return True
 
@@ -74,7 +83,8 @@ while len(problem_queue) < 100:
     problem_queue.append(mutate_reasoning_problem(r))
 
     if problem_well_formed(r):
-        print(r.premises)
-        print(r.query)
+        print(f"Vocab size: {r.vocab_size}")
+        # print(r.premises)
+        # print(r.query)
         print(r.full_prose())
     # time.sleep(1)
