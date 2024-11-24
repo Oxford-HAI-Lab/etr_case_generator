@@ -36,7 +36,31 @@ def ignore_problem(r: ReasoningProblem) -> bool:
         return True
     if all([p[0].is_falsum for p in r.premises]):
         return True
+
+    # Hack to ensure that natural language formulations stay short
+    if any([len(p[1]) > 100 for p in r.premises]):
+        return True
+    if len(r.query[1]) > 100:
+        return True
+
     return len(r.premises) <= 1 and r.premises[0][0].is_falsum
+
+
+def problem_well_formed(r: ReasoningProblem) -> bool:
+    if len(r.premises) == 0:
+        return False
+    if any(
+        [p[0].is_falsum or p[0].is_verum or len(p[0].stage) == 0 for p in r.premises]
+    ):
+        return False
+    if any([View.get_verum() in p[0].stage for p in r.premises]):
+        return False
+    if any([View.get_verum() in p[0].supposition for p in r.premises]):
+        return False
+    if r.query[0].is_falsum or r.query[0].is_verum:
+        return False
+
+    return True
 
 
 problem_queue = [ReasoningProblem(generator=ETRCaseGenerator(ELEMENTS))]
@@ -49,7 +73,7 @@ while len(problem_queue) < 100:
         problem_queue.append(r)
     problem_queue.append(mutate_reasoning_problem(r))
 
-    if not any([p[0].is_falsum for p in r.premises]):
+    if problem_well_formed(r):
         print(r.premises)
         print(r.query)
         print(r.full_prose())

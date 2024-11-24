@@ -28,6 +28,9 @@ def negate_atom(view: View) -> View:
         orig_state: State = random.choice(list(sos))
         state: set[Atom] = set(orig_state)
 
+        if len(state) == 0:
+            return set_of_states
+
         # Pick a random atom
         orig_atom: Atom = random.choice(list(state))
 
