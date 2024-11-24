@@ -13,7 +13,7 @@ r.update_premises(premises=[View.get_falsum()])
 
 def mutate_reasoning_problem(
     r: ReasoningProblem, max_premises: int = 3
-) -> ReasoningProblem:
+) -> list[ReasoningProblem]:
     def add_premise(r: ReasoningProblem) -> ReasoningProblem:
         if len(r.premises) < max_premises:
             r.update_premises(premises=[p[0] for p in r.premises] + [View.get_falsum()])
@@ -37,7 +37,7 @@ def mutate_reasoning_problem(
         return r
 
     mutations = [add_premise, remove_premise, mutate_premise, mutate_query]
-    return random.choice(mutations)(r)
+    return [m(r) for m in mutations]
 
 
 def ignore_problem(r: ReasoningProblem) -> bool:
@@ -66,25 +66,42 @@ def problem_well_formed(r: ReasoningProblem) -> bool:
         return False
     if r.query[0].is_falsum or r.query[0].is_verum:
         return False
+    if len(r.query[0].stage) == 0:
+        return False
     if r.vocab_size > 10:
         return False
 
     return True
 
 
-problem_queue = [ReasoningProblem(generator=ETRCaseGenerator(ELEMENTS))]
+r = ReasoningProblem(generator=ETRCaseGenerator(ELEMENTS))
+r.update_premises(
+    premises=[View.from_str("{P(A())Q(A()), R(A())S(A())}"), View.from_str("{P(A())}")]
+)
+r.update_query(query=View.from_str("{Q(A())}"))
+
+problem_queue = [r]
 
 import time
 
-while len(problem_queue) < 100:
+ret = []
+while len(problem_queue) > 0 and len(ret) < 100:
     r = problem_queue.pop(0)
-    if not ignore_problem(r):
-        problem_queue.append(r)
-    problem_queue.append(mutate_reasoning_problem(r))
+    mutations = mutate_reasoning_problem(r)
+    # if not ignore_problem(r):
+    #     problem_queue.append(r)
+    for m in mutations:
+        if problem_well_formed(m):
+            ret.append(m)
+            problem_queue.append(m)
 
-    if problem_well_formed(r):
-        print(f"Vocab size: {r.vocab_size}")
-        # print(r.premises)
-        # print(r.query)
-        print(r.full_prose())
+    print(len(problem_queue))
+    #     print(f"Vocab size: {r.vocab_size}")
+    #     # print(r.premises)
+    #     # print(r.query)
+    #     print(r.full_prose())
     # time.sleep(1)
+import json
+
+with open("output.json", "w") as f:
+    json.dump([r.to_dict() for r in ret], f, indent=4)
