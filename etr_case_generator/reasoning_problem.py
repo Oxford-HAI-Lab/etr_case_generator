@@ -26,6 +26,21 @@ class ReasoningProblem:
         self.etr_predicts_query_follows: bool = False
         self.query_is_logically_consistent: bool = False
 
+    def to_dict(self) -> dict:
+        return {
+            "premises": [(p[0].to_str(), p[1]) for p in self.premises],
+            "etr_conclusion": (
+                self.etr_conclusion[0].to_str(),
+                self.etr_conclusion[1],
+            ),
+            "etr_conclusion_is_categorical": self.etr_conclusion_is_categorical,
+            "etr_conclusion_is_logically_consistent": self.etr_conclusion_is_logically_consistent,
+            "query": (self.query[0].to_str(), self.query[1]),
+            "etr_predicts_query_follows": self.etr_predicts_query_follows,
+            "query_is_logically_consistent": self.query_is_logically_consistent,
+            "vocab_size": self.vocab_size,
+        }
+
     @property
     def vocab_size(self) -> int:
         all_views = [p[0] for p in self.premises] + [self.query[0]]
