@@ -277,26 +277,6 @@ def add_quantification_to_view(
     )
 
     if quantify == "universal":
-        print(new_stage)
-        print(terms)
-        print(
-            view.dependency_relation.fusion(
-                DependencyRelation(
-                    universals=[ArbitraryObject(name=arb_obj_name)],
-                    existentials=[],
-                    dependencies=[],
-                )
-            )
-        )
-        print(
-            view.dependency_relation.fusion(
-                DependencyRelation(
-                    universals=[ArbitraryObject(name=arb_obj_name)],
-                    existentials=[],
-                    dependencies=[],
-                )
-            ).restriction(set([t for t in terms if isinstance(t, ArbitraryObject)]))
-        )
         return View.with_defaults(
             stage=new_stage,
             supposition=new_supposition,
