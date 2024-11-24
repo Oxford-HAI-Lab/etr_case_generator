@@ -17,6 +17,10 @@ def negate_atom(view: View) -> View:
     """Negates one atom of one state in the view's stage or supposition."""
 
     def negate_atom_in_SetOfStates(set_of_states: SetOfStates) -> SetOfStates:
+        # Can't negate anything in an empty set of states
+        if len(set_of_states) == 0:
+            return set_of_states
+
         # Copy supposition to mutable object
         sos: set[State] = set(set_of_states)
 
@@ -117,6 +121,18 @@ def factor_random_atom(view: View) -> View:
         return view
 
     atom = random.choice(list(view.atoms))
+    # Cannot factor an atom if it contains quantified terms
+    if any(
+        [
+            t in cast(PredicateAtom, atom).terms
+            for t in view.dependency_relation.universals
+        ]
+        + [
+            t in cast(PredicateAtom, atom).terms
+            for t in view.dependency_relation.existentials
+        ]
+    ):
+        return view
     return factor_atom(view, atom)
 
 
