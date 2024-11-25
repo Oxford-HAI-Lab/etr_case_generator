@@ -8,13 +8,20 @@ from etr_case_generator.generator import ETRCaseGenerator
 from etr_case_generator.ontology import ELEMENTS
 from etr_case_generator.reasoning_problem import ReasoningProblem
 from etr_case_generator.mutate_view import mutate_view
+import multiprocessing
 
 r = ReasoningProblem(generator=ETRCaseGenerator(ELEMENTS))
-r.update_premises(premises=[View.get_falsum()])
+r.update_premises(
+    premises=[
+        View.from_str("Ex { S(x*) D(x) }"),
+        View.from_str("{ S(T()*) }"),
+    ]
+)
+r.update_query(query=View.from_str("{D(T())}"))
 
 
 def mutate_reasoning_problem(
-    r: ReasoningProblem, max_premises: int = 3
+    r: ReasoningProblem, max_premises: int = 5
 ) -> list[ReasoningProblem]:
     def add_premise(r: ReasoningProblem) -> ReasoningProblem:
         r = copy.deepcopy(r)
@@ -80,52 +87,133 @@ def problem_well_formed(r: ReasoningProblem) -> bool:
     return True
 
 
-r = ReasoningProblem(generator=ETRCaseGenerator(ELEMENTS))
-r.update_premises(
-    premises=[View.from_str("{P(A())Q(A()), R(A())S(A())}"), View.from_str("{P(A())}")]
-)
-r.update_query(query=View.from_str("{Q(A())}"))
+def worker(proc_num, queue):
+    local_problem_queue = copy.deepcopy(queue)
+    local_ret = []
+    try:
+        while len(local_problem_queue) > 0 and len(local_ret) < 100:
+            r = local_problem_queue.pop(0)
+            mutations = mutate_reasoning_problem(r)
+            for m in mutations:
+                if problem_well_formed(m):
+                    local_problem_queue.append(m)
+                    if m.query_is_logically_consistent or m.etr_predicts_query_follows:
+                        local_ret.append(m)
 
-problem_queue = [r]
+            print(
+                f"Process {proc_num}: "
+                + str(len(local_problem_queue))
+                + "\t"
+                + str(len(local_ret))
+                + "\t"
+                + str(
+                    sum(
+                        [1 if r.etr_conclusion_is_categorical else 0 for r in local_ret]
+                    )
+                )
+                + "\t"
+                + str(
+                    sum([1 if r.etr_predicts_query_follows else 0 for r in local_ret])
+                )
+            )
+    except KeyboardInterrupt:
+        with open(f"output_{proc_num}.jsonl", "w") as f:
+            for r in local_ret:
+                f.write(json.dumps(r.to_dict()) + "\n")
+        exit(0)
 
-import time
-
-ret = []
-try:
-    while (
-        len(problem_queue) > 0
-        and sum([1 if r.etr_predicts_query_follows else 0 for r in ret]) < 10
-    ):
-        r = problem_queue.pop(0)
-        mutations = mutate_reasoning_problem(r)
-        # if not ignore_problem(r):
-        #     problem_queue.append(r)
-        for m in mutations:
-            if problem_well_formed(m):
-                ret.append(m)
-                problem_queue.append(m)
-
-        print(
-            str(len(problem_queue))
-            + "\t"
-            + str(len(ret))
-            + "\t"
-            + str(sum([1 if r.etr_conclusion_is_categorical else 0 for r in ret]))
-            + "\t"
-            + str(sum([1 if r.etr_predicts_query_follows else 0 for r in ret]))
-        )
-        #     print(f"Vocab size: {r.vocab_size}")
-        #     # print(r.premises)
-        #     # print(r.query)
-        #     print(r.full_prose())
-        # time.sleep(1)
-except KeyboardInterrupt:
-    with open("output_2.jsonl", "w") as f:
-        for r in ret:
+    with open(f"output_{proc_num}.jsonl", "w") as f:
+        for r in local_ret:
             f.write(json.dumps(r.to_dict()) + "\n")
-    exit(0)
 
-with open("output_2.jsonl", "w") as f:
-    for r in ret:
-        f.write(json.dumps(r.to_dict()) + "\n")
-    # json.dump([r.to_dict() for r in ret], f, indent=4)
+    print(f"Process {proc_num} finished")
+
+
+if __name__ == "__main__":
+
+    # r = ReasoningProblem(generator=ETRCaseGenerator(ELEMENTS))
+    # r.update_premises(
+    #     premises=[
+    #         View.from_str("{PP(TA())PQ(TA()), PR(TA())PS(TA())}"),
+    #         View.from_str("{PP(TA())}"),
+    #     ]
+    # )
+    # r.update_query(query=View.from_str("{PQ(TA())}"))
+
+    queue = []
+
+    # r = ReasoningProblem(generator=ETRCaseGenerator(ELEMENTS))
+    # r.update_premises(
+    #     premises=[
+    #         View.from_str("{PQ(TA())}^{PP(TA())}"),
+    #         View.from_str("{PP(TA())}"),
+    #     ]
+    # )
+    # r.update_query(query=View.from_str("{PQ(TA())}"))
+
+    # queue.append(r)
+
+    r = ReasoningProblem(generator=ETRCaseGenerator(ELEMENTS))
+    r.update_premises(
+        premises=[
+            View.from_str("Ax Ay {PQ(y)}^{PP(x)}"),
+            View.from_str("{Ax Ay {PR(y)}^{PQ(x)}}"),
+        ]
+    )
+    r.update_query(query=View.from_str("Ax Ay {PP(TA())}"))
+
+    queue.append(r)
+
+    processes = []
+    for i in range(16):
+        p = multiprocessing.Process(target=worker, args=(i, queue))
+        processes.append(p)
+        p.start()
+
+    for p in processes:
+        p.join()
+
+    # Write the output to a single file
+    with open("multi_processed_output.jsonl", "w") as f:
+        for i in range(8):
+            with open(f"output_{i}.jsonl", "r") as f2:
+                f.write(f2.read())
+
+
+# ret = []
+# try:
+#     while len(problem_queue) > 0 and len(ret) < 10:
+#         r = problem_queue.pop(0)
+#         mutations = mutate_reasoning_problem(r)
+#         # if not ignore_problem(r):
+#         #     problem_queue.append(r)
+#         for m in mutations:
+#             if problem_well_formed(m):
+#                 problem_queue.append(m)
+#                 if m.query_is_logically_consistent or m.etr_predicts_query_follows:
+#                     ret.append(m)
+
+#         print(
+#             str(len(problem_queue))
+#             + "\t"
+#             + str(len(ret))
+#             + "\t"
+#             + str(sum([1 if r.etr_conclusion_is_categorical else 0 for r in ret]))
+#             + "\t"
+#             + str(sum([1 if r.etr_predicts_query_follows else 0 for r in ret]))
+#         )
+#         #     print(f"Vocab size: {r.vocab_size}")
+#         #     # print(r.premises)
+#         #     # print(r.query)
+#         #     print(r.full_prose())
+#         # time.sleep(1)
+# except KeyboardInterrupt:
+#     with open("output_2.jsonl", "w") as f:
+#         for r in ret:
+#             f.write(json.dumps(r.to_dict()) + "\n")
+#     exit(0)
+
+# with open("output_2.jsonl", "w") as f:
+#     for r in ret:
+#         f.write(json.dumps(r.to_dict()) + "\n")
+#     # json.dump([r.to_dict() for r in ret], f, indent=4)
