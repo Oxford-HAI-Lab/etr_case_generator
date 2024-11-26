@@ -21,7 +21,7 @@ def parse_args():
     parser.add_argument(
         "--dataset_name",
         type=str,
-        default="etr_for_lm_eval.jsonl",
+        default="etr_for_lm_eval",
         help="Name of the dataset (.jsonl)",
     )
     parser.add_argument(
