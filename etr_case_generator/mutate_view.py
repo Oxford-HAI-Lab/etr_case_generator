@@ -88,7 +88,10 @@ def negate_view(view: View) -> View:
 
 
 def remove_noncommital_states(view: View) -> View:
-    """Remove noncommital states from the view. E.g., {p, q, 0} becomes {p, q}."""
+    """Remove noncommital states from the view. E.g., {p, q, 0} becomes {p, q}.
+    TODO: after what I've learned about {p, q, 0} being a logically vacuous conclusion,
+    I don't know if this is the right approach to take. Maybe for mutations, but
+    cerrtainly not for comparing views to each other."""
     new_stage = set()
     new_sup = set()
     for state in view.stage:
@@ -168,6 +171,12 @@ def merge_random_unary_predicate(view: View) -> View:
     stage.
     The letters may correspond to existing predicates / objects in the view, or they
     may not.
+
+    TODO: this should be split into two functions -- one that merges an existing
+    predicate, and another that creates a new one using the next available letter in the
+    alphabet
+
+    TODO: I don't think this is an atomic operation, either...
     """
     predicate_letter, term_letter = random.sample(list(ALPHABET), k=2)
     predicate_letter = "P" + predicate_letter
@@ -330,15 +339,20 @@ def replace_random_term_in_view(
     atoms = view.stage.atoms | view.supposition.atoms
     terms = set([term for atom in atoms for term in cast(PredicateAtom, atom).terms])
     term_to_replace = random.choice(list(terms))
-    arb_obj_name = random.choice(
-        list(
-            set(ALPHABET)
-            - set(
-                [u.name.upper() for u in view.dependency_relation.universals]
-                + [e.name.upper() for e in view.dependency_relation.existentials]
+
+    # Arbitrary object should take the next alphabet letter name that's available
+    arb_obj_name = (
+        sorted(
+            list(
+                set(ALPHABET)
+                - set(
+                    [u.name.upper() for u in view.dependency_relation.universals]
+                    + [e.name.upper() for e in view.dependency_relation.existentials]
+                )
             )
         )
-    ).lower()
+    )[0].lower()
+
     stage, supposition = replace_term_in_view(
         view, term_to_replace, ArbitraryObject(name=arb_obj_name)
     )
