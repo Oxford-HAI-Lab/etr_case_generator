@@ -156,8 +156,8 @@ if __name__ == "__main__":
     r = ReasoningProblem(generator=ETRCaseGenerator(ELEMENTS))
     r.update_premises(
         premises=[
-            View.from_str("Ax Ay {PQ(y)}^{PP(x)}"),
-            View.from_str("{Ax Ay {PR(y)}^{PQ(x)}}"),
+            View.from_str("Aa Ab {PB(b)}^{PA(a)}"),
+            View.from_str("Aa Ab {PC(b)}^{PB(a)}"),
         ]
     )
     r.update_query(query=View.from_str("Ax Ay {PP(TA())}"))
