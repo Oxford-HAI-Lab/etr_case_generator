@@ -82,6 +82,147 @@ def negate_atom(view: View) -> View:
     )
 
 
+"""What follows below are methods that can return the "family" of views an edit distance
+of one away from an original view."""
+
+
+def return_all_views_with_single_negations(view: View) -> list[View]:
+    """Given a view, return every view that can be obtained by negating a single atom in
+    a single state in the view's stage or supposition.
+
+    Args:
+        view (View): The original view.
+
+    Returns:
+        list[View]: All views obtained with a single negation.
+    """
+    ret = []
+    for state in view.stage:
+        for atom in state:
+            new_state = State(state - {atom} | {~atom})
+            new_stage = SetOfStates(view.stage - {state} | {new_state})
+            ret.append(
+                View.with_defaults(
+                    stage=new_stage,
+                    supposition=view.supposition,
+                    dependency_relation=view.dependency_relation,
+                    issue_structure=view.issue_structure,
+                    weights=None,
+                )
+            )
+    for state in view.supposition:
+        for atom in state:
+            new_state = State(state - {atom} | {~atom})
+            new_supposition = SetOfStates(view.supposition - {state} | {new_state})
+            ret.append(
+                View.with_defaults(
+                    stage=view.stage,
+                    supposition=new_supposition,
+                    dependency_relation=view.dependency_relation,
+                    issue_structure=view.issue_structure,
+                    weights=None,
+                )
+            )
+    return ret
+
+
+def return_all_views_with_single_atom_introductions(
+    view: View, atom: PredicateAtom
+) -> list[View]:
+    """Given a view, return every view that can be obtained by introducing a single atom
+    to the view's stage or supposition.
+
+    Args:
+        view (View): The original view.
+        atom (PredicateAtom): The atom to introduce.
+
+    Returns:
+        list[View]: All views obtained with a single atom introduction.
+    """
+    # First, new disjuncts
+    ret = []
+    new_state = State({atom})
+    new_stage = SetOfStates(view.stage | {new_state})
+    ret.append(
+        View.with_defaults(
+            stage=new_stage,
+            supposition=view.supposition,
+            dependency_relation=view.dependency_relation,
+            issue_structure=view.issue_structure,
+            weights=None,
+        )
+    )
+    new_state = State({atom})
+    new_supposition = SetOfStates(view.supposition | {new_state})
+    ret.append(
+        View.with_defaults(
+            stage=view.stage,
+            supposition=new_supposition,
+            dependency_relation=view.dependency_relation,
+            issue_structure=view.issue_structure,
+            weights=None,
+        )
+    )
+
+    # Next, new conjuncts
+    for state in view.stage:
+        new_state = State(state | {atom})
+        new_stage = SetOfStates(view.stage - {state} | {new_state})
+        ret.append(
+            View.with_defaults(
+                stage=new_stage,
+                supposition=view.supposition,
+                dependency_relation=view.dependency_relation,
+                issue_structure=view.issue_structure,
+                weights=None,
+            )
+        )
+    for state in view.supposition:
+        new_state = State(state | {atom})
+        new_supposition = SetOfStates(view.supposition - {state} | {new_state})
+        ret.append(
+            View.with_defaults(
+                stage=view.stage,
+                supposition=new_supposition,
+                dependency_relation=view.dependency_relation,
+                issue_structure=view.issue_structure,
+                weights=None,
+            )
+        )
+
+    return ret
+
+
+def return_all_atom_introductions(view: View) -> list[View]:
+    """Given a view, return every view that can be obtained by introducing a single atom
+    to the view's stage or supposition.
+
+    Args:
+        view (View): The original view.
+
+    Returns:
+        list[View]: All views obtained with a single atom introduction.
+    """
+    ret = []
+    for atom in view.atoms:
+        ret += return_all_views_with_single_atom_introductions(
+            view, cast(PredicateAtom, atom)
+        )
+    # Also add a novel atom
+    # TODO: this "get novel predicate" should be a separate function for any view
+    predicate_name = "P" + random.choice(
+        ALPHABET
+    )  # TODO: these shouldn't be random choices; they can overlap
+    object_name = "T" + random.choice(ALPHABET)
+
+    term = FunctionalTerm(f=Function(name=object_name, arity=0), t=())
+    new_atom = PredicateAtom(
+        predicate=Predicate(predicate_name, arity=1), terms=(term,)
+    )
+    ret += return_all_views_with_single_atom_introductions(view, new_atom)
+    return ret
+
+
 def negate_view(view: View) -> View:
     """Negate the view."""
     return view.negation()
