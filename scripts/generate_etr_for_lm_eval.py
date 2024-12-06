@@ -189,7 +189,7 @@ def main(
     else:
         dataset += generate_problems_with_set_conclusions(
             generator=g,
-            n_problems=n_problems / 4,
+            n_problems=n_problems,
             conclusions_follow_by_etr=None,
             conclusions_valid=None,
             verbose=verbose,
