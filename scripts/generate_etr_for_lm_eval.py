@@ -219,6 +219,10 @@ def main(
         # print(json.dumps(formatted_problem, indent=2))
         formatted_problems.append(formatted_problem)
 
+    if print_only:
+        for problem in formatted_problems:
+            print(json.dumps(problem, indent=2))
+
     if not print_only:
         if verbose:
             print(
