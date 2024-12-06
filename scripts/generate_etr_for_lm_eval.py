@@ -61,6 +61,12 @@ def parse_args():
         default=False,
         help="Print problems to stdout instead of saving to file",
     )
+    parser.add_argument(
+        "--open_ended_questions",
+        action="store_true",
+        default=False,
+        help="Generate questions like \"What if anything follows?\" instead of \"Does X follow?\"",
+    )
     args = parser.parse_args()
     return args
 
@@ -158,6 +164,7 @@ def main(
     balance: bool,
     verbose: bool = False,
     print_only: bool = False,
+    open_ended_questions: bool = False,
 ):
     """Generate ETR problems for use in lm_eval.
 
@@ -243,4 +250,5 @@ if __name__ == "__main__":
         balance=args.balance,
         verbose=args.verbose,
         print_only=args.print_only,
+        open_ended_questions=args.open_ended_questions,
     )
