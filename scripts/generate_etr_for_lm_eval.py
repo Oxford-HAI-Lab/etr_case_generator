@@ -77,6 +77,7 @@ def generate_problems_with_set_conclusions(
         conclusions_follow_by_etr: Optional[bool],
         conclusions_valid: Optional[bool],
         verbose: bool = False,
+        open_ended_questions: bool = False,
 ):
     problems = []
     if verbose:
@@ -192,6 +193,7 @@ def main(
                 conclusions_follow_by_etr=etr,
                 conclusions_valid=classical,
                 verbose=verbose,
+                open_ended_questions=open_ended_questions,
             )
     else:
         dataset += generate_problems_with_set_conclusions(
@@ -200,6 +202,7 @@ def main(
             conclusions_follow_by_etr=None,
             conclusions_valid=None,
             verbose=verbose,
+            open_ended_questions=open_ended_questions,
         )
 
     formatted_problems = []
