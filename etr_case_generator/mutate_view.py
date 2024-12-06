@@ -210,6 +210,9 @@ def return_all_atom_introductions(view: View) -> list[View]:
         )
     # Also add a novel atom
     # TODO: this "get novel predicate" should be a separate function for any view
+    # TODO: also, it should take a desired arity
+    # also, we need to think about introducing new predicates with existing terms, and
+    # so on...
     predicate_name = "P" + random.choice(
         ALPHABET
     )  # TODO: these shouldn't be random choices; they can overlap
