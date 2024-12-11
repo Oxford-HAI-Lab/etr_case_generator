@@ -10,6 +10,16 @@ python scripts/generate_etr_for_lm_eval.py
 
 This will generate problems in the `datasets/` directory. Unless you have a good reason, keep the default of `datasets/etr_for_lm_eval.jsonl`, whose file name is referenced by `etr_problems.yaml`. 
 
+You can use flags like these:
+- `-n` to generate a different number of problems
+- `--balance` to generate a balanced dataset between the 4 classes at the intersection of the conclusion being classically-correct and the conclusion being ETR-predicted
+- `--open_ended_questions` to generate open-ended questions with "what, if anything, follows?"
+- `--verbose` to see some details
+
+```bash
+python scripts/generate_etr_for_lm_eval.py -n 20 --balance --open_ended_questions --verbose
+```
+
 ## Evaluate Problems
 
 First, ensure that you have the `lm-evaluation-harness` repository cloned and installed from [here](https://github.com/EleutherAI/lm-evaluation-harness). You can run `git clone https://github.com/EleutherAI/lm-evaluation-harness.git`.

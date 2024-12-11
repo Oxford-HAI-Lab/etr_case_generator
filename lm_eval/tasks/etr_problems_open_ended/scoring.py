@@ -25,6 +25,15 @@ def score_answer(question, answer):
     else:
         answer_text = str(answer)
 
+    print(f"Got this answer text: {answer_text}")
+
+    # Find "The following follows" in the answer_text, and get the substring after it
+    match = re.search(r"(?<=The following follows: )(.*)", answer_text)
+    if not match:
+        return {"correct": 0.0, "len_response": len(answer_text)}
+    else:
+        print(f"Matched this: {match.group(1)}")
+
     # Find YES/NO in the response
     match = re.search(r"\b(YES|NO)\b", answer_text.upper())
     if not match:
