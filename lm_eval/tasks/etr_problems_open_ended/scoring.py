@@ -28,11 +28,34 @@ def score_answer(question, answer):
     print(f"Got this answer text: {answer_text}")
 
     # Find "The following follows" in the answer_text, and get the substring after it
-    match = re.search(r"(?<=The following follows: )(.*)", answer_text)
-    if not match:
+    answer = None
+    match = re.search(r"(?<=following follows: )(.*)", answer_text)
+    if match:
+        answer = match.group(1)
+    if not answer:
+        # Find the second to last instance of "`" in the answer_text
+        match = re.search(r"`([^`]+)`[^`]*$", answer_text)
+        answer = match.group(1) if match else None
+    if not answer:
+        # Try to just find "follows" or "Follows" in the response, case insensitive and fairly generous
+        match = re.search(r"(?i)(?:follows|follows:|follows :|follows,|follows, :)(.*)", answer_text)
+        answer = match.group(1) if match else None
+
+    if not answer:
         return {"correct": 0.0, "len_response": len(answer_text)}
     else:
-        print(f"Matched this: {match.group(1)}")
+        print(f"Matched this answer: {answer}")
+
+    # Let's try to clean up the answer
+    # Remove "`." from the end of the answer (but not anywhere else in the string)
+    answer = answer.strip()
+    answer = re.sub(r"^:", "", answer)
+    answer = re.sub(r"`\.$", "", answer)
+    answer = re.sub(r"`$", "", answer)
+    answer = re.sub(r"\.$", "", answer)
+    answer = re.sub(r"^`", "", answer)
+
+    print(f"Matched and parsed: {answer}")
 
     # Find YES/NO in the response
     match = re.search(r"\b(YES|NO)\b", answer_text.upper())
