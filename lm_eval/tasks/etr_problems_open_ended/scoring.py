@@ -58,7 +58,10 @@ def score_answer(question, model_answer):
     print(f"Matched and parsed: {model_answer}")
 
     correct_answer = question["scoring_guide"]["logically_correct_answer"]
-    print(f"Correct answer: {correct_answer}")
+    # print(f"Correct answer: {correct_answer}")  # This will be "YES" or "NO", which doesn't help us here
+
+    etr_answer = question["scoring_guide"]["etr_conclusion"][0]
+    print(f"ETR conclusion: {etr_answer}")
 
     # Get premises
     premises = [p[0] for p in question["scoring_guide"]["premises"]]
@@ -66,5 +69,6 @@ def score_answer(question, model_answer):
 
     return {
         "correct": float(model_answer.lower() == correct_answer.lower()),
+        "same_as_etr": float(model_answer.lower() == etr_answer.lower()),
         "len_response": len(answer_text),
     }
