@@ -2,6 +2,7 @@ import argparse
 import json
 import itertools
 import random
+import textwrap
 
 from pysmt.fnode import FNode
 
@@ -131,7 +132,22 @@ def generate_problems_with_set_conclusions(
 
             if open_ended_questions:
                 # Reset full question to be open-ended
-                p.full_prose_question = "What, if anything, follows?"
+                p.full_prose_question = ""
+                p.full_prose_question += "I've rewritten the premises in logical format for you:\n\n"
+                for i, (view, premise) in enumerate(p.premises):
+                    p.full_prose_question += f" {i+1}. {view}\n"  # TODO Get them in logical form here
+                p.full_prose_question += "\n\n"
+                p.full_prose_question += textwrap.dedent("""
+                    For the purpose of this question, I want you to write your answer in the format of a logical statement. Here are the rules for how you should format it:
+                    - You can write a predicate like "f()"
+                    - If the predicate has arguments, you can write them like "f(x)"
+                    - You can do negation with "~", like "~f(x)" to mean "not f(x)".
+                    - You can represent "and" by writing multiple predicates without a separator, like "f(x)g(x)"
+                    - You can represent "or" by writing multiple predicates with a "," between them, like "f(x),g(x)"
+                    - You can use the "∀" to represent "for all", like "∀x f(x)"
+                    - You can use the "∃" to represent "there exists", like "∃x f(x)"
+                    """).strip() # TODO Add more rules here
+                p.full_prose_question += "\n\nWrite your answer in the logical statement format that I've shown you above.\n\nWhat, if anything, follows from the premises I've given you?"
 
             # If we want conclusions to follow by ETR, ETR has to predict something
             # categorical and it also has to match the question being asked

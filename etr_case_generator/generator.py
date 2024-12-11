@@ -463,15 +463,15 @@ class ETRCaseGenerator:
             classical_validity = check_validity([p1, p2], [question_conclusion_view])
 
             # The full prose
-            full_prose = "Consider the following premises:\n"
+            full_prose_premises = "Consider the following premises:\n"
 
             p1_prose, _ = self.view_to_natural_language(p1)
             p1_prose = p1_prose[0].upper() + p1_prose[1:] + "."
-            full_prose += f"1. {p1_prose}\n"
+            full_prose_premises += f"1. {p1_prose}\n"
 
             p2_prose, _ = self.view_to_natural_language(p2)
             p2_prose = p2_prose[0].upper() + p2_prose[1:] + "."
-            full_prose += f"2. {p2_prose}\n\n"
+            full_prose_premises += f"2. {p2_prose}\n\n"
 
             try:
                 etr_prose, _ = self.view_to_natural_language(question_conclusion_view)
@@ -483,7 +483,7 @@ class ETRCaseGenerator:
             full_prose_question += "Answer using 'YES' or 'NO' ONLY."
 
             yield ReasoningProblem(
-                full_prose_premises=full_prose,
+                full_prose_premises=full_prose_premises,
                 full_prose_question=full_prose_question,
                 premises=[
                     (
