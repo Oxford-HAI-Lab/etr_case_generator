@@ -122,15 +122,16 @@ def generate_problems_with_set_conclusions(
                     )
 
                     # Reset full question text to match the new conclusion
-                    p.full_prose = p.full_prose.split("Does it follow that")[0]
-                    p.full_prose += (
-                        f"Does it follow that {p.question_conclusion[1]}?\n\n"
-                    )
-                    p.full_prose += "Answer using 'YES' or 'NO' ONLY."
+                    p.full_prose_question = f"Does it follow that {p.question_conclusion[1]}?\n\n"
+                    p.full_prose_question += "Answer using 'YES' or 'NO' ONLY."
                 else:
                     continue
             if conclusions_valid == False and valid_conclusion:
                 continue
+
+            if open_ended_questions:
+                # Reset full question to be open-ended
+                p.full_prose_question = "What, if anything, follows?"
 
             # If we want conclusions to follow by ETR, ETR has to predict something
             # categorical and it also has to match the question being asked
@@ -208,7 +209,7 @@ def main(
     formatted_problems = []
     for problem in dataset:
         formatted_problem = {
-            "question": problem["full_prose"],
+            "question": problem["full_prose_premises"].strip() + "\n\n" + problem["full_prose_question"].strip(),
             "scoring_guide": {
                 **problem,
                 "etr_answer": (

@@ -20,7 +20,8 @@ class ReasoningProblem:
     premises: list[tuple[str, str]]
 
     # The actual question
-    full_prose: str  # The premises and the question_conclusion
+    full_prose_premises: str  # The premises
+    full_prose_question: str  # The question being asked
     question_conclusion: tuple[
         str, str
     ]  # Note: this is not necessarily the etr_conclusion
@@ -478,11 +479,12 @@ class ETRCaseGenerator:
                 # Conclusion is in a form we cannot represent yet; skip this case
                 continue
 
-            full_prose += f"Does it follow that {etr_prose}?\n\n"
-            full_prose += "Answer using 'YES' or 'NO' ONLY."
+            full_prose_question = f"Does it follow that {etr_prose}?\n\n"
+            full_prose_question += "Answer using 'YES' or 'NO' ONLY."
 
             yield ReasoningProblem(
-                full_prose=full_prose,
+                full_prose_premises=full_prose,
+                full_prose_question=full_prose_question,
                 premises=[
                     (
                         p1.to_str(),
