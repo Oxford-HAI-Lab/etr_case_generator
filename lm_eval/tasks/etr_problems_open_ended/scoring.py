@@ -67,8 +67,16 @@ def score_answer(question, model_answer):
     premises = [p[0] for p in question["scoring_guide"]["premises"]]
     print(f"Premises: {premises}")
 
+    # Let's check if the model answer is contained within the ETR answer
+    # First, get only the contents insider the curly brackets of the model answer
+    model_answer_contents = re.search(r"\{(.*)\}", model_answer).group(1)
+    # Same with the ETR answer
+    etr_answer_contents = re.search(r"\{(.*)\}", etr_answer).group(1)
+    kinda_same = model_answer_contents in etr_answer_contents
+
     return {
         "correct": float(model_answer.lower() == correct_answer.lower()),
         "same_as_etr": float(model_answer.lower() == etr_answer.lower()),
+        "contained_within_etr": float(kinda_same),
         "len_response": len(answer_text),
     }
