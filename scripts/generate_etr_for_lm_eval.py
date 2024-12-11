@@ -141,13 +141,14 @@ def generate_problems_with_set_conclusions(
                     For the purpose of this question, I want you to write your answer in the format of a logical statement. Here are the rules for how you should format it:
                     - You can write a predicate like "f()"
                     - If the predicate has arguments, you can write them like "f(x)"
-                    - You can do negation with "~", like "~f(x)" to mean "not f(x)".
+                    - You can do negation with "~", like "~f(x)" to mean "not f(x)"
                     - You can represent "and" by writing multiple predicates without a separator, like "f(x)g(x)"
                     - You can represent "or" by writing multiple predicates with a "," between them, like "f(x),g(x)"
                     - You can use the "∀" to represent "for all", like "∀x f(x)"
                     - You can use the "∃" to represent "there exists", like "∃x f(x)"
+                    - Wrap a statement in curly braces, like "{f(x)g(x)}", or "∀x {f(x)g(x)}", if there's a quantifier
                     """).strip() # TODO Add more rules here
-                p.full_prose_question += "\n\nWrite your answer in the logical statement format that I've shown you above.\n\nWhat, if anything, follows from the premises I've given you?"
+                p.full_prose_question += "\n\nWrite your answer in the logical statement format that I've shown you above.\n\nWhat, if anything, follows from the premises I've given you?\n\nSpend one paragraph thinking, and then write your answer like this: 'The following follows: `{f(x)g(x)}`'."
 
             # If we want conclusions to follow by ETR, ETR has to predict something
             # categorical and it also has to match the question being asked
