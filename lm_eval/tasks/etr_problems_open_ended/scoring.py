@@ -69,10 +69,15 @@ def score_answer(question, model_answer):
 
     # Let's check if the model answer is contained within the ETR answer
     # First, get only the contents insider the curly brackets of the model answer
-    model_answer_contents = re.search(r"\{(.*)\}", model_answer).group(1)
-    # Same with the ETR answer
-    etr_answer_contents = re.search(r"\{(.*)\}", etr_answer).group(1)
-    kinda_same = model_answer_contents in etr_answer_contents
+    model_match = re.search(r"\{(.*)\}", model_answer)
+    etr_match = re.search(r"\{(.*)\}", etr_answer)
+    
+    if model_match and etr_match:
+        model_answer_contents = model_match.group(1)
+        etr_answer_contents = etr_match.group(1)
+        kinda_same = model_answer_contents in etr_answer_contents
+    else:
+        kinda_same = False
 
     return {
         "correct": float(model_answer.lower() == correct_answer.lower()),
