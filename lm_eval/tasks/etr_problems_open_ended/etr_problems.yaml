@@ -17,6 +17,9 @@ metric_list:
   - metric: same_as_etr
     aggregation: mean
     higher_is_better: true
+  - metric: contained_within_etr
+    aggregation: mean
+    higher_is_better: true
   - metric: len_response
     aggregation: mean
     higher_is_better: false
