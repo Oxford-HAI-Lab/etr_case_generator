@@ -79,7 +79,7 @@ def generate_problems_with_set_conclusions(
         conclusions_valid: Optional[bool],
         verbose: bool = False,
         open_ended_questions: bool = False,
-):
+) -> list[dict]:
     problems = []
     if verbose:
         print(
