@@ -4,11 +4,11 @@ from etr_case_generator.generator2.problem_in_smt import generate_problem_in_smt
 from etr_case_generator.generator2.reified_problem import FullProblem
 
 
-# from etr_case_generator.ontology import ELEMENTS, CARDS
+from etr_case_generator.ontology import ELEMENTS, CARDS, Ontology
 
 
-def generate_problem(args) -> FullProblem:
-    return generate_problem_in_smt(args)
+def generate_problem(args, ontology: Ontology=ELEMENTS) -> FullProblem:
+    return generate_problem_in_smt(args, ontology)
 
 
 def generate_problem_list(n_problems: int, args) -> list[FullProblem]:

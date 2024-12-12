@@ -5,6 +5,9 @@ from pysmt.shortcuts import Symbol, And, Or, Not, Implies, Iff, is_valid
 from pysmt.fnode import FNode
 from pysmt.typing import BOOL, REAL, PySMTType
 
+from etr_case_generator import Ontology
+from etr_case_generator.ontology import ELEMENTS
+
 
 @dataclass(kw_only=True)
 class SMTProblem:
@@ -15,7 +18,7 @@ class SMTProblem:
     yes_or_no_conclusion_incorrect: FNode = None  # Distractor
 
 
-def random_smt_problem(num_variables: int=3, num_clauses: int=3, min_literals_per_clause: int=3, max_literals_per_clause: int=3, num_steps: int = 3) -> SMTProblem:
+def random_smt_problem(num_variables: int=3, num_clauses: int=3, min_literals_per_clause: int=3, max_literals_per_clause: int=3, num_steps: int = 3, ontology: Ontology=ELEMENTS) -> SMTProblem:
     # Define a random logical operator generator
     # TODO(andrew) This is shit! It needs to be massively improved.
     def random_operator():
