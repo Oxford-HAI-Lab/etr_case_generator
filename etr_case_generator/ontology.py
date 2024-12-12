@@ -117,6 +117,8 @@ ELEMENTS = Ontology(
     ],
 )
 
+from typing import Literal
+
 def predicate_to_function_name(predicate: Predicate, shorten: Literal["None", "Short", "Single"] = "None") -> str:
     if shorten=="None":
         return predicate.name.replace(" ", "_")
