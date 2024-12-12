@@ -6,7 +6,7 @@ from pysmt.fnode import FNode
 from pysmt.typing import BOOL, REAL, PySMTType
 
 from etr_case_generator import Ontology
-from etr_case_generator.ontology import ELEMENTS
+from etr_case_generator.ontology import ELEMENTS, natural_name_to_logical_name
 
 
 @dataclass(kw_only=True)
@@ -36,7 +36,7 @@ def random_smt_problem(num_clauses: int=3, num_steps: int=3, ontology: Ontology=
         # For now we only handle arity=1 predicates
         obj = random.choice(ontology.objects)
         # Create symbol like "red(ace)" or "magnetic(elementium)"
-        return Symbol(f"{predicate.name}({obj})", BOOL)
+        return Symbol(f"{natural_name_to_logical_name(predicate.name)}({natural_name_to_logical_name(obj)})", BOOL)
 
     def random_term(depth=0):
         """Generate a random term with bounded depth"""
