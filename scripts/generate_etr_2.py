@@ -1,12 +1,16 @@
 import argparse
-# from etr_case_generator.ontology import ELEMENTS
+
+from etr_case_generator.generator2.reified_problem import FullProblem
 
 
-def generate_probleem(args):
+# from etr_case_generator.ontology import ELEMENTS, CARDS
+
+
+def generate_problem(args) -> FullProblem:
     ...
 
 
-def main_loop(args):
+def generate_problem_list(n_problems: int, args) -> list[FullProblem]:
     """Generate ETR problems.
 
     Args:
@@ -14,12 +18,13 @@ def main_loop(args):
         verbose (bool, optional): Whether to print debugging info. Defaults to False.
     """
 
-    problems = []
+    problems: list[FullProblem] = []
     for _ in range(args.n_problems):
         if args.verbose:
             print(f"Generating problem {len(problems) + 1}/{args.n_problems}")
-        # TODO: Generate problem here
-        pass
+        generate_problem(args)
+
+    return problems
 
 
 def main():
@@ -41,7 +46,7 @@ def main():
     )
     args = parser.parse_args()
     
-    main_loop(args)
+    generate_problem_list(n_problems=args.n_problems, args=args)
 
 if __name__ == "__main__":
     main()
