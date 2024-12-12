@@ -34,6 +34,8 @@ def smt_to_english(fnode: FNode) -> str:
         # Extract function name and argument from f(x) format
         name, arg = pred_str.split('(')
         arg = arg.rstrip(')')
+        # Replace underscores with spaces in predicate names
+        name = name.replace('_', ' ')
         return f"{arg} is {name}"
     
     # Base case: single predicate
@@ -57,7 +59,7 @@ def smt_to_english(fnode: FNode) -> str:
     elif fnode.is_implies():
         antecedent = smt_to_english(fnode.arg(0))
         consequent = smt_to_english(fnode.arg(1))
-        return f"if {antecedent} then {consequent}"
+        return f"if {antecedent}, then {consequent}"
         
     elif fnode.is_iff():
         left = smt_to_english(fnode.arg(0))
