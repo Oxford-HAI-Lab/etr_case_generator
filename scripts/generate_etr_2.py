@@ -20,12 +20,12 @@ def generate_problem_list(n_problems: int, args) -> list[FullProblem]:
     """
 
     problems: list[FullProblem] = []
-    for _ in range(args.n_problems):
+    for i in range(args.n_problems):
         if args.verbose:
             print(f"Generating problem {len(problems) + 1}/{args.n_problems}")
         problem = generate_problem(args)
         problems.append(problem)
-        print(f"Generated Problem")
+        print(f"Generated Problem {i + 1} of {n_problems}")
         print(problem)
 
     return problems
@@ -39,7 +39,7 @@ def main():
         "-n",
         "--n-problems", 
         type=int,
-        default=10,
+        default=3,
         help="Number of problems to generate"
     )
     parser.add_argument(

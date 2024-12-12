@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
+
+from pysmt.fnode import FNode
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
@@ -10,6 +12,7 @@ from etr_case_generator.smt_generator import SMTProblem
 @dataclass(kw_only=True)
 class ReifiedView:
     logical_form_smt: Optional[str] = None
+    logical_form_smt_fnode: Optional[FNode] = None
     logical_form_etr: Optional[str] = None
     english_form: Optional[str] = None
     mapping: Optional[dict[str, str]] = None  # logical_form -> english_form, this must be bijective
@@ -56,7 +59,7 @@ class FullProblem:
                     content.append(f"     ETR: {view.logical_form_etr}")
                 if view.english_form:
                     content.append(f"     ENG: {view.english_form}")
-                content.append("")
+            content.append("")
         
         # Add yes/no section if present
         if self.yes_or_no_conclusion:
