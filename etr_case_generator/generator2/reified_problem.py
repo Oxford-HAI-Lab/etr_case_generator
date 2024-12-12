@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from etr_case_generator.smt_generator import SMTProblem
+
 
 @dataclass(kw_only=True)
 class ReifiedView:
@@ -29,3 +31,9 @@ class FullProblem:
 
     # Details for printing
     introductory_prose: Optional[str] = None
+
+
+def full_problem_from_smt_problem(smt_problem: SMTProblem) -> FullProblem:
+    views = [ReifiedView(logical_form_smt=smt_problem.views[0].serialize())]
+    yes_or_no_conclusion = ReifiedView(logical_form_smt=smt_problem.yes_or_no_conclusion_correct.serialize())
+    return FullProblem(views=views, yes_or_no_conclusion=yes_or_no_conclusion)
