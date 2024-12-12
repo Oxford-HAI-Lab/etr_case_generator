@@ -134,9 +134,11 @@ def smt_to_english(fnode: FNode) -> str:
 
     def _convert_predicate(pred_str: str) -> str:
         """Convert f(x) format to 'x is f'"""
+        # Clean up the string first - remove any quotes
+        pred_str = pred_str.replace("'", "")
         # Extract function name and argument from f(x) format
         name, arg = pred_str.split('(')
-        arg = arg.rstrip(')')
+        arg = arg.rstrip(')')  # remove closing parenthesis
         # Replace underscores with spaces in predicate names
         name = name.replace('_', ' ')
         return f"{arg} is {name}"
