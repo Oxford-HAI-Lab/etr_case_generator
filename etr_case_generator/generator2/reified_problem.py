@@ -6,6 +6,13 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 
+
+def format_smt(fnode: FNode) -> str:
+    """Format SMT formula without single quotes around symbols"""
+    return str(fnode).replace("'", "")
+from rich.panel import Panel
+from rich.text import Text
+
 from etr_case_generator.smt_generator import SMTProblem
 
 
@@ -108,7 +115,7 @@ def full_problem_from_smt_problem(smt_problem: SMTProblem) -> FullProblem:
     reified_views = []
     for view in smt_problem.views:
         reified_view = ReifiedView(
-            logical_form_smt=str(view),  # Basic string representation of FNode
+            logical_form_smt=format_smt(view),  # Formatted string representation without quotes
             logical_form_smt_fnode=view,  # Store the original FNode
         )
         reified_views.append(reified_view)
