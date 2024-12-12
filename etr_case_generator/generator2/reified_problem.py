@@ -34,4 +34,15 @@ class FullProblem:
 
 
 def full_problem_from_smt_problem(smt_problem: SMTProblem) -> FullProblem:
-    ...
+    """Convert an SMTProblem to a FullProblem, filling only the basic SMT views."""
+    
+    # Convert each FNode view to a ReifiedView
+    reified_views = []
+    for view in smt_problem.views:
+        reified_view = ReifiedView(
+            logical_form_smt=str(view),  # Basic string representation of FNode
+            logical_form_etr=None,  # Leave ETR form empty for now
+        )
+        reified_views.append(reified_view)
+    
+    return FullProblem(views=reified_views)
