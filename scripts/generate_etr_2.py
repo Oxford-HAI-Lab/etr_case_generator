@@ -1,5 +1,6 @@
 import argparse
 
+from etr_case_generator.generator2.problem_in_smt import generate_problem_in_smt
 from etr_case_generator.generator2.reified_problem import FullProblem
 
 
@@ -7,7 +8,7 @@ from etr_case_generator.generator2.reified_problem import FullProblem
 
 
 def generate_problem(args) -> FullProblem:
-    ...
+    return generate_problem_in_smt(args)
 
 
 def generate_problem_list(n_problems: int, args) -> list[FullProblem]:
@@ -22,7 +23,10 @@ def generate_problem_list(n_problems: int, args) -> list[FullProblem]:
     for _ in range(args.n_problems):
         if args.verbose:
             print(f"Generating problem {len(problems) + 1}/{args.n_problems}")
-        generate_problem(args)
+        problem = generate_problem(args)
+        problems.append(problem)
+        print(f"Generated Problem")
+        print(problem)
 
     return problems
 
