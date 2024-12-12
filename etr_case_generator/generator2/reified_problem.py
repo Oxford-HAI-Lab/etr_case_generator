@@ -4,7 +4,8 @@ from typing import Optional
 
 @dataclass
 class ReifiedView:
-    logical_form: str
+    logical_form_z3: str
+    logical_form_etr: str
     english_form: str
     mapping: dict[str, str]  # logical_form -> english_form, this must be bijective
 
