@@ -116,3 +116,13 @@ ELEMENTS = Ontology(
         ]
     ],
 )
+
+def predicate_to_function_name(predicate: Predicate, shorten: Literal["None", "Short", "Single"] = "None") -> str:
+    if shorten=="None":
+        return predicate.name.replace(" ", "_")
+    elif shorten=="Short":
+        # Find the first letter of each word
+        letters = "".join([word[0] for word in predicate.name.split(" ")])
+        return letters.lower()
+    elif shorten=="Single":
+        return predicate.name[0].lower()
