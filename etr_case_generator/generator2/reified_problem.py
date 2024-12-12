@@ -9,7 +9,7 @@ class ReifiedView:
     mapping: dict[str, str]  # logical_form -> english_form, this must be bijective
 
 
-@dataclass
+@dataclass(kw_only=True)
 class FullProblem:
     views: Optional[list[ReifiedView]] = None
 
