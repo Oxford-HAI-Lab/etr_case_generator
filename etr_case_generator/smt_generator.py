@@ -18,36 +18,41 @@ class SMTProblem:
     yes_or_no_conclusion_incorrect: FNode = None  # Distractor
 
 
-def random_smt_problem(num_variables: int=3, num_clauses: int=3, min_literals_per_clause: int=3, max_literals_per_clause: int=3, num_steps: int = 3, ontology: Ontology=ELEMENTS) -> SMTProblem:
-    # Define a random logical operator generator
-    # TODO(andrew) This is shit! It needs to be massively improved.
+def random_smt_problem(num_clauses: int=3, num_steps: int=3, ontology: Ontology=ELEMENTS) -> SMTProblem:
+    """Generate a random SMT problem using predicates and objects from the ontology.
+    
+    Args:
+        num_clauses: Number of views/statements to generate
+        num_steps: Number of logical operations to apply in each statement
+        ontology: The ontology containing predicates and objects to use
+    """
     def random_operator():
-        return random.choice([And, Or, Not])
+        """Return a random logical operator"""
+        return random.choice([And, Or, Not, Implies, Iff])
 
-    # Define a random term generator (variable or NOT variable)
-    def random_term(variables):
-        var = random.choice(variables)
-        if random.choice([True, False]):
-            return Not(var)
-        return var
+    def random_atom():
+        """Generate a random atomic predicate application"""
+        predicate = random.choice(ontology.predicates)
+        # For now we only handle arity=1 predicates
+        obj = random.choice(ontology.objects)
+        # Create symbol like "red(ace)" or "magnetic(elementium)"
+        return Symbol(f"{predicate.name}({obj})", BOOL)
 
-    # Create random variables
-    variables = [Symbol(f'x{i}', BOOL) for i in range(num_variables)]
+    def random_term(depth=0):
+        """Generate a random term with bounded depth"""
+        if depth >= 2 or random.random() < 0.4:  # Base case
+            return random_atom()
+        
+        operator = random_operator()
+        if operator == Not:
+            return operator(random_term(depth + 1))
+        else:
+            return operator(random_term(depth + 1), random_term(depth + 1))
 
     # Generate random views
     views = []
     for _ in range(num_clauses):
-        # Start building the random logical statement
-        statement = random_term(variables)
-
-        # Randomly apply operators and combine terms
-        for _ in range(num_steps):
-            operator = random_operator()
-            if operator == Not:
-                statement = operator(statement)
-            else:
-                statement = operator(statement, random_term(variables))
-        
+        statement = random_term()
         views.append(statement)
 
     return SMTProblem(views=views)
