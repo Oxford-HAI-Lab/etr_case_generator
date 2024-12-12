@@ -2,12 +2,12 @@ from dataclasses import dataclass
 from typing import Optional
 
 
-@dataclass
+@dataclass(kw_only=True)
 class ReifiedView:
-    logical_form_z3: str
-    logical_form_etr: str
-    english_form: str
-    mapping: dict[str, str]  # logical_form -> english_form, this must be bijective
+    logical_form_z3: Optional[str] = None
+    logical_form_etr: Optional[str] = None
+    english_form: Optional[str] = None
+    mapping: Optional[dict[str, str]] = None  # logical_form -> english_form, this must be bijective
 
 
 @dataclass(kw_only=True)
