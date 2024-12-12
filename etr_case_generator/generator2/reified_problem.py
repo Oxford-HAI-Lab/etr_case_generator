@@ -129,6 +129,7 @@ def full_problem_from_smt_problem(smt_problem: SMTProblem) -> FullProblem:
         reified_view = ReifiedView(
             logical_form_smt=format_smt(view),  # Formatted string representation without quotes
             logical_form_smt_fnode=view,  # Store the original FNode
+            english_form=...,
         )
         reified_views.append(reified_view)
     
