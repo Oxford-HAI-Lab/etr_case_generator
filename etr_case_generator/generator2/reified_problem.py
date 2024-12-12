@@ -15,6 +15,66 @@ def format_smt(fnode: FNode) -> str:
     formatted = formatted.replace("exists", "∃")
     formatted = formatted.replace("forall", "∀")
     return formatted
+
+def smt_to_english(fnode: FNode) -> str:
+    """Convert an SMT formula to natural English.
+    
+    Examples:
+        magnetic(elementium) -> elementium is magnetic
+        And(magnetic(x), radioactive(x)) -> x is magnetic and x is radioactive
+        Or(magnetic(x), radioactive(x)) -> x is magnetic or x is radioactive
+        Not(magnetic(x)) -> x is not magnetic
+        Implies(magnetic(x), radioactive(x)) -> if x is magnetic then x is radioactive
+        Iff(magnetic(x), radioactive(x)) -> x is magnetic if and only if x is radioactive
+        ForAll([x], magnetic(x)) -> for all x, x is magnetic
+        Exists([x], magnetic(x)) -> there exists an x such that x is magnetic
+    """
+    def _convert_predicate(pred_str: str) -> str:
+        """Convert f(x) format to 'x is f'"""
+        # Extract function name and argument from f(x) format
+        name, arg = pred_str.split('(')
+        arg = arg.rstrip(')')
+        return f"{arg} is {name}"
+    
+    # Base case: single predicate
+    if fnode.is_symbol():
+        return _convert_predicate(str(fnode))
+        
+    # Handle each operator type
+    if fnode.is_not():
+        pred = smt_to_english(fnode.arg(0))
+        # Replace "is" with "is not" for predicates
+        return pred.replace(" is ", " is not ")
+        
+    elif fnode.is_and():
+        terms = [smt_to_english(arg) for arg in fnode.args()]
+        return " and ".join(terms)
+        
+    elif fnode.is_or():
+        terms = [smt_to_english(arg) for arg in fnode.args()]
+        return " or ".join(terms)
+        
+    elif fnode.is_implies():
+        antecedent = smt_to_english(fnode.arg(0))
+        consequent = smt_to_english(fnode.arg(1))
+        return f"if {antecedent} then {consequent}"
+        
+    elif fnode.is_iff():
+        left = smt_to_english(fnode.arg(0))
+        right = smt_to_english(fnode.arg(1))
+        return f"{left} if and only if {right}"
+        
+    elif fnode.is_forall():
+        vars = [str(v) for v in fnode.quantifier_vars()]
+        body = smt_to_english(fnode.arg(0))
+        return f"for all {', '.join(vars)}, {body}"
+        
+    elif fnode.is_exists():
+        vars = [str(v) for v in fnode.quantifier_vars()]
+        body = smt_to_english(fnode.arg(0))
+        return f"there exists {', '.join(vars)} such that {body}"
+        
+    return str(fnode)  # Fallback for unknown operators
 from rich.panel import Panel
 from rich.text import Text
 
@@ -129,7 +189,7 @@ def full_problem_from_smt_problem(smt_problem: SMTProblem) -> FullProblem:
         reified_view = ReifiedView(
             logical_form_smt=format_smt(view),  # Formatted string representation without quotes
             logical_form_smt_fnode=view,  # Store the original FNode
-            english_form=...,
+            english_form=smt_to_english(view),  # Convert to natural English
         )
         reified_views.append(reified_view)
     
