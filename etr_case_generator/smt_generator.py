@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import random
 
-from pysmt.shortcuts import Symbol, And, Or, Not, Implies, Iff, is_valid
+from pysmt.shortcuts import Symbol, And, Or, Not, Implies, Iff, ForAll, Exists, is_valid
 from pysmt.fnode import FNode
 from pysmt.typing import BOOL, REAL, PySMTType
 
@@ -26,9 +26,12 @@ def random_smt_problem(num_clauses: int=3, num_steps: int=3, ontology: Ontology=
         num_steps: Number of logical operations to apply in each statement
         ontology: The ontology containing predicates and objects to use
     """
-    def random_operator():
+    def random_operator(allow_quantifiers=True):
         """Return a random logical operator"""
-        return random.choice([And, Or, Not, Implies, Iff])
+        basic_ops = [And, Or, Not, Implies, Iff]
+        if allow_quantifiers and random.random() < 0.3:  # 30% chance of quantifier
+            return random.choice([ForAll, Exists])
+        return random.choice(basic_ops)
 
     def random_atom():
         """Generate a random atomic predicate application"""
@@ -38,13 +41,18 @@ def random_smt_problem(num_clauses: int=3, num_steps: int=3, ontology: Ontology=
         # Create symbol like "red(ace)" or "magnetic(elementium)"
         return Symbol(f"{natural_name_to_logical_name(predicate.name)}({natural_name_to_logical_name(obj)})", BOOL)
 
-    def random_term(depth=0):
+    def random_term(depth=0, allow_quantifiers=True):
         """Generate a random term with bounded depth"""
         if depth >= 2 or random.random() < 0.4:  # Base case
             return random_atom()
         
-        operator = random_operator()
-        if operator == Not:
+        operator = random_operator(allow_quantifiers)
+        if operator in (ForAll, Exists):
+            # For quantifiers, we need a variable and a formula
+            var = Symbol(random.choice(ontology.objects), BOOL)
+            # Don't allow nested quantifiers
+            return operator([var], random_term(depth + 1, allow_quantifiers=False))
+        elif operator == Not:
             return operator(random_term(depth + 1))
         else:
             return operator(random_term(depth + 1), random_term(depth + 1))
