@@ -8,8 +8,13 @@ from rich.text import Text
 
 
 def format_smt(fnode: FNode) -> str:
-    """Format SMT formula without single quotes around symbols"""
-    return str(fnode).replace("'", "")
+    """Format SMT formula without single quotes around symbols and with proper quantifier symbols"""
+    # First remove quotes
+    formatted = str(fnode).replace("'", "")
+    # Replace quantifier text with symbols
+    formatted = formatted.replace("exists", "∃")
+    formatted = formatted.replace("forall", "∀")
+    return formatted
 from rich.panel import Panel
 from rich.text import Text
 
