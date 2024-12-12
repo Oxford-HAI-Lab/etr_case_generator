@@ -60,6 +60,7 @@ class FullProblem:
                         content.append(f"     ETR: {view.logical_form_etr}")
                     if view.english_form or show_empty:
                         content.append(f"     Eng: {view.english_form}")
+                    content.append("")
             else:
                 content.append("  None")
             content.append("")
