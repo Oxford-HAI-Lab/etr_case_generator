@@ -50,56 +50,58 @@ class FullProblem:
     # Details for printing
     introductory_prose: Optional[str] = None
 
-    def __str__(self) -> str:
+    def full_string(self, show_empty: bool = False) -> str:
         console = Console(record=True)
         
         # Create the main content
         content = []
         
-        # Add introductory prose if present
-        if self.introductory_prose:
-            content.append(Text(self.introductory_prose, style="bold green"))
+        # Add introductory prose
+        if show_empty or self.introductory_prose:
+            content.append(Text("Introductory Prose:", style="bold green"))
+            content.append(f"  {self.introductory_prose}")
             content.append("")
         
         # Add views
-        if self.views:
+        if show_empty or self.views:
             content.append(Text("Views:", style="bold blue"))
-            for i, view in enumerate(self.views, 1):
-                if view.logical_form_smt:
+            if self.views:
+                for i, view in enumerate(self.views, 1):
                     content.append(f"  {i}. SMT: {view.logical_form_smt}")
-                if view.logical_form_etr:
                     content.append(f"     ETR: {view.logical_form_etr}")
-                if view.english_form:
                     content.append(f"     ENG: {view.english_form}")
+            else:
+                content.append("  None")
             content.append("")
         
-        # Add yes/no section if present
-        if self.yes_or_no_conclusion:
+        # Add yes/no section
+        if show_empty or any([self.yes_or_no_conclusion, self.yes_or_no_answer is not None, self.yes_or_no_question_prose]):
             content.append(Text("Yes/No Question:", style="bold magenta"))
-            if self.yes_or_no_question_prose:
-                content.append(f"  Question: {self.yes_or_no_question_prose}")
-            content.append(f"  Conclusion: {self.yes_or_no_conclusion.logical_form_smt}")
-            if self.yes_or_no_answer is not None:
-                content.append(f"  Answer: {self.yes_or_no_answer}")
+            content.append(f"  Question: {self.yes_or_no_question_prose}")
+            if self.yes_or_no_conclusion:
+                content.append(f"  Conclusion: {self.yes_or_no_conclusion.logical_form_smt}")
+            content.append(f"  Answer: {self.yes_or_no_answer}")
             content.append("")
         
-        # Add multiple choice section if present
-        if self.multiple_choices:
+        # Add multiple choice section
+        if show_empty or self.multiple_choices or self.multiple_choice_question_prose:
             content.append(Text("Multiple Choice:", style="bold yellow"))
-            if self.multiple_choice_question_prose:
-                content.append(f"  Question: {self.multiple_choice_question_prose}")
-            for i, (view, is_correct, is_predicted) in enumerate(self.multiple_choices, 1):
-                content.append(f"  {i}. {view.logical_form_smt}")
-                content.append(f"     Correct: {is_correct}, Predicted: {is_predicted}")
+            content.append(f"  Question: {self.multiple_choice_question_prose}")
+            if self.multiple_choices:
+                for i, (view, is_correct, is_predicted) in enumerate(self.multiple_choices, 1):
+                    content.append(f"  {i}. {view.logical_form_smt}")
+                    content.append(f"     Correct: {is_correct}, Predicted: {is_predicted}")
+            else:
+                content.append("  No choices available")
             content.append("")
         
-        # Add open ended section if present
-        if self.etr_predicted_conclusion or self.open_ended_question_prose:
+        # Add open ended section
+        if show_empty or self.etr_predicted_conclusion or self.open_ended_question_prose:
             content.append(Text("Open Ended:", style="bold cyan"))
-            if self.open_ended_question_prose:
-                content.append(f"  Question: {self.open_ended_question_prose}")
+            content.append(f"  Question: {self.open_ended_question_prose}")
             if self.etr_predicted_conclusion:
                 content.append(f"  Predicted: {self.etr_predicted_conclusion.logical_form_smt}")
+            content.append("")
         
         # Create panel with all content
         panel = Panel("\n".join(str(line) for line in content), 
@@ -111,6 +113,9 @@ class FullProblem:
             console.print(panel)
         
         return capture.get()
+
+    def __str__(self) -> str:
+        return self.full_string(show_empty=False)
 
 
 def full_problem_from_smt_problem(smt_problem: SMTProblem) -> FullProblem:
