@@ -1,26 +1,28 @@
 import argparse
-from etr_case_generator import ETRCaseGenerator
-from etr_case_generator.ontology import ELEMENTS
+# from etr_case_generator.ontology import ELEMENTS
 
 
-def main(n_problems: int, verbose: bool = False):
+def generate_probleem(args):
+    ...
+
+
+def main_loop(args):
     """Generate ETR problems.
 
     Args:
         n_problems (int): The number of problems to generate
         verbose (bool, optional): Whether to print debugging info. Defaults to False.
     """
-    generator = ETRCaseGenerator(ontology=ELEMENTS)
-    
+
     problems = []
-    for _ in range(n_problems):
-        if verbose:
-            print(f"Generating problem {len(problems) + 1}/{n_problems}")
+    for _ in range(args.n_problems):
+        if args.verbose:
+            print(f"Generating problem {len(problems) + 1}/{args.n_problems}")
         # TODO: Generate problem here
         pass
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(
         description="Generate a dataset of reasoning problems using ETRCaseGenerator"
     )
@@ -39,4 +41,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     
-    main(n_problems=args.n_problems, verbose=args.verbose)
+    main_loop(args)
+
+if __name__ == "__main__":
+    main()
