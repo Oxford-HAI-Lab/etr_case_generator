@@ -18,7 +18,7 @@ class SMTProblem:
     yes_or_no_conclusion_incorrect: FNode = None  # Distractor
 
 
-def random_smt_problem(num_clauses: int=3, num_steps: int=3, ontology: Ontology=ELEMENTS) -> SMTProblem:
+def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ontology=ELEMENTS) -> SMTProblem:
     """Generate a random SMT problem using predicates and objects from the ontology.
     
     Args:
@@ -39,7 +39,7 @@ def random_smt_problem(num_clauses: int=3, num_steps: int=3, ontology: Ontology=
         # For now we only handle arity=1 predicates
         obj = random.choice(ontology.objects)
         # Create symbol like "red(ace)" or "magnetic(elementium)"
-        return Symbol(f"{natural_name_to_logical_name(predicate.name)}({natural_name_to_logical_name(obj)})", BOOL)
+        return Symbol(f"{natural_name_to_logical_name(predicate.name, shorten=args.name_shortening)}({natural_name_to_logical_name(obj, shorten=args.name_shortening)})", BOOL)
 
     def random_term(depth=0, allow_quantifiers=True):
         """Generate a random term with bounded depth"""
@@ -49,7 +49,7 @@ def random_smt_problem(num_clauses: int=3, num_steps: int=3, ontology: Ontology=
         operator = random_operator(allow_quantifiers)
         if operator in (ForAll, Exists):
             # For quantifiers, we need a variable and a formula
-            var = Symbol(random.choice(ontology.objects), BOOL)
+            var = Symbol(natural_name_to_logical_name(random.choice(ontology.objects), shorten=args.name_shortening), BOOL)
             # Don't allow nested quantifiers
             return operator([var], random_term(depth + 1, allow_quantifiers=False))
         elif operator == Not:

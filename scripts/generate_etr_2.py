@@ -48,6 +48,7 @@ def main():
         action="store_true",
         help="Print verbose output"
     )
+    parser.add_argument("--name_shortening", type=str, default="none", help="How to shorten names of objects and predicates. Options are 'none', 'short', and 'first'.")
     args = parser.parse_args()
     
     generate_problem_list(n_problems=args.n_problems, args=args)
