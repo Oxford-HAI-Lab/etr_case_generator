@@ -31,17 +31,20 @@ def random_smt_problem(num_variables: int=3, num_clauses: int=3, min_literals_pe
     # Create random variables
     variables = [Symbol(f'x{i}', BOOL) for i in range(num_variables)]
 
-    # Start building the random logical statement
-    statement = random_term(variables)
-    # print(statement)
+    # Generate random views
+    views = []
+    for _ in range(num_clauses):
+        # Start building the random logical statement
+        statement = random_term(variables)
 
-    # Randomly apply operators and combine terms
-    for _ in range(num_steps):
-        operator = random_operator()
-        if operator == Not:
-            statement = operator(statement)
-        else:
-            statement = operator(statement, random_term(variables))
-        # print(statement)
+        # Randomly apply operators and combine terms
+        for _ in range(num_steps):
+            operator = random_operator()
+            if operator == Not:
+                statement = operator(statement)
+            else:
+                statement = operator(statement, random_term(variables))
+        
+        views.append(statement)
 
-    return statement
+    return SMTProblem(views=views)
