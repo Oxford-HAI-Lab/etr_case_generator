@@ -34,6 +34,4 @@ class FullProblem:
 
 
 def full_problem_from_smt_problem(smt_problem: SMTProblem) -> FullProblem:
-    views = [ReifiedView(logical_form_smt=smt_problem.views[0].serialize())]
-    yes_or_no_conclusion = ReifiedView(logical_form_smt=smt_problem.yes_or_no_conclusion_correct.serialize())
-    return FullProblem(views=views, yes_or_no_conclusion=yes_or_no_conclusion)
+    ...
