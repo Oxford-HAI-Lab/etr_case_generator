@@ -4,7 +4,7 @@ from typing import Optional
 
 @dataclass(kw_only=True)
 class ReifiedView:
-    logical_form_z3: Optional[str] = None
+    logical_form_smt: Optional[str] = None
     logical_form_etr: Optional[str] = None
     english_form: Optional[str] = None
     mapping: Optional[dict[str, str]] = None  # logical_form -> english_form, this must be bijective

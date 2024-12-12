@@ -1,0 +1,52 @@
+{
+  "animals": [
+    {"variable_short": "A", "variable_name": "antelope", "positive": "The antelope is grazing", "negative": "The antelope is not grazing"},
+    {"variable_short": "B", "variable_name": "bear", "positive": "The bear is hibernating", "negative": "The bear is not hibernating"},
+    {"variable_short": "C", "variable_name": "cheetah", "positive": "The cheetah is running", "negative": "The cheetah is not running"},
+    {"variable_short": "D", "variable_name": "dolphin", "positive": "The dolphin is swimming", "negative": "The dolphin is not swimming"},
+    {"variable_short": "E", "variable_name": "elephant", "positive": "The elephant is trumpeting", "negative": "The elephant is not trumpeting"},
+    {"variable_short": "F", "variable_name": "fox", "positive": "The fox is hunting", "negative": "The fox is not hunting"},
+    {"variable_short": "G", "variable_name": "giraffe", "positive": "The giraffe is eating leaves", "negative": "The giraffe is not eating leaves"},
+    {"variable_short": "H", "variable_name": "hippo", "positive": "The hippo is submerged", "negative": "The hippo is not submerged"}
+  ],
+  "toolbox": [
+    {"variable_short": "H", "variable_name": "hammer", "positive": "The hammer is being used", "negative": "The hammer is not being used"},
+    {"variable_short": "S", "variable_name": "screwdriver", "positive": "The screwdriver is turning", "negative": "The screwdriver is not turning"},
+    {"variable_short": "W", "variable_name": "wrench", "positive": "The wrench is tightening", "negative": "The wrench is not tightening"},
+    {"variable_short": "P", "variable_name": "pliers", "positive": "The pliers are gripping", "negative": "The pliers are not gripping"},
+    {"variable_short": "S", "variable_name": "saw", "positive": "The saw is cutting", "negative": "The saw is not cutting"},
+    {"variable_short": "D", "variable_name": "drill", "positive": "The drill is boring", "negative": "The drill is not boring"},
+    {"variable_short": "L", "variable_name": "level", "positive": "The level is balancing", "negative": "The level is not balancing"},
+    {"variable_short": "T", "variable_name": "tape_measure", "positive": "The tape measure is extending", "negative": "The tape measure is not extending"}
+  ],
+  "weather": [
+    {"variable_short": "R", "variable_name": "rain", "positive": "It is raining", "negative": "It is not raining"},
+    {"variable_short": "S", "variable_name": "sun", "positive": "The sun is shining", "negative": "The sun is not shining"},
+    {"variable_short": "W", "variable_name": "wind", "positive": "The wind is blowing", "negative": "The wind is not blowing"},
+    {"variable_short": "C", "variable_name": "clouds", "positive": "There are clouds in the sky", "negative": "There are no clouds in the sky"},
+    {"variable_short": "F", "variable_name": "fog", "positive": "There is fog", "negative": "There is no fog"},
+    {"variable_short": "H", "variable_name": "humidity", "positive": "The air is humid", "negative": "The air is not humid"},
+    {"variable_short": "T", "variable_name": "thunder", "positive": "There is thunder", "negative": "There is no thunder"},
+    {"variable_short": "L", "variable_name": "lightning", "positive": "There is lightning", "negative": "There is no lightning"}
+  ],
+  "emotions": [
+    {"variable_short": "H", "variable_name": "happy", "positive": "The person is happy", "negative": "The person is not happy"},
+    {"variable_short": "S", "variable_name": "sad", "positive": "The person is sad", "negative": "The person is not sad"},
+    {"variable_short": "A", "variable_name": "angry", "positive": "The person is angry", "negative": "The person is not angry"},
+    {"variable_short": "F", "variable_name": "fearful", "positive": "The person is fearful", "negative": "The person is not fearful"},
+    {"variable_short": "E", "variable_name": "excited", "positive": "The person is excited", "negative": "The person is not excited"},
+    {"variable_short": "C", "variable_name": "calm", "positive": "The person is calm", "negative": "The person is not calm"},
+    {"variable_short": "S", "variable_name": "surprised", "positive": "The person is surprised", "negative": "The person is not surprised"},
+    {"variable_short": "D", "variable_name": "disgusted", "positive": "The person is disgusted", "negative": "The person is not disgusted"}
+  ],
+  "transportation": [
+    {"variable_short": "C", "variable_name": "car", "positive": "The car is moving", "negative": "The car is not moving"},
+    {"variable_short": "B", "variable_name": "bus", "positive": "The bus is on time", "negative": "The bus is not on time"},
+    {"variable_short": "T", "variable_name": "train", "positive": "The train is arriving", "negative": "The train is not arriving"},
+    {"variable_short": "P", "variable_name": "plane", "positive": "The plane is taking off", "negative": "The plane is not taking off"},
+    {"variable_short": "S", "variable_name": "ship", "positive": "The ship is docking", "negative": "The ship is not docking"},
+    {"variable_short": "B", "variable_name": "bicycle", "positive": "The bicycle is parked", "negative": "The bicycle is not parked"},
+    {"variable_short": "M", "variable_name": "motorcycle", "positive": "The motorcycle is starting", "negative": "The motorcycle is not starting"},
+    {"variable_short": "H", "variable_name": "helicopter", "positive": "The helicopter is landing", "negative": "The helicopter is not landing"}
+  ]
+}
