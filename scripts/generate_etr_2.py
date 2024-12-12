@@ -7,10 +7,6 @@ from etr_case_generator.generator2.reified_problem import FullProblem
 from etr_case_generator.ontology import ELEMENTS, CARDS, Ontology
 
 
-def generate_problem(args, ontology: Ontology=ELEMENTS) -> FullProblem:
-    return generate_problem_in_smt(args, ontology)
-
-
 def generate_problem_list(n_problems: int, args) -> list[FullProblem]:
     """Generate ETR problems.
 
@@ -23,10 +19,10 @@ def generate_problem_list(n_problems: int, args) -> list[FullProblem]:
     for i in range(args.n_problems):
         if args.verbose:
             print(f"Generating problem {len(problems) + 1}/{args.n_problems}")
-        problem = generate_problem(args)
+        problem = generate_problem_in_smt(args, ontology=ELEMENTS)
         problems.append(problem)
         print(f"Generated Problem {i + 1} of {n_problems}")
-        print(problem)
+        print(problem.full_string(show_empty=True))
 
     return problems
 

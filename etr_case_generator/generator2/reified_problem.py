@@ -68,8 +68,10 @@ class FullProblem:
             if self.views:
                 for i, view in enumerate(self.views, 1):
                     content.append(f"  {i}. SMT: {view.logical_form_smt}")
-                    content.append(f"     ETR: {view.logical_form_etr}")
-                    content.append(f"     ENG: {view.english_form}")
+                    if view.logical_form_etr or show_empty:
+                        content.append(f"     ETR: {view.logical_form_etr}")
+                    if view.english_form or show_empty:
+                        content.append(f"     Eng: {view.english_form}")
             else:
                 content.append("  None")
             content.append("")
