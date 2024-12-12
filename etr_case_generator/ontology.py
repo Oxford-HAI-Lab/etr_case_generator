@@ -1,3 +1,4 @@
+from typing import Literal
 from dataclasses import dataclass
 from pyetr.atoms import Predicate
 
@@ -117,7 +118,6 @@ ELEMENTS = Ontology(
     ],
 )
 
-from typing import Literal
 
 def predicate_to_function_name(predicate: Predicate, shorten: Literal["None", "Short", "Single"] = "None") -> str:
     if shorten=="None":
