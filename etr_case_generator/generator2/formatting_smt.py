@@ -30,7 +30,13 @@ def smt_to_etr(fnode: FNode) -> str:
 
     # Base case: single predicate
     if fnode.is_symbol():
-        return wrap_braces(str(fnode).replace("'", ""))  # Remove quotes from symbols
+        # Remove quotes and add () after variable names
+        expr = str(fnode).replace("'", "")
+        if "(" in expr:  # If it's a predicate application
+            name, arg = expr.split("(")
+            arg = arg.rstrip(")")
+            expr = f"{name}({arg}())"
+        return wrap_braces(expr)
 
     # Handle each operator type
     if fnode.is_not():
@@ -84,7 +90,8 @@ def smt_to_english(fnode: FNode) -> str:
         arg = arg.rstrip(')')  # remove closing parenthesis
         # Replace underscores with spaces in predicate names
         name = name.replace('_', ' ')
-        return f"{arg} is {name}"
+        # Add () after the variable name
+        return f"{arg}() is {name}"
 
     # Base case: single predicate
     if fnode.is_symbol():
