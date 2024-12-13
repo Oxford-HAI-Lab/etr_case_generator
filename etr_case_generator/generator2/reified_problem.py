@@ -123,44 +123,48 @@ def smt_to_etr(fnode: FNode) -> str:
     """Convert an SMT formula to ETR notation.
     
     Examples:
-        magnetic(elementium) -> magnetic(elementium)  # unchanged
-        And(magnetic(x), radioactive(x)) -> magnetic(x)radioactive(x)  # remove 'and'
-        Or(magnetic(x), radioactive(x)) -> magnetic(x),radioactive(x)  # use comma
-        Not(magnetic(x)) -> ~magnetic(x)  # use tilde
-        Implies(magnetic(x), radioactive(x)) -> magnetic(x)->radioactive(x)  # use arrow
-        Iff(magnetic(x), radioactive(x)) -> magnetic(x)<->radioactive(x)  # use double arrow
-        ForAll([x], magnetic(x)) -> ∀x.magnetic(x)  # use quantifier symbol
-        Exists([x], magnetic(x)) -> ∃x.magnetic(x)  # use quantifier symbol
+        magnetic(elementium) -> {magnetic(elementium)}  # wrapped in braces
+        And(magnetic(x), radioactive(x)) -> {magnetic(x)radioactive(x)}  # remove 'and'
+        Or(magnetic(x), radioactive(x)) -> {magnetic(x),radioactive(x)}  # use comma
+        Not(magnetic(x)) -> {~magnetic(x)}  # use tilde
+        Implies(magnetic(x), radioactive(x)) -> {magnetic(x)->radioactive(x)}  # use arrow
+        Iff(magnetic(x), radioactive(x)) -> {magnetic(x)<->radioactive(x)}  # use double arrow
+        ForAll([x], magnetic(x)) -> ∀x {magnetic(x)}  # quantifier with space
+        Exists([x], magnetic(x)) -> ∃x {magnetic(x)}  # quantifier with space
     """
+    def wrap_braces(expr: str) -> str:
+        """Wrap expression in braces if not already quantified"""
+        return "{" + expr + "}"
+
     # Base case: single predicate
     if fnode.is_symbol():
-        return str(fnode).replace("'", "")  # Remove quotes from symbols
+        return wrap_braces(str(fnode).replace("'", ""))  # Remove quotes from symbols
         
     # Handle each operator type
     if fnode.is_not():
-        return f"~{smt_to_etr(fnode.arg(0))}"
+        return wrap_braces(f"~{smt_to_etr(fnode.arg(0)).strip('{}')}")
         
     elif fnode.is_and():
-        return "".join(smt_to_etr(arg) for arg in fnode.args())
+        return wrap_braces("".join(smt_to_etr(arg).strip('{}') for arg in fnode.args()))
         
     elif fnode.is_or():
-        return ",".join(smt_to_etr(arg) for arg in fnode.args())
+        return wrap_braces(",".join(smt_to_etr(arg).strip('{}') for arg in fnode.args()))
         
     elif fnode.is_implies():
-        return f"{smt_to_etr(fnode.arg(0))}->{smt_to_etr(fnode.arg(1))}"
+        return wrap_braces(f"{smt_to_etr(fnode.arg(0)).strip('{}')}->{smt_to_etr(fnode.arg(1)).strip('{}')}")
         
     elif fnode.is_iff():
-        return f"{smt_to_etr(fnode.arg(0))}<->{smt_to_etr(fnode.arg(1))}"
+        return wrap_braces(f"{smt_to_etr(fnode.arg(0)).strip('{}')}<->{smt_to_etr(fnode.arg(1)).strip('{}')}")
         
     elif fnode.is_forall():
         vars = [str(v) for v in fnode.quantifier_vars()]
-        return f"∀{','.join(vars)}.{smt_to_etr(fnode.arg(0))}"
+        return f"∀ {','.join(vars)} {smt_to_etr(fnode.arg(0))}"
         
     elif fnode.is_exists():
         vars = [str(v) for v in fnode.quantifier_vars()]
-        return f"∃{','.join(vars)}.{smt_to_etr(fnode.arg(0))}"
+        return f"∃ {','.join(vars)} {smt_to_etr(fnode.arg(0))}"
         
-    return str(fnode)  # Fallback for unknown operators
+    return wrap_braces(str(fnode))  # Fallback for unknown operators
 
 
 def smt_to_english(fnode: FNode) -> str:
