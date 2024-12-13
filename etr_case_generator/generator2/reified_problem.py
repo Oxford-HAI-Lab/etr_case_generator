@@ -119,6 +119,50 @@ def format_smt(fnode: FNode) -> str:
     return formatted
 
 
+def smt_to_etr(fnode: FNode) -> str:
+    """Convert an SMT formula to ETR notation.
+    
+    Examples:
+        magnetic(elementium) -> magnetic(elementium)  # unchanged
+        And(magnetic(x), radioactive(x)) -> magnetic(x)radioactive(x)  # remove 'and'
+        Or(magnetic(x), radioactive(x)) -> magnetic(x),radioactive(x)  # use comma
+        Not(magnetic(x)) -> ~magnetic(x)  # use tilde
+        Implies(magnetic(x), radioactive(x)) -> magnetic(x)->radioactive(x)  # use arrow
+        Iff(magnetic(x), radioactive(x)) -> magnetic(x)<->radioactive(x)  # use double arrow
+        ForAll([x], magnetic(x)) -> ∀x.magnetic(x)  # use quantifier symbol
+        Exists([x], magnetic(x)) -> ∃x.magnetic(x)  # use quantifier symbol
+    """
+    # Base case: single predicate
+    if fnode.is_symbol():
+        return str(fnode).replace("'", "")  # Remove quotes from symbols
+        
+    # Handle each operator type
+    if fnode.is_not():
+        return f"~{smt_to_etr(fnode.arg(0))}"
+        
+    elif fnode.is_and():
+        return "".join(smt_to_etr(arg) for arg in fnode.args())
+        
+    elif fnode.is_or():
+        return ",".join(smt_to_etr(arg) for arg in fnode.args())
+        
+    elif fnode.is_implies():
+        return f"{smt_to_etr(fnode.arg(0))}->{smt_to_etr(fnode.arg(1))}"
+        
+    elif fnode.is_iff():
+        return f"{smt_to_etr(fnode.arg(0))}<->{smt_to_etr(fnode.arg(1))}"
+        
+    elif fnode.is_forall():
+        vars = [str(v) for v in fnode.quantifier_vars()]
+        return f"∀{','.join(vars)}.{smt_to_etr(fnode.arg(0))}"
+        
+    elif fnode.is_exists():
+        vars = [str(v) for v in fnode.quantifier_vars()]
+        return f"∃{','.join(vars)}.{smt_to_etr(fnode.arg(0))}"
+        
+    return str(fnode)  # Fallback for unknown operators
+
+
 def smt_to_english(fnode: FNode) -> str:
     """Convert an SMT formula to natural English.
 
@@ -194,6 +238,7 @@ def full_problem_from_smt_problem(smt_problem: SMTProblem) -> FullProblem:
         reified_view = ReifiedView(
             logical_form_smt=format_smt(view),  # Formatted string representation without quotes
             logical_form_smt_fnode=view,  # Store the original FNode
+            logical_form_etr=smt_to_etr(view),  # Convert to ETR notation
             english_form=smt_to_english(view),  # Convert to natural English
         )
         reified_views.append(reified_view)
