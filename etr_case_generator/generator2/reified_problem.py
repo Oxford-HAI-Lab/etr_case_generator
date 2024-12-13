@@ -52,7 +52,7 @@ class FullProblem:
         
         # Add views
         if show_empty or self.views:
-            content.append(Text("Views:", style="bold blue"))
+            content.append(Text("Views:", style="bold green"))
             if self.views:
                 for i, view in enumerate(self.views, 1):
                     content.append(f"  {i}. SMT: {view.logical_form_smt}")
@@ -67,7 +67,7 @@ class FullProblem:
         
         # Add yes/no section
         if show_empty or any([self.yes_or_no_conclusion, self.yes_or_no_answer is not None, self.yes_or_no_question_prose]):
-            content.append(Text("Yes/No Question:", style="bold magenta"))
+            content.append(Text("Yes/No Question:", style="bold green"))
             content.append(f"  Question: {self.yes_or_no_question_prose}")
             if self.yes_or_no_conclusion:
                 content.append(f"  Conclusion: {self.yes_or_no_conclusion.logical_form_smt}")
@@ -76,7 +76,7 @@ class FullProblem:
         
         # Add multiple choice section
         if show_empty or self.multiple_choices or self.multiple_choice_question_prose:
-            content.append(Text("Multiple Choice:", style="bold yellow"))
+            content.append(Text("Multiple Choice:", style="bold green"))
             content.append(f"  Question: {self.multiple_choice_question_prose}")
             if self.multiple_choices:
                 for i, (view, is_correct, is_predicted) in enumerate(self.multiple_choices, 1):
@@ -88,7 +88,7 @@ class FullProblem:
         
         # Add open ended section
         if show_empty or self.etr_predicted_conclusion or self.open_ended_question_prose:
-            content.append(Text("Open Ended:", style="bold cyan"))
+            content.append(Text("Open Ended:", style="bold green"))
             content.append(f"  Question: {self.open_ended_question_prose}")
             if self.etr_predicted_conclusion:
                 content.append(f"  Predicted: {self.etr_predicted_conclusion.logical_form_smt}")
