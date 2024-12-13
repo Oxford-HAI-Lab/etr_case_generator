@@ -174,7 +174,8 @@ FOODS = Ontology(
 
 def natural_name_to_logical_name(name: str, shorten: Literal["none", "short", "first"] = "none") -> str:
     if shorten=="none":
-        return name.replace(" ", "_").replace("-", "_").lower()
+        # View.from_str appears to have an issue with underscores
+        return name.replace(" ", "").replace("-", "").lower()
     elif shorten=="short":
         # Find the first letter of each word
         letters = "".join([word[0] for word in name.split(" ")])
