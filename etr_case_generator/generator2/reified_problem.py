@@ -26,8 +26,7 @@ class FullProblem:
     views: Optional[list[ReifiedView]] = None
 
     # Yes or No format
-    yes_or_no_conclusion: Optional[ReifiedView] = None
-    yes_or_no_answer: Optional[bool] = None
+    yes_or_no_conclusions: Optional[list[tuple[ReifiedView, bool]]] = None  # List of (conclusion, is_correct) pairs
     yes_or_no_question_prose: Optional[str] = None
 
     # Multiple Choice
@@ -69,12 +68,13 @@ class FullProblem:
             content.append("")
         
         # Add yes/no section
-        if show_empty or any([self.yes_or_no_conclusion, self.yes_or_no_answer is not None, self.yes_or_no_question_prose]):
-            content.append(Text("Yes/No Question:", style="bold green"))
+        if show_empty or any([self.yes_or_no_conclusions, self.yes_or_no_question_prose]):
+            content.append(Text("Yes/No Questions:", style="bold green"))
             content.append(f"  Question: {self.yes_or_no_question_prose}")
-            if self.yes_or_no_conclusion:
-                content.append(f"  Conclusion: {self.yes_or_no_conclusion.logical_form_smt}")
-            content.append(f"  Answer: {self.yes_or_no_answer}")
+            if self.yes_or_no_conclusions:
+                for i, (conclusion, is_correct) in enumerate(self.yes_or_no_conclusions, 1):
+                    content.append(f"  {i}. Conclusion: {conclusion.logical_form_smt}")
+                    content.append(f"     Answer: {is_correct}")
             content.append("")
         
         # Add multiple choice section
@@ -128,40 +128,30 @@ def full_problem_from_smt_problem(smt_problem: SMTProblem, ontology: Ontology=EL
         )
         reified_views.append(reified_view)
     
-    # Create ReifiedViews for both conclusions if they exist
-    correct_conclusion = None
-    incorrect_conclusion = None
+    # Create ReifiedViews for conclusions if they exist
+    yes_no_conclusions = []
+    if smt_problem.yes_or_no_conclusions:
+        for conclusion_fnode, is_correct in smt_problem.yes_or_no_conclusions:
+            reified_conclusion = ReifiedView(
+                logical_form_smt=format_smt(conclusion_fnode),
+                logical_form_smt_fnode=conclusion_fnode,
+                logical_form_etr=smt_to_etr(conclusion_fnode),
+                english_form=smt_to_english(conclusion_fnode),
+            )
+            yes_no_conclusions.append((reified_conclusion, is_correct))
     
-    if smt_problem.yes_or_no_conclusion_correct is not None:
-        correct_conclusion = ReifiedView(
-            logical_form_smt=format_smt(smt_problem.yes_or_no_conclusion_correct),
-            logical_form_smt_fnode=smt_problem.yes_or_no_conclusion_correct,
-            logical_form_etr=smt_to_etr(smt_problem.yes_or_no_conclusion_correct),
-            english_form=smt_to_english(smt_problem.yes_or_no_conclusion_correct),
-        )
-    
-    if smt_problem.yes_or_no_conclusion_incorrect is not None:
-        incorrect_conclusion = ReifiedView(
-            logical_form_smt=format_smt(smt_problem.yes_or_no_conclusion_incorrect),
-            logical_form_smt_fnode=smt_problem.yes_or_no_conclusion_incorrect,
-            logical_form_etr=smt_to_etr(smt_problem.yes_or_no_conclusion_incorrect),
-            english_form=smt_to_english(smt_problem.yes_or_no_conclusion_incorrect),
-        )
-    
-    # Set up multiple choice options
+    # Set up multiple choice options from the yes/no conclusions
     multiple_choices = []
-    if correct_conclusion:
-        # (view, is_correct, is_etr_predicted)
-        multiple_choices.append((correct_conclusion, True, None))
-    if incorrect_conclusion:
-        multiple_choices.append((incorrect_conclusion, False, None))
+    if yes_no_conclusions:
+        for conclusion, is_correct in yes_no_conclusions:
+            # (view, is_correct, is_etr_predicted)
+            multiple_choices.append((conclusion, is_correct, None))
     
     return FullProblem(
         introductory_prose="Here is a logical problem that I want you to think about:",
         views=reified_views,
         # Yes/No section
-        yes_or_no_conclusion=correct_conclusion,
-        yes_or_no_answer=True if correct_conclusion else None,
+        yes_or_no_conclusions=yes_no_conclusions if yes_no_conclusions else None,
         yes_or_no_question_prose="Does the following conclusion necessarily follow from the given statements?",
         # Multiple choice section
         multiple_choices=multiple_choices if multiple_choices else None,

@@ -14,8 +14,7 @@ class SMTProblem:
     views: list[FNode] = None
 
     # Yes or No format
-    yes_or_no_conclusion_correct: FNode = None
-    yes_or_no_conclusion_incorrect: FNode = None  # Distractor
+    yes_or_no_conclusions: list[tuple[FNode, bool]] = None  # List of (conclusion, is_correct) pairs
 
 
 def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ontology=ELEMENTS) -> SMTProblem:
@@ -90,6 +89,8 @@ def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ont
     
     return SMTProblem(
         views=views,
-        yes_or_no_conclusion_correct=correct_conclusion,
-        yes_or_no_conclusion_incorrect=incorrect_conclusion
+        yes_or_no_conclusions=[
+            (correct_conclusion, True),
+            (incorrect_conclusion, False)
+        ]
     )
