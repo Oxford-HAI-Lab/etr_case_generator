@@ -59,7 +59,7 @@ def smt_to_etr(fnode: FNode) -> str:
     elif fnode.is_forall():
         vars = [str(v) for v in fnode.quantifier_vars()]
         body = smt_to_etr(fnode.arg(0)).strip('{}')  # Remove existing braces from body
-        return f"∀{','.join(vars)} {{{body}}}"  # Add new braces around body
+        return f"∀{ ','.join(vars)} {{{body}}}"  # Add new braces around body
 
     elif fnode.is_exists():
         vars = [str(v) for v in fnode.quantifier_vars()]
