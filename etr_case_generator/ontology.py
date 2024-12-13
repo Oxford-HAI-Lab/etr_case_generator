@@ -128,3 +128,6 @@ def natural_name_to_logical_name(name: str, shorten: Literal["none", "short", "f
         return letters.lower()
     elif shorten=="first":
         return name[0].lower()
+
+def get_all_ontologies() -> list[Ontology]:
+    return [CARDS, ELEMENTS]
