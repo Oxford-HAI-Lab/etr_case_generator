@@ -25,6 +25,12 @@ def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ont
         num_clauses: Number of views/statements to generate
         num_steps: Number of logical operations to apply in each statement
         ontology: The ontology containing predicates and objects to use
+        
+    Returns:
+        SMTProblem with views and both correct and incorrect conclusions generated
+        using the Logical Strength Method:
+        - Correct conclusion is logically weaker than premises
+        - Incorrect conclusion is logically stronger than premises
     """
     def random_operator(allow_quantifiers=True):
         """Return a random logical operator"""
@@ -63,4 +69,27 @@ def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ont
         statement = random_term()
         views.append(statement)
 
-    return SMTProblem(views=views)
+    # Generate a correct conclusion by weakening the conjunction of views
+    premises = And(views)
+    
+    # For correct conclusion: take a subset of the views or weaken with OR
+    if random.random() < 0.5 and len(views) > 1:
+        # Take a random subset of views
+        subset_size = random.randint(1, len(views) - 1)
+        correct_conclusion = And(random.sample(views, subset_size))
+    else:
+        # Add a disjunction with a new random term
+        correct_conclusion = Or(random.choice(views), random_term())
+    
+    # For incorrect conclusion: strengthen by adding extra conjunction
+    # Generate new predicate application that isn't in the views
+    new_atom = random_atom()
+    while any(new_atom.is_equals(view) for view in views):
+        new_atom = random_atom()
+    incorrect_conclusion = And(premises, new_atom)
+    
+    return SMTProblem(
+        views=views,
+        yes_or_no_conclusion_correct=correct_conclusion,
+        yes_or_no_conclusion_incorrect=incorrect_conclusion
+    )
