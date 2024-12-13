@@ -249,4 +249,7 @@ def full_problem_from_smt_problem(smt_problem: SMTProblem) -> FullProblem:
         )
         reified_views.append(reified_view)
     
-    return FullProblem(views=reified_views)
+    return FullProblem(
+        introductory_prose="Here is a logical problem that I want you to think about:",
+        views=reified_views,
+    )
