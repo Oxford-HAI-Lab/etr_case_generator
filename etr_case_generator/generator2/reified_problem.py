@@ -273,9 +273,9 @@ def full_problem_from_smt_problem(smt_problem: SMTProblem) -> FullProblem:
     multiple_choices = []
     if correct_conclusion:
         # (view, is_correct, is_etr_predicted)
-        multiple_choices.append((correct_conclusion, True, True))
+        multiple_choices.append((correct_conclusion, True, None))
     if incorrect_conclusion:
-        multiple_choices.append((incorrect_conclusion, False, False))
+        multiple_choices.append((incorrect_conclusion, False, None))
     
     return FullProblem(
         introductory_prose="Here is a logical problem that I want you to think about:",
