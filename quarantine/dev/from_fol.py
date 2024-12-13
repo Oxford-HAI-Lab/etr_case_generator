@@ -7,7 +7,21 @@ def test_view_conversion():
         "{~Ace()}",
         "{Jack()Queen()}",
         "{k()}",
-        "{a()k()}"
+        "{a()k()}",
+        "{KneelingByTheFire(Jane())LookingAtTV(Jane()), PeeringIntoTheGarden(Mark())StandingAtTheWindow(Mark())}",
+        "{KneelingByTheFire(Jane())}",
+        "{LookingAtTV(Jane())}",
+        "{T()K(),Q()A()}",
+        "{K()}",
+        "{T()}",
+        "{King()Ace(),Jack()Queen()}",
+        "{~Ace()}",
+        "{Jack()Queen()}",
+        "{p2()r1()q2()s1(),s2()r1()r2()s1(),s2()p1()q1()r2(),p2()p1()q1()q2()}",
+        "{a()}",
+        "{k()}",
+        "{a()k()}",
+        "{Smokes(j()),Smokes(m())}"
     ]
 
     print("Testing View conversion:")
