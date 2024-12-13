@@ -122,7 +122,7 @@ PLANETS = Ontology(
     name="Celestial Bodies",
     objects=[
         "mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune",
-        "pluto", "ceres", "eris", "makemake", "haumea", "sedna", "planet x", "planet nine",
+        "pluto", "ceres", "eris", "makemake", "haumea", "sedna", "planet x", "planet nine", "quaoar", "charon",
     ],
     predicates=[
         Predicate(name=p, arity=1)

@@ -1,4 +1,5 @@
-from etr_case_generator.generator2.reified_problem import FullProblem, full_problem_from_smt_problem
+from etr_case_generator.generator2.reified_problem import FullProblem
+from etr_case_generator.generator2.full_problem_creator import full_problem_from_smt_problem
 from etr_case_generator.ontology import ELEMENTS, Ontology
 from etr_case_generator.smt_generator import random_smt_problem, SMTProblem
 
