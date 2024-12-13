@@ -8,9 +8,11 @@ def get_etr_conclusion(views: list[ReifiedView]) -> ReifiedView:
     view_strings = [view.logical_form_etr for view in views]
     view_objects = []
     for view_string in view_strings:
-        print(f"Parsing view_string: {view_string}")
+        # print(f"Parsing view_string: {view_string}")
         view_objects.append(View.from_str(view_string))
     etr_predicted_conclusion = default_inference_procedure(tuple(view_objects))
+    print("Predicted conclusion:")
+    print(etr_predicted_conclusion)
     view = ReifiedView(logical_form_etr=etr_predicted_conclusion.__str__())
     return view
 
