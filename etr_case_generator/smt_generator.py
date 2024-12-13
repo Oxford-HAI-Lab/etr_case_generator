@@ -84,7 +84,7 @@ def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ont
     # For incorrect conclusion: strengthen by adding extra conjunction
     # Generate new predicate application that isn't in the views
     new_atom = random_atom()
-    while any(new_atom.is_equals(view) for view in views):
+    while any(new_atom == view for view in views):
         new_atom = random_atom()
     incorrect_conclusion = And(premises, new_atom)
     
