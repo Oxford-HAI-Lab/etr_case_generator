@@ -33,7 +33,7 @@ def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ont
     """
     def random_operator(allow_quantifiers=True):
         """Return a random logical operator"""
-        basic_ops = [And, Or, Not, Implies, Iff]
+        basic_ops = [And, Or, Not]  # , Implies, Iff]
         if allow_quantifiers and random.random() < 0.3:  # 30% chance of quantifier
             return random.choice([ForAll, Exists])
         return random.choice(basic_ops)

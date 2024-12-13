@@ -30,7 +30,7 @@ CARDS = Ontology(
         "ace",
         "one",
         "two",
-        "Three",  # Capitalize to match standard naming
+        "three",
         "four",
         "five",
         "six",
@@ -175,7 +175,7 @@ FOODS = Ontology(
 def natural_name_to_logical_name(name: str, shorten: Literal["none", "short", "first"] = "none") -> str:
     if shorten=="none":
         # View.from_str appears to have an issue with underscores
-        return name.replace(" ", "").replace("-", "").lower()
+        return name.replace(" ", "").replace("-", "").replace("_", "").lower()
     elif shorten=="short":
         # Find the first letter of each word
         letters = "".join([word[0] for word in name.split(" ")])

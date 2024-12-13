@@ -27,6 +27,7 @@ def smt_to_etr(fnode: FNode) -> str:
     def wrap_braces(expr: str) -> str:
         """Wrap expression in braces if not already quantified"""
         return "{" + expr + "}"
+        # return expr
 
     # Base case: single predicate
     if fnode.is_symbol():
@@ -36,7 +37,8 @@ def smt_to_etr(fnode: FNode) -> str:
             name, arg = expr.split("(")
             arg = arg.rstrip(")")
             expr = f"{name}({arg}())"
-        return wrap_braces(expr)
+        expr = wrap_braces(expr)
+        return expr
 
     # Handle each operator type
     if fnode.is_not():
@@ -57,12 +59,12 @@ def smt_to_etr(fnode: FNode) -> str:
     elif fnode.is_forall():
         vars = [str(v) for v in fnode.quantifier_vars()]
         body = smt_to_etr(fnode.arg(0)).strip('{}')  # Remove existing braces from body
-        return f"∀ {','.join(vars)} {{{body}}}"  # Add new braces around body
+        return f"∀{','.join(vars)} {{{body}}}"  # Add new braces around body
 
     elif fnode.is_exists():
         vars = [str(v) for v in fnode.quantifier_vars()]
         body = smt_to_etr(fnode.arg(0)).strip('{}')  # Remove existing braces from body
-        return f"∃ {','.join(vars)} {{{body}}}"  # Add new braces around body
+        return f"∃{','.join(vars)} {{{body}}}"  # Add new braces around body
 
     return wrap_braces(str(fnode))  # Fallback for unknown operators
 

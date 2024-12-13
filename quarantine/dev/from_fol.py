@@ -21,7 +21,10 @@ def test_view_conversion():
         "{a()}",
         "{k()}",
         "{a()k()}",
-        "{Smokes(j()),Smokes(m())}"
+        "{Smokes(j()),Smokes(m())}",
+        "{Hibernates(scorpion())}",
+        "{ellipticalorbit(quaoar())}",
+        "{red(seven())}",
     ]
 
     print("Testing View conversion:")
