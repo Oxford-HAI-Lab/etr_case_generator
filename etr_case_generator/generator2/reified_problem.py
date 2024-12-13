@@ -236,7 +236,7 @@ def smt_to_english(fnode: FNode) -> str:
 
 
 def full_problem_from_smt_problem(smt_problem: SMTProblem) -> FullProblem:
-    """Convert an SMTProblem to a FullProblem, filling only the basic SMT views."""
+    """Convert an SMTProblem to a FullProblem, including yes/no and multiple choice conclusions."""
     
     # Convert each FNode view to a ReifiedView
     reified_views = []
@@ -249,7 +249,42 @@ def full_problem_from_smt_problem(smt_problem: SMTProblem) -> FullProblem:
         )
         reified_views.append(reified_view)
     
+    # Create ReifiedViews for both conclusions if they exist
+    correct_conclusion = None
+    incorrect_conclusion = None
+    
+    if smt_problem.yes_or_no_conclusion_correct is not None:
+        correct_conclusion = ReifiedView(
+            logical_form_smt=format_smt(smt_problem.yes_or_no_conclusion_correct),
+            logical_form_smt_fnode=smt_problem.yes_or_no_conclusion_correct,
+            logical_form_etr=smt_to_etr(smt_problem.yes_or_no_conclusion_correct),
+            english_form=smt_to_english(smt_problem.yes_or_no_conclusion_correct),
+        )
+    
+    if smt_problem.yes_or_no_conclusion_incorrect is not None:
+        incorrect_conclusion = ReifiedView(
+            logical_form_smt=format_smt(smt_problem.yes_or_no_conclusion_incorrect),
+            logical_form_smt_fnode=smt_problem.yes_or_no_conclusion_incorrect,
+            logical_form_etr=smt_to_etr(smt_problem.yes_or_no_conclusion_incorrect),
+            english_form=smt_to_english(smt_problem.yes_or_no_conclusion_incorrect),
+        )
+    
+    # Set up multiple choice options
+    multiple_choices = []
+    if correct_conclusion:
+        # (view, is_correct, is_etr_predicted)
+        multiple_choices.append((correct_conclusion, True, True))
+    if incorrect_conclusion:
+        multiple_choices.append((incorrect_conclusion, False, False))
+    
     return FullProblem(
         introductory_prose="Here is a logical problem that I want you to think about:",
         views=reified_views,
+        # Yes/No section
+        yes_or_no_conclusion=correct_conclusion,
+        yes_or_no_answer=True if correct_conclusion else None,
+        yes_or_no_question_prose="Does the following conclusion necessarily follow from the given statements?",
+        # Multiple choice section
+        multiple_choices=multiple_choices if multiple_choices else None,
+        multiple_choice_question_prose="Which of the following conclusions necessarily follows from the given statements?"
     )
