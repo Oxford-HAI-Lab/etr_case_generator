@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from pysmt.fnode import FNode
-from rich.console import Console
+from rich.console import Console, Group
 from rich.panel import Panel
 from rich.text import Text
 
@@ -95,9 +95,11 @@ class FullProblem:
             content.append("")
         
         # Create panel with all content
-        panel = Panel("\n".join(str(line) for line in content), 
-                     title="Reasoning Problem",
-                     border_style="bright_blue")
+        panel = Panel(
+            Group(*content),  # Use Group to preserve formatting of each line
+            title="Reasoning Problem",
+            border_style="bright_blue"
+        )
         
         # Render to string
         with console.capture() as capture:
