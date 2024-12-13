@@ -118,6 +118,59 @@ ELEMENTS = Ontology(
     ],
 )
 
+PLANETS = Ontology(
+    name="Celestial Bodies",
+    objects=[
+        "mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune",
+        "pluto", "ceres", "eris", "makemake", "haumea", "sedna", "quaoar"
+    ],
+    predicates=[
+        Predicate(name=p, arity=1)
+        for p in [
+            "rocky", "gaseous", "ringed", "habitable_zone",
+            "has_moons", "retrograde_orbit", "elliptical_orbit",
+            "visible_to_naked_eye", "has_atmosphere",
+            "has_magnetic_field", "tidally_locked"
+        ]
+    ]
+)
+
+ANIMALS = Ontology(
+    name="Animals",
+    objects=[
+        "lion", "elephant", "dolphin", "eagle", "penguin", "octopus",
+        "kangaroo", "platypus", "chameleon", "bat", "whale", "cobra",
+        "butterfly", "scorpion", "owl", "beaver"
+    ],
+    predicates=[
+        Predicate(name=p, arity=1)
+        for p in [
+            "warm_blooded", "carnivorous", "nocturnal", "venomous",
+            "can_fly", "aquatic", "hibernates", "migratory",
+            "has_scales", "has_fur", "has_feathers", "egg_laying",
+            "social", "territorial", "camouflaged"
+        ]
+    ]
+)
+
+FOODS = Ontology(
+    name="Cuisine",
+    objects=[
+        "sushi", "pizza", "curry", "pasta", "taco", "sushi",
+        "burger", "salad", "soup", "steak", "bread", "cake",
+        "yogurt", "cheese", "chocolate", "rice"
+    ],
+    predicates=[
+        Predicate(name=p, arity=1)
+        for p in [
+            "vegetarian", "spicy", "fermented", "raw", "baked",
+            "fried", "dairy_based", "gluten_free", "sweet",
+            "savory", "high_protein", "contains_nuts",
+            "requires_refrigeration", "shelf_stable"
+        ]
+    ]
+)
+
 
 def natural_name_to_logical_name(name: str, shorten: Literal["none", "short", "first"] = "none") -> str:
     if shorten=="none":
@@ -130,4 +183,4 @@ def natural_name_to_logical_name(name: str, shorten: Literal["none", "short", "f
         return name[0].lower()
 
 def get_all_ontologies() -> list[Ontology]:
-    return [CARDS, ELEMENTS]
+    return [CARDS, ELEMENTS, PLANETS, ANIMALS, FOODS]
