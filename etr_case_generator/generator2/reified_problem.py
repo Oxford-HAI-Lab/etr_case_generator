@@ -286,5 +286,7 @@ def full_problem_from_smt_problem(smt_problem: SMTProblem) -> FullProblem:
         yes_or_no_question_prose="Does the following conclusion necessarily follow from the given statements?",
         # Multiple choice section
         multiple_choices=multiple_choices if multiple_choices else None,
-        multiple_choice_question_prose="Which of the following conclusions necessarily follows from the given statements?"
+        multiple_choice_question_prose="Which of the following conclusions necessarily follows from the given statements?",
+        # Open ended question
+        open_ended_question_prose="What if anything follows?",
     )
