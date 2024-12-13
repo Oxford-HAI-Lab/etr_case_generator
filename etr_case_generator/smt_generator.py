@@ -31,7 +31,7 @@ def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ont
         - Correct conclusion is logically weaker than premises
         - Incorrect conclusion is logically stronger than premises
     """
-    def random_operator(allow_quantifiers=True):
+    def random_operator(allow_quantifiers=False):
         """Return a random logical operator"""
         basic_ops = [And, Or, Not]  # , Implies, Iff]
         if allow_quantifiers and random.random() < 0.3:  # 30% chance of quantifier
@@ -46,7 +46,7 @@ def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ont
         # Create symbol like "red(ace)" or "magnetic(elementium)"
         return Symbol(f"{natural_name_to_logical_name(predicate.name, shorten=args.name_shortening)}({natural_name_to_logical_name(obj, shorten=args.name_shortening)})", BOOL)
 
-    def random_term(depth=0, allow_quantifiers=True):
+    def random_term(depth=0, allow_quantifiers=False):
         """Generate a random term with bounded depth"""
         if depth >= 2 or random.random() < 0.4:  # Base case
             return random_atom()

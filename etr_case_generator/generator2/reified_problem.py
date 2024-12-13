@@ -89,7 +89,7 @@ class FullProblem:
             content.append(Text("Open Ended:", style="bold green"))
             content.append(f"  Question: {self.open_ended_question_prose}")
             if show_empty or self.etr_predicted_conclusion:
-                content.append(f"  Predicted: {self.etr_predicted_conclusion.logical_form_smt if self.etr_predicted_conclusion else None}")
+                content.append(f"  Predicted: {self.etr_predicted_conclusion if self.etr_predicted_conclusion else None}")
             content.append("")
         
         # Create panel with all content
