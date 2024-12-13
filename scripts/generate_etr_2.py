@@ -1,10 +1,11 @@
 import argparse
+import random
 
 from etr_case_generator.generator2.problem_in_smt import generate_problem_in_smt
 from etr_case_generator.generator2.reified_problem import FullProblem
 
 
-from etr_case_generator.ontology import ELEMENTS, CARDS, Ontology
+from etr_case_generator.ontology import ELEMENTS, CARDS, Ontology, get_all_ontologies
 
 
 def generate_problem_list(n_problems: int, args) -> list[FullProblem]:
@@ -19,7 +20,7 @@ def generate_problem_list(n_problems: int, args) -> list[FullProblem]:
     for i in range(args.n_problems):
         if args.verbose:
             print(f"Generating problem {len(problems) + 1}/{args.n_problems}")
-        problem = generate_problem_in_smt(args, ontology=ELEMENTS)
+        problem = generate_problem_in_smt(args, ontology=random.choice(get_all_ontologies()))
         problems.append(problem)
         print(f"Generated Problem {i + 1} of {n_problems}")
         print(problem.full_string(show_empty=True))
