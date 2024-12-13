@@ -6,7 +6,9 @@ from rich.console import Console, Group
 from rich.panel import Panel
 from rich.text import Text
 
-from etr_case_generator.generator2.rendering_text import format_smt, smt_to_etr, smt_to_english
+from etr_case_generator import Ontology
+from etr_case_generator.generator2.formatting_smt import format_smt, smt_to_etr, smt_to_english
+from etr_case_generator.ontology import ELEMENTS
 from etr_case_generator.smt_generator import SMTProblem
 
 
@@ -112,7 +114,7 @@ class FullProblem:
         return self.full_string(show_empty=False)
 
 
-def full_problem_from_smt_problem(smt_problem: SMTProblem) -> FullProblem:
+def full_problem_from_smt_problem(smt_problem: SMTProblem, ontology: Ontology=ELEMENTS) -> FullProblem:
     """Convert an SMTProblem to a FullProblem, including yes/no and multiple choice conclusions."""
     
     # Convert each FNode view to a ReifiedView
