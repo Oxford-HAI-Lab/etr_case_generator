@@ -13,60 +13,47 @@ def format_smt(fnode: FNode) -> str:
 
 def smt_to_etr(fnode: FNode) -> str:
     """Convert an SMT formula to ETR notation.
-
-    Examples:
-        magnetic(elementium) -> {magnetic(elementium)}  # wrapped in braces
-        And(magnetic(x), radioactive(x)) -> {magnetic(x)radioactive(x)}  # remove 'and'
-        Or(magnetic(x), radioactive(x)) -> {magnetic(x),radioactive(x)}  # use comma
-        Not(magnetic(x)) -> {~magnetic(x)}  # use tilde
-        Implies(magnetic(x), radioactive(x)) -> {magnetic(x)->radioactive(x)}  # use arrow
-        Iff(magnetic(x), radioactive(x)) -> {magnetic(x)<->radioactive(x)}  # use double arrow
-        ForAll([x], magnetic(x)) -> ∀x {magnetic(x)}  # quantifier with space
-        Exists([x], magnetic(x)) -> ∃x {magnetic(x)}  # quantifier with space
+    
+    Rules:
+    - If no quantifiers, wrap the whole expression in curly braces
+    - If there are quantifiers, put curly braces after the quantifier: ∀x {f(x())}
+    - No other curly braces should be used
     """
-    def wrap_braces(expr: str) -> str:
-        """Wrap expression in braces if not already quantified"""
-        return "{" + expr + "}"
-        # return expr
+    def convert_inner(fnode: FNode) -> str:
+        """Convert without adding outer braces"""
+        # Base case: single predicate
+        if fnode.is_symbol():
+            expr = str(fnode).replace("'", "")
+            if "(" in expr:  # If it's a predicate application
+                name, arg = expr.split("(")
+                arg = arg.rstrip(")")
+                return f"{name}({arg}())"
+            return expr
 
-    # Base case: single predicate
-    if fnode.is_symbol():
-        # Remove quotes and add () after variable names
-        expr = str(fnode).replace("'", "")
-        if "(" in expr:  # If it's a predicate application
-            name, arg = expr.split("(")
-            arg = arg.rstrip(")")
-            expr = f"{name}({arg}())"
-        expr = wrap_braces(expr)
-        return expr
+        # Handle each operator type
+        if fnode.is_not():
+            return f"~{convert_inner(fnode.arg(0))}"
+        elif fnode.is_and():
+            return "".join(convert_inner(arg) for arg in fnode.args())
+        elif fnode.is_or():
+            return ",".join(convert_inner(arg) for arg in fnode.args())
+        elif fnode.is_implies():
+            return f"{convert_inner(fnode.arg(0))}->{convert_inner(fnode.arg(1))}"
+        elif fnode.is_iff():
+            return f"{convert_inner(fnode.arg(0))}<->{convert_inner(fnode.arg(1))}"
+        elif fnode.is_forall():
+            vars = [str(v) for v in fnode.quantifier_vars()]
+            return f"∀{','.join(vars)} {{{convert_inner(fnode.arg(0))}}}"
+        elif fnode.is_exists():
+            vars = [str(v) for v in fnode.quantifier_vars()]
+            return f"∃{','.join(vars)} {{{convert_inner(fnode.arg(0))}}}"
+        return str(fnode)  # Fallback
 
-    # Handle each operator type
-    if fnode.is_not():
-        return wrap_braces(f"~{smt_to_etr(fnode.arg(0)).strip('{}')}")
-
-    elif fnode.is_and():
-        return wrap_braces("".join(smt_to_etr(arg).strip('{}') for arg in fnode.args()))
-
-    elif fnode.is_or():
-        return wrap_braces(",".join(smt_to_etr(arg).strip('{}') for arg in fnode.args()))
-
-    elif fnode.is_implies():
-        return wrap_braces(f"{smt_to_etr(fnode.arg(0)).strip('{}')}->{smt_to_etr(fnode.arg(1)).strip('{}')}")
-
-    elif fnode.is_iff():
-        return wrap_braces(f"{smt_to_etr(fnode.arg(0)).strip('{}')}<->{smt_to_etr(fnode.arg(1)).strip('{}')}")
-
-    elif fnode.is_forall():
-        vars = [str(v) for v in fnode.quantifier_vars()]
-        body = smt_to_etr(fnode.arg(0)).strip('{}')  # Remove existing braces from body
-        return f"∀{ ','.join(vars)} {{{body}}}"  # Add new braces around body
-
-    elif fnode.is_exists():
-        vars = [str(v) for v in fnode.quantifier_vars()]
-        body = smt_to_etr(fnode.arg(0)).strip('{}')  # Remove existing braces from body
-        return f"∃{','.join(vars)} {{{body}}}"  # Add new braces around body
-
-    return wrap_braces(str(fnode))  # Fallback for unknown operators
+    # Only add outer braces if there are no quantifiers
+    result = convert_inner(fnode)
+    if not (fnode.is_exists() or fnode.is_forall()):
+        result = "{" + result + "}"
+    return result
 
 
 def smt_to_english(fnode: FNode) -> str:
