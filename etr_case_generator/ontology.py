@@ -30,7 +30,7 @@ CARDS = Ontology(
         "ace",
         "one",
         "two",
-        "three",
+        "Three",  # Capitalize to match standard naming
         "four",
         "five",
         "six",
