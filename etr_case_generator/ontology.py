@@ -141,6 +141,159 @@ PLANETS = Ontology(
     ]
 )
 
+MAGICAL_CREATURES = Ontology(
+    name="Magical Creatures",
+    introduction="I'm a magizoologist studying unusual creatures in my sanctuary. I need to understand their behaviors and characteristics through logical reasoning. Here's what I've observed so far:",
+    objects=[
+        "phoenixling", "shadowdrake", "moonwolf", "crystalspider", "stormgriffin", 
+        "dreamweaver", "frostwyrm", "sunlion", "etherealsnake", "timefox"
+    ],
+    predicates=[
+        Predicate(name=p, arity=1) for p in [
+            "fire_breathing", "shadow_walking", "moonlight_glowing", "crystal_forming",
+            "storm_controlling", "dream_affecting", "ice_generating", "light_emitting",
+            "phase_shifting", "time_bending", "telepathic", "healing_aura",
+            "invisibility_capable", "shape_changing"
+        ]
+    ]
+)
+
+ENCHANTED_ARTIFACTS = Ontology(
+    name="Enchanted Artifacts",
+    introduction="I'm an arcane researcher cataloging mysterious magical items. I need to understand their properties through careful logical analysis. Here's what I've documented so far:",
+    objects=[
+        "timekeepers_compass", "void_mirror", "dreamcatcher_ring", "starlight_pendant",
+        "shadow_cloak", "crystal_orb", "phoenix_feather_quill", "moonstone_bracelet",
+        "dragon_scale_shield", "wisdom_crown"
+    ],
+    predicates=[
+        Predicate(name=p, arity=1) for p in [
+            "time_altering", "dimension_bridging", "dream_walking", "starlight_channeling",
+            "shadow_concealing", "future_seeing", "truth_revealing", "mind_protecting",
+            "magic_nullifying", "wisdom_enhancing"
+        ]
+    ]
+)
+
+QUANTUM_PARTICLES = Ontology(
+    name="Quantum Particles",
+    introduction="I'm a quantum physicist studying newly theorized particles in an alternate universe. I need to use logic to understand their properties. Here's what we've discovered so far:",
+    objects=[
+        "chronoton", "memeton", "gravion", "psychon", "dimensium",
+        "quantix", "voidon", "omnion", "paradox", "infinitum"
+    ],
+    predicates=[
+        Predicate(name=p, arity=1) for p in [
+            "time_reversing", "memory_storing", "gravity_defying", "consciousness_affecting",
+            "dimension_folding", "quantum_entangling", "void_creating", "omnipresent",
+            "paradox_inducing", "infinite_energy_containing"
+        ]
+    ]
+)
+
+CYBER_PROGRAMS = Ontology(
+    name="Cyber Programs",
+    introduction="I'm a digital archaeologist studying ancient AI programs from a forgotten digital civilization. I need to understand their functions through logical deduction. Here's what I've found:",
+    objects=[
+        "alpha_mind", "beta_sentinel", "gamma_weaver", "delta_guardian",
+        "epsilon_architect", "omega_oracle", "sigma_hunter", "theta_healer",
+        "lambda_shifter", "pi_calculator"
+    ],
+    predicates=[
+        Predicate(name=p, arity=1) for p in [
+            "self_evolving", "network_protecting", "data_weaving", "system_guarding",
+            "reality_building", "future_predicting", "virus_hunting", "code_healing",
+            "form_shifting", "quantum_computing"
+        ]
+    ]
+)
+
+DREAM_ENTITIES = Ontology(
+    name="Dream Entities",
+    introduction="I'm a dream researcher studying beings that appear in shared dreams. I need to understand their nature through logical analysis. Here's what we've observed:",
+    objects=[
+        "morpheus", "sandman", "nightmare", "daydream", "lucidus",
+        "dreamweaver", "sleepwalker", "visionkeeper", "mindshaper", "dreamborn"
+    ],
+    predicates=[
+        Predicate(name=p, arity=1) for p in [
+            "reality_bending", "nightmare_inducing", "dream_walking",
+            "memory_weaving", "consciousness_shifting", "time_distorting",
+            "emotion_affecting", "thought_reading", "dream_shaping",
+            "reality_bridging"
+        ]
+    ]
+)
+
+ALCHEMICAL_SUBSTANCES = Ontology(
+    name="Alchemical Substances",
+    introduction="I'm an alchemist studying mysterious substances in my laboratory. I need to understand their properties through logical reasoning. Here's what I've discovered:",
+    objects=[
+        "philosophers_stone", "universal_solvent", "vital_mercury", "prima_materia",
+        "celestial_water", "astral_salt", "ethereal_oil", "cosmic_dust",
+        "void_essence", "time_crystal"
+    ],
+    predicates=[
+        Predicate(name=p, arity=1) for p in [
+            "transmuting", "dissolving_all", "life_giving", "form_changing",
+            "spirit_affecting", "consciousness_expanding", "reality_altering",
+            "time_bending", "void_creating", "immortality_granting"
+        ]
+    ]
+)
+
+DIMENSIONAL_ZONES = Ontology(
+    name="Dimensional Zones",
+    introduction="I'm a dimensional cartographer mapping regions of parallel universes. I need to understand their properties through logical analysis. Here's what I've mapped:",
+    objects=[
+        "void_nexus", "time_spiral", "dream_realm", "crystal_dimension",
+        "shadow_plane", "quantum_zone", "infinity_space", "chaos_domain",
+        "mirror_world", "probability_realm"
+    ],
+    predicates=[
+        Predicate(name=p, arity=1) for p in [
+            "time_warping", "reality_bending", "consciousness_altering",
+            "matter_crystallizing", "light_absorbing", "probability_shifting",
+            "infinity_containing", "chaos_emanating", "reality_reflecting",
+            "possibility_branching"
+        ]
+    ]
+)
+
+PSYCHIC_POWERS = Ontology(
+    name="Psychic Powers",
+    introduction="I'm a researcher studying newly discovered psychic abilities. I need to understand their interactions through logical reasoning. Here's what we know:",
+    objects=[
+        "telepathy", "precognition", "psychokinesis", "clairvoyance",
+        "empathy", "astral_projection", "mind_control", "psychometry",
+        "teleportation", "reality_warping"
+    ],
+    predicates=[
+        Predicate(name=p, arity=1) for p in [
+            "mind_reading", "future_seeing", "matter_moving", "distance_viewing",
+            "emotion_sensing", "soul_traveling", "will_imposing", "object_reading",
+            "space_bending", "reality_changing"
+        ]
+    ]
+)
+
+BIOTECH_ORGANISMS = Ontology(
+    name="Biotech Organisms",
+    introduction="I'm a synthetic biology researcher studying advanced bioengineered life forms. I need to understand their capabilities through logical analysis. Here's what we've created:",
+    objects=[
+        "neurovore", "biomech", "synthoid", "nanohive", "metacell",
+        "quantumorg", "chronoplast", "biomatrix", "neuronet", "vitaform"
+    ],
+    predicates=[
+        Predicate(name=p, arity=1) for p in [
+            "self_evolving", "machine_integrating", "shape_shifting",
+            "swarm_forming", "consciousness_developing", "quantum_computing",
+            "time_manipulating", "life_creating", "network_forming",
+            "energy_converting"
+        ]
+    ]
+)
+
 
 def natural_name_to_logical_name(name: str, shorten: Literal["none", "short", "first"] = "none") -> str:
     if shorten=="none":
@@ -154,4 +307,9 @@ def natural_name_to_logical_name(name: str, shorten: Literal["none", "short", "f
         return name[0].lower()
 
 def get_all_ontologies() -> list[Ontology]:
-    return [CARDS, ELEMENTS, PLANETS, ANIMALS, FOODS]
+    return [
+        CARDS, ELEMENTS, PLANETS, ANIMALS, FOODS,
+        MAGICAL_CREATURES, ENCHANTED_ARTIFACTS, QUANTUM_PARTICLES,
+        CYBER_PROGRAMS, DREAM_ENTITIES, ALCHEMICAL_SUBSTANCES,
+        DIMENSIONAL_ZONES, PSYCHIC_POWERS, BIOTECH_ORGANISMS
+    ]
