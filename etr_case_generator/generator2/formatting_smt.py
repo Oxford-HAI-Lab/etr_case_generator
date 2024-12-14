@@ -79,8 +79,7 @@ def smt_to_english(fnode: FNode) -> str:
         arg = arg.rstrip(')')  # remove closing parenthesis
         # Replace underscores with spaces in predicate names
         name = name.replace('_', ' ')
-        # Add () after the variable name
-        return f"{arg}() is {name}"
+        return f"{arg} is {name}"
 
     # Base case: single predicate
     if fnode.is_symbol():
