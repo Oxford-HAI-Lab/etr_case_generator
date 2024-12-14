@@ -71,6 +71,15 @@ def smt_to_english(fnode: FNode, ontology: Ontology) -> str:
         Exists([x], magnetic(x)) -> there exists an x such that x is magnetic
     """
 
+    def _logical_to_english(text: str):
+        if text in ontology.natural_to_short_name_mapping:
+            text = ontology.natural_to_short_name_mapping[text]
+        else:
+            print(f"Couldn't find {text} in ontology mapping.")
+            print(ontology.natural_to_short_name_mapping)
+        text.replace("_", " ")
+        return text
+
     def _convert_predicate(pred_str: str) -> str:
         """Convert f(x) format to 'x is f'"""
         # Clean up the string first - remove any quotes
@@ -78,11 +87,8 @@ def smt_to_english(fnode: FNode, ontology: Ontology) -> str:
         # Extract function name and argument from f(x) format
         name, arg = pred_str.split('(')
         arg = arg.rstrip(')')  # remove closing parenthesis
-        if name in ontology.natural_to_short_name_mapping:
-            name = ontology.natural_to_short_name_mapping[name]
-        else:
-            print(f"Couldn't find {name} in ontology mapping.")
-            print(ontology.natural_to_short_name_mapping)
+        name = _logical_to_english(name)
+        arg = _logical_to_english(arg)
         return f"{arg} is {name}"
 
     # Base case: single predicate

@@ -16,7 +16,7 @@ def full_problem_from_smt_problem(smt_problem: SMTProblem, ontology: Ontology=EL
             logical_form_smt=format_smt(view),  # Formatted string representation without quotes
             logical_form_smt_fnode=view,  # Store the original FNode
             logical_form_etr=smt_to_etr(view),  # Convert to ETR notation
-            english_form=smt_to_english(view, ontology),  # Convert to natural English
+            english_form=smt_to_english(view, ontology).replace("_", " "),  # Convert to natural English
         )
         reified_views.append(reified_view)
 
@@ -28,7 +28,7 @@ def full_problem_from_smt_problem(smt_problem: SMTProblem, ontology: Ontology=EL
                 logical_form_smt=format_smt(conclusion_fnode),
                 logical_form_smt_fnode=conclusion_fnode,
                 logical_form_etr=smt_to_etr(conclusion_fnode),
-                english_form=smt_to_english(conclusion_fnode, ontology),
+                english_form=smt_to_english(conclusion_fnode, ontology).replace("_", " "),
             )
             yes_no_conclusions.append((reified_conclusion, is_correct))
 
