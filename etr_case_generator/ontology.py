@@ -308,7 +308,7 @@ def natural_name_to_logical_name(name: str, shorten: Literal["none", "short", "f
 
 def get_all_ontologies() -> list[Ontology]:
     return [
-        CARDS, ELEMENTS, PLANETS, ANIMALS, FOODS,
+        CARDS, ELEMENTS, PLANETS,
         MAGICAL_CREATURES, ENCHANTED_ARTIFACTS, QUANTUM_PARTICLES,
         CYBER_PROGRAMS, DREAM_ENTITIES, ALCHEMICAL_SUBSTANCES,
         DIMENSIONAL_ZONES, PSYCHIC_POWERS, BIOTECH_ORGANISMS
