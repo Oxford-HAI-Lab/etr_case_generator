@@ -43,8 +43,33 @@ class Ontology:
         # Assert that the mapping is bijective, i.e. that the size of the set of keys is the same as the size of the set of values.
         assert len(self.natural_to_short_name_mapping.keys()) == len(set(self.natural_to_short_name_mapping.values()))
 
-    def create_smaller_ontology(self, num_predicates, num_objects) -> Ontology:
-        ...
+    def create_smaller_ontology(self, num_predicates: int, num_objects: int) -> 'Ontology':
+        """Create a new smaller ontology by randomly selecting predicates and objects.
+        
+        Args:
+            num_predicates: Number of predicates to include in new ontology
+            num_objects: Number of objects to include in new ontology
+            
+        Returns:
+            New Ontology instance with randomly selected subset of predicates and objects
+        """
+        import random
+        
+        # Ensure we don't try to select more items than available
+        num_predicates = min(num_predicates, len(self.predicates))
+        num_objects = min(num_objects, len(self.objects))
+        
+        # Randomly select predicates and objects
+        selected_predicates = random.sample(self.predicates, num_predicates)
+        selected_objects = random.sample(self.objects, num_objects)
+        
+        # Create new ontology with same name and introduction but smaller sets
+        return Ontology(
+            name=self.name,
+            introduction=self.introduction,
+            objects=selected_objects,
+            predicates=selected_predicates
+        )
 
 
 CARDS = Ontology(
