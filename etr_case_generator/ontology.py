@@ -40,6 +40,9 @@ class Ontology:
         for pred in self.predicates:
             self.natural_to_short_name_mapping[natural_name_to_logical_name(pred.name)] = pred.name
 
+        # Assert that the mapping is bijective, i.e. that the size of the set of keys is the same as the size of the set of values.
+        assert len(self.natural_to_short_name_mapping.keys()) == len(set(self.natural_to_short_name_mapping.values()))
+
 
 CARDS = Ontology(
     name="Cards",
@@ -312,7 +315,7 @@ def natural_name_to_logical_name(name: str, shorten: Literal["none", "short", "f
     if shorten=="none":
         # View.from_str appears to have an issue with underscores
         name = name.replace(" ", "").replace("-", "").lower()
-        # name = name.replace("_", "")
+        # name = name.replace("_", "")  # PyETR appears to require no underscores
         return name
     elif shorten=="short":
         # Find the first letter of each word

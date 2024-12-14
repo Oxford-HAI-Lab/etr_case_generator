@@ -54,7 +54,7 @@ def smt_to_etr(fnode: FNode) -> str:
     result = convert_inner(fnode)
     if not (fnode.is_exists() or fnode.is_forall()):
         result = "{" + result + "}"
-    return result
+    return result.replace("_", "")  # PyETR appears to not allow underscores
 
 
 def smt_to_english(fnode: FNode, ontology: Ontology) -> str:
@@ -100,6 +100,7 @@ def smt_to_english(fnode: FNode, ontology: Ontology) -> str:
     if fnode.is_not():
         pred = smt_to_english(fnode.arg(0), ontology)
         # Replace "is" with "is not" for predicates
+        # TODO(bug): This seems like it is likely to cause issues with deeply nested formulas
         return pred.replace(" is ", " is not ")
 
     elif fnode.is_and():
