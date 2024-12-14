@@ -311,7 +311,9 @@ BIOTECH_ORGANISMS = Ontology(
 def natural_name_to_logical_name(name: str, shorten: Literal["none", "short", "first"] = "none") -> str:
     if shorten=="none":
         # View.from_str appears to have an issue with underscores
-        return name.replace(" ", "").replace("-", "").replace("_", "").lower()
+        name = name.replace(" ", "").replace("-", "").lower()
+        # name = name.replace("_", "")
+        return name
     elif shorten=="short":
         # Find the first letter of each word
         letters = "".join([word[0] for word in name.split(" ")])
