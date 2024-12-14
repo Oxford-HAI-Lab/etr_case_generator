@@ -90,36 +90,36 @@ def smt_to_english(fnode: FNode, ontology: Ontology) -> str:
 
     # Handle each operator type
     if fnode.is_not():
-        pred = smt_to_english(fnode.arg(0))
+        pred = smt_to_english(fnode.arg(0), ontology)
         # Replace "is" with "is not" for predicates
         return pred.replace(" is ", " is not ")
 
     elif fnode.is_and():
-        terms = [smt_to_english(arg) for arg in fnode.args()]
+        terms = [smt_to_english(arg, ontology) for arg in fnode.args()]
         return " and ".join(terms)
 
     elif fnode.is_or():
-        terms = [smt_to_english(arg) for arg in fnode.args()]
+        terms = [smt_to_english(arg, ontology) for arg in fnode.args()]
         return " or ".join(terms)
 
     elif fnode.is_implies():
-        antecedent = smt_to_english(fnode.arg(0))
-        consequent = smt_to_english(fnode.arg(1))
+        antecedent = smt_to_english(fnode.arg(0), ontology)
+        consequent = smt_to_english(fnode.arg(1), ontology)
         return f"if {antecedent}, then {consequent}"
 
     elif fnode.is_iff():
-        left = smt_to_english(fnode.arg(0))
-        right = smt_to_english(fnode.arg(1))
+        left = smt_to_english(fnode.arg(0), ontology)
+        right = smt_to_english(fnode.arg(1), ontology)
         return f"{left} if and only if {right}"
 
     elif fnode.is_forall():
         vars = [str(v) for v in fnode.quantifier_vars()]
-        body = smt_to_english(fnode.arg(0))
+        body = smt_to_english(fnode.arg(0), ontology)
         return f"for all {', '.join(vars)}, {body}"
 
     elif fnode.is_exists():
         vars = [str(v) for v in fnode.quantifier_vars()]
-        body = smt_to_english(fnode.arg(0))
+        body = smt_to_english(fnode.arg(0), ontology)
         return f"there exists {', '.join(vars)} such that {body}"
 
     return str(fnode)  # Fallback for unknown operators
