@@ -56,7 +56,7 @@ def smt_to_etr(fnode: FNode) -> str:
     return result
 
 
-def smt_to_english(fnode: FNode) -> str:
+def smt_to_english(fnode: FNode, ontology: Ontology) -> str:
     """Convert an SMT formula to natural English.
 
     Examples:
@@ -83,7 +83,10 @@ def smt_to_english(fnode: FNode) -> str:
 
     # Base case: single predicate
     if fnode.is_symbol():
-        return _convert_predicate(str(fnode))
+        text = _convert_predicate(str(fnode))
+        if text in ontology.natural_to_short_name_mapping:
+            text = ontology.natural_to_short_name_mapping[text]
+        return text
 
     # Handle each operator type
     if fnode.is_not():
