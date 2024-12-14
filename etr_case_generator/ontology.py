@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 from dataclasses import dataclass
 from pyetr.atoms import Predicate
 
@@ -26,6 +26,19 @@ class Ontology:
     Note that for now, these predicates cannot be exhaustive, meaning for any P and Q,
     it must be possible to have P(x)Q(x).
     """
+
+    natural_to_short_name_mapping: Optional[dict[str, str]] = None
+    """
+    For all object names and predicate names, we want to shorten them using the `natural_name_to_logical_name` function. 
+    This is for mapping in the other direction.
+    """
+    
+    def fill_mapping(self):
+        self.natural_to_short_name_mapping = {}
+        for obj in self.objects:
+            self.natural_to_short_name_mapping[natural_name_to_logical_name(obj)] = obj
+        for pred in self.predicates:
+            self.natural_to_short_name_mapping[natural_name_to_logical_name(pred.name)] = pred.name
 
 
 CARDS = Ontology(

@@ -33,7 +33,6 @@ class FullProblem:
 
     # Details for printing
     introductory_prose: Optional[str] = None
-    mapping: Optional[dict[str, str]] = None  # logical_form -> english_form, this must be bijective
 
     def full_string(self, show_empty: bool = False) -> str:
         console = Console(record=True)

@@ -87,6 +87,9 @@ def smt_to_english(fnode: FNode, ontology: Ontology) -> str:
         text = _convert_predicate(str(fnode))
         if text in ontology.natural_to_short_name_mapping:
             text = ontology.natural_to_short_name_mapping[text]
+        else:
+            print(f"Couldn't find {text} in ontology mapping.")
+            print(ontology.natural_to_short_name_mapping)
         return text
 
     # Handle each operator type

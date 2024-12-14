@@ -5,7 +5,7 @@ from etr_case_generator.generator2.problem_in_smt import generate_problem_in_smt
 from etr_case_generator.generator2.reified_problem import FullProblem
 
 
-from etr_case_generator.ontology import ELEMENTS, CARDS, Ontology, get_all_ontologies
+from etr_case_generator.ontology import Ontology, get_all_ontologies, natural_name_to_logical_name
 
 
 def generate_problem_list(n_problems: int, args) -> list[FullProblem]:
@@ -15,12 +15,15 @@ def generate_problem_list(n_problems: int, args) -> list[FullProblem]:
         n_problems (int): The number of problems to generate
         verbose (bool, optional): Whether to print debugging info. Defaults to False.
     """
+    all_ontologies: list[Ontology] = get_all_ontologies()
+    for o in all_ontologies:
+        o.fill_mapping()
 
     problems: list[FullProblem] = []
     for i in range(args.n_problems):
         if args.verbose:
             print(f"Generating problem {len(problems) + 1}/{args.n_problems}")
-        problem = generate_problem_in_smt(args, ontology=random.choice(get_all_ontologies()))
+        problem = generate_problem_in_smt(args, ontology=random.choice(all_ontologies))
         problems.append(problem)
         print(f"Generated Problem {i + 1} of {n_problems}")
         print(problem.full_string(show_empty=True))
