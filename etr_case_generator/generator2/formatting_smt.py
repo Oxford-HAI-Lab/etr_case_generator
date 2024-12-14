@@ -1,4 +1,5 @@
 from pysmt.fnode import FNode
+from etr_case_generator.ontology import Ontology
 
 
 def format_smt(fnode: FNode) -> str:
