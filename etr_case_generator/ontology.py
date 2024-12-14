@@ -43,6 +43,9 @@ class Ontology:
         # Assert that the mapping is bijective, i.e. that the size of the set of keys is the same as the size of the set of values.
         assert len(self.natural_to_short_name_mapping.keys()) == len(set(self.natural_to_short_name_mapping.values()))
 
+    def create_smaller_ontology(self, num_predicates, num_objects) -> Ontology:
+        ...
+
 
 CARDS = Ontology(
     name="Cards",
