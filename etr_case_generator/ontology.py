@@ -64,12 +64,16 @@ class Ontology:
         selected_objects = random.sample(self.objects, num_objects)
         
         # Create new ontology with same name and introduction but smaller sets
-        return Ontology(
+        onto = Ontology(
             name=self.name,
             introduction=self.introduction,
             objects=selected_objects,
             predicates=selected_predicates
         )
+
+        onto.fill_mapping()
+
+        return onto
 
 
 CARDS = Ontology(
