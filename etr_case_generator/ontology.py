@@ -6,6 +6,10 @@ from pyetr.atoms import Predicate
 @dataclass
 class Ontology:
     name: str
+    introduction: str
+    """
+    Prompting prose for the LLM in which we introduce the logical problem. 
+    """
 
     objects: list[str]
     """
@@ -26,6 +30,7 @@ class Ontology:
 
 CARDS = Ontology(
     name="Cards",
+    introduction="I'm playing a card game against the computer. It's an unusual game with an unusual deck of cards. I have some clues about what's going on, and I need to figure some more things out through logical reasoning. Here's what I know so far:",
     objects=[
         "ace",
         "one",
@@ -50,6 +55,7 @@ CARDS = Ontology(
 
 ELEMENTS = Ontology(
     name="Materials",
+    introduction="I'm working in a materials science lab and we've gotten some puzzling results. I need to use logical reasoning to figure out what's going on. Here's what I know so far:",
     objects=[
         "elementium",
         "zycron",
@@ -120,9 +126,9 @@ ELEMENTS = Ontology(
 
 PLANETS = Ontology(
     name="Celestial Bodies",
+    introduction="I'm an astronomer studying newly discovered celestial bodies. I've made some observations and I need to use logical reasoning to figure out what's going on. Here's what I know so far:",
     objects=[
-        "mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune",
-        "pluto", "ceres", "eris", "makemake", "haumea", "sedna", "planet x", "planet nine", "quaoar", "charon",
+        "planet X", "planet Y", "planet Z", "asteroid A", "asteroid B", "comet 1", "comet 2", "moon 1", "moon 2", "moon 3"
     ],
     predicates=[
         Predicate(name=p, arity=1)
@@ -131,42 +137,6 @@ PLANETS = Ontology(
             "has_moons", "retrograde_orbit", "elliptical_orbit",
             "visible_to_naked_eye", "has_atmosphere",
             "has_magnetic_field", "tidally_locked"
-        ]
-    ]
-)
-
-ANIMALS = Ontology(
-    name="Animals",
-    objects=[
-        "lion", "elephant", "dolphin", "eagle", "penguin", "octopus",
-        "kangaroo", "platypus", "chameleon", "bat", "whale", "cobra",
-        "butterfly", "scorpion", "owl", "beaver"
-    ],
-    predicates=[
-        Predicate(name=p, arity=1)
-        for p in [
-            "warm_blooded", "carnivorous", "nocturnal", "venomous",
-            "can_fly", "aquatic", "hibernates", "migratory",
-            "has_scales", "has_fur", "has_feathers", "egg_laying",
-            "social", "territorial", "camouflaged"
-        ]
-    ]
-)
-
-FOODS = Ontology(
-    name="Cuisine",
-    objects=[
-        "sushi", "pizza", "curry", "pasta", "taco", "sushi",
-        "burger", "salad", "soup", "steak", "bread", "cake",
-        "yogurt", "cheese", "chocolate", "rice"
-    ],
-    predicates=[
-        Predicate(name=p, arity=1)
-        for p in [
-            "vegetarian", "spicy", "fermented", "raw", "baked",
-            "fried", "dairy_based", "gluten_free", "sweet",
-            "savory", "high_protein", "contains_nuts",
-            "requires_refrigeration", "shelf_stable"
         ]
     ]
 )
