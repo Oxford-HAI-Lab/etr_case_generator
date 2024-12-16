@@ -56,6 +56,8 @@ def main():
     parser.add_argument("--num_predicates_per_problem", type=int, default=3, help="Number of predicates to use in each problem")
     parser.add_argument("--num_objects_per_problem", type=int, default=3, help="Number of objects to use in each problem")
     parser.add_argument("--name_shortening", type=str, default="none", help="How to shorten names of objects and predicates. Options are 'none', 'short', and 'first'.")
+    parser.add_argument("--num_follows", type=int, default=3, help="Number of potential variable assignments which might follow, the top level size of the DNF form of the logical conclusion from the premises.")
+    parser.add_argument("--num_clauses", type=int, default=3, help="A measure of the complexity of the premises.")
     args = parser.parse_args()
     
     generate_problem_list(n_problems=args.n_problems, args=args)
