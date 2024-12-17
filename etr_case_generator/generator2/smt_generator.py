@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import random
 
 from pysmt.shortcuts import Symbol, And, Or, Not, Implies, Iff, ForAll, Exists, is_valid, Solver
+from typing import List, Union, Optional
 from pysmt.fnode import FNode
 from pysmt.typing import BOOL, REAL, PySMTType
 
@@ -9,9 +10,86 @@ from etr_case_generator import Ontology
 from etr_case_generator.ontology import ELEMENTS, natural_name_to_logical_name
 
 
+def to_cnf(formula: FNode) -> FNode:
+    """Convert formula to Conjunctive Normal Form (CNF)"""
+    # First convert implications and iffs
+    formula = eliminate_implications(formula)
+    
+    # Push negations inward using De Morgan's laws
+    formula = push_negations(formula)
+    
+    # Distribute Or over And
+    formula = distribute_or_over_and(formula)
+    
+    return formula
+
+def eliminate_implications(formula: FNode) -> FNode:
+    """Eliminate implications and iff from formula"""
+    if formula.is_implies():
+        # a → b becomes ¬a ∨ b
+        a = eliminate_implications(formula.arg(0))
+        b = eliminate_implications(formula.arg(1))
+        return Or(Not(a), b)
+    elif formula.is_iff():
+        # a ↔ b becomes (a → b) ∧ (b → a)
+        a = eliminate_implications(formula.arg(0))
+        b = eliminate_implications(formula.arg(1))
+        return And(Or(Not(a), b), Or(Not(b), a))
+    elif formula.is_and():
+        return And([eliminate_implications(arg) for arg in formula.args()])
+    elif formula.is_or():
+        return Or([eliminate_implications(arg) for arg in formula.args()])
+    elif formula.is_not():
+        return Not(eliminate_implications(formula.arg(0)))
+    else:
+        return formula
+
+def push_negations(formula: FNode) -> FNode:
+    """Push negations inward using De Morgan's laws"""
+    if formula.is_not():
+        child = formula.arg(0)
+        if child.is_and():
+            # ¬(a ∧ b) becomes ¬a ∨ ¬b
+            return Or([push_negations(Not(arg)) for arg in child.args()])
+        elif child.is_or():
+            # ¬(a ∨ b) becomes ¬a ∧ ¬b
+            return And([push_negations(Not(arg)) for arg in child.args()])
+        elif child.is_not():
+            # ¬¬a becomes a
+            return push_negations(child.arg(0))
+        else:
+            return formula
+    elif formula.is_and():
+        return And([push_negations(arg) for arg in formula.args()])
+    elif formula.is_or():
+        return Or([push_negations(arg) for arg in formula.args()])
+    else:
+        return formula
+
+def distribute_or_over_and(formula: FNode) -> FNode:
+    """Distribute Or over And"""
+    if formula.is_or():
+        # Find any And terms
+        and_terms = [arg for arg in formula.args() if arg.is_and()]
+        if and_terms:
+            # Take first And term and distribute
+            and_term = and_terms[0]
+            other_terms = [arg for arg in formula.args() if arg is not and_term]
+            distributed = [Or(distribute_or_over_and(and_arg), 
+                           *[distribute_or_over_and(term) for term in other_terms])
+                         for and_arg in and_term.args()]
+            return And(distributed)
+        else:
+            return Or([distribute_or_over_and(arg) for arg in formula.args()])
+    elif formula.is_and():
+        return And([distribute_or_over_and(arg) for arg in formula.args()])
+    return formula
+
+
 @dataclass(kw_only=True)
 class SMTProblem:
     views: list[FNode] = None
+    views_cnf: list[FNode] = None  # Views converted to CNF form
 
     # Yes or No format
     yes_or_no_conclusions: list[tuple[FNode, bool]] = None  # List of (conclusion, is_correct) pairs
@@ -118,8 +196,12 @@ def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ont
                 new_atom = random_atom()
             incorrect_conclusion = And(premises, new_atom)
             
+            # Convert views to CNF
+            views_cnf = [to_cnf(view) for view in views]
+            
             return SMTProblem(
                 views=views,
+                views_cnf=views_cnf,
                 yes_or_no_conclusions=[
                     (correct_conclusion, True),
                     (incorrect_conclusion, False)
