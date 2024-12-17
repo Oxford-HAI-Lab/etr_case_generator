@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import random
 
-from pysmt.shortcuts import Symbol, And, Or, Not, Implies, Iff, ForAll, Exists, is_valid
+from pysmt.shortcuts import Symbol, And, Or, Not, Implies, Iff, ForAll, Exists, is_valid, Solver
 from pysmt.fnode import FNode
 from pysmt.typing import BOOL, REAL, PySMTType
 
@@ -18,7 +18,7 @@ class SMTProblem:
 
 
 def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ontology=ELEMENTS) -> SMTProblem:
-    """Generate a random SMT problem using predicates and objects from the ontology.
+    """Generate a random SMT problem with at least one necessary assignment.
     
     Args:
         num_clauses: Number of views/statements to generate
@@ -26,7 +26,7 @@ def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ont
         ontology: The ontology containing predicates and objects to use
         
     Returns:
-        SMTProblem with views and both correct and incorrect conclusions generated
+        SMTProblem with views that have at least one necessary assignment and conclusions
         using the Logical Strength Method:
         - Correct conclusion is logically weaker than premises
         - Incorrect conclusion is logically stronger than premises
@@ -62,35 +62,69 @@ def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ont
         else:
             return operator(random_term(depth + 1), random_term(depth + 1))
 
-    # Generate random views
-    views = []
-    for _ in range(num_clauses):
-        statement = random_term()
-        views.append(statement)
+    def has_necessary_assignments(views: list[FNode]) -> bool:
+        """Check if the conjunction of views has any necessary assignments"""
+        premises = And(views)
+        solver = Solver()
+        solver.add_assertion(premises)
+        
+        # Get all variables used in the formula
+        variables = premises.get_free_variables()
+        
+        # For each variable, check if it must be True or False
+        for var in variables:
+            # Check if var must be True
+            solver.push()
+            solver.add_assertion(Not(var))
+            if not solver.solve():
+                solver.pop()
+                return True
+            solver.pop()
+            
+            # Check if var must be False 
+            solver.push()
+            solver.add_assertion(var)
+            if not solver.solve():
+                solver.pop()
+                return True
+            solver.pop()
+            
+        return False
 
-    # Generate a correct conclusion by weakening the conjunction of views
-    premises = And(views)
-    
-    # For correct conclusion: take a subset of the views or weaken with OR
-    if random.random() < 0.5 and len(views) > 1:
-        # Take a random subset of views
-        subset_size = random.randint(1, len(views) - 1)
-        correct_conclusion = And(random.sample(views, subset_size))
-    else:
-        # Add a disjunction with a new random term
-        correct_conclusion = Or(random.choice(views), random_term())
-    
-    # For incorrect conclusion: strengthen by adding extra conjunction
-    # Generate new predicate application that isn't in the views
-    new_atom = random_atom()
-    while any(new_atom == view for view in views):
-        new_atom = random_atom()
-    incorrect_conclusion = And(premises, new_atom)
-    
-    return SMTProblem(
-        views=views,
-        yes_or_no_conclusions=[
-            (correct_conclusion, True),
-            (incorrect_conclusion, False)
-        ]
-    )
+    # Try to generate views with necessary assignments
+    max_attempts = 100
+    for attempt in range(max_attempts):
+        # Generate random views
+        views = []
+        for _ in range(num_clauses):
+            statement = random_term()
+            views.append(statement)
+
+        # Check if these views create any necessary assignments
+        if has_necessary_assignments(views):
+            # Generate conclusions as before
+            premises = And(views)
+            
+            # For correct conclusion: take a subset of the views or weaken with OR
+            if random.random() < 0.5 and len(views) > 1:
+                subset_size = random.randint(1, len(views) - 1)
+                correct_conclusion = And(random.sample(views, subset_size))
+            else:
+                correct_conclusion = Or(random.choice(views), random_term())
+            
+            # For incorrect conclusion: strengthen by adding extra conjunction
+            new_atom = random_atom()
+            while any(new_atom == view for view in views):
+                new_atom = random_atom()
+            incorrect_conclusion = And(premises, new_atom)
+            
+            return SMTProblem(
+                views=views,
+                yes_or_no_conclusions=[
+                    (correct_conclusion, True),
+                    (incorrect_conclusion, False)
+                ]
+            )
+
+    # If we failed to find views with necessary assignments
+    raise ValueError(f"Failed to generate problem with necessary assignments after {max_attempts} attempts")
