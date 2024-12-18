@@ -46,12 +46,9 @@ def full_problem_from_smt_problem(smt_problem: SMTProblem, ontology: Ontology=EL
         introductory_prose=ontology.introduction,
         views=reified_views,
         # Yes/No section
-        yes_or_no_conclusions=yes_no_conclusions if yes_no_conclusions else None,
-        yes_or_no_question_prose="Does the following conclusion necessarily follow from the given statements?",
+        possible_conclusions=yes_no_conclusions if yes_no_conclusions else None,
         # Multiple choice section
         multiple_choices=multiple_choices if multiple_choices else None,
-        multiple_choice_question_prose="Which of the following conclusions necessarily follows from the given statements?",
         # Open ended question
-        open_ended_question_prose="What if anything follows?",
         etr_predicted_conclusion=etr_predicted_conclusion,
     )

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Literal
 
 from pysmt.fnode import FNode
 from rich.console import Console, Group
@@ -18,21 +18,61 @@ class ReifiedView:
 @dataclass(kw_only=True)
 class FullProblem:
     views: Optional[list[ReifiedView]] = None
+    possible_conclusions: Optional[list[tuple[ReifiedView, bool]]] = None  # List of (conclusion, is_correct) pairs
 
     # Yes or No format
-    yes_or_no_conclusions: Optional[list[tuple[ReifiedView, bool]]] = None  # List of (conclusion, is_correct) pairs
-    yes_or_no_question_prose: Optional[str] = None
+    yes_or_no_conclusion_chosen_index: int = 0  # Indexes into possible_conclusions
+    yes_or_no_question_prose: Optional[str] = "Does the following conclusion necessarily follow from the given statements?"
+    yes_or_no_answer_guidance_prose: Optional[str] = 'Answer in the form of "Answer: Yes" or "Answer: No".'
 
     # Multiple Choice
     multiple_choices: Optional[list[tuple[ReifiedView, bool, bool]]] = None  # (view, is_correct, is_etr_predicted)
-    multiple_choice_question_prose: Optional[str] = None
+    multiple_choice_question_prose: Optional[str] = "Which of the following conclusions necessarily follows from the given statements?"
+    multiple_choice_answer_guidance_prose: Optional[str] = 'Answer in the form of "Answer: A", "Answer: B", etc.'
+    multiple_choice_options: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     # Open Ended
     etr_predicted_conclusion: Optional[ReifiedView] = None
-    open_ended_question_prose: Optional[str] = None
+    open_ended_question_prose: Optional[str] = "What if anything follows?"
+    open_ended_answer_guidance_prose: Optional[str] = 'Answer in the format that I showed you.'
 
-    # Details for printing
+    # Boilerplate for the question
     introductory_prose: Optional[str] = None
+    answer_immediately_prose: Optional[str] = "I want you to answer immediately."
+    chain_of_thought_prose: Optional[str] = "I want you to spend a few paragraphs thinking about your answer."
+
+    def to_prompt(self, format: Literal["yes_no", "multiple_choice", "open_ended"] = "yes_no", chain_of_thought: bool = False, include_smt_form: bool = False) -> str:
+        s = self.introductory_prose
+        s += "\n\n"
+        for view in self.views:
+            s += f"* {view.english_form}"
+            if include_smt_form:
+                s += f"\n  Or, here it is in the format that PySMT uses: {view.logical_form_smt}"
+            s += "\n"
+        s += "\n"
+        if format == "yes_no":
+            s += self.yes_or_no_question_prose
+            s += "\n\n"
+            s += f"My Conclusion: {self.possible_conclusions[self.yes_or_no_conclusion_chosen_index][0].english_form}"
+            s += "\n\n"
+            s += self.yes_or_no_answer_guidance_prose
+        elif format == "multiple_choice":
+            s += self.multiple_choice_question_prose
+            s += "\n\n"
+            for i, (view, is_correct, is_etr_predicted) in enumerate(self.multiple_choices):
+                s += f"{self.multiple_choice_options[i]}. {view.english_form}\n"
+            s += "\n"
+            s += self.multiple_choice_answer_guidance_prose
+        elif format == "open_ended":
+            s += self.open_ended_question_prose
+            s += "\n\n"
+            s += self.open_ended_answer_guidance_prose
+        s += "\n\n"
+        if chain_of_thought:
+            s += self.chain_of_thought_prose
+        else:
+            s += self.answer_immediately_prose
+        return s
 
     def full_string(self, show_empty: bool = False) -> str:
         console = Console(record=True)
@@ -62,11 +102,11 @@ class FullProblem:
             content.append("")
         
         # Add yes/no section
-        if show_empty or any([self.yes_or_no_conclusions, self.yes_or_no_question_prose]):
+        if show_empty or any([self.possible_conclusions, self.yes_or_no_question_prose]):
             content.append(Text("Yes/No Questions:", style="bold green"))
             content.append(f"  Question: {self.yes_or_no_question_prose}")
-            if self.yes_or_no_conclusions:
-                for i, (conclusion, is_correct) in enumerate(self.yes_or_no_conclusions, 1):
+            if self.possible_conclusions:
+                for i, (conclusion, is_correct) in enumerate(self.possible_conclusions, 1):
                     content.append(f"  {i}. Conclusion: {conclusion.logical_form_smt}")
                     content.append(f"     Answer: {is_correct}")
             content.append("")
@@ -101,6 +141,14 @@ class FullProblem:
         # Render to string
         with console.capture() as capture:
             console.print(panel)
+
+            for prompt_type in ["yes_no", "multiple_choice", "open_ended"]:
+                prompt_panel = Panel(
+                    Group(Text(f"{self.to_prompt(prompt_type)}")),
+                    title=f"{prompt_type.capitalize()} Prompt",
+                    border_style="bright_blue"
+                )
+                console.print(prompt_panel)
         
         return capture.get()
 
