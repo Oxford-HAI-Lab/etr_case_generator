@@ -3,6 +3,9 @@ from dataclasses import dataclass
 from pyetr.atoms import Predicate
 
 
+NameShorteningScheme = Literal["none", "short", "first"]
+
+
 @dataclass
 class Ontology:
     name: str
@@ -32,6 +35,8 @@ class Ontology:
     For all object names and predicate names, we want to shorten them using the `natural_name_to_logical_name` function. 
     This is for mapping in the other direction.
     """
+
+    preferred_name_shortening_scheme: NameShorteningScheme = "short"
     
     def fill_mapping(self):
         self.natural_to_short_name_mapping = {}
@@ -343,7 +348,7 @@ BIOTECH_ORGANISMS = Ontology(
 )
 
 
-def natural_name_to_logical_name(name: str, shorten: Literal["none", "short", "first"] = "none") -> str:
+def natural_name_to_logical_name(name: str, shorten: NameShorteningScheme = "none") -> str:
     if shorten=="none":
         # View.from_str appears to have an issue with underscores
         name = name.replace(" ", "").replace("-", "").lower()
@@ -355,6 +360,7 @@ def natural_name_to_logical_name(name: str, shorten: Literal["none", "short", "f
         return letters.lower()
     elif shorten=="first":
         return name[0].lower()
+
 
 def get_all_ontologies() -> list[Ontology]:
     return [

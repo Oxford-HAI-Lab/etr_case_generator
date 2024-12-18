@@ -19,6 +19,7 @@ def generate_problem_list(n_problems: int, args) -> list[FullProblem]:
     all_ontologies: list[Ontology] = get_all_ontologies()
     for o in all_ontologies:
         o.fill_mapping()
+        o.preferred_name_shortening_scheme = args.name_shortening
 
     problems: list[FullProblem] = []
     for i in range(args.n_problems):
