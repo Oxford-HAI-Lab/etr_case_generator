@@ -60,6 +60,23 @@ def random_smt_problem(ontology: Ontology=ELEMENTS,
     # There will be exactly num_clauses number of clauses distributed across those views
     # Each clause will have between min_disjuncts_per_clause and max_disjuncts_per_clause disjuncts
 
-    # TODO Implement this algorithm
+    # Distribute clauses across views
+    num_views = random.randint(1, max_num_views)
+    clauses_per_view = [0] * num_views
+    for i in range(num_clauses):
+        clauses_per_view[random.randint(0, num_views - 1)] += 1
 
-    return SMTProblem(...)
+    views = []
+    for num_clauses_in_view in clauses_per_view:
+        clauses = []
+        for _ in range(num_clauses_in_view):
+            num_disjuncts = random.randint(min_disjuncts_per_clause, max_disjuncts_per_clause)
+            disjuncts = random.sample(possible_atoms, min(num_disjuncts, len(possible_atoms)))
+            clause = Or(disjuncts)
+            clauses.append(clause)
+        
+        if clauses:
+            view = And(clauses)
+            views.append(view)
+
+    return SMTProblem(views=views)
