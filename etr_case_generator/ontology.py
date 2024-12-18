@@ -73,7 +73,8 @@ class Ontology:
             name=self.name,
             introduction=self.introduction,
             objects=selected_objects,
-            predicates=selected_predicates
+            predicates=selected_predicates,
+            preferred_name_shortening_scheme=self.preferred_name_shortening_scheme,
         )
 
         onto.fill_mapping()
