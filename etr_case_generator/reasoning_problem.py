@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from dataclasses_json import config, dataclass_json
-from etr_case_generator.generator import ETRCaseGenerator
+from etr_case_generator.ontology import Ontology
 from etr_case_generator.view_to_natural_language import view_to_natural_language
 from pyetr import PredicateAtom, View
 from pyetr.inference import (
@@ -12,14 +12,14 @@ from typing import cast, Optional
 
 
 class ReasoningProblem:
-    def __init__(self, generator: ETRCaseGenerator):
+    def __init__(self, ontology: Ontology):
         self.premises: list[tuple[View, str]] = []
         self.etr_conclusion: tuple[View, str] = (View.get_verum(), "")
 
         self.etr_conclusion_is_categorical: bool = False
         self.etr_conclusion_is_logically_consistent: bool = False
 
-        self.generator = generator
+        self.ontology = ontology
         self.obj_map: dict[str, str] = {}
 
         self.query: tuple[View, str] = self.etr_conclusion
@@ -62,20 +62,20 @@ class ReasoningProblem:
         self.obj_map = {}
         for view in premises:
             nl, self.obj_map = view_to_natural_language(
-                self.generator.ontology, view, self.obj_map
+                self.ontology, view, self.obj_map
             )
             self.premises.append((view, nl))
 
         # Query needs to be updated to the new natural language
         nl, self.obj_map = view_to_natural_language(
-            self.generator.ontology, self.query[0], self.obj_map
+            self.ontology, self.query[0], self.obj_map
         )
         self.query = (self.query[0], nl)
 
         # Run ETR to get the ETR conclusion
         c_etr = default_inference_procedure([p[0] for p in self.premises])
         c_nl, self.obj_map = view_to_natural_language(
-            self.generator.ontology, c_etr, obj_map=self.obj_map
+            self.ontology, c_etr, obj_map=self.obj_map
         )
         self.etr_conclusion = (
             c_etr,
@@ -101,9 +101,7 @@ class ReasoningProblem:
 
     def update_query(self, query: View):
         self.obj_map = {}
-        nl, self.obj_map = view_to_natural_language(
-            self.generator.ontology, query, self.obj_map
-        )
+        nl, self.obj_map = view_to_natural_language(self.ontology, query, self.obj_map)
         self.query = (
             query,
             nl,
