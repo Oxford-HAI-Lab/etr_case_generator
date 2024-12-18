@@ -24,18 +24,18 @@ class FullProblem:
     # Yes or No format
     yes_or_no_conclusion_chosen_index: int = 0  # Indexes into possible_conclusions
     yes_or_no_question_prose: Optional[str] = "Does the following conclusion necessarily follow from the given statements?"
-    yes_or_no_answer_guidance_prose: Optional[str] = 'Answer in the form of "Answer: Yes" or "Answer: No".'
+    yes_or_no_answer_guidance_prose: Optional[str] = 'Does it follow? Answer in the form of "Answer: Yes" or "Answer: No".'
 
     # Multiple Choice
     multiple_choices: Optional[list[tuple[ReifiedView, bool, bool]]] = None  # (view, is_correct, is_etr_predicted)
     multiple_choice_question_prose: Optional[str] = "Which of the following conclusions necessarily follows from the given statements?"
-    multiple_choice_answer_guidance_prose: Optional[str] = 'Answer in the form of "Answer: A", "Answer: B", etc.'
+    multiple_choice_answer_guidance_prose: Optional[str] = 'Which one follows? Answer in the form of "Answer: A", "Answer: B", etc.'
     multiple_choice_options: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     # Open Ended
     etr_predicted_conclusion: Optional[ReifiedView] = None
     open_ended_question_prose: Optional[str] = "What if anything follows?"
-    open_ended_answer_guidance_prose: Optional[str] = 'Answer in the format that I showed you.'
+    open_ended_answer_guidance_prose: Optional[str] = 'What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".'
     open_ended_formatting_advice = textwrap.dedent("""
         For the purpose of this question, I want you to write your answer in the format of a logical statement. Here are the rules for how you should format it:
         - You can write a predicate like "f()"
@@ -59,31 +59,35 @@ class FullProblem:
         for view in self.views:
             s += f"* {view.english_form}"
             if format == "open_ended" and view.logical_form_etr:
-                s += f"\n  Or, here it is in the format that PySMT uses: {view.logical_form_smt}"
+                s += f"\n  Eq: `{view.logical_form_smt}`"
             s += "\n"
         s += "\n"
         if format == "yes_no":
             s += self.yes_or_no_question_prose
             s += "\n\n"
             s += f"My Conclusion: {self.possible_conclusions[self.yes_or_no_conclusion_chosen_index][0].english_form}"
-            s += "\n\n"
-            s += self.yes_or_no_answer_guidance_prose
         elif format == "multiple_choice":
             s += self.multiple_choice_question_prose
             s += "\n\n"
             for i, (view, is_correct, is_etr_predicted) in enumerate(self.multiple_choices):
                 s += f"{self.multiple_choice_options[i]}. {view.english_form}\n"
-            s += "\n"
-            s += self.multiple_choice_answer_guidance_prose
+            s = s[:-1]  # Remove the last "\n"
         elif format == "open_ended":
-            s += self.open_ended_question_prose
+            s += self.open_ended_formatting_advice
             s += "\n\n"
-            s += self.open_ended_answer_guidance_prose
+            s += self.open_ended_question_prose
         s += "\n\n"
         if chain_of_thought:
             s += self.chain_of_thought_prose
         else:
             s += self.answer_immediately_prose
+        s += "\n\n"
+        if format == "yes_no":
+            s += self.yes_or_no_answer_guidance_prose
+        elif format == "multiple_choice":
+            s += self.multiple_choice_answer_guidance_prose
+        elif format == "open_ended":
+            s += self.open_ended_answer_guidance_prose
         return s
 
     def full_string(self, show_empty: bool = False) -> str:
