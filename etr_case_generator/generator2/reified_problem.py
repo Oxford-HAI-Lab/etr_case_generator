@@ -1,3 +1,4 @@
+import textwrap
 from dataclasses import dataclass
 from typing import Optional, Literal
 
@@ -35,18 +36,29 @@ class FullProblem:
     etr_predicted_conclusion: Optional[ReifiedView] = None
     open_ended_question_prose: Optional[str] = "What if anything follows?"
     open_ended_answer_guidance_prose: Optional[str] = 'Answer in the format that I showed you.'
+    open_ended_formatting_advice = textwrap.dedent("""
+        For the purpose of this question, I want you to write your answer in the format of a logical statement. Here are the rules for how you should format it:
+        - You can write a predicate like "f()"
+        - If the predicate has arguments, you can write them like "f(x)"
+        - You can do negation with "~", like "~f(x)" to mean "not f(x)"
+        - You can represent "and" by writing multiple predicates without a separator, like "f(x)g(x)"
+        - You can represent "or" by writing multiple predicates with a "," between them, like "f(x),g(x)"
+        - You can use the "∀" to represent "for all", like "∀x f(x)"
+        - You can use the "∃" to represent "there exists", like "∃x f(x)"
+        - Wrap a statement in curly braces, like "{f(x)g(x)}", or "∀x {f(x)g(x)}", if there's a quantifier
+        """).strip()  # TODO Add more rules here
 
     # Boilerplate for the question
     introductory_prose: Optional[str] = None
     answer_immediately_prose: Optional[str] = "I want you to answer immediately."
     chain_of_thought_prose: Optional[str] = "I want you to spend a few paragraphs thinking about your answer."
 
-    def to_prompt(self, format: Literal["yes_no", "multiple_choice", "open_ended"] = "yes_no", chain_of_thought: bool = False, include_smt_form: bool = False) -> str:
+    def to_prompt(self, format: Literal["yes_no", "multiple_choice", "open_ended"] = "yes_no", chain_of_thought: bool = False) -> str:
         s = self.introductory_prose
         s += "\n\n"
         for view in self.views:
             s += f"* {view.english_form}"
-            if include_smt_form:
+            if format == "open_ended" and view.logical_form_etr:
                 s += f"\n  Or, here it is in the format that PySMT uses: {view.logical_form_smt}"
             s += "\n"
         s += "\n"

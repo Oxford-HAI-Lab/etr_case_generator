@@ -17,7 +17,7 @@ from smt_interface.smt_encoder import check_validity
 @dataclass_json
 @dataclass
 class ReasoningProblem:
-    premises: list[tuple[str, str]]
+    premises: list[tuple[str, str]]  # TODO(ryan): Comment the two members of the tuple
 
     # The actual question
     full_prose_premises: str  # The premises
