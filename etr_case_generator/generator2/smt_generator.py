@@ -158,19 +158,11 @@ def has_necessary_assignments(views: list[FNode]) -> bool:
 
 def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ontology=ELEMENTS) -> SMTProblem:
     # TODO This needs to be overhauled! This function could be total junk for all I know!
-    """Generate a random SMT problem with at least one necessary assignment.
-    
-    Args:
-        num_clauses: Number of views/statements to generate
-        num_steps: Number of logical operations to apply in each statement
-        ontology: The ontology containing predicates and objects to use
-        
-    Returns:
-        SMTProblem with views that have at least one necessary assignment and conclusions
-        using the Logical Strength Method:
-        - Correct conclusion is logically weaker than premises
-        - Incorrect conclusion is logically stronger than premises
-    """
+
+    # Here's how this function should work:
+    # * Ontology needs to have the args.shortening stored on it...
+    # * TODO: fill this out
+    # * TODO: Delete this junk and have aider regenerate it!
 
     # Try to generate views with necessary assignments
     max_attempts = 100
