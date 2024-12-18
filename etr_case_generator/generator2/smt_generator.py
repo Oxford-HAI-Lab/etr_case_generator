@@ -198,6 +198,8 @@ def random_smt_problem(args, num_clauses: int=3, num_steps: int=3, ontology: Ont
             
             # Convert views to CNF
             views_cnf = [to_cnf(view) for view in views]
+
+            print(f"Generated problem after {attempt + 1} attempts")
             
             return SMTProblem(
                 views=views,
