@@ -1,11 +1,15 @@
 import textwrap
 from dataclasses import dataclass
-from typing import Optional, Literal
+from typing import Optional, Literal, cast
 
 from pysmt.fnode import FNode
 from rich.console import Console, Group
 from rich.panel import Panel
 from rich.text import Text
+
+
+# Define a type for Literal["yes_no", "multiple_choice", "open_ended"]
+QuestionType = Literal["yes_no", "multiple_choice", "open_ended"]
 
 
 @dataclass(kw_only=True)
@@ -19,7 +23,7 @@ class ReifiedView:
 @dataclass(kw_only=True)
 class FullProblem:
     views: Optional[list[ReifiedView]] = None
-    possible_conclusions: Optional[list[tuple[ReifiedView, bool]]] = None  # List of (conclusion, is_correct) pairs
+    possible_conclusions: Optional[list[tuple[ReifiedView, bool]]] = None  # List of (conclusion, is_classically_correct) pairs
 
     # Yes or No format
     yes_or_no_conclusion_chosen_index: int = 0  # Indexes into possible_conclusions
@@ -53,7 +57,7 @@ class FullProblem:
     answer_immediately_prose: Optional[str] = "I want you to answer immediately."
     chain_of_thought_prose: Optional[str] = "I want you to spend a few paragraphs thinking about your answer."
 
-    def to_prompt(self, format: Literal["yes_no", "multiple_choice", "open_ended"] = "yes_no", chain_of_thought: bool = False) -> str:
+    def to_prompt(self, format: QuestionType = "yes_no", chain_of_thought: bool = False) -> str:
         s = self.introductory_prose
         s += "\n\n"
         for view in self.views:
@@ -89,6 +93,21 @@ class FullProblem:
         elif format == "open_ended":
             s += self.open_ended_answer_guidance_prose
         return s
+
+    def to_answer(self, format: QuestionType = "yes_no") -> str:
+        if format == "yes_no":
+            return f"Answer: {'Yes' if self.possible_conclusions[self.yes_or_no_conclusion_chosen_index][1] else 'No'}"
+        elif format == "multiple_choice":
+            correct_index: int = -1
+            for i, (_, is_correct, _) in enumerate(self.multiple_choices):
+                if is_correct:
+                    correct_index = i
+                    break
+            if correct_index == -1:
+                raise ValueError("No correct answer found in multiple_choices")
+            return f"Answer: {self.multiple_choice_options[correct_index]}"
+        elif format == "open_ended":
+            return f"Answer: {self.etr_predicted_conclusion.logical_form_etr}"
 
     def full_string(self, show_empty: bool = False) -> str:
         console = Console(record=True)
@@ -159,12 +178,20 @@ class FullProblem:
             console.print(panel)
 
             for prompt_type in ["yes_no", "multiple_choice", "open_ended"]:
+                prompt_type = cast(QuestionType, prompt_type)
                 prompt_panel = Panel(
                     Group(Text(f"{self.to_prompt(prompt_type)}")),
                     title=f"{prompt_type.capitalize()} Prompt",
                     border_style="bright_blue"
                 )
                 console.print(prompt_panel)
+
+                answer_panel = Panel(
+                    Group(Text(f"{self.to_answer(prompt_type)}")),
+                    title=f"{prompt_type.capitalize()} Answer",
+                    border_style="bright_blue"
+                )
+                console.print(answer_panel)
         
         return capture.get()
 
