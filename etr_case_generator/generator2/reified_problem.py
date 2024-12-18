@@ -1,6 +1,6 @@
 import textwrap
 from dataclasses import dataclass
-from typing import Optional, Literal, cast
+from typing import Optional, Literal, cast, get_args
 
 from pysmt.fnode import FNode
 from rich.console import Console, Group
@@ -96,7 +96,7 @@ class FullProblem:
 
     def to_answer(self, format: QuestionType = "yes_no") -> str:
         if format == "yes_no":
-            return f"Answer: {'Yes' if self.possible_conclusions[self.yes_or_no_conclusion_chosen_index][1] else 'No'}"
+            return f"{'Yes' if self.possible_conclusions[self.yes_or_no_conclusion_chosen_index][1] else 'No'}"
         elif format == "multiple_choice":
             correct_index: int = -1
             for i, (_, is_correct, _) in enumerate(self.multiple_choices):
@@ -105,9 +105,22 @@ class FullProblem:
                     break
             if correct_index == -1:
                 raise ValueError("No correct answer found in multiple_choices")
-            return f"Answer: {self.multiple_choice_options[correct_index]}"
+            return f"{self.multiple_choice_options[correct_index]}"
         elif format == "open_ended":
-            return f"Answer: {self.etr_predicted_conclusion.logical_form_etr}"
+            return f"{self.etr_predicted_conclusion.logical_form_etr}"
+
+    def to_dict_for_jsonl(self, format: QuestionType = "yes_no", chain_of_thought: bool = False) -> dict:
+        dict = {
+            "question": self.to_prompt(format, chain_of_thought),
+            "scoring_guide": {
+                "answer": self.to_answer(format)
+            },
+            "generation_details": {
+                # TODO: Also include data like how many atoms or clauses were used in the views
+            }
+        }
+        return dict
+
 
     def full_string(self, show_empty: bool = False) -> str:
         console = Console(record=True)
@@ -177,7 +190,7 @@ class FullProblem:
         with console.capture() as capture:
             console.print(panel)
 
-            for prompt_type in ["yes_no", "multiple_choice", "open_ended"]:
+            for prompt_type in get_args(QuestionType):
                 prompt_type = cast(QuestionType, prompt_type)
                 prompt_panel = Panel(
                     Group(Text(f"{self.to_prompt(prompt_type)}")),

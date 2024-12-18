@@ -1,9 +1,10 @@
 import argparse
+import json
 import random
+from typing import get_args
 
 from etr_case_generator.generator2.problem_in_smt import generate_problem_in_smt
-from etr_case_generator.generator2.reified_problem import FullProblem
-
+from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType
 
 from etr_case_generator.ontology import Ontology, get_all_ontologies, natural_name_to_logical_name
 
@@ -60,7 +61,13 @@ def main():
     parser.add_argument("--num_clauses", type=int, default=3, help="A measure of the complexity of the premises.")
     args = parser.parse_args()
     
-    generate_problem_list(n_problems=args.n_problems, args=args)
+    problems: list[FullProblem] = generate_problem_list(n_problems=args.n_problems, args=args)
+
+    # Save to file
+    for prompt_type in get_args(QuestionType):
+        with open(f"datasets/problems_{prompt_type}.jsonl", "w") as f:
+            for problem in problems:
+                f.write(json.dumps(problem.to_dict_for_jsonl(prompt_type)) + "\n")
 
 if __name__ == "__main__":
     main()
