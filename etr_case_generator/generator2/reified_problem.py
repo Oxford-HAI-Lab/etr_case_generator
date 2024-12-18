@@ -63,7 +63,7 @@ class FullProblem:
         for view in self.views:
             s += f"* {view.english_form}"
             if format == "open_ended" and view.logical_form_etr:
-                s += f"\n  Eq: `{view.logical_form_smt}`"
+                s += f"\n  Eq: `{view.logical_form_etr}`"
             s += "\n"
         s += "\n"
         if format == "yes_no":
