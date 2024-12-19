@@ -35,8 +35,8 @@ def random_atom(ontology: Ontology, name_shortening_scheme: NameShorteningScheme
     )
 
 
-def has_only_one_set_of_necessary_assignments(views: list[FNode], min_solutions: int = 1,
-                                              max_solutions: int = 5) -> bool:
+def has_a_good_number_of_necessary_assignments(views: list[FNode], min_solutions: int = 1,
+                                               max_solutions: int = 5) -> bool:
     """
     Returns true if the number of possible solutions is within the specified range.
 
@@ -223,7 +223,7 @@ def random_smt_problem(ontology: Ontology=ELEMENTS,
     while True:
         views = cnf_generation(total_num_pieces, possible_atoms)
 
-        if has_only_one_set_of_necessary_assignments(views):
+        if has_a_good_number_of_necessary_assignments(views):
             break
 
     # print("Got SMT Problem with views:")

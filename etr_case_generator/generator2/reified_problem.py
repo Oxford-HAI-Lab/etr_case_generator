@@ -19,11 +19,41 @@ class ReifiedView:
     logical_form_etr: Optional[str] = None
     english_form: Optional[str] = None
 
+    # TODO(andrew) Fill out method
+
+
+@dataclass(kw_only=True)
+class Conclusion:
+    # This class only makes sense when held by a Problem object
+    view: ReifiedView
+    is_classically_correct: Optional[bool] = None
+
+    # Result of default_procedure_does_it_follow function
+    is_etr_predicted: Optional[bool] = None
+
+
+@dataclass(kw_only=True)
+class PartialProblem:
+    premises: Optional[list[ReifiedView]] = None
+
+    # There should be exactly one option which is classically correct
+    possible_conclusions_from_logical: Optional[list[Conclusion]] = None
+
+    # There should be exactly one option which is ETR-predicted
+    possible_conclusions_from_etr: Optional[list[Conclusion]] = None
+
+    # The result of the default_inference_procedure
+    etr_what_follows: Optional[ReifiedView] = None
+
+    # TODO(andrew) A function here to "fill out" the ReifiedViews with both
+
 
 @dataclass(kw_only=True)
 class FullProblem:
     views: Optional[list[ReifiedView]] = None
     possible_conclusions: Optional[list[tuple[ReifiedView, bool]]] = None  # List of (conclusion, is_classically_correct) pairs
+
+    # TODO(andrew) Think about how to handle the two types of conclusion from PartialProblem
 
     # Yes or No format
     yes_or_no_conclusion_chosen_index: int = 0  # Indexes into possible_conclusions

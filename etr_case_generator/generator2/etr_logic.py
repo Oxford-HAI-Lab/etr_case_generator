@@ -6,7 +6,7 @@ from etr_case_generator.generator2.reified_problem import FullProblem, ReifiedVi
 
 def get_etr_conclusion(views: list[ReifiedView]) -> ReifiedView:
     view_strings = [view.logical_form_etr for view in views]
-    view_objects = []
+    view_objects: list[View] = []
     for view_string in view_strings:
         # print(f"Parsing view_string: {view_string}")
         view_objects.append(View.from_str(view_string))

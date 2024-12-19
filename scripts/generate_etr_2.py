@@ -3,7 +3,7 @@ import json
 import random
 from typing import get_args
 
-from etr_case_generator.generator2.problem_in_smt import generate_problem_in_smt
+from etr_case_generator.generator2.generate_problem_from_logical import generate_problem
 from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType
 
 from etr_case_generator.ontology import Ontology, get_all_ontologies, natural_name_to_logical_name
@@ -30,7 +30,9 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
         ontology = random.choice(all_ontologies)
         small_ontology = ontology.create_smaller_ontology(args.num_predicates_per_problem, args.num_objects_per_problem)
 
-        problem = generate_problem_in_smt(args, ontology=small_ontology)
+        # Generate a random problem
+        problem = generate_problem(args, ontology=small_ontology)
+
         problems.append(problem)
         print(f"Generated Problem {i + 1} of {n_problems}")
         print(problem.full_string(show_empty=True, question_types=question_types))
@@ -62,9 +64,10 @@ def main():
     # parser.add_argument("--num_clauses", type=int, default=3, help="A measure of the complexity of the premises.")
     parser.add_argument("--num_pieces", type=int, default=3, help="Number of pieces to use in the premises of each problem. For example, there are for pieces in `(a or b) and (c or d)`.")
     parser.add_argument("--chain_of_thought_prompt", type=str, default="no", help="Whether to include a chain of thought prompt. Options are 'yes', 'no', and 'both'.")
-    parser.add_argument("--question_type", type=str, default="all", help="Type of question to ask. Options are 'all', 'yes_no', 'multiple_choice', 'open_ended'.")
+    parser.add_argument("--question_type", type=str, default="all", help="Type of question to ask. Options are 'all', 'yes_no', 'multiple_choice', 'open_ended'.", choices=["all"] + list(get_args(QuestionType)))
     parser.add_argument("--save_file_name", type=str, default="problems", help="Name for saved jsonl files")
-
+    parser.add_argument("--generate_function", type=str, default="random_smt_problem", help="Which function to use in generation.", choices=["random_smt_problem", "random_pyetr_problem"])
+    # TODO(Ryan): Add parameters for problem generation here
     args = parser.parse_args()
 
     if args.question_type == "all":
@@ -73,6 +76,7 @@ def main():
         assert args.question_type in get_args(QuestionType), f"Invalid question type: {args.question_type}, must be in: {get_args(QuestionType)}"
         question_types = [args.question_type]
 
+    # Most of the logic occurs here!
     problems: list[FullProblem] = generate_problem_list(n_problems=args.n_problems, args=args, question_types=question_types)
 
     # Save to file
