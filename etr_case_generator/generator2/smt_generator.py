@@ -127,7 +127,7 @@ def generate_conclusions(views: list[FNode], possible_atoms: list[Symbol], num_w
         possible_atoms: List of atomic predicates that can be used
         num_wrong: Number of wrong conclusions to generate
     """
-    print("\n=== Generating conclusions ===")
+    # print("\n=== Generating conclusions ===")
     premises = And(views)
     conclusions = []
 
@@ -162,7 +162,7 @@ def generate_conclusions(views: list[FNode], possible_atoms: list[Symbol], num_w
             return Or(atoms)
 
     # First find a correct conclusion (something that's necessary)
-    print("\nLooking for necessary conclusion...")
+    # print("\nLooking for necessary conclusion...")
     attempts = 0
     while len(conclusions) == 0 and attempts < 100:
         attempts += 1
@@ -174,7 +174,7 @@ def generate_conclusions(views: list[FNode], possible_atoms: list[Symbol], num_w
             break
 
     # Now generate wrong conclusions (things that are contingent)
-    print("\nGenerating contingent conclusions...")
+    # print("\nGenerating contingent conclusions...")
     wrong_attempts = 0
     while len(conclusions) < num_wrong + 1 and wrong_attempts < 100:
         wrong_attempts += 1
@@ -193,10 +193,10 @@ def generate_conclusions(views: list[FNode], possible_atoms: list[Symbol], num_w
 
         if can_be_true and can_be_false:
             # It's contingent! Add it as a wrong answer
-            print(f"Found contingent statement: {candidate}")
+            # print(f"Found contingent statement: {candidate}")
             conclusions.append((candidate, False))
 
-    print(f"\nGenerated {len(conclusions)} conclusions after {attempts + wrong_attempts} attempts")
+    # print(f"\nGenerated {len(conclusions)} conclusions after {attempts + wrong_attempts} attempts")
     random.shuffle(conclusions)  # Randomize order
     return conclusions
 
@@ -229,17 +229,7 @@ def random_smt_problem(ontology: Ontology=ELEMENTS,
     # print("Got SMT Problem with views:")
     # print(views)
 
-    # Now, need to generate some bogus yes/no conclusions
-    # For now, just generate some random ones
-    # TODO This is a placeholder
-    # yes_or_no_conclusions = []
-    # for _ in range(3):
-    #     conclusion = random.choice(possible_atoms)
-    #     is_correct = False
-    #     yes_or_no_conclusions.append((conclusion, is_correct))
-    # # Mark one as true
-    # yes_or_no_conclusions[0] = (yes_or_no_conclusions[0][0], True)
-    yes_or_no_conclusions = generate_conclusions(views, possible_atoms, num_wrong=2)
+    yes_or_no_conclusions = generate_conclusions(views, possible_atoms, num_wrong=3)
 
     smt_problem = SMTProblem(
         views=views,
