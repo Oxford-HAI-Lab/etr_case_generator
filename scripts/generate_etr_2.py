@@ -9,7 +9,7 @@ from etr_case_generator.generator2.reified_problem import FullProblem, QuestionT
 from etr_case_generator.ontology import Ontology, get_all_ontologies, natural_name_to_logical_name
 
 
-def generate_problem_list(n_problems: int, args) -> list[FullProblem]:
+def generate_problem_list(n_problems: int, args, question_types: list[str]) -> list[FullProblem]:
     """Generate ETR problems.
 
     Args:
@@ -33,7 +33,7 @@ def generate_problem_list(n_problems: int, args) -> list[FullProblem]:
         problem = generate_problem_in_smt(args, ontology=small_ontology)
         problems.append(problem)
         print(f"Generated Problem {i + 1} of {n_problems}")
-        print(problem.full_string(show_empty=True))
+        print(problem.full_string(show_empty=True, question_types=question_types))
 
     return problems
 
@@ -58,19 +58,25 @@ def main():
     parser.add_argument("--num_predicates_per_problem", type=int, default=3, help="Number of predicates to use in each problem")
     parser.add_argument("--num_objects_per_problem", type=int, default=3, help="Number of objects to use in each problem")
     parser.add_argument("--name_shortening", type=str, default="none", help="How to shorten names of objects and predicates. Options are 'none', 'short', and 'first'.")
-    parser.add_argument("--num_follows", type=int, default=3, help="Number of potential variable assignments which might follow, the top level size of the DNF form of the logical conclusion from the premises.")
-    parser.add_argument("--num_clauses", type=int, default=3, help="A measure of the complexity of the premises.")
+    # parser.add_argument("--num_follows", type=int, default=3, help="Number of potential variable assignments which might follow, the top level size of the DNF form of the logical conclusion from the premises.")
+    # parser.add_argument("--num_clauses", type=int, default=3, help="A measure of the complexity of the premises.")
+    parser.add_argument("--num_pieces", type=int, default=3, help="Number of pieces to use in the premises of each problem. For example, there are for pieces in `(a or b) and (c or d)`.")
     parser.add_argument("--chain_of_thought_prompt", type=str, default="no", help="Whether to include a chain of thought prompt. Options are 'yes', 'no', and 'both'.")
+    parser.add_argument("--question_type", type=str, default="all", help="Type of question to ask. Options are 'all', 'yes_no', 'multiple_choice', 'open_ended'.")
     parser.add_argument("--save_file_name", type=str, default="problems", help="Name for saved jsonl files")
 
     args = parser.parse_args()
 
-    # TODO Args like num_clauses for the actual generation
+    if args.question_type == "all":
+        question_types = get_args(QuestionType)
+    else:
+        assert args.question_type in get_args(QuestionType), f"Invalid question type: {args.question_type}, must be in: {get_args(QuestionType)}"
+        question_types = [args.question_type]
 
-    problems: list[FullProblem] = generate_problem_list(n_problems=args.n_problems, args=args)
+    problems: list[FullProblem] = generate_problem_list(n_problems=args.n_problems, args=args, question_types=question_types)
 
     # Save to file
-    for prompt_type in get_args(QuestionType):
+    for prompt_type in question_types:
         if args.chain_of_thought_prompt == "no" or args.chain_of_thought_prompt == "both":
             fname = f"datasets/{args.save_file_name}_{prompt_type}.jsonl"
             with open(fname, "w") as f:

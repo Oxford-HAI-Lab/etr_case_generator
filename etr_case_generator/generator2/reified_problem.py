@@ -122,7 +122,7 @@ class FullProblem:
         return dict
 
 
-    def full_string(self, show_empty: bool = False) -> str:
+    def full_string(self, question_types: list[str] = get_args(QuestionType), show_empty: bool = False) -> str:
         console = Console(record=True)
         
         # Create the main content
@@ -190,7 +190,7 @@ class FullProblem:
         with console.capture() as capture:
             console.print(panel)
 
-            for prompt_type in get_args(QuestionType):
+            for prompt_type in question_types:
                 prompt_type = cast(QuestionType, prompt_type)
                 prompt_panel = Panel(
                     Group(Text(f"{self.to_prompt(prompt_type)}")),
