@@ -109,14 +109,18 @@ class FullProblem:
         elif format == "open_ended":
             return f"{self.etr_predicted_conclusion.logical_form_etr}"
 
-    def to_dict_for_jsonl(self, format: QuestionType = "yes_no", chain_of_thought: bool = False) -> dict:
+    def to_dict_for_jsonl(self, args, format: QuestionType = "yes_no", chain_of_thought: bool = False) -> dict:
         dict = {
             "question": self.to_prompt(format, chain_of_thought),
             "scoring_guide": {
-                "answer": self.to_answer(format)
+                "answer": self.to_answer(format),
+                "etr_predicted": self.etr_predicted_conclusion.logical_form_etr if self.etr_predicted_conclusion else None,
             },
             "generation_details": {
                 # TODO: Also include data like how many atoms or clauses were used in the views
+                "atoms_distributed_over_views": args.num_pieces,
+                "num_predicates_per_problem": args.num_predicates_per_problem,
+                "num_objects_per_problem": args.num_objects_per_problem,
             }
         }
         return dict

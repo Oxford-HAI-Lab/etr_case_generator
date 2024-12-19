@@ -81,14 +81,14 @@ def main():
             fname = f"datasets/{args.save_file_name}_{prompt_type}.jsonl"
             with open(fname, "w") as f:
                 for problem in problems:
-                    f.write(json.dumps(problem.to_dict_for_jsonl(prompt_type, chain_of_thought=False)) + "\n")
+                    f.write(json.dumps(problem.to_dict_for_jsonl(args, format=prompt_type, chain_of_thought=False)) + "\n")
             print(f"Saved file {fname}")
 
         if args.chain_of_thought_prompt == "yes" or args.chain_of_thought_prompt == "both":
             fname = f"datasets/{args.save_file_name}_{prompt_type}_with_cot.jsonl"
             with open(fname, "w") as f:
                 for problem in problems:
-                    f.write(json.dumps(problem.to_dict_for_jsonl(prompt_type, chain_of_thought=True)) + "\n")
+                    f.write(json.dumps(problem.to_dict_for_jsonl(args, format=prompt_type, chain_of_thought=True)) + "\n")
             print(f"Saved file {fname}")
 
 if __name__ == "__main__":
