@@ -60,15 +60,26 @@ def main():
     parser.add_argument("--name_shortening", type=str, default="none", help="How to shorten names of objects and predicates. Options are 'none', 'short', and 'first'.")
     parser.add_argument("--num_follows", type=int, default=3, help="Number of potential variable assignments which might follow, the top level size of the DNF form of the logical conclusion from the premises.")
     parser.add_argument("--num_clauses", type=int, default=3, help="A measure of the complexity of the premises.")
+    parser.add_argument("--chain_of_thought_prompt", type=str, default="no", help="Whether to include a chain of thought prompt. Options are 'yes', 'no', and 'both'.")
+    parser.add_argument("--save_file_name", type=str, default="problems", help="Name for saved jsonl files")
+
     args = parser.parse_args()
     
+    # TODO Args like num_clauses for the actual generation
+
     problems: list[FullProblem] = generate_problem_list(n_problems=args.n_problems, args=args)
 
     # Save to file
     for prompt_type in get_args(QuestionType):
-        with open(f"datasets/problems_{prompt_type}.jsonl", "w") as f:
-            for problem in problems:
-                f.write(json.dumps(problem.to_dict_for_jsonl(prompt_type)) + "\n")
+        if args.chain_of_thought_prompt == "no" or args.chain_of_thought_prompt == "both":
+            with open(f"datasets/{args.save_file_name}_{prompt_type}.jsonl", "w") as f:
+                for problem in problems:
+                    f.write(json.dumps(problem.to_dict_for_jsonl(prompt_type, chain_of_thought=False)) + "\n")
+
+        if args.chain_of_thought_prompt == "yes" or args.chain_of_thought_prompt == "both":
+            with open(f"datasets/{args.save_file_name}_{prompt_type}_with_cot.jsonl", "w") as f:
+                for problem in problems:
+                    f.write(json.dumps(problem.to_dict_for_jsonl(prompt_type, chain_of_thought=True)) + "\n")
 
 if __name__ == "__main__":
     main()
