@@ -35,14 +35,83 @@ def random_atom(ontology: Ontology, name_shortening_scheme: NameShorteningScheme
     )
 
 
-def has_only_one_set_of_necessary_assignments(views: list[FNode]) -> bool:
-    """Returns true if only one set of assignments is possible given these views"""
+def has_only_one_set_of_necessary_assignments(views: list[FNode], min_solutions: int = 1,
+                                              max_solutions: int = 5) -> bool:
+    """
+    Returns true if the number of possible solutions is within the specified range.
+
+    Args:
+        views: List of boolean formula nodes representing the constraints
+        min_solutions: Minimum acceptable number of solutions (default: 1)
+        max_solutions: Maximum acceptable number of solutions (default: 5)
+
+    Returns:
+        bool: True if number of solutions is within [min_solutions, max_solutions], False otherwise
+    """
+    # print(f"\n=== Checking for {min_solutions}-{max_solutions} solutions ===")
+    # print("Input views:")
+    # for i, view in enumerate(views):
+    #     print(f"  View {i}: {view}")
+
     premises = And(views)
+    # print(f"\nCombined premises: {premises}")
+
+    # Extract all unique predicate applications
+    def get_atoms(formula: FNode) -> set[FNode]:
+        if formula.is_symbol():
+            return {formula}
+        return set().union(*(get_atoms(child) for child in formula.args()))
+
+    atoms = set()
+    for view in views:
+        atoms.update(get_atoms(view))
+
+    # print("\nExtracted atomic predicates:")
+    # for atom in atoms:
+    #     print(f"  {atom}")
+
+    # Find solutions until we exceed max_solutions or run out
+    solutions = []
     solver = Solver()
     solver.add_assertion(premises)
 
-    # TODO
-    ...
+    while len(solutions) <= max_solutions:
+        if not solver.solve():
+            break
+
+        # Get the current solution
+        current_solution = solver.get_model()
+        solutions.append(current_solution)
+
+        # print(f"\nFound solution #{len(solutions)}:")
+        # for atom in atoms:
+        #     print(f"  {atom} = {current_solution.get_value(atom)}")
+        #
+        # if len(solutions) > max_solutions:
+        #     print(f"\nExceeded maximum of {max_solutions} solutions!")
+        #     return False
+
+        # Add constraint to exclude this solution
+        solution_constraints = []
+        for atom in atoms:
+            if current_solution.get_value(atom).is_true():
+                solution_constraints.append(atom)
+            else:
+                solution_constraints.append(Not(atom))
+        solver.add_assertion(Not(And(solution_constraints)))
+
+    num_solutions = len(solutions)
+    # print(f"\nFound {num_solutions} total solutions")
+
+    if num_solutions < min_solutions:
+        # print(f"Too few solutions (minimum is {min_solutions})")
+        return False
+    elif num_solutions > max_solutions:
+        # print(f"Too many solutions (maximum is {max_solutions})")
+        return False
+    else:
+        # print(f"Number of solutions ({num_solutions}) is within acceptable range [{min_solutions}, {max_solutions}]")
+        return True
 
 
 def random_smt_problem(ontology: Ontology=ELEMENTS,
@@ -57,17 +126,21 @@ def random_smt_problem(ontology: Ontology=ELEMENTS,
     possible_atoms = list(set(possible_atoms))  # Remove duplicates from possible_atoms
     possible_atoms = possible_atoms[:num_generated_atoms]  # Trim down to the right number of atoms
 
-    print("Made this smaller list of atoms for the problem:")
-    print(possible_atoms)
+    # print("Made this smaller list of atoms for the problem:")
+    # print(possible_atoms)
 
     # The algorithm here is that we generate up to max_num_views views, each of which is a conjunction of disjunctions in CNF
     # There will be exactly num_clauses number of clauses distributed across those views
     # Each clause will have between min_disjuncts_per_clause and max_disjuncts_per_clause disjuncts
 
-    views = cnf_generation(total_num_pieces, possible_atoms)
+    while True:
+        views = cnf_generation(total_num_pieces, possible_atoms)
 
-    print("Got SMT Problem with views:")
-    print(views)
+        if has_only_one_set_of_necessary_assignments(views):
+            break
+
+    # print("Got SMT Problem with views:")
+    # print(views)
 
     # Now, need to generate some bogus yes/no conclusions
     # For now, just generate some random ones
@@ -123,15 +196,15 @@ def cnf_generation(total_num_pieces: int, possible_atoms: list[Symbol]) -> list[
             num_pieces_remaining -= num_disjuncts
             pieces_remaining_in_view -= num_disjuncts
 
-        print(f"Built view with {num_pieces_in_view} pieces:")
-        print(clauses)
-        print(f"Num pieces remaining in view: {pieces_remaining_in_view}")
+        # print(f"Built view with {num_pieces_in_view} pieces:")
+        # print(clauses)
+        # print(f"Num pieces remaining in view: {pieces_remaining_in_view}")
 
         if clauses:
             view = And(clauses)
             views.append(view)
 
-    print("Views:")
-    print(views)
-    print(f"Num pieces remaining: {num_pieces_remaining}")
+    # print("Views:")
+    # print(views)
+    # print(f"Num pieces remaining: {num_pieces_remaining}")
     return views
