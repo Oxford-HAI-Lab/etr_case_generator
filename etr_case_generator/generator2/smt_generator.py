@@ -52,7 +52,13 @@ def random_smt_problem(ontology: Ontology=ELEMENTS,
                        ) -> SMTProblem:
     # Possible atoms
     # TODO This might be too many or too few, idk
-    possible_atoms: list[Symbol] = [random_atom(ontology, ontology.preferred_name_shortening_scheme) for _ in range(total_num_pieces)]
+    num_generated_atoms = total_num_pieces
+    possible_atoms = [random_atom(ontology, ontology.preferred_name_shortening_scheme) for _ in range(total_num_pieces * 10)]  # Overgenerate
+    possible_atoms = list(set(possible_atoms))  # Remove duplicates from possible_atoms
+    possible_atoms = possible_atoms[:num_generated_atoms]  # Trim down to the right number of atoms
+
+    print("Made this smaller list of atoms for the problem:")
+    print(possible_atoms)
 
     # The algorithm here is that we generate up to max_num_views views, each of which is a conjunction of disjunctions in CNF
     # There will be exactly num_clauses number of clauses distributed across those views
