@@ -114,6 +114,93 @@ def has_only_one_set_of_necessary_assignments(views: list[FNode], min_solutions:
         return True
 
 
+def generate_conclusions(views: list[FNode], possible_atoms: list[Symbol], num_wrong: int = 3) -> list[
+    tuple[FNode, bool]]:
+    """
+    Generate conclusions that include compound statements (AND, OR).
+    Returns a list of (conclusion, is_correct) pairs where:
+    - Correct conclusions are necessarily true/false given the views
+    - Wrong conclusions are contingent (could be either true or false)
+
+    Args:
+        views: List of boolean formula nodes representing the constraints
+        possible_atoms: List of atomic predicates that can be used
+        num_wrong: Number of wrong conclusions to generate
+    """
+    print("\n=== Generating conclusions ===")
+    premises = And(views)
+    conclusions = []
+
+    # Helper to test if a formula is necessary (true/false in all models)
+    def is_necessary(formula: FNode) -> tuple[bool, bool]:
+        """Returns (is_necessary, necessary_value)"""
+        # Test if it must be true
+        solver_true = Solver()
+        solver_true.add_assertion(premises)
+        solver_true.add_assertion(Not(formula))
+        must_be_true = not solver_true.solve()
+
+        # Test if it must be false
+        solver_false = Solver()
+        solver_false.add_assertion(premises)
+        solver_false.add_assertion(formula)
+        must_be_false = not solver_false.solve()
+
+        return (must_be_true or must_be_false, must_be_true)
+
+    # Generate some compound formulas to test
+    def generate_compound_formula() -> FNode:
+        """Generate a random compound formula"""
+        formula_type = random.choice(['ATOM', 'AND', 'OR'])
+        if formula_type == 'ATOM':
+            return random.choice(possible_atoms)
+        elif formula_type == 'AND':
+            atoms = random.sample(possible_atoms, 2)
+            return And(atoms)
+        else:  # OR
+            atoms = random.sample(possible_atoms, 2)
+            return Or(atoms)
+
+    # First find a correct conclusion (something that's necessary)
+    print("\nLooking for necessary conclusion...")
+    attempts = 0
+    while len(conclusions) == 0 and attempts < 100:
+        attempts += 1
+        candidate = generate_compound_formula()
+        is_nec, nec_value = is_necessary(candidate)
+        if is_nec:
+            conclusions.append((candidate, nec_value))
+            print(f"Found necessary {'truth' if nec_value else 'falsehood'}: {candidate}")
+            break
+
+    # Now generate wrong conclusions (things that are contingent)
+    print("\nGenerating contingent conclusions...")
+    wrong_attempts = 0
+    while len(conclusions) < num_wrong + 1 and wrong_attempts < 100:
+        wrong_attempts += 1
+        candidate = generate_compound_formula()
+
+        # Check if it's contingent (can be both true and false)
+        solver_true = Solver()
+        solver_true.add_assertion(premises)
+        solver_true.add_assertion(candidate)
+        can_be_true = solver_true.solve()
+
+        solver_false = Solver()
+        solver_false.add_assertion(premises)
+        solver_false.add_assertion(Not(candidate))
+        can_be_false = solver_false.solve()
+
+        if can_be_true and can_be_false:
+            # It's contingent! Add it as a wrong answer
+            print(f"Found contingent statement: {candidate}")
+            conclusions.append((candidate, False))
+
+    print(f"\nGenerated {len(conclusions)} conclusions after {attempts + wrong_attempts} attempts")
+    random.shuffle(conclusions)  # Randomize order
+    return conclusions
+
+
 def random_smt_problem(ontology: Ontology=ELEMENTS,
                        # TODO Add these to the args in the main script
                        # "Total num pieces" refers to the count of variables, so like `(a or b or c) and (d or e)` would have 5 pieces
@@ -145,13 +232,14 @@ def random_smt_problem(ontology: Ontology=ELEMENTS,
     # Now, need to generate some bogus yes/no conclusions
     # For now, just generate some random ones
     # TODO This is a placeholder
-    yes_or_no_conclusions = []
-    for _ in range(3):
-        conclusion = random.choice(possible_atoms)
-        is_correct = False
-        yes_or_no_conclusions.append((conclusion, is_correct))
-    # Mark one as true
-    yes_or_no_conclusions[0] = (yes_or_no_conclusions[0][0], True)
+    # yes_or_no_conclusions = []
+    # for _ in range(3):
+    #     conclusion = random.choice(possible_atoms)
+    #     is_correct = False
+    #     yes_or_no_conclusions.append((conclusion, is_correct))
+    # # Mark one as true
+    # yes_or_no_conclusions[0] = (yes_or_no_conclusions[0][0], True)
+    yes_or_no_conclusions = generate_conclusions(views, possible_atoms, num_wrong=2)
 
     smt_problem = SMTProblem(
         views=views,
