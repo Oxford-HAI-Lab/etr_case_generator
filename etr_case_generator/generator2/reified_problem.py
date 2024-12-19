@@ -115,6 +115,7 @@ class FullProblem:
             "scoring_guide": {
                 "answer": self.to_answer(format),
                 "etr_predicted": self.etr_predicted_conclusion.logical_form_etr if self.etr_predicted_conclusion else None,
+                "etr_predicted_is_classically_correct": "UNKNOWN",
             },
             "generation_details": {
                 # TODO: Also include data like how many atoms or clauses were used in the views
@@ -123,6 +124,10 @@ class FullProblem:
                 "num_objects_per_problem": args.num_objects_per_problem,
             }
         }
+        if format == "multiple_choice":
+            dict["scoring_guide"]["options"] = [
+                (view.english_form if view.english_form else view.logical_form_etr, classically_correct) for view, classically_correct, _ in self.multiple_choices
+            ]
         return dict
 
 
