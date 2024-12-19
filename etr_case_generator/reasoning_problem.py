@@ -57,6 +57,8 @@ class ReasoningProblem:
             )
         )
 
+    # TODO: should add depth as a property
+
     def update_premises(self, premises: list[View]):
         self.premises = []
         self.obj_map = {}
