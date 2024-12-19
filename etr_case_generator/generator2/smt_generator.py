@@ -1,3 +1,4 @@
+import math
 from dataclasses import dataclass
 import random
 
@@ -51,7 +52,7 @@ def random_smt_problem(ontology: Ontology=ELEMENTS,
                        ) -> SMTProblem:
     # Possible atoms
     # TODO This might be too many or too few, idk
-    possible_atoms: list[Symbol] = [random_atom(ontology, ontology.preferred_name_shortening_scheme) for _ in range(total_num_pieces // 2)]
+    possible_atoms: list[Symbol] = [random_atom(ontology, ontology.preferred_name_shortening_scheme) for _ in range(total_num_pieces)]
 
     # The algorithm here is that we generate up to max_num_views views, each of which is a conjunction of disjunctions in CNF
     # There will be exactly num_clauses number of clauses distributed across those views
@@ -87,23 +88,44 @@ def cnf_generation(total_num_pieces: int, possible_atoms: list[Symbol]) -> list[
     max_disjuncts_per_clause = 4
     max_num_views = 3
     min_disjuncts_per_clause = 2
-    num_clauses = total_num_pieces // 2
+    # num_clauses = int(total_num_pieces / 2.5)
 
     # Distribute clauses across views
-    clauses_per_view = [0] * max_num_views
-    for i in range(num_clauses):
-        clauses_per_view[random.randint(0, max_num_views - 1)] += 1
-    clauses_per_view = [nc for nc in clauses_per_view if nc > 0]
+    num_pieces_per_view = [0] * max_num_views
+    for i in range(total_num_pieces):
+        num_pieces_per_view[random.randint(0, len(num_pieces_per_view) - 1)] += 1
+    num_pieces_per_view = [nc for nc in num_pieces_per_view if nc > 0]
+
+    num_pieces_remaining = total_num_pieces
+
     views = []
-    for num_clauses_in_view in clauses_per_view:
+    for num_pieces_in_view in num_pieces_per_view:
         clauses = []
-        for _ in range(num_clauses_in_view):
+        pieces_remaining_in_view = num_pieces_in_view
+        while pieces_remaining_in_view > 0:
             num_disjuncts = random.randint(min_disjuncts_per_clause, max_disjuncts_per_clause)
-            disjuncts = random.sample(possible_atoms, min(num_disjuncts, len(possible_atoms)))
+            num_disjuncts = min(num_disjuncts, len(possible_atoms))
+            num_disjuncts = min(num_disjuncts, num_pieces_remaining)
+
+            if num_disjuncts == 0:
+                break
+
+            disjuncts = random.sample(possible_atoms, num_disjuncts)
             clause = Or(disjuncts)
             clauses.append(clause)
+
+            num_pieces_remaining -= num_disjuncts
+            pieces_remaining_in_view -= num_disjuncts
+
+        print(f"Built view with {num_pieces_in_view} pieces:")
+        print(clauses)
+        print(f"Num pieces remaining in view: {pieces_remaining_in_view}")
 
         if clauses:
             view = And(clauses)
             views.append(view)
+
+    print("Views:")
+    print(views)
+    print(f"Num pieces remaining: {num_pieces_remaining}")
     return views
