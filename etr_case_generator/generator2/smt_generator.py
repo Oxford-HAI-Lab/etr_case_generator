@@ -46,39 +46,18 @@ def has_only_one_set_of_necessary_assignments(views: list[FNode]) -> bool:
 
 def random_smt_problem(ontology: Ontology=ELEMENTS,
                        # TODO Add these to the args in the main script
-                       num_clauses: int = 5,
-                       min_disjuncts_per_clause: int = 2,
-                       max_disjuncts_per_clause: int = 4,
-                       max_num_views: int = 3,
+                       # "Total num pieces" refers to the count of variables, so like `(a or b or c) and (d or e)` would have 5 pieces
+                       total_num_pieces: int = 5,
                        ) -> SMTProblem:
-    # TODO This needs to be overhauled! This function could be total junk for all I know!
-
     # Possible atoms
     # TODO This might be too many or too few, idk
-    possible_atoms = [random_atom(ontology, ontology.preferred_name_shortening_scheme) for _ in range(num_clauses * min_disjuncts_per_clause // 2)]
+    possible_atoms: list[Symbol] = [random_atom(ontology, ontology.preferred_name_shortening_scheme) for _ in range(total_num_pieces // 2)]
 
     # The algorithm here is that we generate up to max_num_views views, each of which is a conjunction of disjunctions in CNF
     # There will be exactly num_clauses number of clauses distributed across those views
     # Each clause will have between min_disjuncts_per_clause and max_disjuncts_per_clause disjuncts
 
-    # Distribute clauses across views
-    clauses_per_view = [0] * max_num_views
-    for i in range(num_clauses):
-        clauses_per_view[random.randint(0, max_num_views - 1)] += 1
-    clauses_per_view = [nc for nc in clauses_per_view if nc > 0]
-
-    views = []
-    for num_clauses_in_view in clauses_per_view:
-        clauses = []
-        for _ in range(num_clauses_in_view):
-            num_disjuncts = random.randint(min_disjuncts_per_clause, max_disjuncts_per_clause)
-            disjuncts = random.sample(possible_atoms, min(num_disjuncts, len(possible_atoms)))
-            clause = Or(disjuncts)
-            clauses.append(clause)
-        
-        if clauses:
-            view = And(clauses)
-            views.append(view)
+    views = cnf_generation(total_num_pieces, possible_atoms)
 
     print("Got SMT Problem with views:")
     print(views)
@@ -101,3 +80,30 @@ def random_smt_problem(ontology: Ontology=ELEMENTS,
     )
 
     return smt_problem
+
+
+def cnf_generation(total_num_pieces: int, possible_atoms: list[Symbol]) -> list[FNode]:
+    # TODO, this doesn't reflect total_num_pieces perfectly
+    max_disjuncts_per_clause = 4
+    max_num_views = 3
+    min_disjuncts_per_clause = 2
+    num_clauses = total_num_pieces // 2
+
+    # Distribute clauses across views
+    clauses_per_view = [0] * max_num_views
+    for i in range(num_clauses):
+        clauses_per_view[random.randint(0, max_num_views - 1)] += 1
+    clauses_per_view = [nc for nc in clauses_per_view if nc > 0]
+    views = []
+    for num_clauses_in_view in clauses_per_view:
+        clauses = []
+        for _ in range(num_clauses_in_view):
+            num_disjuncts = random.randint(min_disjuncts_per_clause, max_disjuncts_per_clause)
+            disjuncts = random.sample(possible_atoms, min(num_disjuncts, len(possible_atoms)))
+            clause = Or(disjuncts)
+            clauses.append(clause)
+
+        if clauses:
+            view = And(clauses)
+            views.append(view)
+    return views

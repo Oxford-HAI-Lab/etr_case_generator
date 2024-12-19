@@ -64,7 +64,7 @@ def main():
     parser.add_argument("--save_file_name", type=str, default="problems", help="Name for saved jsonl files")
 
     args = parser.parse_args()
-    
+
     # TODO Args like num_clauses for the actual generation
 
     problems: list[FullProblem] = generate_problem_list(n_problems=args.n_problems, args=args)
@@ -72,14 +72,18 @@ def main():
     # Save to file
     for prompt_type in get_args(QuestionType):
         if args.chain_of_thought_prompt == "no" or args.chain_of_thought_prompt == "both":
-            with open(f"datasets/{args.save_file_name}_{prompt_type}.jsonl", "w") as f:
+            fname = f"datasets/{args.save_file_name}_{prompt_type}.jsonl"
+            with open(fname, "w") as f:
                 for problem in problems:
                     f.write(json.dumps(problem.to_dict_for_jsonl(prompt_type, chain_of_thought=False)) + "\n")
+            print(f"Saved file {fname}")
 
         if args.chain_of_thought_prompt == "yes" or args.chain_of_thought_prompt == "both":
-            with open(f"datasets/{args.save_file_name}_{prompt_type}_with_cot.jsonl", "w") as f:
+            fname = f"datasets/{args.save_file_name}_{prompt_type}_with_cot.jsonl"
+            with open(fname, "w") as f:
                 for problem in problems:
                     f.write(json.dumps(problem.to_dict_for_jsonl(prompt_type, chain_of_thought=True)) + "\n")
+            print(f"Saved file {fname}")
 
 if __name__ == "__main__":
     main()
