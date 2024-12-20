@@ -219,7 +219,7 @@ def random_smt_problem(ontology: Ontology=ELEMENTS,
     # Possible atoms
     # TODO This might be too many or too few, idk
     num_generated_atoms = total_num_pieces
-    possible_atoms = [random_atom(ontology, ontology.preferred_name_shortening_scheme) for _ in range(total_num_pieces * 10)]  # Overgenerate
+    possible_atoms: list[Symbol] = [random_atom(ontology, ontology.preferred_name_shortening_scheme) for _ in range(total_num_pieces * 10)]  # Overgenerate
     possible_atoms = list(set(possible_atoms))  # Remove duplicates from possible_atoms
     possible_atoms = possible_atoms[:num_generated_atoms]  # Trim down to the right number of atoms
 
@@ -296,3 +296,18 @@ def cnf_generation(total_num_pieces: int, possible_atoms: list[Symbol]) -> list[
     # print(views)
     # print(f"Num pieces remaining: {num_pieces_remaining}")
     return views
+
+def add_conclusions(partial_problem: PartialProblem, ontology: Ontology, num_wrong: int = 3):
+    # TODO Need to pull out the atoms, like `p(a)` from the logical form
+    possible_atoms: list[Symbol] = [random_atom(ontology, ontology.preferred_name_shortening_scheme) for _ in range(20)]  # Overgenerate
+    possible_atoms = list(set(possible_atoms))  # Remove duplicates from possible_atoms
+    possible_atoms = possible_atoms[:6]  # Trim down to the right number of atoms
+
+    generated_conclusions = generate_conclusions([p.logical_form_smt_fnode for p in partial_problem.premises], possible_atoms, num_wrong=num_wrong)
+    partial_problem.possible_conclusions_from_logical = []
+    for conclusion, is_correct in generated_conclusions:
+        partial_problem.possible_conclusions_from_logical.append(
+            Conclusion(view=ReifiedView(logical_form_smt_fnode=conclusion), is_classically_correct=is_correct))
+    partial_problem.fill_out(ontology=ontology)  # Fill out the conclusions
+    for c in partial_problem.possible_conclusions_from_logical:
+        c.view.english_form += " !!! THIS CONCLUSION IS BOGUS !!!"

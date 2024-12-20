@@ -7,6 +7,7 @@ from pyetr import View
 from pyetr.inference import default_procedure_does_it_follow, default_inference_procedure
 from pysmt.fnode import FNode
 from pyetr import View
+from pysmt.shortcuts import Symbol
 from rich.console import Console, Group
 from rich.panel import Panel
 from rich.text import Text
@@ -36,6 +37,13 @@ class ReifiedView:
                 self.logical_form_smt_fnode = view_to_smt(view)
             if self.logical_form_smt is None:
                 self.logical_form_smt = format_smt(self.logical_form_smt_fnode)
+        elif self.logical_form_etr_view is not None:
+            if self.logical_form_etr is None:
+                self.logical_form_etr = str(self.logical_form_etr_view)
+            if self.logical_form_smt_fnode is None:
+                self.logical_form_smt_fnode = view_to_smt(self.logical_form_etr_view)
+            if self.logical_form_smt is None:
+                self.logical_form_smt = format_smt(self.logical_form_smt_fnode)
         elif self.logical_form_smt_fnode is not None:
             if self.logical_form_smt is None:
                 self.logical_form_smt = format_smt(self.logical_form_smt_fnode)
@@ -44,6 +52,8 @@ class ReifiedView:
 
         if self.logical_form_smt_fnode is None:
                 # This is not implemented
+                print(f"This is not implemented")
+                print(self)
                 self.logical_form_smt_fnode = load_fnode_from_string(self.logical_form_smt)
         if self.logical_form_etr_view is None:
             self.logical_form_etr_view = View.from_str(self.logical_form_etr)
@@ -119,7 +129,7 @@ class PartialProblem:
             for conclusion in self.possible_conclusions_from_etr:
                 if conclusion.is_classically_correct is None:
                     conclusion.is_classically_correct = does_it_follow(premise_fnodes, conclusion.view.logical_form_smt_fnode)
-        assert all(c.is_classically_correct is not None for c in self.possible_conclusions_from_logical), "Error adding classical logic predictions to PartialProblem. Make sure to annotate correctness when creating possible_conclusions_from_logical. Or delete this assert and replace it with the for loop, idc." + str(self)
+        assert self.possible_conclusions_from_logical is None or all(c.is_classically_correct is not None for c in self.possible_conclusions_from_logical), "Error adding classical logic predictions to PartialProblem. Make sure to annotate correctness when creating possible_conclusions_from_logical. Or delete this assert and replace it with the for loop, idc." + str(self)
 
 
 @dataclass(kw_only=True)
@@ -264,7 +274,7 @@ class FullProblem:
         
         # Add yes/no section
         if show_empty or any([self.possible_conclusions, self.yes_or_no_question_prose]):
-            content.append(Text("Yes/No Questions:", style="bold green"))
+            content.append(Text("Possible Conclusions for Yes/No:", style="bold green"))
             content.append(f"  Question: {self.yes_or_no_question_prose}")
             if self.possible_conclusions:
                 for i, conclusion in enumerate(self.possible_conclusions, 1):

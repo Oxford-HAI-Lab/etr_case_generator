@@ -1,6 +1,8 @@
 from typing import Optional
 
 from pysmt.fnode import FNode
+# from z3 import parse_smt2_string
+
 from etr_case_generator.ontology import Ontology
 
 
@@ -74,11 +76,11 @@ def smt_to_english(fnode: FNode, ontology: Ontology) -> str:
     """
 
     def _logical_to_english(text: str):
-        if text in ontology.natural_to_short_name_mapping:
-            text = ontology.natural_to_short_name_mapping[text]
+        if text in ontology.short_name_to_full_name:
+            text = ontology.short_name_to_full_name[text]
         else:
             print(f"Couldn't find {text} in ontology mapping.")
-            print(ontology.natural_to_short_name_mapping)
+            print(ontology.short_name_to_full_name)
         text.replace("_", " ")
         return text
 
@@ -145,4 +147,7 @@ def smt_to_english(fnode: FNode, ontology: Ontology) -> str:
 
 def load_fnode_from_string(smtlib_string: str) -> FNode:
     """Parses an SMT-LIB string and returns the first FNode assertion."""
-    raise NotImplementedError("This function is not yet implemented.")
+    # raise NotImplementedError("This function is not yet implemented.")
+    print(f"Trying to pars string: `{smtlib_string}`")
+    # return parse_smt2_string(smtlib_string).as_formula()
+    raise NotImplementedError("This function is not yet implemented.", smtlib_string)

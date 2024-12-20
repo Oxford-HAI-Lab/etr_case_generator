@@ -1,10 +1,12 @@
 from typing import get_args
 
 from etr_case_generator.generator2.etr_generator import random_etr_problem
-from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType, PartialProblem
+from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType, PartialProblem, Conclusion, \
+    ReifiedView
 from etr_case_generator.generator2.full_problem_creator import full_problem_from_partial_problem
 from etr_case_generator.ontology import ELEMENTS, Ontology
-from etr_case_generator.generator2.smt_generator import random_smt_problem, SMTProblem
+from etr_case_generator.generator2.smt_generator import random_smt_problem, SMTProblem, generate_conclusions, \
+    add_conclusions
 
 
 def generate_problem(args, ontology: Ontology = ELEMENTS) -> FullProblem:
@@ -22,6 +24,9 @@ def generate_problem(args, ontology: Ontology = ELEMENTS) -> FullProblem:
     partial_problem.fill_out(ontology=ontology)
     partial_problem.add_etr_predictions(ontology=ontology)
     partial_problem.add_classical_logic_predictions()
+    if partial_problem.possible_conclusions_from_etr is None and partial_problem.possible_conclusions_from_logical is None:
+        # If there are no conclusions, make some!
+        add_conclusions(partial_problem, ontology=ontology)
 
     # Flesh out the problems with text and everything
     full_problem: FullProblem = full_problem_from_partial_problem(partial_problem, ontology=ontology)

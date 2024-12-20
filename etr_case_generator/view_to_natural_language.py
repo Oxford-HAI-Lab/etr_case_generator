@@ -135,7 +135,7 @@ def view_to_natural_language(
 
     full_nl_str = quantifier_str + stage_str
 
-    print("view_to_natural_language END - obj_map:", obj_map)
-    print("view_to_natural_language END - full_nl_str:", full_nl_str)
+    # print("view_to_natural_language END - obj_map:", obj_map)
+    # print("view_to_natural_language END - full_nl_str:", full_nl_str)
 
     return full_nl_str, obj_map

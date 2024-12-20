@@ -30,7 +30,7 @@ class Ontology:
     it must be possible to have P(x)Q(x).
     """
 
-    natural_to_short_name_mapping: Optional[dict[str, str]] = None
+    short_name_to_full_name: Optional[dict[str, str]] = None
     """
     For all object names and predicate names, we want to shorten them using the `natural_name_to_logical_name` function. 
     This is for mapping in the other direction.
@@ -39,24 +39,24 @@ class Ontology:
     preferred_name_shortening_scheme: NameShorteningScheme = "short"
     
     def fill_mapping(self):
-        self.natural_to_short_name_mapping = {}
+        self.short_name_to_full_name = {}
         for obj in self.objects:
             s = natural_name_to_logical_name(obj, self.preferred_name_shortening_scheme)
-            self.natural_to_short_name_mapping[s] = obj
+            self.short_name_to_full_name[s] = obj
         for pred in self.predicates:
             s = natural_name_to_logical_name(pred.name, self.preferred_name_shortening_scheme)
-            self.natural_to_short_name_mapping[s] = pred.name
+            self.short_name_to_full_name[s] = pred.name
 
         # Assert that the mapping is bijective, i.e. that the size of the set of keys is the same as the size of the set of values.
-        assert len(self.natural_to_short_name_mapping.keys()) == len(set(self.natural_to_short_name_mapping.values()))
+        assert len(self.short_name_to_full_name.keys()) == len(set(self.short_name_to_full_name.values()))
 
         # Also add some other ways that it might appear. This makes it not bijective, but hopefully that's okay. The reason for this is that ETR doesn't like underscores in names.
         for obj in self.objects:
             s = natural_name_to_logical_name(obj, self.preferred_name_shortening_scheme)
-            self.natural_to_short_name_mapping[s.replace("_", " ")] = obj
+            self.short_name_to_full_name[s.replace("_", " ")] = obj
         for pred in self.predicates:
             s = natural_name_to_logical_name(pred.name, self.preferred_name_shortening_scheme)
-            self.natural_to_short_name_mapping[s.replace("_", " ")] = pred.name
+            self.short_name_to_full_name[s.replace("_", " ")] = pred.name
 
     def create_smaller_ontology(self, num_predicates: int, num_objects: int) -> 'Ontology':
         """Create a new smaller ontology by randomly selecting predicates and objects.
@@ -112,8 +112,13 @@ CARDS = Ontology(
         "king",
     ],
     predicates=[
+        # These must be able to apply to any card, so "face" is not a good predicate.
         Predicate(name="red", arity=1),
         Predicate(name="square", arity=1),
+        Predicate(name="marked", arity=1),
+        Predicate(name="yellow", arity=1),
+        Predicate(name="round", arity=1),
+        Predicate(name="castable", arity=1),
     ],
 )
 

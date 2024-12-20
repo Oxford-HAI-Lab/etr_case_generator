@@ -14,8 +14,8 @@ def full_problem_from_partial_problem(partial_problem: PartialProblem, ontology:
     possible_conclusions: list[Conclusion] = []
     if partial_problem.possible_conclusions_from_logical:
         possible_conclusions.extend(partial_problem.possible_conclusions_from_logical)
-    if partial_problem.possible_conclusions_from_logical:
-        possible_conclusions.extend(partial_problem.possible_conclusions_from_logical)
+    if partial_problem.possible_conclusions_from_etr:
+        possible_conclusions.extend(partial_problem.possible_conclusions_from_etr)
 
     # TODO, A smarter method for selecting multiple choice options, getting a good mix of answers, making sure there's exactly one correct answer
     multiple_choices: list[Conclusion] = possible_conclusions.copy()[:4]
