@@ -66,7 +66,7 @@ def main():
     parser.add_argument("--chain_of_thought_prompt", type=str, default="no", help="Whether to include a chain of thought prompt. Options are 'yes', 'no', and 'both'.")
     parser.add_argument("--question_type", type=str, default="all", help="Type of question to ask. Options are 'all', 'yes_no', 'multiple_choice', 'open_ended'.", choices=["all"] + list(get_args(QuestionType)))
     parser.add_argument("--save_file_name", type=str, default="problems", help="Name for saved jsonl files")
-    parser.add_argument("--generate_function", type=str, default="random_smt_problem", help="Which function to use in generation.", choices=["random_smt_problem", "random_pyetr_problem"])
+    parser.add_argument("--generate_function", type=str, default="random_smt_problem", help="Which function to use in generation.", choices=["random_smt_problem", "random_etr_problem"])
     # TODO(Ryan): Add parameters for problem generation here
     args = parser.parse_args()
 
