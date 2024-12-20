@@ -1,8 +1,9 @@
-from typing import Optional, Generator, Deque
 from collections import deque
 from dataclasses import dataclass, field
 from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
 from etr_case_generator.ontology import Ontology
+from pyetr import View
+from typing import Optional, Generator, Deque
 
 @dataclass
 class ETRGenerator:
@@ -22,20 +23,32 @@ class ETRGenerator:
         Create an initial seed problem.
 
         Returns:
-            PartialProblem
+            PartialProblem: for now, just the initial disjunction fallacy example
         """
-        # TODO: Implement actual seed problem creation logic
         return PartialProblem(
-            premises=[ReifiedView(
-                logical_form_smt=None,
-                logical_form_smt_fnode=None,
-                logical_form_etr=None,  # TODO
-                english_form=None,  # TODO
-            )],  # TODO
+            premises=[
+                ReifiedView(
+                    logical_form_smt=None,
+                    logical_form_smt_fnode=None,
+                    logical_form_etr=View.from_str("{ A(a()) B(a()), C(b()) D(b()) }"),
+                    english_form=None,  # TODO
+                ),
+                ReifiedView(
+                    logical_form_smt=None,
+                    logical_form_smt_fnode=None,
+                    logical_form_etr=View.from_str("{ A(a()) }"),
+                    english_form=None,  # TODO
+                ),
+            ],  # TODO
             possible_conclusions_from_logical=None,
             possible_conclusions_from_etr=None,  # TODO
-            etr_what_follows=None,  # TODO
-        )  # Placeholder
+            etr_what_follows=ReifiedView(
+                logical_form_smt=None,
+                logical_form_smt_fnode=None,
+                logical_form_etr=View.from_str("{ B(a()) }"),
+                english_form=None,  # TODO
+            ),
+        )
 
     def mutate_problem(self, problem: PartialProblem) -> Optional[PartialProblem]:
         """

@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from typing import Optional, Literal, cast, get_args
 
 from pysmt.fnode import FNode
+from pyetr import View
 from rich.console import Console, Group
 from rich.panel import Panel
 from rich.text import Text
@@ -16,7 +17,7 @@ QuestionType = Literal["yes_no", "multiple_choice", "open_ended"]
 class ReifiedView:
     logical_form_smt: Optional[str] = None
     logical_form_smt_fnode: Optional[FNode] = None
-    logical_form_etr: Optional[str] = None
+    logical_form_etr: Optional[View] = None
     english_form: Optional[str] = None
 
     # TODO(andrew) Fill out method
@@ -249,5 +250,3 @@ class FullProblem:
 
     def __str__(self) -> str:
         return self.full_string(show_empty=False)
-
-
