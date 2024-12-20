@@ -28,10 +28,9 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
 
         # Generate a random ontology
         ontology = random.choice(all_ontologies)
-        small_ontology = ontology.create_smaller_ontology(args.num_predicates_per_problem, args.num_objects_per_problem)
 
         # Generate a random problem
-        problem = generate_problem(args, ontology=small_ontology)
+        problem = generate_problem(args, ontology=ontology)
 
         problems.append(problem)
         print(f"Generated Problem {i + 1} of {n_problems}")
@@ -57,8 +56,8 @@ def main():
         action="store_true",
         help="Print verbose output"
     )
-    parser.add_argument("--num_predicates_per_problem", type=int, default=3, help="Number of predicates to use in each problem")
-    parser.add_argument("--num_objects_per_problem", type=int, default=3, help="Number of objects to use in each problem")
+    parser.add_argument("--num_predicates_per_problem", type=int, default=3, help="Number of predicates to use in each problem. Not used by all generate functions.")
+    parser.add_argument("--num_objects_per_problem", type=int, default=3, help="Number of objects to use in each problem. Not used by all generate functions.")
     parser.add_argument("--name_shortening", type=str, default="none", help="How to shorten names of objects and predicates. Options are 'none', 'short', and 'first'.")
     # parser.add_argument("--num_follows", type=int, default=3, help="Number of potential variable assignments which might follow, the top level size of the DNF form of the logical conclusion from the premises.")
     # parser.add_argument("--num_clauses", type=int, default=3, help="A measure of the complexity of the premises.")

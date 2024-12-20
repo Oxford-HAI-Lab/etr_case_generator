@@ -10,7 +10,8 @@ from etr_case_generator.generator2.smt_generator import random_smt_problem, SMTP
 def generate_problem(args, ontology: Ontology = ELEMENTS) -> FullProblem:
     # Generate partial problems
     if args.generate_function == "random_smt_problem":
-        smt_problem: SMTProblem = random_smt_problem(ontology=ontology, total_num_pieces=args.num_pieces)
+        small_ontology = ontology.create_smaller_ontology(args.num_predicates_per_problem, args.num_objects_per_problem)
+        smt_problem: SMTProblem = random_smt_problem(ontology=small_ontology, total_num_pieces=args.num_pieces)
         partial_problem = smt_problem.to_partial_problem()
     elif args.generate_function == "random_etr_problem":
         partial_problem: PartialProblem = random_etr_problem(ontology=ontology)
