@@ -180,7 +180,7 @@ def generate_conclusions(views: list[FNode], possible_atoms: list[Symbol], num_w
         is_nec, nec_value = is_necessary(candidate)
         if is_nec:
             conclusions.append((candidate, nec_value))
-            print(f"Found necessary {'truth' if nec_value else 'falsehood'}: {candidate}")
+            # print(f"Found necessary {'truth' if nec_value else 'falsehood'}: {candidate}")
             break
 
     # Now generate wrong conclusions (things that are contingent)

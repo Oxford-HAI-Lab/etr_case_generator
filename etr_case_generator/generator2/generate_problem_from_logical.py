@@ -18,6 +18,7 @@ def generate_problem(args, ontology: Ontology = ELEMENTS) -> FullProblem:
         raise ValueError(f"Unknown generate_function: {args.generate_function}")
 
     partial_problem.fill_out(ontology=ontology)
+    partial_problem.add_etr_predictions(ontology=ontology)
 
     # Flesh out the problems with text and everything
     full_problem: FullProblem = full_problem_from_partial_problem(partial_problem, ontology=ontology)

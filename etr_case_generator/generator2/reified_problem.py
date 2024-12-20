@@ -1,8 +1,10 @@
+import json
 import textwrap
 from dataclasses import dataclass
 from typing import Optional, Literal, cast, get_args
 
 from pyetr import View
+from pyetr.inference import default_procedure_does_it_follow, default_inference_procedure
 from pysmt.fnode import FNode
 from rich.console import Console, Group
 from rich.panel import Panel
@@ -21,6 +23,7 @@ class ReifiedView:
     logical_form_smt: Optional[str] = None
     logical_form_smt_fnode: Optional[FNode] = None
     logical_form_etr: Optional[str] = None
+    logical_form_etr_view: Optional[View] = None
     english_form: Optional[str] = None
 
     def fill_out(self, ontology: Optional[Ontology] = None):
@@ -36,17 +39,21 @@ class ReifiedView:
                 self.logical_form_smt = format_smt(self.logical_form_smt_fnode)
             if self.logical_form_etr is None:
                 self.logical_form_etr = smt_to_etr(self.logical_form_smt_fnode)
-        elif self.logical_form_smt_fnode is None:
+
+        if self.logical_form_smt_fnode is None:
                 # This is not implemented
                 self.logical_form_smt_fnode = load_fnode_from_string(self.logical_form_smt)
+        if self.logical_form_etr_view is None:
+            self.logical_form_etr_view = View.from_str(self.logical_form_etr)
 
-        assert self.logical_form_smt_fnode is not None
+        assert self.logical_form_smt_fnode is not None, "Error filling out FNode. Currently, it is not possible to fill out the SMT string but not the FNode." + json.dumps(self.__dict__, indent=2)
 
         if self.english_form is None and ontology is not None:
             # Consider using view_to_natural_language, to go from ETR->ENG
             self.english_form = smt_to_english(self.logical_form_smt_fnode, ontology)
 
-        assert self.logical_form_smt is not None and self.logical_form_etr is not None and self.english_form is not None, "Error filling out ReifiedView. Make sure it has either an smt or etr form. It cannot be filled out from the english form."
+        assert self.english_form is not None or ontology is None, "An ontology was provided, but the english_form was not filled out."
+        assert self.logical_form_smt is not None and self.logical_form_etr is not None, "Error filling out ReifiedView. Make sure it has either an smt or etr form. It cannot be filled out from the english form." + str(self)
 
 
 @dataclass(kw_only=True)
@@ -85,7 +92,18 @@ class PartialProblem:
         if self.etr_what_follows is not None:
             self.etr_what_follows.fill_out(ontology)
 
-        # Note that this does NOT fill out the etr_what_follows view, or the is_etr_predicted field of the conclusions.
+        # Note that you may also want to call add_etr_predictions
+
+    def add_etr_predictions(self, ontology: Optional[Ontology] = None):
+        premises_views = [p.logical_form_etr_view for p in self.premises]
+        if self.etr_what_follows is None:
+            follows_view = default_inference_procedure(premises_views)
+            self.etr_what_follows = ReifiedView(logical_form_etr_view=follows_view, logical_form_etr=follows_view.to_str())
+            self.etr_what_follows.fill_out(ontology=ontology)
+        if self.possible_conclusions_from_logical is not None:
+            for conclusion in self.possible_conclusions_from_logical:
+                if conclusion.is_etr_predicted is None:
+                    conclusion.is_etr_predicted = default_procedure_does_it_follow(premises_views, conclusion.view.logical_form_etr_view)
 
 
 @dataclass(kw_only=True)

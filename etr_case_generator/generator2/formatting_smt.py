@@ -86,8 +86,15 @@ def smt_to_english(fnode: FNode, ontology: Ontology) -> str:
         """Convert f(x) format to 'x is f'"""
         # Clean up the string first - remove any quotes
         pred_str = pred_str.replace("'", "")
+        # Handle case with no parentheses
+        if "(" not in pred_str:
+            return _logical_to_english(pred_str)
         # Extract function name and argument from f(x) format
-        name, arg = pred_str.split('(')
+        try:
+            name, arg = pred_str.split('(')
+        except ValueError as e:
+            print(f"Error splitting predicate {pred_str}")
+            raise e
         arg = arg.rstrip(')')  # remove closing parenthesis
         name = _logical_to_english(name)
         arg = _logical_to_english(arg)
