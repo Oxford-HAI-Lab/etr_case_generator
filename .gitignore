@@ -9,3 +9,6 @@
 
 # Manually add results if you want to share them
 lm_eval/tasks/etr_problems/results/*
+
+# Development jsonl files
+datasets/dev_*.jsonl
