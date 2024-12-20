@@ -3,17 +3,17 @@ import random
 from etr_case_generator import Ontology
 from etr_case_generator.generator2.etr_logic import get_etr_conclusion
 from etr_case_generator.generator2.formatting_smt import format_smt, smt_to_etr, smt_to_english
-from etr_case_generator.generator2.reified_problem import FullProblem, ReifiedView
+from etr_case_generator.generator2.reified_problem import FullProblem, ReifiedView, PartialProblem
 from etr_case_generator.ontology import ELEMENTS
 from etr_case_generator.generator2.smt_generator import SMTProblem
 
 
-def full_problem_from_smt_problem(smt_problem: SMTProblem, ontology: Ontology=ELEMENTS) -> FullProblem:
+def full_problem_from_partial_problem(partial_problem: PartialProblem, ontology: Ontology=ELEMENTS) -> FullProblem:
     """Convert an SMTProblem to a FullProblem, including yes/no and multiple choice conclusions."""
 
     # Convert each FNode view to a ReifiedView
     reified_views = []
-    for view in smt_problem.views:
+    for view in partial_problem.views:
         reified_view = ReifiedView(
             logical_form_smt=format_smt(view),  # Formatted string representation without quotes
             logical_form_smt_fnode=view,  # Store the original FNode
@@ -24,8 +24,8 @@ def full_problem_from_smt_problem(smt_problem: SMTProblem, ontology: Ontology=EL
 
     # Create ReifiedViews for conclusions if they exist
     possible_conclusions = []
-    if smt_problem.yes_or_no_conclusions:
-        for conclusion_fnode, is_correct in smt_problem.yes_or_no_conclusions:
+    if partial_problem.yes_or_no_conclusions:
+        for conclusion_fnode, is_correct in partial_problem.yes_or_no_conclusions:
             reified_conclusion = ReifiedView(
                 logical_form_smt=format_smt(conclusion_fnode),
                 logical_form_smt_fnode=conclusion_fnode,

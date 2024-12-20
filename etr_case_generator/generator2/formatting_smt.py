@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pysmt.fnode import FNode
 from etr_case_generator.ontology import Ontology
 
@@ -132,3 +134,7 @@ def smt_to_english(fnode: FNode, ontology: Ontology) -> str:
         return f"there exists {', '.join(vars)} such that {body}"
 
     return str(fnode)  # Fallback for unknown operators
+
+def load_fnode_from_string(smtlib_string: str) -> FNode:
+    """Parses an SMT-LIB string and returns the first FNode assertion."""
+    raise NotImplementedError("This function is not yet implemented.")

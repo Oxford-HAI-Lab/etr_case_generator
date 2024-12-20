@@ -2,13 +2,17 @@ import textwrap
 from dataclasses import dataclass
 from typing import Optional, Literal, cast, get_args
 
+from pyetr import View
 from pysmt.fnode import FNode
 from rich.console import Console, Group
 from rich.panel import Panel
 from rich.text import Text
 
+from etr_case_generator import Ontology
+from etr_case_generator.generator2.formatting_smt import format_smt, smt_to_etr, smt_to_english, load_fnode_from_string
+from smt_interface.smt_encoder import view_to_smt
 
-# Define a type for Literal["yes_no", "multiple_choice", "open_ended"]
+# Different ways of asking a question
 QuestionType = Literal["yes_no", "multiple_choice", "open_ended"]
 
 
@@ -19,7 +23,30 @@ class ReifiedView:
     logical_form_etr: Optional[str] = None
     english_form: Optional[str] = None
 
-    # TODO(andrew) Fill out method
+    def fill_out(self, ontology: Ontology):
+        if self.logical_form_etr is not None:
+            view: View = View.from_str(self.logical_form_etr)
+            # Consider using `view_to_smt` to go from ETR->SMT
+            if self.logical_form_smt_fnode is None:
+                self.logical_form_smt_fnode = view_to_smt(view)
+            if self.logical_form_smt is None:
+                self.logical_form_smt = format_smt(self.logical_form_smt_fnode)
+        elif self.logical_form_smt_fnode is not None:
+            if self.logical_form_smt is None:
+                self.logical_form_smt = format_smt(self.logical_form_smt_fnode)
+            if self.logical_form_etr is None:
+                self.logical_form_etr = smt_to_etr(self.logical_form_smt_fnode)
+        elif self.logical_form_smt_fnode is None:
+                # This is not implemented
+                self.logical_form_smt_fnode = load_fnode_from_string(self.logical_form_smt)
+
+        assert self.logical_form_smt_fnode is not None
+
+        if self.english_form is None:
+            # Consider using view_to_natural_language, to go from ETR->ENG
+            self.english_form = smt_to_english(self.logical_form_smt_fnode, ontology)
+
+        assert self.logical_form_smt is not None and self.logical_form_etr is not None and self.english_form is not None, "Error filling out ReifiedView. Make sure it has either an smt or etr form. It cannot be filled out from the english form."
 
 
 @dataclass(kw_only=True)
