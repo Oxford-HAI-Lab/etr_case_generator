@@ -6,6 +6,7 @@ from typing import Optional, Literal, cast, get_args
 from pyetr import View
 from pyetr.inference import default_procedure_does_it_follow, default_inference_procedure
 from pysmt.fnode import FNode
+from pyetr import View
 from rich.console import Console, Group
 from rich.panel import Panel
 from rich.text import Text
@@ -322,5 +323,3 @@ class FullProblem:
 
     def __str__(self) -> str:
         return self.full_string(show_empty=False)
-
-
