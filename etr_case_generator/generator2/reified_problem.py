@@ -218,7 +218,9 @@ class FullProblem:
                     correct_index = i
                     break
             if correct_index == -1:
-                raise ValueError("No correct answer found in multiple_choices")
+                # raise ValueError("No correct answer found in multiple_choices")
+                print("\n\t\t!!!! ERROR! No correct answer found! !!!!\n")
+                return "ERROR: No correct answer found"
             return f"{self.multiple_choice_options[correct_index]}"
         elif format == "open_ended":
             return f"{self.etr_predicted_conclusion.logical_form_etr}"
