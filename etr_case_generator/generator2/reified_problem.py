@@ -85,11 +85,13 @@ class PartialProblem:
         if self.etr_what_follows is not None:
             self.etr_what_follows.fill_out(ontology)
 
+        # Note that this does NOT fill out the etr_what_follows view, or the is_etr_predicted field of the conclusions.
+
 
 @dataclass(kw_only=True)
 class FullProblem:
     views: Optional[list[ReifiedView]] = None
-    possible_conclusions: Optional[list[tuple[ReifiedView, bool]]] = None  # List of (conclusion, is_classically_correct) pairs
+    possible_conclusions: Optional[list[Conclusion]] = None  # List of (conclusion, is_classically_correct) pairs
 
     # TODO(andrew) Think about how to handle the two types of conclusion from PartialProblem
 
@@ -99,7 +101,7 @@ class FullProblem:
     yes_or_no_answer_guidance_prose: Optional[str] = 'Does it follow? Answer in the form of "Answer: Yes" or "Answer: No".'
 
     # Multiple Choice
-    multiple_choices: Optional[list[tuple[ReifiedView, bool, bool]]] = None  # (view, is_correct, is_etr_predicted)
+    multiple_choices: Optional[list[Conclusion]] = None  # (view, is_correct, is_etr_predicted)
     multiple_choice_question_prose: Optional[str] = "Which of the following conclusions necessarily follows from the given statements?"
     multiple_choice_answer_guidance_prose: Optional[str] = 'Which one follows? Answer in the form of "Answer: A", "Answer: B", etc.'
     multiple_choice_options: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -137,12 +139,12 @@ class FullProblem:
         if format == "yes_no":
             s += self.yes_or_no_question_prose
             s += "\n\n"
-            s += f"My Conclusion: {self.possible_conclusions[self.yes_or_no_conclusion_chosen_index][0].english_form}"
+            s += f"My Conclusion: {self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.english_form}"
         elif format == "multiple_choice":
             s += self.multiple_choice_question_prose
             s += "\n\n"
-            for i, (view, is_correct, is_etr_predicted) in enumerate(self.multiple_choices):
-                s += f"{self.multiple_choice_options[i]}. {view.english_form}\n"
+            for i, conclusion in enumerate(self.multiple_choices):
+                s += f"{self.multiple_choice_options[i]}. {conclusion.view.english_form}\n"
             s = s[:-1]  # Remove the last "\n"
         elif format == "open_ended":
             s += self.open_ended_formatting_advice
@@ -164,11 +166,11 @@ class FullProblem:
 
     def to_answer(self, format: QuestionType = "yes_no") -> str:
         if format == "yes_no":
-            return f"{'Yes' if self.possible_conclusions[self.yes_or_no_conclusion_chosen_index][1] else 'No'}"
+            return f"{'Yes' if self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_classically_correct else 'No'}"
         elif format == "multiple_choice":
             correct_index: int = -1
-            for i, (_, is_correct, _) in enumerate(self.multiple_choices):
-                if is_correct:
+            for i, conclusion in enumerate(self.multiple_choices):
+                if conclusion.is_classically_correct:
                     correct_index = i
                     break
             if correct_index == -1:
@@ -194,7 +196,7 @@ class FullProblem:
         }
         if format == "multiple_choice":
             dict["scoring_guide"]["options"] = [
-                (view.english_form if view.english_form else view.logical_form_etr, classically_correct) for view, classically_correct, _ in self.multiple_choices
+                (conclusion.view.english_form if conclusion.view.english_form else conclusion.view.logical_form_etr, conclusion.is_classically_correct) for conclusion in self.multiple_choices
             ]
         return dict
 
@@ -231,9 +233,9 @@ class FullProblem:
             content.append(Text("Yes/No Questions:", style="bold green"))
             content.append(f"  Question: {self.yes_or_no_question_prose}")
             if self.possible_conclusions:
-                for i, (conclusion, is_correct) in enumerate(self.possible_conclusions, 1):
-                    content.append(f"  {i}. Conclusion: {conclusion.logical_form_smt}")
-                    content.append(f"     Answer: {is_correct}")
+                for i, conclusion in enumerate(self.possible_conclusions, 1):
+                    content.append(f"  {i}. Conclusion: {conclusion.view.logical_form_smt}")
+                    content.append(f"     Answer: {conclusion.is_classically_correct}")
             content.append("")
         
         # Add multiple choice section
@@ -241,9 +243,9 @@ class FullProblem:
             content.append(Text("Multiple Choice:", style="bold green"))
             content.append(f"  Question: {self.multiple_choice_question_prose}")
             if self.multiple_choices:
-                for i, (view, is_correct, is_predicted) in enumerate(self.multiple_choices, 1):
-                    content.append(f"  {i}. {view.logical_form_smt}")
-                    content.append(f"     Correct: {is_correct}, Predicted: {is_predicted}")
+                for i, conclusion in enumerate(self.multiple_choices, 1):
+                    content.append(f"  {i}. {conclusion.view.logical_form_smt}")
+                    content.append(f"     Correct: {conclusion.is_classically_correct}, Predicted: {conclusion.is_etr_predicted}")
             else:
                 content.append("  No choices available")
             content.append("")
