@@ -142,6 +142,7 @@ def smt_to_english(fnode: FNode, ontology: Ontology) -> str:
 
     return str(fnode)  # Fallback for unknown operators
 
+
 def load_fnode_from_string(smtlib_string: str) -> FNode:
     """Parses an SMT-LIB string and returns the first FNode assertion."""
     raise NotImplementedError("This function is not yet implemented.")

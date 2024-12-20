@@ -12,6 +12,7 @@ from rich.text import Text
 
 from etr_case_generator import Ontology
 from etr_case_generator.generator2.formatting_smt import format_smt, smt_to_etr, smt_to_english, load_fnode_from_string
+from etr_case_generator.generator2.logic_helper import does_it_follow
 from smt_interface.smt_encoder import view_to_smt
 
 # Different ways of asking a question
@@ -104,6 +105,20 @@ class PartialProblem:
             for conclusion in self.possible_conclusions_from_logical:
                 if conclusion.is_etr_predicted is None:
                     conclusion.is_etr_predicted = default_procedure_does_it_follow(premises_views, conclusion.view.logical_form_etr_view)
+        if self.possible_conclusions_from_etr is not None:
+            for conclusion in self.possible_conclusions_from_etr:
+                if conclusion.is_etr_predicted is None:
+                    conclusion.is_etr_predicted = default_procedure_does_it_follow(premises_views, conclusion.view.logical_form_etr_view)
+                    print("WARNING! Are you sure you want to add ETR predictions to the ETR conclusions? It's likely you meant to add them during their generation.")
+
+    def add_classical_logic_predictions(self):
+        # TODO(andrew) Use the logical_form_smt_fnode to determine if the conclusion is classically correct
+        premise_fnodes = [p.logical_form_smt_fnode for p in self.premises]
+        if self.possible_conclusions_from_etr:
+            for conclusion in self.possible_conclusions_from_etr:
+                if conclusion.is_classically_correct is None:
+                    conclusion.is_classically_correct = does_it_follow(premise_fnodes, conclusion.view.logical_form_smt_fnode)
+        assert all(c.is_classically_correct is not None for c in self.possible_conclusions_from_logical), "Error adding classical logic predictions to PartialProblem. Make sure to annotate correctness when creating possible_conclusions_from_logical. Or delete this assert and replace it with the for loop, idc." + str(self)
 
 
 @dataclass(kw_only=True)
