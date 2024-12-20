@@ -8,6 +8,7 @@ from pysmt.fnode import FNode
 from pysmt.typing import BOOL, REAL, PySMTType
 
 from etr_case_generator import Ontology
+from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView, Conclusion
 from etr_case_generator.ontology import ELEMENTS, natural_name_to_logical_name, NameShorteningScheme
 
 
@@ -18,6 +19,15 @@ class SMTProblem:
 
     # Yes or No format
     yes_or_no_conclusions: list[tuple[FNode, bool]] = None  # List of (conclusion, is_correct) pairs
+
+    def to_partial_problem(self) -> PartialProblem:
+        premises = []
+        for view in self.views:
+            premises.append(ReifiedView(logical_form_smt_fnode=view))
+        conclusions = []
+        for conclusion, is_correct in self.yes_or_no_conclusions:
+            conclusions.append(Conclusion(view=ReifiedView(logical_form_smt_fnode=conclusion), is_classically_correct=is_correct))
+        return PartialProblem(premises=premises, possible_conclusions_from_logical=conclusions)
 
 
 def random_atom(ontology: Ontology, name_shortening_scheme: NameShorteningScheme) -> Symbol:
@@ -170,7 +180,7 @@ def generate_conclusions(views: list[FNode], possible_atoms: list[Symbol], num_w
         is_nec, nec_value = is_necessary(candidate)
         if is_nec:
             conclusions.append((candidate, nec_value))
-            print(f"Found necessary {'truth' if nec_value else 'falsehood'}: {candidate}")
+            # print(f"Found necessary {'truth' if nec_value else 'falsehood'}: {candidate}")
             break
 
     # Now generate wrong conclusions (things that are contingent)

@@ -1,15 +1,22 @@
+import json
 import textwrap
 from dataclasses import dataclass
 from typing import Optional, Literal, cast, get_args
 
+from pyetr import View
+from pyetr.inference import default_procedure_does_it_follow, default_inference_procedure
 from pysmt.fnode import FNode
 from pyetr import View
 from rich.console import Console, Group
 from rich.panel import Panel
 from rich.text import Text
 
+from etr_case_generator import Ontology
+from etr_case_generator.generator2.formatting_smt import format_smt, smt_to_etr, smt_to_english, load_fnode_from_string
+from etr_case_generator.generator2.logic_helper import does_it_follow
+from smt_interface.smt_encoder import view_to_smt
 
-# Define a type for Literal["yes_no", "multiple_choice", "open_ended"]
+# Different ways of asking a question
 QuestionType = Literal["yes_no", "multiple_choice", "open_ended"]
 
 
@@ -17,10 +24,38 @@ QuestionType = Literal["yes_no", "multiple_choice", "open_ended"]
 class ReifiedView:
     logical_form_smt: Optional[str] = None
     logical_form_smt_fnode: Optional[FNode] = None
-    logical_form_etr: Optional[View] = None
+    logical_form_etr: Optional[str] = None
+    logical_form_etr_view: Optional[View] = None
     english_form: Optional[str] = None
 
-    # TODO(andrew) Fill out method
+    def fill_out(self, ontology: Optional[Ontology] = None):
+        if self.logical_form_etr is not None:
+            view: View = View.from_str(self.logical_form_etr)
+            # Consider using `view_to_smt` to go from ETR->SMT
+            if self.logical_form_smt_fnode is None:
+                self.logical_form_smt_fnode = view_to_smt(view)
+            if self.logical_form_smt is None:
+                self.logical_form_smt = format_smt(self.logical_form_smt_fnode)
+        elif self.logical_form_smt_fnode is not None:
+            if self.logical_form_smt is None:
+                self.logical_form_smt = format_smt(self.logical_form_smt_fnode)
+            if self.logical_form_etr is None:
+                self.logical_form_etr = smt_to_etr(self.logical_form_smt_fnode)
+
+        if self.logical_form_smt_fnode is None:
+                # This is not implemented
+                self.logical_form_smt_fnode = load_fnode_from_string(self.logical_form_smt)
+        if self.logical_form_etr_view is None:
+            self.logical_form_etr_view = View.from_str(self.logical_form_etr)
+
+        assert self.logical_form_smt_fnode is not None, "Error filling out FNode. Currently, it is not possible to fill out the SMT string but not the FNode." + json.dumps(self.__dict__, indent=2)
+
+        if self.english_form is None and ontology is not None:
+            # Consider using view_to_natural_language, to go from ETR->ENG
+            self.english_form = smt_to_english(self.logical_form_smt_fnode, ontology)
+
+        assert self.english_form is not None or ontology is None, "An ontology was provided, but the english_form was not filled out."
+        assert self.logical_form_smt is not None and self.logical_form_etr is not None, "Error filling out ReifiedView. Make sure it has either an smt or etr form. It cannot be filled out from the english form." + str(self)
 
 
 @dataclass(kw_only=True)
@@ -46,13 +81,51 @@ class PartialProblem:
     # The result of the default_inference_procedure
     etr_what_follows: Optional[ReifiedView] = None
 
-    # TODO(andrew) A function here to "fill out" the ReifiedViews with both
+    def fill_out(self, ontology: Optional[Ontology] = None):
+        if self.premises is not None:
+            for premise in self.premises:
+                premise.fill_out(ontology)
+        if self.possible_conclusions_from_logical is not None:
+            for conclusion in self.possible_conclusions_from_logical:
+                conclusion.view.fill_out(ontology)
+        if self.possible_conclusions_from_etr is not None:
+            for conclusion in self.possible_conclusions_from_etr:
+                conclusion.view.fill_out(ontology)
+        if self.etr_what_follows is not None:
+            self.etr_what_follows.fill_out(ontology)
+
+        # Note that you may also want to call add_etr_predictions
+
+    def add_etr_predictions(self, ontology: Optional[Ontology] = None):
+        premises_views = [p.logical_form_etr_view for p in self.premises]
+        if self.etr_what_follows is None:
+            follows_view = default_inference_procedure(premises_views)
+            self.etr_what_follows = ReifiedView(logical_form_etr_view=follows_view, logical_form_etr=follows_view.to_str())
+            self.etr_what_follows.fill_out(ontology=ontology)
+        if self.possible_conclusions_from_logical is not None:
+            for conclusion in self.possible_conclusions_from_logical:
+                if conclusion.is_etr_predicted is None:
+                    conclusion.is_etr_predicted = default_procedure_does_it_follow(premises_views, conclusion.view.logical_form_etr_view)
+        if self.possible_conclusions_from_etr is not None:
+            for conclusion in self.possible_conclusions_from_etr:
+                if conclusion.is_etr_predicted is None:
+                    conclusion.is_etr_predicted = default_procedure_does_it_follow(premises_views, conclusion.view.logical_form_etr_view)
+                    print("WARNING! Are you sure you want to add ETR predictions to the ETR conclusions? It's likely you meant to add them during their generation.")
+
+    def add_classical_logic_predictions(self):
+        # TODO(andrew) Use the logical_form_smt_fnode to determine if the conclusion is classically correct
+        premise_fnodes = [p.logical_form_smt_fnode for p in self.premises]
+        if self.possible_conclusions_from_etr:
+            for conclusion in self.possible_conclusions_from_etr:
+                if conclusion.is_classically_correct is None:
+                    conclusion.is_classically_correct = does_it_follow(premise_fnodes, conclusion.view.logical_form_smt_fnode)
+        assert all(c.is_classically_correct is not None for c in self.possible_conclusions_from_logical), "Error adding classical logic predictions to PartialProblem. Make sure to annotate correctness when creating possible_conclusions_from_logical. Or delete this assert and replace it with the for loop, idc." + str(self)
 
 
 @dataclass(kw_only=True)
 class FullProblem:
     views: Optional[list[ReifiedView]] = None
-    possible_conclusions: Optional[list[tuple[ReifiedView, bool]]] = None  # List of (conclusion, is_classically_correct) pairs
+    possible_conclusions: Optional[list[Conclusion]] = None  # List of (conclusion, is_classically_correct) pairs
 
     # TODO(andrew) Think about how to handle the two types of conclusion from PartialProblem
 
@@ -62,7 +135,7 @@ class FullProblem:
     yes_or_no_answer_guidance_prose: Optional[str] = 'Does it follow? Answer in the form of "Answer: Yes" or "Answer: No".'
 
     # Multiple Choice
-    multiple_choices: Optional[list[tuple[ReifiedView, bool, bool]]] = None  # (view, is_correct, is_etr_predicted)
+    multiple_choices: Optional[list[Conclusion]] = None  # (view, is_correct, is_etr_predicted)
     multiple_choice_question_prose: Optional[str] = "Which of the following conclusions necessarily follows from the given statements?"
     multiple_choice_answer_guidance_prose: Optional[str] = 'Which one follows? Answer in the form of "Answer: A", "Answer: B", etc.'
     multiple_choice_options: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -100,12 +173,12 @@ class FullProblem:
         if format == "yes_no":
             s += self.yes_or_no_question_prose
             s += "\n\n"
-            s += f"My Conclusion: {self.possible_conclusions[self.yes_or_no_conclusion_chosen_index][0].english_form}"
+            s += f"My Conclusion: {self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.english_form}"
         elif format == "multiple_choice":
             s += self.multiple_choice_question_prose
             s += "\n\n"
-            for i, (view, is_correct, is_etr_predicted) in enumerate(self.multiple_choices):
-                s += f"{self.multiple_choice_options[i]}. {view.english_form}\n"
+            for i, conclusion in enumerate(self.multiple_choices):
+                s += f"{self.multiple_choice_options[i]}. {conclusion.view.english_form}\n"
             s = s[:-1]  # Remove the last "\n"
         elif format == "open_ended":
             s += self.open_ended_formatting_advice
@@ -127,11 +200,11 @@ class FullProblem:
 
     def to_answer(self, format: QuestionType = "yes_no") -> str:
         if format == "yes_no":
-            return f"{'Yes' if self.possible_conclusions[self.yes_or_no_conclusion_chosen_index][1] else 'No'}"
+            return f"{'Yes' if self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_classically_correct else 'No'}"
         elif format == "multiple_choice":
             correct_index: int = -1
-            for i, (_, is_correct, _) in enumerate(self.multiple_choices):
-                if is_correct:
+            for i, conclusion in enumerate(self.multiple_choices):
+                if conclusion.is_classically_correct:
                     correct_index = i
                     break
             if correct_index == -1:
@@ -157,7 +230,7 @@ class FullProblem:
         }
         if format == "multiple_choice":
             dict["scoring_guide"]["options"] = [
-                (view.english_form if view.english_form else view.logical_form_etr, classically_correct) for view, classically_correct, _ in self.multiple_choices
+                (conclusion.view.english_form if conclusion.view.english_form else conclusion.view.logical_form_etr, conclusion.is_classically_correct) for conclusion in self.multiple_choices
             ]
         return dict
 
@@ -194,9 +267,9 @@ class FullProblem:
             content.append(Text("Yes/No Questions:", style="bold green"))
             content.append(f"  Question: {self.yes_or_no_question_prose}")
             if self.possible_conclusions:
-                for i, (conclusion, is_correct) in enumerate(self.possible_conclusions, 1):
-                    content.append(f"  {i}. Conclusion: {conclusion.logical_form_smt}")
-                    content.append(f"     Answer: {is_correct}")
+                for i, conclusion in enumerate(self.possible_conclusions, 1):
+                    content.append(f"  {i}. Conclusion: {conclusion.view.logical_form_smt}")
+                    content.append(f"     Answer: {conclusion.is_classically_correct}")
             content.append("")
         
         # Add multiple choice section
@@ -204,9 +277,9 @@ class FullProblem:
             content.append(Text("Multiple Choice:", style="bold green"))
             content.append(f"  Question: {self.multiple_choice_question_prose}")
             if self.multiple_choices:
-                for i, (view, is_correct, is_predicted) in enumerate(self.multiple_choices, 1):
-                    content.append(f"  {i}. {view.logical_form_smt}")
-                    content.append(f"     Correct: {is_correct}, Predicted: {is_predicted}")
+                for i, conclusion in enumerate(self.multiple_choices, 1):
+                    content.append(f"  {i}. {conclusion.view.logical_form_smt}")
+                    content.append(f"     Correct: {conclusion.is_classically_correct}, Predicted: {conclusion.is_etr_predicted}")
             else:
                 content.append("  No choices available")
             content.append("")

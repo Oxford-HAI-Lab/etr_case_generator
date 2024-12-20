@@ -34,13 +34,13 @@ class ETRGenerator:
                 ReifiedView(
                     logical_form_smt=None,
                     logical_form_smt_fnode=None,
-                    logical_form_etr=View.from_str("{ A(a()) B(a()), C(b()) D(b()) }"),
+                    logical_form_etr_view=View.from_str("{ A(a()) B(a()), C(b()) D(b()) }"),
                     english_form=None,  # TODO
                 ),
                 ReifiedView(
                     logical_form_smt=None,
                     logical_form_smt_fnode=None,
-                    logical_form_etr=View.from_str("{ A(a()) }"),
+                    logical_form_etr_view=View.from_str("{ A(a()) }"),
                     english_form=None,  # TODO
                 ),
             ],  # TODO
@@ -49,7 +49,7 @@ class ETRGenerator:
             etr_what_follows=ReifiedView(
                 logical_form_smt=None,
                 logical_form_smt_fnode=None,
-                logical_form_etr=View.from_str("{ B(a()) }"),
+                logical_form_etr_view=View.from_str("{ B(a()) }"),
                 english_form=None,  # TODO
             ),
         )
@@ -64,15 +64,15 @@ class ETRGenerator:
         mutations = set()
         assert problem.premises is not None
         for i, view in enumerate(problem.premises):
-            assert view.logical_form_etr is not None
-            for mut in get_view_mutations(view.logical_form_etr):
+            assert view.logical_form_etr_view is not None
+            for mut in get_view_mutations(view.logical_form_etr_view):
                 mutations.add(
-                    tuple([p.logical_form_etr for p in problem.premises[:i]]) +
+                    tuple([p.logical_form_etr_view for p in problem.premises[:i]]) +
                     (mut,) +
-                    tuple([p.logical_form_etr for p in problem.premises[i+1:]])
+                    tuple([p.logical_form_etr_view for p in problem.premises[i+1:]])
                 )
         mutations.add(
-            tuple([p.logical_form_etr for p in problem.premises]) +
+            tuple([p.logical_form_etr_view for p in problem.premises]) +
             (View.from_str("{A(a())}"),)
         )
         return mutations
@@ -99,7 +99,7 @@ class ETRGenerator:
                 etr_what_follows = default_inference_procedure(mutated_premises)
                 new_problem = PartialProblem(
                     premises=[ReifiedView(
-                        logical_form_etr=p,
+                        logical_form_etr_view=p,
                         english_form=view_to_natural_language(
                             ontology=ontology,
                             view=p
@@ -108,7 +108,7 @@ class ETRGenerator:
                     possible_conclusions_from_logical=None,
                     possible_conclusions_from_etr=None,
                     etr_what_follows=ReifiedView(
-                        logical_form_etr=etr_what_follows,
+                        logical_form_etr_view=etr_what_follows,
                         english_form=view_to_natural_language(
                             ontology=ontology,
                             view=etr_what_follows

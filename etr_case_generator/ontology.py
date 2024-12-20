@@ -41,12 +41,22 @@ class Ontology:
     def fill_mapping(self):
         self.natural_to_short_name_mapping = {}
         for obj in self.objects:
-            self.natural_to_short_name_mapping[natural_name_to_logical_name(obj)] = obj
+            s = natural_name_to_logical_name(obj, self.preferred_name_shortening_scheme)
+            self.natural_to_short_name_mapping[s] = obj
         for pred in self.predicates:
-            self.natural_to_short_name_mapping[natural_name_to_logical_name(pred.name)] = pred.name
+            s = natural_name_to_logical_name(pred.name, self.preferred_name_shortening_scheme)
+            self.natural_to_short_name_mapping[s] = pred.name
 
         # Assert that the mapping is bijective, i.e. that the size of the set of keys is the same as the size of the set of values.
         assert len(self.natural_to_short_name_mapping.keys()) == len(set(self.natural_to_short_name_mapping.values()))
+
+        # Also add some other ways that it might appear. This makes it not bijective, but hopefully that's okay. The reason for this is that ETR doesn't like underscores in names.
+        for obj in self.objects:
+            s = natural_name_to_logical_name(obj, self.preferred_name_shortening_scheme)
+            self.natural_to_short_name_mapping[s.replace("_", " ")] = obj
+        for pred in self.predicates:
+            s = natural_name_to_logical_name(pred.name, self.preferred_name_shortening_scheme)
+            self.natural_to_short_name_mapping[s.replace("_", " ")] = pred.name
 
     def create_smaller_ontology(self, num_predicates: int, num_objects: int) -> 'Ontology':
         """Create a new smaller ontology by randomly selecting predicates and objects.
