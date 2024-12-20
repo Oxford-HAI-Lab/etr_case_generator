@@ -17,6 +17,7 @@ def generate_problem(args, ontology: Ontology = ELEMENTS) -> FullProblem:
     else:
         raise ValueError(f"Unknown generate_function: {args.generate_function}")
 
+    # Fill out the partial problem as much as possible, e.g. fill in the ETR from the SMT and vice versa
     partial_problem.fill_out(ontology=ontology)
     partial_problem.add_etr_predictions(ontology=ontology)
     partial_problem.add_classical_logic_predictions()
