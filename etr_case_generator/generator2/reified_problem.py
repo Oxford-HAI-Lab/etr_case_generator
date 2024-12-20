@@ -23,7 +23,7 @@ class ReifiedView:
     logical_form_etr: Optional[str] = None
     english_form: Optional[str] = None
 
-    def fill_out(self, ontology: Ontology):
+    def fill_out(self, ontology: Optional[Ontology] = None):
         if self.logical_form_etr is not None:
             view: View = View.from_str(self.logical_form_etr)
             # Consider using `view_to_smt` to go from ETR->SMT
@@ -42,7 +42,7 @@ class ReifiedView:
 
         assert self.logical_form_smt_fnode is not None
 
-        if self.english_form is None:
+        if self.english_form is None and ontology is not None:
             # Consider using view_to_natural_language, to go from ETR->ENG
             self.english_form = smt_to_english(self.logical_form_smt_fnode, ontology)
 
@@ -72,7 +72,18 @@ class PartialProblem:
     # The result of the default_inference_procedure
     etr_what_follows: Optional[ReifiedView] = None
 
-    # TODO(andrew) A function here to "fill out" the ReifiedViews with both
+    def fill_out(self, ontology: Optional[Ontology] = None):
+        if self.premises is not None:
+            for premise in self.premises:
+                premise.fill_out(ontology)
+        if self.possible_conclusions_from_logical is not None:
+            for conclusion in self.possible_conclusions_from_logical:
+                conclusion.view.fill_out(ontology)
+        if self.possible_conclusions_from_etr is not None:
+            for conclusion in self.possible_conclusions_from_etr:
+                conclusion.view.fill_out(ontology)
+        if self.etr_what_follows is not None:
+            self.etr_what_follows.fill_out(ontology)
 
 
 @dataclass(kw_only=True)
