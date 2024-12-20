@@ -4,7 +4,10 @@ from etr_case_generator.generator2.reified_problem import PartialProblem, Reifie
 from etr_case_generator.mutations import get_view_mutations
 from etr_case_generator.ontology import Ontology
 from pyetr import View
+from pyetr.inference import default_inference_procedure
 from typing import Optional, Generator, Deque, Tuple, Set
+
+from etr_case_generator.view_to_natural_language import view_to_natural_language
 
 @dataclass
 class ETRGenerator:
@@ -93,11 +96,24 @@ class ETRGenerator:
 
             possible_mutations = self.get_mutated_premises(base_problem)
             for mutated_premises in possible_mutations:
+                etr_what_follows = default_inference_procedure(mutated_premises)
                 new_problem = PartialProblem(
-                    premises=[ReifiedView(logical_form_etr=p) for p in mutated_premises],
+                    premises=[ReifiedView(
+                        logical_form_etr=p,
+                        english_form=view_to_natural_language(
+                            ontology=ontology,
+                            view=p
+                        )[0]
+                    ) for p in mutated_premises],
                     possible_conclusions_from_logical=None,
                     possible_conclusions_from_etr=None,
-                    etr_what_follows=base_problem.etr_what_follows,
+                    etr_what_follows=ReifiedView(
+                        logical_form_etr=etr_what_follows,
+                        english_form=view_to_natural_language(
+                            ontology=ontology,
+                            view=etr_what_follows
+                        )[0]
+                    )
                 )
                 yield new_problem
 
