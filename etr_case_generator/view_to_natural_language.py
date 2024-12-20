@@ -43,6 +43,11 @@ def view_to_natural_language(
         predicate_name = atom.predicate.name
         term_name = str(term)
 
+        print("DEBUG ATOM - predicate_name:", predicate_name)
+        print("DEBUG ATOM - term_name:", term_name)
+        print("DEBUG ATOM - obj_map:", obj_map)
+        print("DEBUG ATOM - ontology predicates:", [p.name for p in ontology.predicates])
+
         if predicate_name in obj_map.keys():
             predicate_nl = obj_map[predicate_name]
         else:
@@ -51,6 +56,7 @@ def view_to_natural_language(
             available_predicates = [
                 p for p in ontology.predicates if p.name not in obj_map.values()
             ]
+            print("DEBUG ATOM - available_predicates:", [p.name for p in available_predicates])
             predicate_nl = random.sample(available_predicates, k=1)[0].name
             obj_map[predicate_name] = predicate_nl
 
@@ -72,6 +78,7 @@ def view_to_natural_language(
         return " ".join(" ".join([term_nl, "is", neg, predicate_nl]).split())
 
     def state_to_natural_language(state: State) -> str:
+        print("DEBUG STATE - state:", state)
         ret = ""
         atoms = [atom_to_natural_language(cast(PredicateAtom, atom)) for atom in state]
 
