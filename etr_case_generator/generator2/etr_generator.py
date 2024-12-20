@@ -1,9 +1,10 @@
 from collections import deque
 from dataclasses import dataclass, field
 from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
+from etr_case_generator.mutations import get_view_mutations
 from etr_case_generator.ontology import Ontology
 from pyetr import View
-from typing import Optional, Generator, Deque
+from typing import Optional, Generator, Deque, Tuple, Set
 
 @dataclass
 class ETRGenerator:
@@ -11,14 +12,14 @@ class ETRGenerator:
     problem_queue: Deque[PartialProblem] = field(default_factory=deque)
     min_queue_size: int = 5  # Minimum number of problems to maintain in queue
     max_queue_size: int = 10  # Maximum size of the queue
-    _generator: Optional[Generator] = None
+    _generator: Optional[Generator[PartialProblem, None, None]] = None
     max_mutations: int = 50  # Maximum number of mutations before considering the line exhausted
 
     def initialize_generator(self, ontology: Ontology) -> None:
         """Initialize the problem generator."""
         self._generator = self._generate_problems(ontology)
 
-    def create_starting_problem(self, ontology: Ontology) -> Optional[PartialProblem]:
+    def create_starting_problem(self, ontology: Ontology) -> PartialProblem:
         """
         Create an initial seed problem.
 
@@ -50,23 +51,33 @@ class ETRGenerator:
             ),
         )
 
-    def mutate_problem(self, problem: PartialProblem) -> Optional[PartialProblem]:
+    def get_mutated_premises(self, problem: PartialProblem) -> Set[Tuple[View, ...]]:
         """
-        Create a new problem by mutating an existing one.
+        Get all possible mutations of the premises of a problem.
         
         Returns:
-            PartialProblem if mutation successful, None if no viable mutation possible
+            Set[List[View]]: A set of all possible mutated premises
         """
-        # TODO: Implement actual mutation logic
-        return PartialProblem()  # Placeholder
+        mutations = set()
+        assert problem.premises is not None
+        for i, view in enumerate(problem.premises):
+            assert view.logical_form_etr is not None
+            for mut in get_view_mutations(view.logical_form_etr):
+                mutations.add(
+                    tuple([p.logical_form_etr for p in problem.premises[:i]]) +
+                    (mut,) +
+                    tuple([p.logical_form_etr for p in problem.premises[i+1:]])
+                )
+        mutations.add(
+            tuple([p.logical_form_etr for p in problem.premises]) +
+            (View.from_str("{A(a())}"),)
+        )
+        return mutations
 
     def _generate_problems(self, ontology: Ontology) -> Generator[PartialProblem, None, None]:
         """Internal generator function that creates new problems."""
         # First, try to create a starting problem
         seed_problem = self.create_starting_problem(ontology)
-        if seed_problem is None:
-            # If we can't create a viable seed, the generator exhausts immediately
-            return
 
         # Add the seed problem to the queue
         yield seed_problem
@@ -77,16 +88,20 @@ class ETRGenerator:
             if not self.problem_queue:
                 # If queue is empty, we've exhausted this line of problems
                 return
-                
+
             base_problem = self.problem_queue[-1]  # Look at last problem without removing it
-            new_problem = self.mutate_problem(base_problem)
-            
-            if new_problem is None:
-                # If mutation fails, this line is exhausted
-                return
-                
+
+            possible_mutations = self.get_mutated_premises(base_problem)
+            for mutated_premises in possible_mutations:
+                new_problem = PartialProblem(
+                    premises=[ReifiedView(logical_form_etr=p) for p in mutated_premises],
+                    possible_conclusions_from_logical=None,
+                    possible_conclusions_from_etr=None,
+                    etr_what_follows=base_problem.etr_what_follows,
+                )
+                yield new_problem
+
             mutation_count += 1
-            yield new_problem
 
     def ensure_queue_filled(self, ontology: Ontology) -> None:
         """Ensure the queue has at least min_queue_size problems."""
@@ -94,21 +109,10 @@ class ETRGenerator:
             self.initialize_generator(ontology)
 
         while len(self.problem_queue) < self.min_queue_size:
-            try:
-                new_problem = next(self._generator)
-                if len(self.problem_queue) < self.max_queue_size:
-                    self.problem_queue.append(new_problem)
-            except StopIteration:
-                # Current generator is exhausted, try starting fresh
-                self.initialize_generator(ontology)
-                try:
-                    # Try to get at least one problem from the new generator
-                    new_problem = next(self._generator)
-                    self.problem_queue.clear()  # Clear old problems from exhausted line
-                    self.problem_queue.append(new_problem)
-                except StopIteration:
-                    # If we still can't generate problems, we're in trouble
-                    raise RuntimeError("Unable to generate viable problems after multiple attempts")
+            assert self._generator is not None
+            new_problem = next(self._generator)
+            if len(self.problem_queue) < self.max_queue_size:
+                self.problem_queue.append(new_problem)
 
     def get_next_problem(self, ontology: Ontology) -> PartialProblem:
         """Get the next problem from the queue, generating more if needed."""
