@@ -17,8 +17,7 @@ def generate_problem(args, ontology: Ontology = ELEMENTS) -> FullProblem:
     else:
         raise ValueError(f"Unknown generate_function: {args.generate_function}")
 
-    # TODO(Andrew) Fill out all views in PartialProblems, so they have both logical_form_smt and logical_form_etr
-    # TODO use `view_to_smt`
+    partial_problem.fill_out(ontology=ontology)
 
     # Flesh out the problems with text and everything
     full_problem: FullProblem = full_problem_from_partial_problem(partial_problem, ontology=ontology)
