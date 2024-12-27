@@ -17,7 +17,7 @@ def generate_problem(args, ontology: Ontology = ELEMENTS) -> FullProblem:
         smt_problem: SMTProblem = random_smt_problem(ontology=small_ontology, total_num_pieces=args.num_pieces)
         partial_problem = smt_problem.to_partial_problem()
     elif args.generate_function == "random_etr_problem":
-        partial_problem: PartialProblem = random_etr_problem(ontology=ontology)
+        partial_problem: PartialProblem = random_etr_problem()
 
         # Use this space to update the natural language object mapping for the ontology.
         assert partial_problem.premises is not None
@@ -30,6 +30,18 @@ def generate_problem(args, ontology: Ontology = ELEMENTS) -> FullProblem:
             )
             p.english_form = english_form
             ontology.short_name_to_full_name.update(obj_map)
+
+        # Do the ETR supported conclusion in addition to the premises
+        assert partial_problem.etr_what_follows is not None
+        assert partial_problem.etr_what_follows.logical_form_etr_view is not None
+        english_form, obj_map = view_to_natural_language(
+            ontology=ontology, 
+            view=partial_problem.etr_what_follows.logical_form_etr_view,
+            obj_map=ontology.short_name_to_full_name
+        )
+        partial_problem.etr_what_follows.english_form = english_form
+        ontology.short_name_to_full_name.update(obj_map)
+
     else:
         raise ValueError(f"Unknown generate_function: {args.generate_function}")
 

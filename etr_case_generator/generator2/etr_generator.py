@@ -18,11 +18,11 @@ class ETRGenerator:
     _generator: Optional[Generator[PartialProblem, None, None]] = None
     max_mutations: int = 50  # Maximum number of mutations before considering the line exhausted
 
-    def initialize_generator(self, ontology: Ontology) -> None:
+    def initialize_generator(self) -> None:
         """Initialize the problem generator."""
-        self._generator = self._generate_problems(ontology)
+        self._generator = self._generate_problems()
 
-    def create_starting_problem(self, ontology: Ontology) -> PartialProblem:
+    def create_starting_problem(self) -> PartialProblem:
         """
         Create an initial seed problem.
 
@@ -77,10 +77,10 @@ class ETRGenerator:
         )
         return mutations
 
-    def _generate_problems(self, ontology: Ontology) -> Generator[PartialProblem, None, None]:
+    def _generate_problems(self) -> Generator[PartialProblem, None, None]:
         """Internal generator function that creates new problems."""
         # First, try to create a starting problem
-        seed_problem = self.create_starting_problem(ontology)
+        seed_problem = self.create_starting_problem()
 
         # Add the seed problem to the queue
         yield seed_problem
@@ -108,7 +108,9 @@ class ETRGenerator:
                     premises.append(
                         ReifiedView(
                             logical_form_etr_view=p,
-                            english_form=None,  # Generator isn't responsible for English mappings. Actually, it shouldn't even have access to the ontology.
+                            # Generator is not responsible for generating English forms,
+                            # since it's agnostic to the ontology
+                            english_form=None,
                         )
                     )
                 new_problem = PartialProblem(
@@ -117,20 +119,19 @@ class ETRGenerator:
                     possible_conclusions_from_etr=None,
                     etr_what_follows=ReifiedView(
                         logical_form_etr_view=etr_what_follows,
-                        english_form=view_to_natural_language(
-                            ontology=ontology,
-                            view=etr_what_follows
-                        )[0]
+                        # Generator is not responsible for generating English forms,
+                        # since it's agnostic to the ontology
+                        english_form=None,
                     )
                 )
                 yield new_problem
 
             mutation_count += 1
 
-    def ensure_queue_filled(self, ontology: Ontology) -> None:
+    def ensure_queue_filled(self) -> None:
         """Ensure the queue has at least min_queue_size problems."""
         if self._generator is None:
-            self.initialize_generator(ontology)
+            self.initialize_generator()
 
         while len(self.problem_queue) < self.min_queue_size:
             assert self._generator is not None
@@ -138,15 +139,15 @@ class ETRGenerator:
             if len(self.problem_queue) < self.max_queue_size:
                 self.problem_queue.append(new_problem)
 
-    def get_next_problem(self, ontology: Ontology) -> PartialProblem:
+    def get_next_problem(self) -> PartialProblem:
         """Get the next problem from the queue, generating more if needed."""
-        self.ensure_queue_filled(ontology)
+        self.ensure_queue_filled()
         return self.problem_queue.popleft()
 
 # Global state instance
 _etr_generator = ETRGenerator()
 
-def random_etr_problem(ontology: Ontology) -> PartialProblem:
+def random_etr_problem() -> PartialProblem:
     """
     Generate a random ETR problem, maintaining a queue of pre-generated problems.
     
@@ -159,7 +160,7 @@ def random_etr_problem(ontology: Ontology) -> PartialProblem:
     Raises:
         RuntimeError: If unable to generate viable problems after multiple attempts
     """
-    return _etr_generator.get_next_problem(ontology)
+    return _etr_generator.get_next_problem()
 
 def reset_generator_state():
     """Reset the generator state to initial conditions."""
