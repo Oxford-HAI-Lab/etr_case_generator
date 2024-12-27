@@ -7,6 +7,7 @@ from etr_case_generator.generator2.full_problem_creator import full_problem_from
 from etr_case_generator.ontology import ELEMENTS, Ontology
 from etr_case_generator.generator2.smt_generator import random_smt_problem, SMTProblem, generate_conclusions, \
     add_conclusions
+from etr_case_generator.view_to_natural_language import view_to_natural_language
 
 
 def generate_problem(args, ontology: Ontology = ELEMENTS) -> FullProblem:
@@ -17,6 +18,18 @@ def generate_problem(args, ontology: Ontology = ELEMENTS) -> FullProblem:
         partial_problem = smt_problem.to_partial_problem()
     elif args.generate_function == "random_etr_problem":
         partial_problem: PartialProblem = random_etr_problem(ontology=ontology)
+
+        # Use this space to update the natural language object mapping for the ontology.
+        assert partial_problem.premises is not None
+        for p in partial_problem.premises:
+            assert p.logical_form_etr_view is not None
+            english_form, obj_map = view_to_natural_language(
+                ontology=ontology, 
+                view=p.logical_form_etr_view,
+                obj_map=ontology.short_name_to_full_name
+            )
+            p.english_form = english_form
+            ontology.short_name_to_full_name.update(obj_map)
     else:
         raise ValueError(f"Unknown generate_function: {args.generate_function}")
 
