@@ -2,8 +2,9 @@ import math
 from dataclasses import dataclass
 import random
 
+from pyetr import FunctionalTerm, PredicateAtom
 from pysmt.shortcuts import Symbol, And, Or, Not, Implies, Iff, ForAll, Exists, is_valid, Solver
-from typing import List, Union, Optional
+from typing import List, Union, Optional, cast
 from pysmt.fnode import FNode
 from pysmt.typing import BOOL, REAL, PySMTType
 
@@ -42,6 +43,15 @@ def random_atom(ontology: Ontology, name_shortening_scheme: NameShorteningScheme
     return Symbol(
         name=f"{pred_name}({obj_name})",
         typename=BOOL
+    )
+
+
+def smt_atom_from_etr_atom(etr_atom: PredicateAtom) -> Symbol:
+    """Convert an ETR PredicateAtom to an SMT Symbol."""
+    assert len(etr_atom.terms) == 1, "Only unary predicates are supported"
+    assert type(etr_atom.terms[0]) == FunctionalTerm, "Only functional terms are supported"
+    return Symbol(
+        name=f"{etr_atom.predicate.name}({etr_atom.terms[0].f.name})",
     )
 
 
@@ -298,10 +308,21 @@ def cnf_generation(total_num_pieces: int, possible_atoms: list[Symbol]) -> list[
     return views
 
 def add_conclusions(partial_problem: PartialProblem, ontology: Ontology, num_wrong: int = 3):
-    # TODO Need to pull out the atoms, like `p(a)` from the logical form
-    possible_atoms: list[Symbol] = [random_atom(ontology, ontology.preferred_name_shortening_scheme) for _ in range(20)]  # Overgenerate
-    possible_atoms = list(set(possible_atoms))  # Remove duplicates from possible_atoms
-    possible_atoms = possible_atoms[:6]  # Trim down to the right number of atoms
+    # Use the logical forms of the premises to get possibly relevant atoms for the
+    # conclusions
+    possible_atoms = set()
+    assert partial_problem.premises is not None
+    for premise in partial_problem.premises:
+        assert premise.logical_form_etr_view is not None
+        possible_atoms.update(
+            [
+                smt_atom_from_etr_atom(
+                    cast(PredicateAtom, a)
+                ) for a in premise.logical_form_etr_view.atoms
+            ]
+        )
+
+    possible_atoms = list(possible_atoms)[:6]  # Trim down to the right number of atoms
 
     generated_conclusions = generate_conclusions([p.logical_form_smt_fnode for p in partial_problem.premises], possible_atoms, num_wrong=num_wrong)
     partial_problem.possible_conclusions_from_logical = []
