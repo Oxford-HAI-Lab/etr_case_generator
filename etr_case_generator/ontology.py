@@ -1,5 +1,5 @@
 from typing import Literal, Optional
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pyetr.atoms import Predicate
 
 
@@ -30,7 +30,7 @@ class Ontology:
     it must be possible to have P(x)Q(x).
     """
 
-    short_name_to_full_name: Optional[dict[str, str]] = None
+    short_name_to_full_name: dict[str, str] = field(default_factory=dict)
     """
     For all object names and predicate names, we want to shorten them using the `natural_name_to_logical_name` function. 
     This is for mapping in the other direction.
@@ -39,7 +39,7 @@ class Ontology:
     preferred_name_shortening_scheme: NameShorteningScheme = "short"
     
     def fill_mapping(self):
-        self.short_name_to_full_name = {}
+        # self.short_name_to_full_name = {}
         for obj in self.objects:
             s = natural_name_to_logical_name(obj, self.preferred_name_shortening_scheme)
             self.short_name_to_full_name[s] = obj

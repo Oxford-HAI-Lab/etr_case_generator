@@ -97,14 +97,22 @@ class ETRGenerator:
             possible_mutations = self.get_mutated_premises(base_problem)
             for mutated_premises in possible_mutations:
                 etr_what_follows = default_inference_procedure(mutated_premises)
+                premises = []
+                for p in mutated_premises:
+                    english_form, obj_map = view_to_natural_language(
+                        ontology=ontology, 
+                        view=p,
+                        obj_map=ontology.short_name_to_full_name
+                    )
+                    ontology.short_name_to_full_name.update(obj_map)
+                    premises.append(
+                        ReifiedView(
+                            logical_form_etr_view=p,
+                            english_form=english_form,
+                        )
+                    )
                 new_problem = PartialProblem(
-                    premises=[ReifiedView(
-                        logical_form_etr_view=p,
-                        english_form=view_to_natural_language(
-                            ontology=ontology,
-                            view=p
-                        )[0]
-                    ) for p in mutated_premises],
+                    premises=premises,
                     possible_conclusions_from_logical=None,
                     possible_conclusions_from_etr=None,
                     etr_what_follows=ReifiedView(
