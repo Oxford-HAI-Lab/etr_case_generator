@@ -2,7 +2,7 @@ import math
 from dataclasses import dataclass
 import random
 
-from pyetr import FunctionalTerm, PredicateAtom
+from pyetr import ArbitraryObject, FunctionalTerm, PredicateAtom
 from pysmt.shortcuts import Symbol, And, Or, Not, Implies, Iff, ForAll, Exists, is_valid, Solver
 from typing import List, Union, Optional, cast
 from pysmt.fnode import FNode
@@ -49,9 +49,15 @@ def random_atom(ontology: Ontology, name_shortening_scheme: NameShorteningScheme
 def smt_atom_from_etr_atom(etr_atom: PredicateAtom) -> Symbol:
     """Convert an ETR PredicateAtom to an SMT Symbol."""
     assert len(etr_atom.terms) == 1, "Only unary predicates are supported"
-    assert type(etr_atom.terms[0]) == FunctionalTerm, "Only functional terms are supported"
+    obj_name = ""
+    if type(etr_atom.terms[0]) == FunctionalTerm:
+        obj_name = etr_atom.terms[0].f.name
+    elif type(etr_atom.terms[0]) == ArbitraryObject:
+        obj_name = etr_atom.terms[0].name
+    else:
+        raise ValueError(f"Unsupported term type: {type(etr_atom.terms[0])}")
     return Symbol(
-        name=f"{etr_atom.predicate.name}({etr_atom.terms[0].f.name})",
+        name=f"{etr_atom.predicate.name}({obj_name})",
     )
 
 
