@@ -313,6 +313,7 @@ def cnf_generation(total_num_pieces: int, possible_atoms: list[Symbol]) -> list[
     # print(f"Num pieces remaining: {num_pieces_remaining}")
     return views
 
+
 def add_conclusions(partial_problem: PartialProblem, ontology: Ontology, num_wrong: int = 3):
     # Use the logical forms of the premises to get possibly relevant atoms for the
     # conclusions
@@ -336,5 +337,3 @@ def add_conclusions(partial_problem: PartialProblem, ontology: Ontology, num_wro
         partial_problem.possible_conclusions_from_logical.append(
             Conclusion(view=ReifiedView(logical_form_smt_fnode=conclusion), is_classically_correct=is_correct))
     partial_problem.fill_out(ontology=ontology)  # Fill out the conclusions
-    for c in partial_problem.possible_conclusions_from_logical:
-        c.view.english_form += " !!! THIS CONCLUSION IS BOGUS !!!"
