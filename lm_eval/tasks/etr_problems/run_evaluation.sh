@@ -9,6 +9,7 @@ show_help() {
     echo "  -m, --model MODEL      Model to use (default: gpt-4-turbo)"
     echo "  -p, --path PATH        Path to lm-evaluation-harness directory"
     echo "  -i, --include PATH     Path to include for task definitions"
+    echo "  -d, --dataset PATH     Path to dataset JSONL file to evaluate"
     echo "  -h, --help            Show this help message"
     echo
     echo "Example:"
@@ -19,6 +20,9 @@ show_help() {
 MODEL="gpt-4-turbo"
 EVAL_PATH="/home/keenan/Dev/lm-evaluation-harness/"
 INCLUDE_PATH="/home/keenan/Dev/etr_case_generator/"
+DATASET=""
+TASK="etr_problems"
+YAML_PATH="/home/keenan/Dev/etr_case_generator/lm_eval/tasks/etr_problems/etr_problems.yaml"
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -35,6 +39,10 @@ while [[ $# -gt 0 ]]; do
             INCLUDE_PATH="$2"
             shift 2
             ;;
+        -d|--dataset)
+            DATASET="$2"
+            shift 2
+            ;;
         -h|--help)
             show_help
             exit 0
@@ -46,6 +54,29 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+# Handle dataset routing if specified
+if [ -n "$DATASET" ]; then
+    if [[ $DATASET == *"yes_no"* ]]; then
+        TASK="etr_problems"
+        YAML_PATH="/home/keenan/Dev/etr_case_generator/lm_eval/tasks/etr_problems/etr_problems.yaml"
+    elif [[ $DATASET == *"open_ended"* ]]; then
+        TASK="etr_problems_open_ended"
+        YAML_PATH="/home/keenan/Dev/etr_case_generator/lm_eval/tasks/etr_problems_open_ended/etr_problems.yaml"
+    elif [[ $DATASET == *"multiple_choice"* ]]; then
+        echo "Error: multiple-choice questions are not yet implemented"
+        exit 1
+    else
+        echo "Error: Dataset filename must contain 'yes_no', 'open_ended', or 'multiple_choice'"
+        exit 1
+    fi
+
+    # Copy dataset to appropriate location
+    TARGET_DIR=$(dirname "$YAML_PATH")
+    mkdir -p "$TARGET_DIR/datasets"
+    cp "$DATASET" "$TARGET_DIR/datasets/etr_for_lm_eval.jsonl"
+    echo "Copied $DATASET to $TARGET_DIR/datasets/etr_for_lm_eval.jsonl"
+fi
 
 # Assert that EVAL_PATH is a real directory
 if [ ! -d "$EVAL_PATH" ]; then
@@ -69,14 +100,19 @@ echo "  Model: $MODEL"
 echo "  Evaluation harness path: $EVAL_PATH"
 echo "  Include path: $INCLUDE_PATH"
 
-TASK="etr_problems"
+echo "Configuration:"
+echo "  Model: $MODEL"
+echo "  Evaluation harness path: $EVAL_PATH"
+echo "  Include path: $INCLUDE_PATH"
 echo "  Task: $TASK"
+echo "  YAML config: $YAML_PATH"
 
 # Run evaluation
 lm_eval --model openai-chat-completions \
     --model_args model=$MODEL \
     --include_path "$INCLUDE_PATH" \
     --tasks $TASK \
+    --conf_path "$YAML_PATH" \
     --num_fewshot 0 \
     --batch_size 1 \
     --output_path lm_eval/tasks/etr_problems/results \
