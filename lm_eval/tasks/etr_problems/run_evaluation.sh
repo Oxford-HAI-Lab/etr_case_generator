@@ -67,8 +67,10 @@ if [ -n "$DATASET" ]; then
         echo "Error: multiple-choice questions are not yet implemented"
         exit 1
     else
-        echo "Error: Dataset filename must contain 'yes_no', 'open_ended', or 'multiple_choice'"
-        exit 1
+        echo "Warning: Dataset filename does not contain 'yes_no', 'open_ended', or 'multiple_choice'"
+        echo "Defaulting to yes/no questions task configuration"
+        TASK="etr_problems"
+        YAML_PATH="/home/keenan/Dev/etr_case_generator/lm_eval/tasks/etr_problems/etr_problems.yaml"
     fi
 
     # Copy dataset to the root datasets directory
