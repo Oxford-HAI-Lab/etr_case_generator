@@ -71,11 +71,10 @@ if [ -n "$DATASET" ]; then
         exit 1
     fi
 
-    # Copy dataset to appropriate location
-    TARGET_DIR=$(dirname "$YAML_PATH")
-    mkdir -p "$TARGET_DIR/datasets"
-    cp "$DATASET" "$TARGET_DIR/datasets/etr_for_lm_eval.jsonl"
-    echo "Copied $DATASET to $TARGET_DIR/datasets/etr_for_lm_eval.jsonl"
+    # Copy dataset to the root datasets directory
+    mkdir -p "datasets"
+    cp "$DATASET" "datasets/etr_for_lm_eval.jsonl"
+    echo "Copied $DATASET to datasets/etr_for_lm_eval.jsonl"
 fi
 
 # Assert that EVAL_PATH is a real directory
