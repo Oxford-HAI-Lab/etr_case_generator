@@ -108,7 +108,6 @@ lm_eval --model openai-chat-completions \
     --model_args model=$MODEL \
     --include_path "$INCLUDE_PATH" \
     --tasks $TASK \
-    --conf_path "$YAML_PATH" \
     --num_fewshot 0 \
     --batch_size 1 \
     --output_path lm_eval/tasks/etr_problems/results \
