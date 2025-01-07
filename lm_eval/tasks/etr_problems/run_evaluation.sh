@@ -22,7 +22,6 @@ EVAL_PATH="/home/keenan/Dev/lm-evaluation-harness/"
 INCLUDE_PATH="/home/keenan/Dev/etr_case_generator/"
 DATASET=""
 TASK="etr_problems"
-YAML_PATH="/home/keenan/Dev/etr_case_generator/lm_eval/tasks/etr_problems/etr_problems.yaml"
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -59,10 +58,8 @@ done
 if [ -n "$DATASET" ]; then
     if [[ $DATASET == *"yes_no"* ]]; then
         TASK="etr_problems"
-        YAML_PATH="/home/keenan/Dev/etr_case_generator/lm_eval/tasks/etr_problems/etr_problems.yaml"
     elif [[ $DATASET == *"open_ended"* ]]; then
         TASK="etr_problems_open_ended"
-        YAML_PATH="/home/keenan/Dev/etr_case_generator/lm_eval/tasks/etr_problems_open_ended/etr_problems.yaml"
     elif [[ $DATASET == *"multiple_choice"* ]]; then
         echo "Error: multiple-choice questions are not yet implemented"
         exit 1
@@ -70,7 +67,6 @@ if [ -n "$DATASET" ]; then
         echo "Warning: Dataset filename does not contain 'yes_no', 'open_ended', or 'multiple_choice'"
         echo "Defaulting to yes/no questions task configuration"
         TASK="etr_problems"
-        YAML_PATH="/home/keenan/Dev/etr_case_generator/lm_eval/tasks/etr_problems/etr_problems.yaml"
     fi
 
     # Copy dataset to the root datasets directory
@@ -106,7 +102,6 @@ echo "  Model: $MODEL"
 echo "  Evaluation harness path: $EVAL_PATH"
 echo "  Include path: $INCLUDE_PATH"
 echo "  Task: $TASK"
-echo "  YAML config: $YAML_PATH"
 
 # Run evaluation
 lm_eval --model openai-chat-completions \
