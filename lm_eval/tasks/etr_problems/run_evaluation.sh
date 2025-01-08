@@ -17,6 +17,7 @@ show_help() {
 }
 
 # Default values
+MODEL_CLASS="openai-chat-completions"
 MODEL="gpt-4-turbo"
 EVAL_PATH="/home/keenan/Dev/lm-evaluation-harness/"
 INCLUDE_PATH="/home/keenan/Dev/etr_case_generator/"
@@ -93,13 +94,14 @@ if [ -n "$EVAL_PATH" ]; then
 fi
 
 echo "Configuration:"
+echo "  Model Class: $MODEL_CLASS"
 echo "  Model: $MODEL"
 echo "  Evaluation harness path: $EVAL_PATH"
 echo "  Include path: $INCLUDE_PATH"
 echo "  Task: $TASK"
 
 # Run evaluation
-lm_eval --model openai-chat-completions \
+lm_eval --model $MODEL_CLASS \
     --model_args model=$MODEL \
     --include_path "$INCLUDE_PATH" \
     --tasks $TASK \

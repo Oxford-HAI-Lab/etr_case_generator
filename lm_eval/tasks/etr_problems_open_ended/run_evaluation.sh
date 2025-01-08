@@ -83,7 +83,7 @@ lm_eval --model openai-chat-completions \
     --apply_chat_template \
     --log_samples \
     --write_out \
-    --verbosity DEBUG
+#    --verbosity DEBUG
 
 # Uncomment to use Anthropic's Claude model instead
 # TODO Make this an argument
