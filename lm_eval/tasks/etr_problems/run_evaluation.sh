@@ -10,6 +10,7 @@ show_help() {
     echo "  -p, --path PATH        Path to lm-evaluation-harness directory"
     echo "  -i, --include PATH     Path to include for task definitions"
     echo "  -d, --dataset PATH     Path to dataset JSONL file to evaluate"
+    echo "  -v, --verbosity LEVEL  Verbosity level (default: INFO)"
     echo "  -h, --help            Show this help message"
     echo
     echo "Example:"
@@ -23,6 +24,7 @@ EVAL_PATH="/home/keenan/Dev/lm-evaluation-harness/"
 INCLUDE_PATH="/home/keenan/Dev/etr_case_generator/"
 DATASET=""
 TASK="etr_problems"
+VERBOSITY="INFO"
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -41,6 +43,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         -d|--dataset)
             DATASET="$2"
+            shift 2
+            ;;
+        -v|--verbosity)
+            VERBOSITY="$2"
             shift 2
             ;;
         -h|--help)
@@ -111,7 +117,7 @@ lm_eval --model $MODEL_CLASS \
     --apply_chat_template \
     --log_samples \
     --write_out \
-#    --verbosity DEBUG
+    --verbosity $VERBOSITY
 
 # Uncomment to use Anthropic's Claude model instead
 # TODO Make this an argument
