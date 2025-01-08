@@ -12,3 +12,6 @@ lm_eval/tasks/etr_problems/results/*
 
 # Development jsonl files
 datasets/dev_*.jsonl
+
+# This file gets copied over when you run run_evaluation.sh, so it shouldn't get checked in!
+datasets/etr_for_lm_eval.jsonl
