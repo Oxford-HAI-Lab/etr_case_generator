@@ -96,11 +96,6 @@ echo "Configuration:"
 echo "  Model: $MODEL"
 echo "  Evaluation harness path: $EVAL_PATH"
 echo "  Include path: $INCLUDE_PATH"
-
-echo "Configuration:"
-echo "  Model: $MODEL"
-echo "  Evaluation harness path: $EVAL_PATH"
-echo "  Include path: $INCLUDE_PATH"
 echo "  Task: $TASK"
 
 # Run evaluation
