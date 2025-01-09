@@ -29,7 +29,7 @@ def full_problem_from_partial_problem(partial_problem: PartialProblem, ontology:
     else:
         etr_predicted_conclusion = get_etr_conclusion(views=partial_problem.premises)
 
-    return FullProblem(
+    full_problem = FullProblem(
         introductory_prose=ontology.introduction,
         views=partial_problem.premises,
         # Yes/No section
@@ -37,5 +37,9 @@ def full_problem_from_partial_problem(partial_problem: PartialProblem, ontology:
         # Multiple choice section
         multiple_choices=multiple_choices if multiple_choices else None,
         # Open ended question
-        etr_predicted_conclusion=etr_predicted_conclusion,
+        etr_predicted_conclusion=Conclusion(view=etr_predicted_conclusion),
     )
+
+    full_problem.fill_out(ontology=ontology, partial_problem=partial_problem)
+
+    return full_problem

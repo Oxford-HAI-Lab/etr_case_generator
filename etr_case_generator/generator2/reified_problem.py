@@ -98,8 +98,8 @@ class PartialProblem:
         if conclusion.is_etr_predicted is None:
             conclusion.is_etr_predicted = default_procedure_does_it_follow(premises_views, conclusion.view.logical_form_etr_view)
         if conclusion.is_classically_correct is None:
-            print("WARNING! conclusion.is_classically_correct is not filled out and will not be filled out here.")
-            pass  # TODO
+            premise_fnodes = [p.logical_form_smt_fnode for p in self.premises]
+            conclusion.is_classically_correct = does_it_follow(premise_fnodes, conclusion.view.logical_form_smt_fnode)
 
     def fill_out(self, ontology: Optional[Ontology] = None):
         if self.premises is not None:
@@ -133,7 +133,6 @@ class PartialProblem:
                     print("WARNING! Are you sure you want to add ETR predictions to the ETR conclusions? It's likely you meant to add them during their generation.")
 
     def add_classical_logic_predictions(self):
-        # TODO(andrew) Use the logical_form_smt_fnode to determine if the conclusion is classically correct
         premise_fnodes = [p.logical_form_smt_fnode for p in self.premises]
         if self.possible_conclusions_from_etr:
             for conclusion in self.possible_conclusions_from_etr:
@@ -161,7 +160,7 @@ class FullProblem:
     multiple_choice_options: str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     # Open Ended
-    etr_predicted_conclusion: Optional[ReifiedView] = None
+    etr_predicted_conclusion: Optional[Conclusion] = None
     open_ended_question_prose: Optional[str] = "What if anything follows?"
     open_ended_answer_guidance_prose: Optional[str] = 'What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".'
     open_ended_formatting_advice = textwrap.dedent("""
@@ -180,6 +179,19 @@ class FullProblem:
     introductory_prose: Optional[str] = None
     answer_immediately_prose: Optional[str] = "I want you to answer immediately."
     chain_of_thought_prose: Optional[str] = "I want you to spend a few paragraphs thinking about your answer."
+
+    def fill_out(self, ontology: Optional[Ontology] = None, partial_problem: PartialProblem = None):
+        if self.views is not None:
+            for view in self.views:
+                view.fill_out(ontology)
+        if self.possible_conclusions is not None:
+            for conclusion in self.possible_conclusions:
+                partial_problem.fill_out_conclusion(conclusion, ontology)
+        if self.multiple_choices is not None:
+            for conclusion in self.multiple_choices:
+                partial_problem.fill_out_conclusion(conclusion, ontology)
+        if self.etr_predicted_conclusion is not None:
+            partial_problem.fill_out_conclusion(self.etr_predicted_conclusion, ontology)
 
     def to_prompt(self, format: QuestionType = "yes_no", chain_of_thought: bool = False) -> str:
         s = self.introductory_prose
@@ -233,15 +245,15 @@ class FullProblem:
                 return "ERROR: No correct answer found"
             return f"{self.multiple_choice_options[correct_index]}"
         elif format == "open_ended":
-            return f"{self.etr_predicted_conclusion.logical_form_etr}"
+            return f"{self.etr_predicted_conclusion.view.logical_form_etr}"
 
     def to_dict_for_jsonl(self, args, format: QuestionType = "yes_no", chain_of_thought: bool = False) -> dict:
         dict = {
             "question": self.to_prompt(format, chain_of_thought),
             "scoring_guide": {
                 "answer": self.to_answer(format),
-                "etr_predicted": self.etr_predicted_conclusion.logical_form_etr if self.etr_predicted_conclusion else None,
-                "etr_predicted_is_classically_correct": "UNKNOWN",  # TODO
+                "etr_predicted": self.etr_predicted_conclusion.view.logical_form_etr if self.etr_predicted_conclusion else None,
+                "etr_predicted_is_classically_correct": self.etr_predicted_conclusion.is_classically_correct if self.etr_predicted_conclusion else None,
                 "generation_details": {
                     "atoms_distributed_over_views": args.num_pieces,
                     "num_predicates_per_problem": args.num_predicates_per_problem,
@@ -323,7 +335,7 @@ class FullProblem:
             content.append(Text("Open Ended:", style="bold green"))
             content.append(f"  Question: {self.open_ended_question_prose}")
             if show_empty or self.etr_predicted_conclusion:
-                content.append(f"  Predicted: {self.etr_predicted_conclusion if self.etr_predicted_conclusion else None}")
+                content.append(f"  Predicted: {self.etr_predicted_conclusion.view if self.etr_predicted_conclusion.view else None}")
             content.append("")
         
         # Create panel with all content

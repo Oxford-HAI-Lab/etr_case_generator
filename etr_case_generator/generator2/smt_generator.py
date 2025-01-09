@@ -337,3 +337,5 @@ def add_conclusions(partial_problem: PartialProblem, ontology: Ontology, num_wro
         partial_problem.possible_conclusions_from_logical.append(
             Conclusion(view=ReifiedView(logical_form_smt_fnode=conclusion), is_classically_correct=is_correct))
     partial_problem.fill_out(ontology=ontology)  # Fill out the conclusions
+    partial_problem.add_etr_predictions(ontology=ontology)
+    partial_problem.add_classical_logic_predictions()

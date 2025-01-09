@@ -36,8 +36,8 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
         problem = generate_problem(args, ontology=ontology)
 
         problems.append(problem)
-        print(f"Generated Problem {i + 1} of {n_problems}")
-        print(problem.full_string(show_empty=True, question_types=question_types))
+        # print(f"Generated Problem {i + 1} of {n_problems}")
+        # print(problem.full_string(show_empty=True, question_types=question_types))
 
     return problems
 
