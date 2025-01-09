@@ -91,16 +91,26 @@ class PartialProblem:
     # The result of the default_inference_procedure
     etr_what_follows: Optional[ReifiedView] = None
 
+    def fill_out_conclusion(self, conclusion: Conclusion, ontology: Optional[Ontology] = None):
+        conclusion.view.fill_out(ontology)
+
+        premises_views = [p.logical_form_etr_view for p in self.premises]
+        if conclusion.is_etr_predicted is None:
+            conclusion.is_etr_predicted = default_procedure_does_it_follow(premises_views, conclusion.view.logical_form_etr_view)
+        if conclusion.is_classically_correct is None:
+            print("WARNING! conclusion.is_classically_correct is not filled out and will not be filled out here.")
+            pass  # TODO
+
     def fill_out(self, ontology: Optional[Ontology] = None):
         if self.premises is not None:
             for premise in self.premises:
                 premise.fill_out(ontology)
         if self.possible_conclusions_from_logical is not None:
             for conclusion in self.possible_conclusions_from_logical:
-                conclusion.view.fill_out(ontology)
+                self.fill_out_conclusion(conclusion, ontology)
         if self.possible_conclusions_from_etr is not None:
             for conclusion in self.possible_conclusions_from_etr:
-                conclusion.view.fill_out(ontology)
+                self.fill_out_conclusion(conclusion, ontology)
         if self.etr_what_follows is not None:
             self.etr_what_follows.fill_out(ontology)
 
@@ -231,12 +241,12 @@ class FullProblem:
             "scoring_guide": {
                 "answer": self.to_answer(format),
                 "etr_predicted": self.etr_predicted_conclusion.logical_form_etr if self.etr_predicted_conclusion else None,
-                "etr_predicted_is_classically_correct": "UNKNOWN",
+                "etr_predicted_is_classically_correct": "UNKNOWN",  # TODO
                 "generation_details": {
-                    # TODO: Also include data like how many atoms or clauses were used in the views
                     "atoms_distributed_over_views": args.num_pieces,
                     "num_predicates_per_problem": args.num_predicates_per_problem,
                     "num_objects_per_problem": args.num_objects_per_problem,
+                    "premises": [view.logical_form_etr for view in self.views]
                 }
             },
         }
@@ -246,12 +256,15 @@ class FullProblem:
                 "yes_no_conclusion_is_classically_correct": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_classically_correct,
                 "yes_no_conclusion_english": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.english_form,
                 "is_etr_predicted": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_etr_predicted,
-                "premises": [view.logical_form_etr for view in self.views]
             }
         elif format == "multiple_choice":
             dict["scoring_guide"]["multiple_choice"] = {"options": [
                 (conclusion.view.english_form if conclusion.view.english_form else conclusion.view.logical_form_etr, conclusion.is_classically_correct) for conclusion in self.multiple_choices
             ]}
+        elif format == "open_ended":
+            dict["scoring_guide"]["open_ended"] = {
+                # Unclear what is needed here
+            }
 
         return dict
 
