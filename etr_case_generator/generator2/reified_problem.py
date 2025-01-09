@@ -232,13 +232,13 @@ class FullProblem:
                 "answer": self.to_answer(format),
                 "etr_predicted": self.etr_predicted_conclusion.logical_form_etr if self.etr_predicted_conclusion else None,
                 "etr_predicted_is_classically_correct": "UNKNOWN",
+                "generation_details": {
+                    # TODO: Also include data like how many atoms or clauses were used in the views
+                    "atoms_distributed_over_views": args.num_pieces,
+                    "num_predicates_per_problem": args.num_predicates_per_problem,
+                    "num_objects_per_problem": args.num_objects_per_problem,
+                }
             },
-            "generation_details": {
-                # TODO: Also include data like how many atoms or clauses were used in the views
-                "atoms_distributed_over_views": args.num_pieces,
-                "num_predicates_per_problem": args.num_predicates_per_problem,
-                "num_objects_per_problem": args.num_objects_per_problem,
-            }
         }
         if format == "multiple_choice":
             dict["scoring_guide"]["options"] = [

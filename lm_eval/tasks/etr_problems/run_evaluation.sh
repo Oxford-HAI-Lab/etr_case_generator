@@ -24,7 +24,7 @@ EVAL_PATH="/home/keenan/Dev/lm-evaluation-harness/"
 INCLUDE_PATH="/home/keenan/Dev/etr_case_generator/"
 DATASET=""
 TASK="etr_problems"
-VERBOSITY="none"
+VERBOSITY=""
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
