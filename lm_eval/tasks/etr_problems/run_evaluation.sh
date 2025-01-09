@@ -117,7 +117,7 @@ lm_eval --model $MODEL_CLASS \
     --apply_chat_template \
     --log_samples \
     --write_out \
-    --verbosity $VERBOSITY
+    ${VERBOSITY:+--verbosity "$VERBOSITY"}
 
 # Uncomment to use Anthropic's Claude model instead
 # TODO Make this an argument
