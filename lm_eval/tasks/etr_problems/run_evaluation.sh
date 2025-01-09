@@ -10,7 +10,7 @@ show_help() {
     echo "  -p, --path PATH        Path to lm-evaluation-harness directory"
     echo "  -i, --include PATH     Path to include for task definitions"
     echo "  -d, --dataset PATH     Path to dataset JSONL file to evaluate"
-    echo "  -v, --verbosity LEVEL  Verbosity level (default: INFO)"
+    echo "  -v, --verbosity LEVEL  Verbosity level (default: none)"
     echo "  -h, --help            Show this help message"
     echo
     echo "Example:"
@@ -24,7 +24,7 @@ EVAL_PATH="/home/keenan/Dev/lm-evaluation-harness/"
 INCLUDE_PATH="/home/keenan/Dev/etr_case_generator/"
 DATASET=""
 TASK="etr_problems"
-VERBOSITY="INFO"
+VERBOSITY="none"
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
