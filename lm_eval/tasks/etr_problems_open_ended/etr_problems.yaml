@@ -3,7 +3,7 @@ dataset_name: null
 dataset_kwargs:
   data_files: datasets/etr_for_lm_eval.jsonl
 
-task: etr_problems
+task: open_ended_etr_problems
 
 doc_to_text: "{{question}}"
 doc_to_target: "{{scoring_guide}}"
@@ -34,7 +34,7 @@ generation_kwargs:
   temperature: 0.2
   max_gen_toks: 2000
 
-process_results: !function scoring.score_answer
+process_results: !function open_ended_scoring.score_answer
 
 metadata:
   version: 1.0

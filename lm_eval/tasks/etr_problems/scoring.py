@@ -33,6 +33,8 @@ def score_answer(question, answer):
     model_answer = match.group(1)
     correct_answer = question["scoring_guide"]["logically_correct_answer"]
 
+    print(f"Got model answer: {model_answer.lower}\tCorrect answer: {correct_answer.lower}")
+
     return {
         "correct": float(model_answer.lower() == correct_answer.lower()),
         "len_response": len(answer_text),

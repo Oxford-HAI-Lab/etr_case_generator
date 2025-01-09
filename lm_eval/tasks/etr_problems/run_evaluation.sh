@@ -105,6 +105,7 @@ echo "  Model: $MODEL"
 echo "  Evaluation harness path: $EVAL_PATH"
 echo "  Include path: $INCLUDE_PATH"
 echo "  Task: $TASK"
+echo ""
 
 # Run evaluation
 lm_eval --model $MODEL_CLASS \
