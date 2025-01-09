@@ -264,10 +264,10 @@ class FullProblem:
         }
         if format == "yes_no":
             dict["scoring_guide"]["yes_no"] = {
-                "yes_no_conclusion_etr": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.logical_form_etr,
-                "yes_no_conclusion_is_classically_correct": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_classically_correct,
-                "yes_no_conclusion_english": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.english_form,
-                "is_etr_predicted": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_etr_predicted,
+                "conclusion_etr": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.logical_form_etr,
+                "conclusion_is_classically_correct": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_classically_correct,
+                "conclusion_english": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.english_form,
+                "conclusion_is_etr_predicted": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_etr_predicted,
             }
         elif format == "multiple_choice":
             dict["scoring_guide"]["multiple_choice"] = {"options": [

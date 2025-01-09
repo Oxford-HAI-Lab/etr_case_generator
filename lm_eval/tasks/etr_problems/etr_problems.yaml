@@ -17,6 +17,9 @@ metric_list:
   - metric: len_response
     aggregation: mean
     higher_is_better: false
+  - metric: etr_agreement
+    aggregation: mean
+    higher_is_better: true
 
 test_split: train
 fewshot_split: train
