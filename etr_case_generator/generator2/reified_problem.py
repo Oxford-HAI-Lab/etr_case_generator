@@ -232,6 +232,7 @@ class FullProblem:
                 "answer": self.to_answer(format),
                 "etr_predicted": self.etr_predicted_conclusion.logical_form_etr if self.etr_predicted_conclusion else None,
                 "etr_predicted_is_classically_correct": "UNKNOWN",
+                "yes_no_conclusion": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.logical_form_etr if format == "yes_no" else None,
                 "generation_details": {
                     # TODO: Also include data like how many atoms or clauses were used in the views
                     "atoms_distributed_over_views": args.num_pieces,
