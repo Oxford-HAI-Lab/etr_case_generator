@@ -232,11 +232,6 @@ class FullProblem:
                 "answer": self.to_answer(format),
                 "etr_predicted": self.etr_predicted_conclusion.logical_form_etr if self.etr_predicted_conclusion else None,
                 "etr_predicted_is_classically_correct": "UNKNOWN",
-
-                # Yes or No Format
-                "yes_no_conclusion_etr": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.logical_form_etr if format == "yes_no" else None,
-                "yes_no_conclusion_is_classically_correct": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_classically_correct if format == "yes_no" else None,
-
                 "generation_details": {
                     # TODO: Also include data like how many atoms or clauses were used in the views
                     "atoms_distributed_over_views": args.num_pieces,
@@ -245,7 +240,15 @@ class FullProblem:
                 }
             },
         }
-        if format == "multiple_choice":
+        if format == "yes_no":
+            dict["scoring_guide"].update({
+                "yes_no_conclusion_etr": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.logical_form_etr,
+                "yes_no_conclusion_is_classically_correct": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_classically_correct,
+                "yes_no_conclusion_english": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.english_form,
+                "is_etr_predicted": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_etr_predicted,
+                "premises": [view.logical_form_etr for view in self.views]
+            })
+        elif format == "multiple_choice":
             dict["scoring_guide"]["options"] = [
                 (conclusion.view.english_form if conclusion.view.english_form else conclusion.view.logical_form_etr, conclusion.is_classically_correct) for conclusion in self.multiple_choices
             ]
