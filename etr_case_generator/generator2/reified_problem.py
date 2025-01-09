@@ -241,19 +241,17 @@ class FullProblem:
             },
         }
         if format == "yes_no":
-            dict["scoring_guide"].update({
+            dict["scoring_guide"]["yes_no"] = {
                 "yes_no_conclusion_etr": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.logical_form_etr,
                 "yes_no_conclusion_is_classically_correct": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_classically_correct,
                 "yes_no_conclusion_english": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.english_form,
                 "is_etr_predicted": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_etr_predicted,
                 "premises": [view.logical_form_etr for view in self.views]
-            })
+            }
         elif format == "multiple_choice":
-            dict["scoring_guide"]["options"] = [
+            dict["scoring_guide"]["multiple_choice"] = {"options": [
                 (conclusion.view.english_form if conclusion.view.english_form else conclusion.view.logical_form_etr, conclusion.is_classically_correct) for conclusion in self.multiple_choices
-            ]
-        if format == "yes_no":
-            dict["scoring_guide"]["yes_no_conclusion_english"] = self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.english_form
+            ]}
 
         return dict
 
