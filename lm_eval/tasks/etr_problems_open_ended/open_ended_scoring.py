@@ -76,6 +76,10 @@ def score_answer(question, model_answer):
         model_answer = re.sub(r"\.$", "", model_answer)
         model_answer = re.sub(r"^`", "", model_answer)
 
+        # If there are more than one '{' in the model_answer, and the first character is a '{', remove it and also the last '}'
+        if model_answer.count("{") > 1 and model_answer[0] == "{" and model_answer[-1] == "}":
+            model_answer = model_answer[1:-1]
+
         print(f"Matched and parsed: {model_answer}")
 
         # Try to see if it follows!
@@ -100,4 +104,7 @@ def score_answer(question, model_answer):
     except Exception as e:
         print("!" * 80)
         print(f"Error: {e}")
+        print(json.dumps(question, indent=4))
+        print(model_answer)
+        # raise e
         return {"correct": 0.0, "len_response": 0, "parse_error": 1}
