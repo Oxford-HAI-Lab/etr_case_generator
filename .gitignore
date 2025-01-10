@@ -17,4 +17,7 @@ datasets/dev_*.jsonl
 datasets/etr_for_lm_eval.jsonl
 
 # Package
-etr_case_generator.egg-info/*
+etr_case_generator.egg-info/
+
+# These are the good results that we want to keep
+lm_eval/tasks/etr_problems/results/gpt-4-turbo/samples_etr_problems_open_ended_2025-01-10T09-48-13.235570.jsonl
