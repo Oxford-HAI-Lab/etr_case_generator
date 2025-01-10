@@ -259,7 +259,7 @@ class FullProblem:
                     "num_predicates_per_problem": args.num_predicates_per_problem,
                     "num_objects_per_problem": args.num_objects_per_problem,
                     "premises_etr": [view.logical_form_etr for view in self.views],
-                    "premises_fnodes": [view.logical_form_smt_fnode for view in self.views],
+                    "premises_fnodes": [format_smt(view.logical_form_smt_fnode) for view in self.views],
                 }
             },
         }
