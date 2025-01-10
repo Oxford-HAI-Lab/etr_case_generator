@@ -366,9 +366,12 @@ BIOTECH_ORGANISMS = Ontology(
 
 def natural_name_to_logical_name(name: str, shorten: NameShorteningScheme = "none") -> str:
     if shorten=="none":
-        # View.from_str appears to have an issue with underscores
-        name = name.replace(" ", "").replace("-", "").lower()
-        # name = name.replace("_", "")  # PyETR appears to require no underscores
+        name = name.replace("_", " ")  # PyETR appears to require no underscores
+
+        # format name in lowerCamelCase
+        name_list = name.split(" ")
+        name_list = [name_list[0].lower()] + [word.capitalize() for word in name_list[1:]]
+        name = "".join(name_list)
         return name
     elif shorten=="short":
         # Find the first letter of each word

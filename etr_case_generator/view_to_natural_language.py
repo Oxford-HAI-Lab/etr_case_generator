@@ -1,7 +1,7 @@
 import random
 import re
 
-from etr_case_generator.ontology import Ontology
+from etr_case_generator.ontology import Ontology, natural_name_to_logical_name
 from pyetr import View, PredicateAtom, ArbitraryObject, State
 from typing import cast
 
@@ -36,10 +36,10 @@ def atom_to_natural_language(atom: PredicateAtom, obj_map: dict[str, str], ontol
         # For now, since these predicates are all arity 1, we just take the
         # name property straightaway
         available_predicates = [
-            p for p in ontology.predicates if p.name not in obj_map.values()
+            natural_name_to_logical_name(p.name) for p in ontology.predicates if p.name not in obj_map.values()
         ]
         # print("DEBUG ATOM - available_predicates:", [p.name for p in available_predicates])
-        predicate_nl = random.sample(available_predicates, k=1)[0].name
+        predicate_nl = random.sample(available_predicates, k=1)[0]
         obj_map[predicate_name] = predicate_nl
 
     # Check if term is arbitrary or not
@@ -52,7 +52,7 @@ def atom_to_natural_language(atom: PredicateAtom, obj_map: dict[str, str], ontol
             term_nl = obj_map[term_name]
         else:
             available_terms = [
-                t for t in ontology.objects if t not in obj_map.values()
+                natural_name_to_logical_name(t) for t in ontology.objects if t not in obj_map.values()
             ]
             term_nl = random.sample(available_terms, k=1)[0]
             obj_map[term_name] = term_nl
