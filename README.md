@@ -36,7 +36,7 @@ This project has two main components that require different setup:
    pip install -e ~/Dev/PyETR_fork/
    
    # Install other dependencies
-   pip install pysmt rich
+   pip install pysmt rich dataclasses_json
    
    # Install this package in editable mode
    pip install -e .
