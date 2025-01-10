@@ -69,6 +69,14 @@ def score_answer(question, model_answer):
 
     print(f"Matched and parsed: {model_answer}")
 
+    # Try to see if it follows!
+    model_view_etr = ...
+    model_view_smt_fnode = ...
+    premises: list[FNode] = ...
+    is_etr_predicted: bool = default_procedure_does_it_follow(premises_views, model_view_etr)
+    is_classically_correct: bool = does_it_follow(premise_fnodes, model_view_smt_fnode)
+
+
     correct_answer = question["scoring_guide"]["logically_correct_answer"]
     # print(f"Correct answer: {correct_answer}")  # This will be "YES" or "NO", which doesn't help us here
 
