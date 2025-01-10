@@ -8,6 +8,7 @@ from pysmt.fnode import FNode
 from etr_case_generator.generator2.formatting_smt import load_fnode_from_string
 from etr_case_generator.generator2.logic_helper import does_it_follow
 from pyetr.inference import default_procedure_does_it_follow
+from smt_interface.smt_encoder import view_to_smt
 
 # This is necessary because of the way that lm_eval runs this file
 sys.path.append(os.getcwd())
@@ -76,8 +77,8 @@ def score_answer(question, model_answer):
     print(f"Matched and parsed: {model_answer}")
 
     # Try to see if it follows!
-    model_view_etr = ...
-    model_view_smt_fnode = ...
+    model_view_etr = View.from_str(model_answer)
+    model_view_smt_fnode = view_to_smt(model_view_etr)
     premises_fnodes: list[FNode] = [load_fnode_from_string(p[1]) for p in question["scoring_guide"]["premises_fnodes"]]
     premises_view = [View.from_str(p[0]) for p in question["scoring_guide"]["premises"]]
     is_classically_correct: bool = does_it_follow(premises_fnodes, model_view_smt_fnode)
