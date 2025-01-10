@@ -12,3 +12,6 @@ dependencies = [
     "rich",
     "pyetr"
 ]
+
+[tool.setuptools]
+packages = ["etr_case_generator"]
