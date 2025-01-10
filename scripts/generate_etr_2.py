@@ -2,6 +2,7 @@ import argparse
 import json
 import random
 from typing import get_args
+from tqdm import tqdm
 
 from etr_case_generator.generator2.generate_problem_from_logical import generate_problem
 from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType
@@ -25,9 +26,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
             o.fill_mapping()
 
     problems: list[FullProblem] = []
-    for i in range(args.n_problems):
-        if args.verbose:
-            print(f"Generating problem {len(problems) + 1}/{args.n_problems}")
+    for i in tqdm(range(args.n_problems), desc="Generating problems"):
 
         # Generate a random ontology
         ontology = random.choice(all_ontologies)
