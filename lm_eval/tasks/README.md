@@ -5,20 +5,14 @@
 Run this command to generate problems:
 
 ```bash
-python scripts/generate_etr_for_lm_eval.py
+python scripts/generate_etr_2.py --save_file_name dev --question_type=all --generate_function=random_etr_problem -n 10
 ```
 
-This will generate problems in the `datasets/` directory. Unless you have a good reason, keep the default of `datasets/etr_for_lm_eval.jsonl`, whose file name is referenced by `etr_problems.yaml`. 
+This will generate problems in the `datasets/` directory with names starting with "dev".
 
 You can use flags like these:
-- `-n` to generate a different number of problems
-- `--balance` to generate a balanced dataset between the 4 classes at the intersection of the conclusion being classically-correct and the conclusion being ETR-predicted
-- `--open_ended_questions` to generate open-ended questions with "what, if anything, follows?"
-- `--verbose` to see some details
 
-```bash
-python scripts/generate_etr_for_lm_eval.py -n 20 --balance --open_ended_questions --verbose
-```
+... # TODO Document flags
 
 ## Evaluate Problems
 
@@ -27,13 +21,13 @@ First, ensure that you have the `lm-evaluation-harness` repository cloned and in
 Then, run this command to evaluate the generated problems:
 
 ```bash
-lm_eval/tasks/etr_problems/run_evaluation.sh
+lm_eval/tasks/etr_problems/run_evaluation.sh --dataset /home/keenan/Dev/etr_case_generator/datasets/dev_yes_no.jsonl
 ```
 
 Or, this fuller command, in which you will need to specify the full paths to the `lm-evaluation-harness` and `etr_case_generator` repositories, and the model you want to evaluate with:
 
 ```bash
-lm_eval/tasks/etr_problems/run_evaluation.sh -p /path/to/lm-evaluation-harness -i /path/to/etr_case_generator  -m gpt-4-turbo
+lm_eval/tasks/etr_problems/run_evaluation.sh --dataset /home/keenan/Dev/etr_case_generator/datasets/dev_yes_no.jsonl -p /path/to/lm-evaluation-harness -i /path/to/etr_case_generator  -m gpt-4-turbo
 ```
 
 Running this command will print out the results of the evaluation. You can see the full results of the run in `lm_eval/tasks/etr_problems/results/`. In particular, the `samples` jsonl file there will contain "resps" objects which are the model's responses to the problems.
