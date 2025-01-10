@@ -1,3 +1,4 @@
+import json
 import re
 import os
 import sys
@@ -27,9 +28,18 @@ def score_answer(question, model_answer):
 
     print(f"Got this answer text: {answer_text}")
 
+    print(json.dumps(question, indent=4))
+
     # Find "The following follows" in the answer_text, and get the substring after it
     model_answer = None
     match = re.search(r"(?<=following follows: )(.*)", answer_text)
+    if not match:
+        match = re.search(r"(?<=Answer: )(.*)", answer_text)
+    # Find a matching pair of curly brackets in the answer_text
+    if not match:
+        match = re.search(r"\{([^}]+)\}", answer_text)
+        model_answer = match.group(1) if match else None
+
     if match:
         model_answer = match.group(1)
     if not model_answer:
@@ -42,6 +52,8 @@ def score_answer(question, model_answer):
         model_answer = match.group(1) if match else None
 
     if not model_answer:
+        # TODO This fails too often!
+        print(f"Could not find a match in this answer: {answer_text}")
         return {"correct": 0.0, "len_response": len(answer_text)}
     else:
         print(f"Matched this answer: {model_answer}")
@@ -66,6 +78,8 @@ def score_answer(question, model_answer):
     # Get premises
     premises = [p[0] for p in question["scoring_guide"]["premises"]]
     print(f"Premises: {premises}")
+
+    # TODO Need to call does_it_follow
 
     # Let's check if the model answer is contained within the ETR answer
     # First, get only the contents insider the curly brackets of the model answer

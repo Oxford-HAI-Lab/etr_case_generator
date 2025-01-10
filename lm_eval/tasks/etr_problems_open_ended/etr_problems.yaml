@@ -3,7 +3,7 @@ dataset_name: null
 dataset_kwargs:
   data_files: datasets/etr_for_lm_eval.jsonl
 
-task: open_ended_etr_problems
+task: etr_problems_open_ended
 
 doc_to_text: "{{question}}"
 doc_to_target: "{{scoring_guide}}"
