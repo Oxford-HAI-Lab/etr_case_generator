@@ -20,6 +20,9 @@ metric_list:
   - metric: len_response
     aggregation: mean
     higher_is_better: false
+  - metric: parse_error
+    aggregation: mean
+    higher_is_better: false
 
 test_split: train
 fewshot_split: train

@@ -63,7 +63,7 @@ def score_answer(question, model_answer):
         if not model_answer:
             # TODO This fails too often!
             print(f"Could not find a match in this answer: {answer_text}")
-            return {"correct": 0.0, "len_response": len(answer_text)}
+            return {"correct": 0.0, "len_response": len(answer_text), "parse_error": 1}
         else:
             print(f"Matched this answer: {model_answer}")
 
@@ -95,8 +95,9 @@ def score_answer(question, model_answer):
             "correct": float(is_classically_correct),
             "etr_predicted": float(is_etr_predicted),
             "len_response": len(answer_text),
+            "parse_error": 0,
         }
     except Exception as e:
         print("!" * 80)
         print(f"Error: {e}")
-        return {"correct": 0.0, "len_response": 0}
+        return {"correct": 0.0, "len_response": 0, "parse_error": 1}
