@@ -35,7 +35,8 @@ def score_answer(question, model_answer):
 
     print(f"Got this answer text: {answer_text}")
 
-    print(json.dumps(question, indent=4))
+    # Show the full details of the question, for debugging. This contains generation details and the scoring guide.
+    # print(json.dumps(question, indent=4))
 
     # Find "The following follows" in the answer_text, and get the substring after it
     model_answer = None
@@ -79,39 +80,14 @@ def score_answer(question, model_answer):
     # Try to see if it follows!
     model_view_etr = View.from_str(model_answer)
     model_view_smt_fnode = view_to_smt(model_view_etr)
-    premises = question["scoring_guide"]["generation_details"]["premises"]
-    premises_view = [View.from_str(p) for p in premises]
+    premises_etr = question["scoring_guide"]["generation_details"]["premises_etr"]
+    premises_view = [View.from_str(p) for p in premises_etr]
     premises_fnodes = [view_to_smt(v) for v in premises_view]
     is_classically_correct: bool = does_it_follow(premises_fnodes, model_view_smt_fnode)
     is_etr_predicted: bool = default_procedure_does_it_follow(premises_view, model_view_etr)
 
     print(f"ETR predicted: {is_etr_predicted}")
     print(f"Classically correct: {is_classically_correct}")
-
-
-    # correct_answer = question["scoring_guide"]["logically_correct_answer"]
-    # # print(f"Correct answer: {correct_answer}")  # This will be "YES" or "NO", which doesn't help us here
-    #
-    # etr_answer = question["scoring_guide"]["etr_conclusion"][0]
-    # print(f"ETR conclusion: {etr_answer}")
-    #
-    # # Get premises
-    # premises = [p[0] for p in question["scoring_guide"]["premises"]]
-    # print(f"Premises: {premises}")
-    #
-    # # TODO Need to call does_it_follow
-    #
-    # # Let's check if the model answer is contained within the ETR answer
-    # # First, get only the contents insider the curly brackets of the model answer
-    # model_match = re.search(r"\{(.*)\}", model_answer)
-    # etr_match = re.search(r"\{(.*)\}", etr_answer)
-    #
-    # if model_match and etr_match:
-    #     model_answer_contents = model_match.group(1)
-    #     etr_answer_contents = etr_match.group(1)
-    #     kinda_same = model_answer_contents in etr_answer_contents
-    # else:
-    #     kinda_same = False
 
     return {
         "correct": float(is_classically_correct),
