@@ -89,33 +89,32 @@ def score_answer(question, model_answer):
     print(f"Classically correct: {is_classically_correct}")
 
 
-    correct_answer = question["scoring_guide"]["logically_correct_answer"]
-    # print(f"Correct answer: {correct_answer}")  # This will be "YES" or "NO", which doesn't help us here
-
-    etr_answer = question["scoring_guide"]["etr_conclusion"][0]
-    print(f"ETR conclusion: {etr_answer}")
-
-    # Get premises
-    premises = [p[0] for p in question["scoring_guide"]["premises"]]
-    print(f"Premises: {premises}")
-
-    # TODO Need to call does_it_follow
-
-    # Let's check if the model answer is contained within the ETR answer
-    # First, get only the contents insider the curly brackets of the model answer
-    model_match = re.search(r"\{(.*)\}", model_answer)
-    etr_match = re.search(r"\{(.*)\}", etr_answer)
-    
-    if model_match and etr_match:
-        model_answer_contents = model_match.group(1)
-        etr_answer_contents = etr_match.group(1)
-        kinda_same = model_answer_contents in etr_answer_contents
-    else:
-        kinda_same = False
+    # correct_answer = question["scoring_guide"]["logically_correct_answer"]
+    # # print(f"Correct answer: {correct_answer}")  # This will be "YES" or "NO", which doesn't help us here
+    #
+    # etr_answer = question["scoring_guide"]["etr_conclusion"][0]
+    # print(f"ETR conclusion: {etr_answer}")
+    #
+    # # Get premises
+    # premises = [p[0] for p in question["scoring_guide"]["premises"]]
+    # print(f"Premises: {premises}")
+    #
+    # # TODO Need to call does_it_follow
+    #
+    # # Let's check if the model answer is contained within the ETR answer
+    # # First, get only the contents insider the curly brackets of the model answer
+    # model_match = re.search(r"\{(.*)\}", model_answer)
+    # etr_match = re.search(r"\{(.*)\}", etr_answer)
+    #
+    # if model_match and etr_match:
+    #     model_answer_contents = model_match.group(1)
+    #     etr_answer_contents = etr_match.group(1)
+    #     kinda_same = model_answer_contents in etr_answer_contents
+    # else:
+    #     kinda_same = False
 
     return {
-        "correct": float(model_answer.lower() == correct_answer.lower()),
-        "same_as_etr": float(model_answer.lower() == etr_answer.lower()),
-        "contained_within_etr": float(kinda_same),
+        "correct": float(is_classically_correct),
+        "etr_predicted": float(is_etr_predicted),
         "len_response": len(answer_text),
     }
