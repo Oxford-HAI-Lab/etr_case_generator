@@ -79,8 +79,9 @@ def score_answer(question, model_answer):
     # Try to see if it follows!
     model_view_etr = View.from_str(model_answer)
     model_view_smt_fnode = view_to_smt(model_view_etr)
-    premises_view = [View.from_str(p[0]) for p in question["scoring_guide"]["premises"]]
-    premises_fnodes: list[FNode] = ...
+    premises = question["scoring_guide"]["generation_details"]["premises"]
+    premises_view = [View.from_str(p) for p in premises]
+    premises_fnodes = [view_to_smt(v) for v in premises_view]
     is_classically_correct: bool = does_it_follow(premises_fnodes, model_view_smt_fnode)
     is_etr_predicted: bool = default_procedure_does_it_follow(premises_view, model_view_etr)
 
