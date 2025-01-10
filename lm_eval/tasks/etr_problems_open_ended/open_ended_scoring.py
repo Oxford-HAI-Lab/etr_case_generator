@@ -39,6 +39,10 @@ def score_answer(question, model_answer):
         # Show the full details of the question, for debugging. This contains generation details and the scoring guide.
         # print(json.dumps(question, indent=4))
 
+        # If it contains no '{', wrap it in curly brackets
+        if "{" not in answer_text:
+            answer_text = "{" + answer_text + "}"
+
         # Find "The following follows" in the answer_text, and get the substring after it
         model_answer = None
         match = re.search(r"(?<=following follows: )(.*)", answer_text)
