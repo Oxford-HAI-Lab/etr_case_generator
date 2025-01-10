@@ -19,6 +19,8 @@ Finally: possibly necessary for some scripting:
 export PYTHONPATH=/path/to/your/etr_case_generator/etr_case_generator:$PYTHONPATH
 ```
 
+### Additional Setup for ...
+
 ## Generation
 
 ## Generating Individual Views
@@ -37,10 +39,10 @@ quantification.
 Run this command:
 
 ```bash
-python scripts/generate_etr_for_lm_eval.py -n 10
+python scripts/generate_etr_2.py --save_file_name dev --question_type=all --generate_function=random_etr_problem -n 10
 ```
 
-This will generate 10 problems and save them to a file called `datasets/etr_for_lm_eval.jsonl`. It's important that it be in this location, so that lm_eval can find it. 
+This will generate 10 problems and save them to 3 files called `datasets/dev_yes_no.jsonl` and similar.  
 
 See the [lm_eval documentation](lm_eval/tasks/README.md) for more information on how to use this dataset with lm_eval.
 
@@ -54,26 +56,26 @@ pip install pprint_problems
 
 Then, here are some ways you can inspect it.
 
-Show the details of 10 random problems:
+Show the details of 1 random problems:
 
 ```bash
-pprint_problems datasets/etr_for_lm_eval.jsonl -n 10 -r
+pprint_problems datasets/dev_yes_no.jsonl -n 1 -r
 ```
 
 Show the structure of the dataset:
 
 ```bash
-pprint_problems datasets/etr_for_lm_eval.jsonl --structure
+pprint_problems datasets/dev_yes_no.jsonl --structure
 ```
 
 Look at just the question, premises, and conclusion for 3 random problems:
 
 ```bash
-pprint_problems datasets/etr_for_lm_eval.jsonl -n 3 -r --parts question scoring_guide/premises scoring_guide/question_conclusion
+pprint_problems datasets/dev_yes_no.jsonl -n 3 -r --parts question scoring_guide/premises scoring_guide/question_conclusion
 ```
 
 Show stats about the dataset:
 
 ```bash
-pprint_problems datasets/etr_for_lm_eval.jsonl -p scoring_guide/etr_answer scoring_guide/logically_correct_answer --stats --full_combinatoric
+pprint_problems datasets/dev_yes_no.jsonl -p scoring_guide/etr_answer scoring_guide/logically_correct_answer --stats --full_combinatoric
 ```
