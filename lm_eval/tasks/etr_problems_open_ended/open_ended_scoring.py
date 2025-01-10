@@ -4,6 +4,8 @@ import os
 import sys
 from pysmt.fnode import FNode
 from etr_case_generator.generator2.formatting_smt import load_fnode_from_string
+from etr_case_generator.generator2.logic_helper import does_it_follow
+from pyetr.inference import default_procedure_does_it_follow
 
 # This is necessary because of the way that lm_eval runs this file
 sys.path.append(os.getcwd())
@@ -75,8 +77,8 @@ def score_answer(question, model_answer):
     model_view_etr = ...
     model_view_smt_fnode = ...
     premises = [load_fnode_from_string(p[1]) for p in question["scoring_guide"]["premises_fnodes"]]
-    is_etr_predicted: bool = default_procedure_does_it_follow(premises_views, model_view_etr)
-    is_classically_correct: bool = does_it_follow(premise_fnodes, model_view_smt_fnode)
+    is_etr_predicted: bool = default_procedure_does_it_follow(premises, model_view_etr)
+    is_classically_correct: bool = does_it_follow(premises, model_view_smt_fnode)
 
 
     correct_answer = question["scoring_guide"]["logically_correct_answer"]
