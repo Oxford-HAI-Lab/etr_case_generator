@@ -9,8 +9,7 @@ description = "ETR Case Generator"
 requires-python = ">=3.8"
 dependencies = [
     "pysmt",
-    "rich",
-    "pyetr"
+    "rich"
 ]
 
 [tool.setuptools]
