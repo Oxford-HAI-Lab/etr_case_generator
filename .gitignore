@@ -7,8 +7,10 @@
 
 .idea/
 
-# Manually add results if you want to share them
+# Results directories - block by default but allow specific ones
 lm_eval/tasks/etr_problems/results/*
+!lm_eval/tasks/etr_problems/results/gpt-4-turbo/
+!lm_eval/tasks/etr_problems/results/claude-2.1/
 
 # Development jsonl files
 datasets/dev_*.jsonl
