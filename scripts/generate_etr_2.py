@@ -18,59 +18,44 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
         verbose (bool, optional): Whether to print debugging info. Defaults to False.
     """
     all_ontologies: list[Ontology] = get_all_ontologies()
-    # Only SMT problem generation requires this mapping pre-filled. ETR problems will
-    # fill it themselves.
     if args.generate_function == "random_smt_problem":
         for o in all_ontologies:
             o.preferred_name_shortening_scheme = args.name_shortening
             o.fill_mapping()
 
-    # Create a counter for each quadrant (erotetic, classical), for the args.balance==True case
     quadrant_counts = {
         (True, True): 0,   # (erotetic, classical)
         (True, False): 0,  # (erotetic, non-classical)
         (False, True): 0,  # (non-erotetic, classical)
         (False, False): 0  # (non-erotetic, non-classical)
     }
-    num_needed_per_quadrant: int = (n_problems + 3) // 4  # Round up division
+    num_needed_per_quadrant: int = (n_problems + 3) // 4
 
     problems: list[FullProblem] = []
-    with tqdm(range(args.n_problems), desc="Generating problems") as pbar:
-        while len(problems) < n_problems:
-            # Extend the iterator if needed
-            if pbar.n >= len(pbar.iterable):
-                pbar.iterable = range(len(pbar.iterable) + args.n_problems)
-
-            # Generate a random ontology
+    for _ in tqdm(range(n_problems), desc="Generating problems"):
+        while True:  # Keep trying until we get an acceptable problem
             ontology = random.choice(all_ontologies)
-
-            # Generate a random problem
+            
             try:
                 problem: FullProblem = generate_problem(args, ontology=ontology)
 
                 if args.balance:
                     problem_is_erotetic: bool = problem.get_yes_no_conclusion().is_etr_predicted
                     problem_is_classical: bool = problem.get_yes_no_conclusion().is_classically_correct
-                    
-                    # Check if we need more problems in this quadrant
                     current_quadrant = (problem_is_erotetic, problem_is_classical)
+                    
                     if quadrant_counts[current_quadrant] >= num_needed_per_quadrant:
-                        pbar.update(1)
-                        continue  # Skip this problem if we have enough in this quadrant
+                        continue  # Try again if this quadrant is full
                     
                     quadrant_counts[current_quadrant] += 1
                 
                 problems.append(problem)
-                pbar.update(1)
+                break  # Successfully generated a problem, move to next iteration
 
             except Exception as e:
-                print(f"Failed to generate problem {pbar.n + 1}")
-                print(e)
-                pbar.update(1)
-                continue
-        # print(f"Generated Problem {i + 1} of {n_problems}")
-        # print(problem.full_string(show_empty=True, question_types=question_types))
-
+                print(f"Failed to generate problem: {e}")
+                continue  # Try again
+    
     return problems
 
 
