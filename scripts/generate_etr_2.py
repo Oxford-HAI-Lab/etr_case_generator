@@ -34,8 +34,10 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
     problems: list[FullProblem] = []
     pbar = tqdm(range(n_problems), desc="Generating problems")
     for _ in pbar:
+        current_counter: int = 0
         while True:  # Keep trying until we get an acceptable problem
             ontology = random.choice(all_ontologies)
+            current_counter += 1
             
             try:
                 problem: FullProblem = generate_problem(args, ontology=ontology)
@@ -44,18 +46,20 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                     problem_is_erotetic: bool = problem.get_yes_no_conclusion().is_etr_predicted
                     problem_is_classical: bool = problem.get_yes_no_conclusion().is_classically_correct
                     current_quadrant = (problem_is_erotetic, problem_is_classical)
-                    
-                    if quadrant_counts[current_quadrant] >= num_needed_per_quadrant:
-                        continue  # Try again if this quadrant is full
-                    
-                    quadrant_counts[current_quadrant] += 1
+
                     # Update the progress bar with current counts
                     pbar.set_postfix({
                         'EC': quadrant_counts[(True, True)],    # Erotetic Classical
                         'EN': quadrant_counts[(True, False)],   # Erotetic Non-classical
                         'NC': quadrant_counts[(False, True)],   # Non-erotetic Classical
-                        'NN': quadrant_counts[(False, False)]   # Non-erotetic Non-classical
+                        'NN': quadrant_counts[(False, False)],  # Non-erotetic Non-classical
+                        'T': current_counter,                   # Try number
                     })
+                    
+                    if quadrant_counts[current_quadrant] >= num_needed_per_quadrant:
+                        continue  # Try again if this quadrant is full
+                    
+                    quadrant_counts[current_quadrant] += 1
                 
                 problems.append(problem)
                 break  # Successfully generated a problem, move to next iteration

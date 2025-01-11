@@ -181,6 +181,9 @@ class FullProblem:
     answer_immediately_prose: Optional[str] = "I want you to answer immediately. Do not think about it at all, just immediately answer."
     chain_of_thought_prose: Optional[str] = "I want you to spend a few paragraphs thinking about your answer."
 
+    def get_yes_no_conclusion(self) -> Conclusion:
+        return self.possible_conclusions[self.yes_or_no_conclusion_chosen_index]
+
     def fill_out(self, ontology: Optional[Ontology] = None, partial_problem: PartialProblem = None):
         if self.views is not None:
             for view in self.views:

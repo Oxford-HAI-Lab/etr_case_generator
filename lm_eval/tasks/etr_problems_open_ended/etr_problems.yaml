@@ -14,7 +14,7 @@ metric_list:
   - metric: correct
     aggregation: mean
     higher_is_better: true
-  - metric: etr_predicted
+  - metric: is_etr_predicted
     aggregation: mean
     higher_is_better: true
   - metric: etr_strong_predicted

@@ -27,14 +27,14 @@ def score_answer(question, model_answer):
         dict: A dictionary containing the score and response length
     """
     # Extract answer text
+    if isinstance(model_answer, dict):
+        answer_text = model_answer.get("text", "")
+    elif isinstance(model_answer, list) and len(model_answer) > 0:
+        answer_text = str(model_answer[0])
+    else:
+        answer_text = str(model_answer)
+    original_model_answer: str = model_answer
     try:
-        if isinstance(model_answer, dict):
-            answer_text = model_answer.get("text", "")
-        elif isinstance(model_answer, list) and len(model_answer) > 0:
-            answer_text = str(model_answer[0])
-        else:
-            answer_text = str(model_answer)
-
         print(f"Got this answer text: {answer_text}")
 
         # Show the full details of the question, for debugging. This contains generation details and the scoring guide.
@@ -68,7 +68,7 @@ def score_answer(question, model_answer):
         if not model_answer:
             # TODO This fails too often!
             print(f"Could not find a match in this answer: {answer_text}")
-            return {"correct": 0.0, "len_response": len(answer_text), "parse_error": 1}
+            raise Exception("Could not find a match in the answer text")
         else:
             print(f"Matched this answer: {model_answer}")
 
@@ -104,9 +104,9 @@ def score_answer(question, model_answer):
 
         return {
             "correct": float(is_classically_correct),
-            "etr_predicted": float(is_etr_predicted),
+            "is_etr_predicted": float(is_etr_predicted),
             "etr_strong_predicted": float(is_etr_strong_predicted),
-            "len_response": len(answer_text),
+            "len_response": len(original_model_answer),
             "parse_error": 0,
         }
     except Exception as e:
@@ -115,4 +115,10 @@ def score_answer(question, model_answer):
         print(json.dumps(question, indent=4))
         print(model_answer)
         # raise e
-        return {"correct": 0.0, "len_response": 0, "parse_error": 1}
+        return {
+            "correct": 0.0,
+            "len_response": len(original_model_answer),
+            "parse_error": 1,
+            "is_etr_predicted": 0.0,
+            "etr_strong_predicted": 0.0,
+        }
