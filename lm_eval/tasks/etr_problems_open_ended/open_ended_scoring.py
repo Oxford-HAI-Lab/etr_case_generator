@@ -33,7 +33,7 @@ def score_answer(question, model_answer):
         answer_text = str(model_answer[0])
     else:
         answer_text = str(model_answer)
-    original_model_answer: str = model_answer
+    original_model_answer: str = answer_text
     try:
         print(f"Got this answer text: {answer_text}")
 
@@ -70,7 +70,8 @@ def score_answer(question, model_answer):
             print(f"Could not find a match in this answer: {answer_text}")
             raise Exception("Could not find a match in the answer text")
         else:
-            print(f"Matched this answer: {model_answer}")
+            # print(f"Matched this answer: {model_answer}")
+            pass
 
         # Let's try to clean up the answer
         # Remove "`." from the end of the answer (but not anywhere else in the string)
