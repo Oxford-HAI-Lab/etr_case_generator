@@ -32,7 +32,8 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
     num_needed_per_quadrant: int = (n_problems + 3) // 4
 
     problems: list[FullProblem] = []
-    for _ in tqdm(range(n_problems), desc="Generating problems"):
+    pbar = tqdm(range(n_problems), desc="Generating problems")
+    for _ in pbar:
         while True:  # Keep trying until we get an acceptable problem
             ontology = random.choice(all_ontologies)
             
@@ -48,6 +49,13 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                         continue  # Try again if this quadrant is full
                     
                     quadrant_counts[current_quadrant] += 1
+                    # Update the progress bar with current counts
+                    pbar.set_postfix({
+                        'EC': quadrant_counts[(True, True)],    # Erotetic Classical
+                        'EN': quadrant_counts[(True, False)],   # Erotetic Non-classical
+                        'NC': quadrant_counts[(False, True)],   # Non-erotetic Classical
+                        'NN': quadrant_counts[(False, False)]   # Non-erotetic Non-classical
+                    })
                 
                 problems.append(problem)
                 break  # Successfully generated a problem, move to next iteration
