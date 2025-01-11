@@ -25,6 +25,15 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
             o.preferred_name_shortening_scheme = args.name_shortening
             o.fill_mapping()
 
+    # Create a counter for each quadrant (erotetic, classical), for the args.balance==True case
+    quadrant_counts = {
+        (True, True): 0,   # (erotetic, classical)
+        (True, False): 0,  # (erotetic, non-classical)
+        (False, True): 0,  # (non-erotetic, classical)
+        (False, False): 0  # (non-erotetic, non-classical)
+    }
+    num_needed_per_quadrant: int = (n_problems + 3) // 4  # Round up division
+
     problems: list[FullProblem] = []
     for i in tqdm(range(args.n_problems), desc="Generating problems"):
 
@@ -32,7 +41,23 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
         ontology = random.choice(all_ontologies)
 
         # Generate a random problem
-        problem = generate_problem(args, ontology=ontology)
+        try:
+            problem: FullProblem = generate_problem(args, ontology=ontology)
+
+            if args.balance:
+                problem_is_erotetic: bool = problem.get_yes_no_conclusion().is_etr_predicted
+                problem_is_classical: bool = problem.get_yes_no_conclusion().is_classically_correct
+                
+                # Check if we need more problems in this quadrant
+                current_quadrant = (problem_is_erotetic, problem_is_classical)
+                if quadrant_counts[current_quadrant] >= num_needed_per_quadrant:
+                    continue  # Skip this problem if we have enough in this quadrant
+                
+                quadrant_counts[current_quadrant] += 1
+        except Exception as e:
+            print(f"Failed to generate problem {i + 1} of {n_problems}")
+            print(e)
+            continue
 
         problems.append(problem)
         # print(f"Generated Problem {i + 1} of {n_problems}")
@@ -68,6 +93,7 @@ def main():
     parser.add_argument("--question_type", type=str, default="all", help="Type of question to ask. Options are 'all', 'yes_no', 'multiple_choice', 'open_ended'.", choices=["all"] + list(get_args(QuestionType)))
     parser.add_argument("--save_file_name", type=str, default="problems", help="Name for saved jsonl files")
     parser.add_argument("--generate_function", type=str, default="random_smt_problem", help="Which function to use in generation.", choices=["random_smt_problem", "random_etr_problem"])
+    parser.add_argument("--balance", help="Balance the dataset through the 4 quadrants of erotetic and classical yes/no.", action="store_true")
     # TODO(Ryan): Add parameters for problem generation here
     args = parser.parse_args()
 
