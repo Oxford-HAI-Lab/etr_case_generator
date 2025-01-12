@@ -17,12 +17,10 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
         verbose (bool, optional): Whether to print debugging info. Defaults to False.
     """
     all_ontologies: list[Ontology] = get_all_ontologies()
-    # Only SMT problem generation requires this mapping pre-filled. ETR problems will
-    # fill it themselves.
-    if args.generate_function == "random_smt_problem":
-        for o in all_ontologies:
-            o.preferred_name_shortening_scheme = args.name_shortening
-            o.fill_mapping()
+
+    for o in all_ontologies:
+        o.preferred_name_shortening_scheme = args.name_shortening
+        o.fill_mapping()
 
     problems: list[FullProblem] = []
     for i in range(args.n_problems):
