@@ -30,6 +30,13 @@ class Ontology:
     it must be possible to have P(x)Q(x).
     """
 
+    logical_placeholder_to_short_name: dict[str, str] = field(default_factory=dict)
+    """
+    When mapping from logical form to natural language, we need to replace the
+    placeholders in the logical form with more readable variable names, e.g. "A(b())" ->
+    "red(ace())" for "the ace is red."
+    """
+
     short_name_to_full_name: dict[str, str] = field(default_factory=dict)
     """
     For all object names and predicate names, we want to shorten them using the `natural_name_to_logical_name` function. 
@@ -367,6 +374,7 @@ BIOTECH_ORGANISMS = Ontology(
 def natural_name_to_logical_name(name: str, shorten: NameShorteningScheme = "none") -> str:
     if shorten=="none":
         name = name.replace("_", " ")  # PyETR appears to require no underscores
+        name = name.replace("-", " ")
 
         # format name in lowerCamelCase
         name_list = name.split(" ")

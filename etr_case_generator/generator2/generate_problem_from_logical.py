@@ -1,13 +1,22 @@
-from typing import get_args
-
 from etr_case_generator.generator2.etr_generator import random_etr_problem
 from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType, PartialProblem, Conclusion, \
     ReifiedView
 from etr_case_generator.generator2.full_problem_creator import full_problem_from_partial_problem
-from etr_case_generator.ontology import ELEMENTS, Ontology
+from etr_case_generator.ontology import ELEMENTS, Ontology, natural_name_to_logical_name
 from etr_case_generator.generator2.smt_generator import random_smt_problem, SMTProblem, generate_conclusions, \
     add_conclusions
 from etr_case_generator.view_to_natural_language import view_to_natural_language
+from pyetr import View
+
+
+def renamed_view(view: View, renames: dict[str, str]) -> View:
+    new_view_str = ""
+    for c in view.to_str():
+        if c in renames.keys():
+            new_view_str += natural_name_to_logical_name(renames[c])
+        else:
+            new_view_str += c
+    return View.from_str(new_view_str)
 
 
 def generate_problem(args, ontology: Ontology = ELEMENTS) -> FullProblem:
@@ -26,10 +35,16 @@ def generate_problem(args, ontology: Ontology = ELEMENTS) -> FullProblem:
             english_form, obj_map = view_to_natural_language(
                 ontology=ontology, 
                 view=p.logical_form_etr_view,
-                obj_map=ontology.short_name_to_full_name
+                obj_map=ontology.logical_placeholder_to_short_name
             )
             p.english_form = english_form
-            ontology.short_name_to_full_name.update(obj_map)
+            ontology.logical_placeholder_to_short_name.update(obj_map)
+
+            # Now that we have the English form, replace placeholders in the ETR view
+            p.logical_form_etr_view = renamed_view(
+                p.logical_form_etr_view,
+                renames=ontology.logical_placeholder_to_short_name
+            )
 
         # Do the ETR supported conclusion in addition to the premises
         assert partial_problem.etr_what_follows is not None
@@ -37,10 +52,15 @@ def generate_problem(args, ontology: Ontology = ELEMENTS) -> FullProblem:
         english_form, obj_map = view_to_natural_language(
             ontology=ontology, 
             view=partial_problem.etr_what_follows.logical_form_etr_view,
-            obj_map=ontology.short_name_to_full_name
+            obj_map=ontology.logical_placeholder_to_short_name
         )
         partial_problem.etr_what_follows.english_form = english_form
-        ontology.short_name_to_full_name.update(obj_map)
+        ontology.logical_placeholder_to_short_name.update(obj_map)
+        # Now that we have the English form, replace placeholders in the ETR view
+        partial_problem.etr_what_follows.logical_form_etr_view = renamed_view(
+            partial_problem.etr_what_follows.logical_form_etr_view,
+            renames=ontology.logical_placeholder_to_short_name
+        )
 
     else:
         raise ValueError(f"Unknown generate_function: {args.generate_function}")

@@ -99,12 +99,6 @@ class ETRGenerator:
                 etr_what_follows = default_inference_procedure(mutated_premises)
                 premises = []
                 for p in mutated_premises:
-                    # english_form, obj_map = view_to_natural_language(
-                    #     ontology=ontology, 
-                    #     view=p,
-                    #     obj_map=ontology.short_name_to_full_name
-                    # )
-                    # ontology.short_name_to_full_name.update(obj_map)
                     premises.append(
                         ReifiedView(
                             logical_form_etr_view=p,
