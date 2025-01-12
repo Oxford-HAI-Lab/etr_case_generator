@@ -44,7 +44,7 @@ class Ontology:
     """
 
     preferred_name_shortening_scheme: NameShorteningScheme = "short"
-    
+
     def fill_mapping(self):
         # self.short_name_to_full_name = {}
         for obj in self.objects:
