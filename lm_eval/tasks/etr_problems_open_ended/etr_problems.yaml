@@ -10,6 +10,7 @@ doc_to_target: "{{scoring_guide}}"
 
 output_type: generate_until
 
+# "aggregation: bypass" means that the metric aggregation is 999. "higher_is_better" is filled out to suppress warnings.
 metric_list:
   - metric: correct
     aggregation: mean
@@ -28,16 +29,22 @@ metric_list:
     higher_is_better: false
   - metric: model_answer
     aggregation: bypass
+    higher_is_better: false
   - metric: full_model_response
     aggregation: bypass
+    higher_is_better: false
   - metric: correct_and_etr
     aggregation: mean
+    higher_is_better: false
   - metric: correct_and_not_etr
     aggregation: mean
+    higher_is_better: false
   - metric: not_correct_and_etr
     aggregation: mean
+    higher_is_better: false
   - metric: not_correct_and_not_etr
     aggregation: mean
+    higher_is_better: false
 
 
 test_split: train

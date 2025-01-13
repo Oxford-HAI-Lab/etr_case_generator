@@ -39,9 +39,10 @@ def score_answer(question, model_answer):
     else:
         answer_text = str(model_answer)
     original_model_answer: str = answer_text
+    print("-" * 80)
     print(f"Starting Open Ended Scoring. Got this answer text: {answer_text}")
     try:
-        model_answer = get_etr_substr(answer_text)
+        model_answer = use_model_get_etr_text(answer_text)
 
         # Try to see if it follows!
         model_view_etr: View = View.from_str(model_answer)
@@ -80,7 +81,7 @@ def score_answer(question, model_answer):
         }
     except Exception as e:
         # print("!" * 80)
-        print(f"Error: {e}")
+        print(f"Error: {str(e)[:100]}")
         # print(json.dumps(question, indent=4))
         # print(model_answer)
         # raise e
