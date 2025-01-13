@@ -143,7 +143,7 @@ class PartialProblem:
 
 @dataclass(kw_only=True)
 class FullProblem:
-    views: Optional[list[ReifiedView]] = None
+    views: Optional[list[ReifiedView]] = None  # Premises
     possible_conclusions: Optional[list[Conclusion]] = None
 
     # TODO(andrew) Think about how to handle the two types of conclusion from PartialProblem
@@ -252,6 +252,7 @@ class FullProblem:
             return f"{self.etr_predicted_conclusion.view.logical_form_etr}"
 
     def to_dict_for_jsonl(self, args, format: QuestionType = "yes_no", chain_of_thought: bool = False) -> dict:
+        total_num_atoms = sum(len(view.logical_form_etr_view.atoms) for view in self.views)
         dict = {
             "question": self.to_prompt(format, chain_of_thought),
             "scoring_guide": {
@@ -259,7 +260,8 @@ class FullProblem:
                 "etr_predicted": self.etr_predicted_conclusion.view.logical_form_etr if self.etr_predicted_conclusion else None,
                 "etr_predicted_is_classically_correct": self.etr_predicted_conclusion.is_classically_correct if self.etr_predicted_conclusion else None,
                 "generation_details": {
-                    "atoms_distributed_over_views": args.num_pieces,
+                    "atoms_distributed_over_views_SMT_ONLY": args.num_pieces,
+                    "total_num_atoms": total_num_atoms,
                     "num_predicates_per_problem": args.num_predicates_per_problem,
                     "num_objects_per_problem": args.num_objects_per_problem,
                     "premises_etr": [view.logical_form_etr for view in self.views],
@@ -282,8 +284,10 @@ class FullProblem:
                 (conclusion.view.english_form if conclusion.view.english_form else conclusion.view.logical_form_etr, conclusion.is_classically_correct) for conclusion in self.multiple_choices
             ]}
         elif format == "open_ended":
+            yes_no_conclusion = self.possible_conclusions[self.yes_or_no_conclusion_chosen_index]
             dict["scoring_guide"]["open_ended"] = {
-                # Unclear what is needed here
+                # This isn't really relevant for open ended questions, but it might be interesting.
+                "conclusion_agrees_in_yes_no_case": yes_no_conclusion.is_classically_correct == self.etr_predicted_conclusion.is_classically_correct,
             }
 
         return dict
