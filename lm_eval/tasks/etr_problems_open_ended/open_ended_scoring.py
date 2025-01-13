@@ -2,6 +2,8 @@ import json
 import re
 import os
 import sys
+import textwrap
+import openai
 
 from pyetr import View
 from pysmt.fnode import FNode
@@ -13,6 +15,9 @@ from smt_interface.smt_encoder import view_to_smt
 
 # This is necessary because of the way that lm_eval runs this file
 sys.path.append(os.getcwd())
+
+# Set up openai client
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 def score_answer(question, model_answer):
@@ -37,56 +42,7 @@ def score_answer(question, model_answer):
     try:
         print(f"Got this answer text: {answer_text}")
 
-        # Show the full details of the question, for debugging. This contains generation details and the scoring guide.
-        # print(json.dumps(question, indent=4))
-
-        # If it contains no '{', wrap it in curly brackets
-        if "{" not in answer_text:
-            answer_text = "{" + answer_text + "}"
-
-        # Find "The following follows" in the answer_text, and get the substring after it
-        model_answer = None
-        match = re.search(r"(?<=following follows: )(.*)", answer_text)
-        if not match:
-            match = re.search(r"(?<=Answer: )(.*)", answer_text)
-        # Find a matching pair of curly brackets in the answer_text
-        if not match:
-            match = re.search(r"\{([^}]+)\}", answer_text)
-            model_answer = match.group(1) if match else None
-
-        if match:
-            model_answer = match.group(1)
-        if not model_answer:
-            # Find the second to last instance of "`" in the answer_text
-            match = re.search(r"`([^`]+)`[^`]*$", answer_text)
-            model_answer = match.group(1) if match else None
-        if not model_answer:
-            # Try to just find "follows" or "Follows" in the response, case insensitive and fairly generous
-            match = re.search(r"(?i)(?:follows|follows:|follows :|follows,|follows, :)(.*)", answer_text)
-            model_answer = match.group(1) if match else None
-
-        if not model_answer:
-            # TODO This fails too often!
-            print(f"Could not find a match in this answer: {answer_text}")
-            raise Exception("Could not find a match in the answer text")
-        else:
-            # print(f"Matched this answer: {model_answer}")
-            pass
-
-        # Let's try to clean up the answer
-        # Remove "`." from the end of the answer (but not anywhere else in the string)
-        model_answer = model_answer.strip()
-        model_answer = re.sub(r"^:", "", model_answer)
-        model_answer = re.sub(r"`\.$", "", model_answer)
-        model_answer = re.sub(r"`$", "", model_answer)
-        model_answer = re.sub(r"\.$", "", model_answer)
-        model_answer = re.sub(r"^`", "", model_answer)
-
-        # If there are more than one '{' in the model_answer, and the first character is a '{', remove it and also the last '}'
-        if model_answer.count("{") > 1 and model_answer[0] == "{" and model_answer[-1] == "}":
-            model_answer = model_answer[1:-1]
-
-        print(f"Matched and parsed: {model_answer}")
+        model_answer = get_etr_substr(answer_text)
 
         # Try to see if it follows!
         model_view_etr: View = View.from_str(model_answer)
@@ -144,3 +100,69 @@ def score_answer(question, model_answer):
             "not_correct_and_etr": 0.0,
             "not_correct_and_not_etr": 0.0,
         }
+
+
+def get_etr_substr(answer_text):
+    # Show the full details of the question, for debugging. This contains generation details and the scoring guide.
+    # print(json.dumps(question, indent=4))
+    # If it contains no '{', wrap it in curly brackets
+    if "{" not in answer_text:
+        answer_text = "{" + answer_text + "}"
+    # Find "The following follows" in the answer_text, and get the substring after it
+    model_answer = None
+    match = re.search(r"(?<=following follows: )(.*)", answer_text)
+    if not match:
+        match = re.search(r"(?<=Answer: )(.*)", answer_text)
+    # Find a matching pair of curly brackets in the answer_text
+    if not match:
+        match = re.search(r"\{([^}]+)\}", answer_text)
+        model_answer = match.group(1) if match else None
+    if match:
+        model_answer = match.group(1)
+    if not model_answer:
+        # Find the second to last instance of "`" in the answer_text
+        match = re.search(r"`([^`]+)`[^`]*$", answer_text)
+        model_answer = match.group(1) if match else None
+    if not model_answer:
+        # Try to just find "follows" or "Follows" in the response, case insensitive and fairly generous
+        match = re.search(r"(?i)(?:follows|follows:|follows :|follows,|follows, :)(.*)", answer_text)
+        model_answer = match.group(1) if match else None
+    if not model_answer:
+        # TODO This fails too often!
+        print(f"Could not find a match in this answer: {answer_text}")
+        raise Exception("Could not find a match in the answer text")
+    else:
+        # print(f"Matched this answer: {model_answer}")
+        pass
+    # Let's try to clean up the answer
+    # Remove "`." from the end of the answer (but not anywhere else in the string)
+    model_answer = model_answer.strip()
+    model_answer = re.sub(r"^:", "", model_answer)
+    model_answer = re.sub(r"`\.$", "", model_answer)
+    model_answer = re.sub(r"`$", "", model_answer)
+    model_answer = re.sub(r"\.$", "", model_answer)
+    model_answer = re.sub(r"^`", "", model_answer)
+    # If there are more than one '{' in the model_answer, and the first character is a '{', remove it and also the last '}'
+    if model_answer.count("{") > 1 and model_answer[0] == "{" and model_answer[-1] == "}":
+        model_answer = model_answer[1:-1]
+    print(f"Matched and parsed: {model_answer}")
+    return model_answer
+
+def use_model_get_etr_text(model_answer):
+    prompt = textwrap.dedent(f"""
+        {model_answer}
+        
+        I want you to rewrite this answer in the format of a logical statement. Here are the rules for how you should format it:
+        - You can write a predicate like "f()"
+        - If the predicate has arguments, you can write them like "f(x)"
+        - You can do negation with "~", like "~f(x)" to mean "not f(x)"
+        - You can represent "and" by writing multiple predicates without a separator, like "f(x)g(x)"
+        - You can represent "or" by writing multiple predicates with a "," between them, like "f(x),g(x)"
+        - You can use the "∀" to represent "for all", like "∀x f(x)"
+        - You can use the "∃" to represent "there exists", like "∃x f(x)"
+        - Wrap a statement in curly braces, like "{{f(x)g(x)}}", or "∀x {{f(x)g(x)}}", if there's a quantifier
+        - Don't use unnecessary parentheses, like write "f(x)g(x)" instead of "(f(x))(g(x))"
+    """)
+    rewritten_by_model = ...  # TODO Use openai with gpt-4-turbo
+    etr_text = get_etr_substr(rewritten_by_model)
+    return etr_text
