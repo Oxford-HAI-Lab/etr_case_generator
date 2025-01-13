@@ -146,7 +146,8 @@ class FullProblem:
     views: Optional[list[ReifiedView]] = None  # Premises
     possible_conclusions: Optional[list[Conclusion]] = None
 
-    # TODO(andrew) Think about how to handle the two types of conclusion from PartialProblem
+    # Generation Details
+    ontology: Ontology = None
 
     # Yes or No format
     yes_or_no_conclusion_chosen_index: int = 0  # Indexes into possible_conclusions
@@ -293,6 +294,7 @@ class FullProblem:
             dict["scoring_guide"]["open_ended"] = {
                 # This isn't really relevant for open ended questions, but it might be interesting.
                 "conclusion_agrees_in_yes_no_case": yes_no_conclusion.is_classically_correct == self.etr_predicted_conclusion.is_classically_correct,
+                "short_name_to_full_name": self.ontology.short_name_to_full_name,
             }
 
         return dict

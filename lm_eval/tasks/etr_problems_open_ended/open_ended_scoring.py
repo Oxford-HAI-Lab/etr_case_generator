@@ -42,7 +42,10 @@ def score_answer(question, model_answer):
     print("-" * 80)
     print(f"Starting Open Ended Scoring. Got this answer text: {answer_text}")
     try:
-        model_answer = use_model_get_etr_text(answer_text)
+        print(f"Compare to predicted:", question["scoring_guide"]["etr_predicted"])
+
+        short_name_to_full_name: dict[str, str] = question["scoring_guide"]["open_ended"]["short_name_to_full_name"]
+        model_answer = use_model_get_etr_text(answer_text, short_name_to_full_name)
 
         # Try to see if it follows!
         model_view_etr: View = View.from_str(model_answer)
@@ -108,11 +111,13 @@ def get_etr_substr(answer_text):
     # If it contains no '{', wrap it in curly brackets
     if "{" not in answer_text:
         answer_text = "{" + answer_text + "}"
+
     # Find "The following follows" in the answer_text, and get the substring after it
     model_answer = None
     match = re.search(r"(?<=following follows: )(.*)", answer_text)
     if not match:
         match = re.search(r"(?<=Answer: )(.*)", answer_text)
+
     # Find a matching pair of curly brackets in the answer_text
     if not match:
         match = re.search(r"\{([^}]+)\}", answer_text)
@@ -134,6 +139,7 @@ def get_etr_substr(answer_text):
     else:
         # print(f"Matched this answer: {model_answer}")
         pass
+
     # Let's try to clean up the answer
     # Remove "`." from the end of the answer (but not anywhere else in the string)
     model_answer = model_answer.strip()
@@ -142,18 +148,26 @@ def get_etr_substr(answer_text):
     model_answer = re.sub(r"`$", "", model_answer)
     model_answer = re.sub(r"\.$", "", model_answer)
     model_answer = re.sub(r"^`", "", model_answer)
+
     # If there are more than one '{' in the model_answer, and the first character is a '{', remove it and also the last '}'
     if model_answer.count("{") > 1 and model_answer[0] == "{" and model_answer[-1] == "}":
         model_answer = model_answer[1:-1]
+
+    # If there is no '{' in the model, add it to the front, do the same at the back
+    if "{" not in model_answer:
+        model_answer = "{" + model_answer
+    if "}" not in model_answer:
+        model_answer = model_answer + "}"
+
     print(f"Matched and parsed: {model_answer}")
     return model_answer
 
-def use_model_get_etr_text(model_answer: str, temperature: float = 0):
+def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str, str], temperature: float = 0):
+    # Reverse short_name_to_full_name
+    full_name_to_short_name = {v: k for k, v in short_name_to_full_name.items()}
+
     prompt = textwrap.dedent(f"""
         I am evaluating a logical claim, and I need to rewrite it into a format I can use.
-        
-        # The Background
-        ...
         
         # The Claim
         {model_answer}
@@ -170,6 +184,8 @@ def use_model_get_etr_text(model_answer: str, temperature: float = 0):
         - Wrap a statement in curly braces, like "{{f(x)g(x)}}", or "∀x {{f(x)g(x)}}", if there's a quantifier
         - Don't use unnecessary parentheses, like write "f(x)g(x)" instead of "(f(x))(g(x))"
         
+        You can use these predicates in your answer: {', '.join(short_name_to_full_name.values())}
+        
         Please rewrite the claim in this format. 
         
         Give your answer like this: `Answer: {{f(x)g(x)}}`
@@ -183,5 +199,17 @@ def use_model_get_etr_text(model_answer: str, temperature: float = 0):
         max_tokens=200
     )
     rewritten_by_model = response.choices[0].message.content
+    print(f"Rewritten by model: {rewritten_by_model}")
     etr_text = get_etr_substr(rewritten_by_model)
+
+    # Use full_name_to_short_name to convert the etr_text back to the short names
+    print(f"Converting {etr_text} back to short names")
+    etr_text = etr_text.replace("_", "")
+    for full_name, short_name in full_name_to_short_name.items():
+        full_name = full_name.replace("_", "")
+        etr_text = etr_text.replace(full_name, short_name)
+    print(f"Converted to short names: {etr_text}")
+
+    # Add '()' as needed, so like {B(a)} becomes {B(a())}, so any short name that isn't followed by a '(' should have '()' inserted right after. But only do this if the '(' is not already there.
+
     return etr_text
