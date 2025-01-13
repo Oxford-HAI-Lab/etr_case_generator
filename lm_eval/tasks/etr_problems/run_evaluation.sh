@@ -27,7 +27,7 @@ TASK="etr_problems"
 VERBOSITY="WARNING"
 
 # Default model class
-MODEL_CLASS="openai-chat-completions"
+MODEL_CLASS="openai-chat-completions"  # Supported model names: local-completions, local-chat-completions, openai-completions, openai-chat-completions, anthropic-completions, anthropic-chat, anthropic-chat-completions, dummy, gguf, ggml, hf-auto, hf, huggingface, hf-multimodal, watsonx_llm, mamba_ssm, nemo_lm, sparseml, deepsparse, neuronx, openvino, textsynth, vllm, vllm-vlm
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do

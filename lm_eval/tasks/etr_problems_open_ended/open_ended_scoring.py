@@ -94,9 +94,14 @@ def score_answer(question, model_answer):
         premises_etr = question["scoring_guide"]["generation_details"]["premises_etr"]
         premises_view = [View.from_str(p) for p in premises_etr]
         premises_fnodes = [view_to_smt(v) for v in premises_view]
+
+        # Classical logic
         is_classically_correct: bool = does_it_follow(premises_fnodes, model_view_smt_fnode)
+
+        # ETR
         is_etr_predicted: bool = default_procedure_does_it_follow(premises_view, model_view_etr)
-        # TODO Use default_inference_procedure, see if the views match
+
+        # Exact ETR
         etr_strong_predicted: View = default_inference_procedure(premises_view)
         is_etr_strong_predicted: bool = etr_strong_predicted == model_view_etr
 
@@ -106,9 +111,17 @@ def score_answer(question, model_answer):
         return {
             "correct": float(is_classically_correct),
             "is_etr_predicted": float(is_etr_predicted),
-            "etr_strong_predicted": float(is_etr_strong_predicted),
+            "is_etr_predicted_exact": float(is_etr_strong_predicted),
             "len_response": len(original_model_answer),
             "parse_error": 0,
+            "model_answer": model_answer,
+            "full_model_response": original_model_answer,
+
+            # Full quadrants
+            "correct_and_etr": float(is_classically_correct and is_etr_predicted),
+            "correct_and_not_etr": float(is_classically_correct and not is_etr_predicted),
+            "not_correct_and_etr": float(not is_classically_correct and is_etr_predicted),
+            "not_correct_and_not_etr": float(not is_classically_correct and not is_etr_predicted),
         }
     except Exception as e:
         print("!" * 80)
