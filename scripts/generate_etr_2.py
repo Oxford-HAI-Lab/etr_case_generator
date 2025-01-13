@@ -2,6 +2,7 @@ import argparse
 import json
 import random
 from typing import get_args
+from tqdm import tqdm
 
 from etr_case_generator.generator2.generate_problem_from_logical import generate_problem
 from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType
@@ -22,21 +23,51 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
         o.preferred_name_shortening_scheme = args.name_shortening
         o.fill_mapping()
 
+    quadrant_counts = {
+        (True, True): 0,   # (erotetic, classical)
+        (True, False): 0,  # (erotetic, non-classical)
+        (False, True): 0,  # (non-erotetic, classical)
+        (False, False): 0  # (non-erotetic, non-classical)
+    }
+    num_needed_per_quadrant: int = (n_problems + 3) // 4
+
     problems: list[FullProblem] = []
-    for i in range(args.n_problems):
-        if args.verbose:
-            print(f"Generating problem {len(problems) + 1}/{args.n_problems}")
+    pbar = tqdm(range(n_problems), desc="Generating problems")
+    for _ in pbar:
+        current_counter: int = 0
+        while True:  # Keep trying until we get an acceptable problem
+            ontology = random.choice(all_ontologies)
+            current_counter += 1
+            
+            try:
+                problem: FullProblem = generate_problem(args, ontology=ontology)
 
-        # Generate a random ontology
-        ontology = random.choice(all_ontologies)
+                if args.balance:
+                    problem_is_erotetic: bool = problem.get_yes_no_conclusion().is_etr_predicted
+                    problem_is_classical: bool = problem.get_yes_no_conclusion().is_classically_correct
+                    current_quadrant = (problem_is_erotetic, problem_is_classical)
 
-        # Generate a random problem
-        problem = generate_problem(args, ontology=ontology)
+                    # Update the progress bar with current counts
+                    pbar.set_postfix({
+                        'EC': quadrant_counts[(True, True)],    # Erotetic Classical
+                        'EN': quadrant_counts[(True, False)],   # Erotetic Non-classical
+                        'NC': quadrant_counts[(False, True)],   # Non-erotetic Classical
+                        'NN': quadrant_counts[(False, False)],  # Non-erotetic Non-classical
+                        'T': current_counter,                   # Try number
+                    })
+                    
+                    if quadrant_counts[current_quadrant] >= num_needed_per_quadrant:
+                        continue  # Try again if this quadrant is full
+                    
+                    quadrant_counts[current_quadrant] += 1
+                
+                problems.append(problem)
+                break  # Successfully generated a problem, move to next iteration
 
-        problems.append(problem)
-        # print(f"Generated Problem {i + 1} of {n_problems}")
-        # print(problem.full_string(show_empty=True, question_types=question_types))
-
+            except Exception as e:
+                print(f"Failed to generate problem: {e}")
+                continue  # Try again
+    
     return problems
 
 
@@ -67,6 +98,7 @@ def main():
     parser.add_argument("--question_type", type=str, default="all", help="Type of question to ask. Options are 'all', 'yes_no', 'multiple_choice', 'open_ended'.", choices=["all"] + list(get_args(QuestionType)))
     parser.add_argument("--save_file_name", type=str, default="problems", help="Name for saved jsonl files")
     parser.add_argument("--generate_function", type=str, default="random_smt_problem", help="Which function to use in generation.", choices=["random_smt_problem", "random_etr_problem"])
+    parser.add_argument("--balance", help="Balance the dataset through the 4 quadrants of erotetic and classical yes/no.", action="store_true")
     # TODO(Ryan): Add parameters for problem generation here
     args = parser.parse_args()
 

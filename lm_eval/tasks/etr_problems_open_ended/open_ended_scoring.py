@@ -8,6 +8,7 @@ from pysmt.fnode import FNode
 from etr_case_generator.generator2.formatting_smt import load_fnode_from_string
 from etr_case_generator.generator2.logic_helper import does_it_follow
 from pyetr.inference import default_procedure_does_it_follow
+from pyetr.inference import default_inference_procedure
 from smt_interface.smt_encoder import view_to_smt
 
 # This is necessary because of the way that lm_eval runs this file
@@ -26,18 +27,22 @@ def score_answer(question, model_answer):
         dict: A dictionary containing the score and response length
     """
     # Extract answer text
+    if isinstance(model_answer, dict):
+        answer_text = model_answer.get("text", "")
+    elif isinstance(model_answer, list) and len(model_answer) > 0:
+        answer_text = str(model_answer[0])
+    else:
+        answer_text = str(model_answer)
+    original_model_answer: str = answer_text
     try:
-        if isinstance(model_answer, dict):
-            answer_text = model_answer.get("text", "")
-        elif isinstance(model_answer, list) and len(model_answer) > 0:
-            answer_text = str(model_answer[0])
-        else:
-            answer_text = str(model_answer)
-
         print(f"Got this answer text: {answer_text}")
 
         # Show the full details of the question, for debugging. This contains generation details and the scoring guide.
         # print(json.dumps(question, indent=4))
+
+        # If it contains no '{', wrap it in curly brackets
+        if "{" not in answer_text:
+            answer_text = "{" + answer_text + "}"
 
         # Find "The following follows" in the answer_text, and get the substring after it
         model_answer = None
@@ -63,9 +68,10 @@ def score_answer(question, model_answer):
         if not model_answer:
             # TODO This fails too often!
             print(f"Could not find a match in this answer: {answer_text}")
-            return {"correct": 0.0, "len_response": len(answer_text)}
+            raise Exception("Could not find a match in the answer text")
         else:
-            print(f"Matched this answer: {model_answer}")
+            # print(f"Matched this answer: {model_answer}")
+            pass
 
         # Let's try to clean up the answer
         # Remove "`." from the end of the answer (but not anywhere else in the string)
@@ -75,6 +81,10 @@ def score_answer(question, model_answer):
         model_answer = re.sub(r"`$", "", model_answer)
         model_answer = re.sub(r"\.$", "", model_answer)
         model_answer = re.sub(r"^`", "", model_answer)
+
+        # If there are more than one '{' in the model_answer, and the first character is a '{', remove it and also the last '}'
+        if model_answer.count("{") > 1 and model_answer[0] == "{" and model_answer[-1] == "}":
+            model_answer = model_answer[1:-1]
 
         print(f"Matched and parsed: {model_answer}")
 
@@ -87,16 +97,29 @@ def score_answer(question, model_answer):
         is_classically_correct: bool = does_it_follow(premises_fnodes, model_view_smt_fnode)
         is_etr_predicted: bool = default_procedure_does_it_follow(premises_view, model_view_etr)
         # TODO Use default_inference_procedure, see if the views match
+        etr_strong_predicted: View = default_inference_procedure(premises_view)
+        is_etr_strong_predicted: bool = etr_strong_predicted == model_view_etr
 
         print(f"ETR predicted: {is_etr_predicted}")
         print(f"Classically correct: {is_classically_correct}")
 
         return {
             "correct": float(is_classically_correct),
-            "etr_predicted": float(is_etr_predicted),
-            "len_response": len(answer_text),
+            "is_etr_predicted": float(is_etr_predicted),
+            "etr_strong_predicted": float(is_etr_strong_predicted),
+            "len_response": len(original_model_answer),
+            "parse_error": 0,
         }
     except Exception as e:
         print("!" * 80)
         print(f"Error: {e}")
-        return {"correct": 0.0, "len_response": 0}
+        print(json.dumps(question, indent=4))
+        print(model_answer)
+        # raise e
+        return {
+            "correct": 0.0,
+            "len_response": len(original_model_answer),
+            "parse_error": 1,
+            "is_etr_predicted": 0.0,
+            "etr_strong_predicted": 0.0,
+        }

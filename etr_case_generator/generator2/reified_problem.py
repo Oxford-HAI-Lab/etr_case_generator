@@ -173,12 +173,16 @@ class FullProblem:
         - You can use the "∀" to represent "for all", like "∀x f(x)"
         - You can use the "∃" to represent "there exists", like "∃x f(x)"
         - Wrap a statement in curly braces, like "{f(x)g(x)}", or "∀x {f(x)g(x)}", if there's a quantifier
+        - Don't use unnecessary parentheses, like write "f(x)g(x)" instead of "(f(x))(g(x))"
         """).strip()  # TODO Add more rules here
 
     # Boilerplate for the question
     introductory_prose: Optional[str] = None
-    answer_immediately_prose: Optional[str] = "I want you to answer immediately."
+    answer_immediately_prose: Optional[str] = "I want you to answer immediately. Do not think about it at all, just immediately answer."
     chain_of_thought_prose: Optional[str] = "I want you to spend a few paragraphs thinking about your answer."
+
+    def get_yes_no_conclusion(self) -> Conclusion:
+        return self.possible_conclusions[self.yes_or_no_conclusion_chosen_index]
 
     def fill_out(self, ontology: Optional[Ontology] = None, partial_problem: PartialProblem = None):
         if self.views is not None:
@@ -260,6 +264,7 @@ class FullProblem:
                     "num_objects_per_problem": args.num_objects_per_problem,
                     "premises_etr": [view.logical_form_etr for view in self.views],
                     "premises_fnodes": [format_smt(view.logical_form_smt_fnode) for view in self.views],
+                    "is_chain_of_thought": chain_of_thought,
                     # TODO Number of disjunctions in premises
                     # TODO Number of conjunctions in premises
                 }
