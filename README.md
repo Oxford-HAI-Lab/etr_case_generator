@@ -50,7 +50,7 @@ This project has two main components that require different setup:
    ~/.local/pipx/venvs/lm-eval/bin/python -m pip install -e ~/Dev/PyETR_fork/
    
    # Install other required dependencies
-   ~/.local/pipx/venvs/lm-eval/bin/python -m pip install pysmt rich
+   ~/.local/pipx/venvs/lm-eval/bin/python -m pip install pysmt rich openai dataclasses_json
    
    # Install this package
    ~/.local/pipx/venvs/lm-eval/bin/python -m pip install -e ~/Dev/etr_case_generator/
