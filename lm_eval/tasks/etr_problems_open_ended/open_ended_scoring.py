@@ -134,5 +134,13 @@ def score_answer(question, model_answer):
             "len_response": len(original_model_answer),
             "parse_error": 1,
             "is_etr_predicted": 0.0,
-            "etr_strong_predicted": 0.0,
+            "is_etr_predicted_exact": 0.0,
+            "model_answer": model_answer,
+            "full_model_response": original_model_answer,
+
+            # Full quadrants
+            "correct_and_etr": 0.0,
+            "correct_and_not_etr": 0.0,
+            "not_correct_and_etr": 0.0,
+            "not_correct_and_not_etr": 0.0,
         }

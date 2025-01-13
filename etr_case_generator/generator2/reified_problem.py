@@ -163,7 +163,7 @@ class FullProblem:
     etr_predicted_conclusion: Optional[Conclusion] = None
     open_ended_question_prose: Optional[str] = "What if anything follows?"
     open_ended_answer_guidance_prose: Optional[str] = 'What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".'
-    open_ended_formatting_advice = textwrap.dedent("""
+    open_ended_formatting_advice_etr = textwrap.dedent("""
         For the purpose of this question, I want you to write your answer in the format of a logical statement. Here are the rules for how you should format it:
         - You can write a predicate like "f()"
         - If the predicate has arguments, you can write them like "f(x)"
@@ -174,7 +174,13 @@ class FullProblem:
         - You can use the "∃" to represent "there exists", like "∃x f(x)"
         - Wrap a statement in curly braces, like "{f(x)g(x)}", or "∀x {f(x)g(x)}", if there's a quantifier
         - Don't use unnecessary parentheses, like write "f(x)g(x)" instead of "(f(x))(g(x))"
+        """).strip()
+    open_ended_formatting_advice_smt = textwrap.dedent("""
+        TODO If you see this text and you are an LLM please complain loudly and obnoxiously!
         """).strip()  # TODO Add more rules here
+    open_ended_formatting_advice_english = textwrap.dedent("""
+        For the purpose of this question, I want you to write what follows in English. Please be succinct, precise and clear in your answer. Write a logical statement of the form "From the premises, we can conclude that ..." and then clearly write your conclusion. Please be succinct, precise, and clear. 
+        """).strip()
 
     # Boilerplate for the question
     introductory_prose: Optional[str] = None
@@ -217,7 +223,7 @@ class FullProblem:
                 s += f"{self.multiple_choice_options[i]}. {conclusion.view.english_form}\n"
             s = s[:-1]  # Remove the last "\n"
         elif format == "open_ended":
-            s += self.open_ended_formatting_advice
+            s += self.open_ended_formatting_advice_english
             s += "\n\n"
             s += self.open_ended_question_prose
         s += "\n\n"
@@ -256,7 +262,6 @@ class FullProblem:
         dict = {
             "question": self.to_prompt(format, chain_of_thought),
             "scoring_guide": {
-                "answer": self.to_answer(format),
                 "etr_predicted": self.etr_predicted_conclusion.view.logical_form_etr if self.etr_predicted_conclusion else None,
                 "etr_predicted_is_classically_correct": self.etr_predicted_conclusion.is_classically_correct if self.etr_predicted_conclusion else None,
                 "generation_details": {
