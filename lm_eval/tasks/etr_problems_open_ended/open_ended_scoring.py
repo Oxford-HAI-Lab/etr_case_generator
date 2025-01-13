@@ -163,6 +163,14 @@ def use_model_get_etr_text(model_answer):
         - Wrap a statement in curly braces, like "{{f(x)g(x)}}", or "∀x {{f(x)g(x)}}", if there's a quantifier
         - Don't use unnecessary parentheses, like write "f(x)g(x)" instead of "(f(x))(g(x))"
     """)
-    rewritten_by_model = ...  # TODO Use openai with gpt-4-turbo
+    response = openai.chat.completions.create(
+        model="gpt-4-turbo-preview",
+        messages=[
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0,
+        max_tokens=200
+    )
+    rewritten_by_model = response.choices[0].message.content
     etr_text = get_etr_substr(rewritten_by_model)
     return etr_text
