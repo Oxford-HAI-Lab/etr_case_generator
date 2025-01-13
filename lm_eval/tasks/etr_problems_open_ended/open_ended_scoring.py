@@ -39,9 +39,8 @@ def score_answer(question, model_answer):
     else:
         answer_text = str(model_answer)
     original_model_answer: str = answer_text
+    print(f"Starting Open Ended Scoring. Got this answer text: {answer_text}")
     try:
-        print(f"Got this answer text: {answer_text}")
-
         model_answer = get_etr_substr(answer_text)
 
         # Try to see if it follows!
@@ -80,10 +79,10 @@ def score_answer(question, model_answer):
             "not_correct_and_not_etr": float(not is_classically_correct and not is_etr_predicted),
         }
     except Exception as e:
-        print("!" * 80)
+        # print("!" * 80)
         print(f"Error: {e}")
-        print(json.dumps(question, indent=4))
-        print(model_answer)
+        # print(json.dumps(question, indent=4))
+        # print(model_answer)
         # raise e
         return {
             "correct": 0.0,
@@ -148,10 +147,17 @@ def get_etr_substr(answer_text):
     print(f"Matched and parsed: {model_answer}")
     return model_answer
 
-def use_model_get_etr_text(model_answer):
+def use_model_get_etr_text(model_answer: str, temperature: float = 0):
     prompt = textwrap.dedent(f"""
+        I am evaluating a logical claim, and I need to rewrite it into a format I can use.
+        
+        # The Background
+        ...
+        
+        # The Claim
         {model_answer}
         
+        # Needed Format
         I want you to rewrite this answer in the format of a logical statement. Here are the rules for how you should format it:
         - You can write a predicate like "f()"
         - If the predicate has arguments, you can write them like "f(x)"
@@ -162,13 +168,17 @@ def use_model_get_etr_text(model_answer):
         - You can use the "∃" to represent "there exists", like "∃x f(x)"
         - Wrap a statement in curly braces, like "{{f(x)g(x)}}", or "∀x {{f(x)g(x)}}", if there's a quantifier
         - Don't use unnecessary parentheses, like write "f(x)g(x)" instead of "(f(x))(g(x))"
+        
+        Please rewrite the claim in this format. 
+        
+        Give your answer like this: `Answer: {{f(x)g(x)}}`
     """)
     response = openai.chat.completions.create(
         model="gpt-4-turbo-preview",
         messages=[
             {"role": "user", "content": prompt}
         ],
-        temperature=0,
+        temperature=temperature,
         max_tokens=200
     )
     rewritten_by_model = response.choices[0].message.content
