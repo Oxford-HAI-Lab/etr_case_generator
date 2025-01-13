@@ -7,6 +7,7 @@ show_help() {
     echo
     echo "Options:"
     echo "  -m, --model MODEL      Model to use (default: gpt-4-turbo)"
+    echo "  -c, --class CLASS      Model class (default: openai-chat-completions)"
     echo "  -p, --path PATH        Path to lm-evaluation-harness directory"
     echo "  -i, --include PATH     Path to include for task definitions"
     echo "  -d, --dataset PATH     Path to dataset JSONL file to evaluate"
@@ -18,7 +19,6 @@ show_help() {
 }
 
 # Default values
-MODEL_CLASS="openai-chat-completions"
 MODEL="gpt-4-turbo"
 EVAL_PATH="/home/keenan/Dev/lm-evaluation-harness/"
 INCLUDE_PATH="/home/keenan/Dev/etr_case_generator/"
@@ -26,9 +26,16 @@ DATASET=""
 TASK="etr_problems"
 VERBOSITY="WARNING"
 
+# Default model class
+MODEL_CLASS="openai-chat-completions"
+
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
+        -c|--class)
+            MODEL_CLASS="$2"
+            shift 2
+            ;;
         -m|--model)
             MODEL="$2"
             shift 2
