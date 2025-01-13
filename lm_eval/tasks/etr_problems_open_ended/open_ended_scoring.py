@@ -211,5 +211,10 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
     print(f"Converted to short names: {etr_text}")
 
     # Add '()' as needed, so like {B(a)} becomes {B(a())}, so any short name that isn't followed by a '(' should have '()' inserted right after. But only do this if the '(' is not already there.
-
+    for short_name in full_name_to_short_name.values():
+        # Look for the short_name not followed by a '('
+        pattern = f"({short_name})([^(]|$)"
+        etr_text = re.sub(pattern, r"\1()\2", etr_text)
+    
+    print(f"Added missing parentheses: {etr_text}")
     return etr_text
