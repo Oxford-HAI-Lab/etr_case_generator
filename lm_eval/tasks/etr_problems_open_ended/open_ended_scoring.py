@@ -43,7 +43,13 @@ def score_answer(question, model_answer):
     print(f"Starting Open Ended Scoring. Got this answer text: {answer_text}")
     try:
         short_name_to_full_name: dict[str, str] = question["scoring_guide"]["open_ended"]["short_name_to_full_name"]
-        model_answer = use_model_get_etr_text(answer_text, short_name_to_full_name)
+        for i in range(3):
+            try:
+                model_answer = use_model_get_etr_text(answer_text, short_name_to_full_name, temperature=0.2 + 0.2 * i)
+                break
+            except Exception as e:
+                print(f"ETR Text Translation Failure {i}: {e}")
+                continue
 
         print(f"Compare to predicted:", question["scoring_guide"]["etr_predicted"])
 
@@ -87,7 +93,7 @@ def score_answer(question, model_answer):
         print(f"Error: {str(e)[:100]}")
         # print(json.dumps(question, indent=4))
         # print(model_answer)
-        raise e
+        # raise e
         return {
             "correct": 0.0,
             "len_response": len(original_model_answer),
