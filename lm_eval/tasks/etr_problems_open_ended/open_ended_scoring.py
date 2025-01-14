@@ -43,12 +43,15 @@ def score_answer(question, model_answer):
     print(f"Starting Open Ended Scoring. Got this answer text: {answer_text}")
     try:
         short_name_to_full_name: dict[str, str] = question["scoring_guide"]["open_ended"]["short_name_to_full_name"]
-        for i in range(3):
+        num_attempts = 3
+        for i in range(num_attempts):
             try:
                 model_answer = use_model_get_etr_text(answer_text, short_name_to_full_name, temperature=0.2 + 0.2 * i)
                 break
             except Exception as e:
                 print(f"ETR Text Translation Failure {i}: {e}")
+                if i == num_attempts - 1:
+                    raise e
                 continue
 
         print(f"Compare to predicted:", question["scoring_guide"]["etr_predicted"])
