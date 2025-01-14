@@ -7,6 +7,7 @@ show_help() {
     echo
     echo "Options:"
     echo "  -m, --model MODEL      Model to use (default: gpt-4-turbo)"
+    echo "  -c, --class CLASS      Model class (default: openai-chat-completions)"
     echo "  -p, --path PATH        Path to lm-evaluation-harness directory"
     echo "  -i, --include PATH     Path to include for task definitions"
     echo "  -d, --dataset PATH     Path to dataset JSONL file to evaluate"
@@ -18,7 +19,6 @@ show_help() {
 }
 
 # Default values
-MODEL_CLASS="openai-chat-completions"
 MODEL="gpt-4-turbo"
 EVAL_PATH="/home/keenan/Dev/lm-evaluation-harness/"
 INCLUDE_PATH="/home/keenan/Dev/etr_case_generator/"
@@ -26,9 +26,23 @@ DATASET=""
 TASK="etr_problems"
 VERBOSITY="WARNING"
 
+# Check for required environment variables
+if [ -z "$OPENAI_API_KEY" ]; then
+    echo "Error: OPENAI_API_KEY environment variable is not set"
+    echo "Please ensure it is exported in your ~/.bashrc or set it before running this script"
+    exit 1
+fi
+
+# Default model class
+MODEL_CLASS="openai-chat-completions"  # Supported model names: local-completions, local-chat-completions, openai-completions, openai-chat-completions, anthropic-completions, anthropic-chat, anthropic-chat-completions, dummy, gguf, ggml, hf-auto, hf, huggingface, hf-multimodal, watsonx_llm, mamba_ssm, nemo_lm, sparseml, deepsparse, neuronx, openvino, textsynth, vllm, vllm-vlm
+
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
+        -c|--class)
+            MODEL_CLASS="$2"
+            shift 2
+            ;;
         -m|--model)
             MODEL="$2"
             shift 2

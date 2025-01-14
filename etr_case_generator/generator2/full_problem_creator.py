@@ -40,6 +40,8 @@ def full_problem_from_partial_problem(partial_problem: PartialProblem, ontology:
         etr_predicted_conclusion=Conclusion(view=etr_predicted_conclusion),
     )
 
+    full_problem.ontology = ontology
+
     full_problem.fill_out(ontology=ontology, partial_problem=partial_problem)
 
     return full_problem
