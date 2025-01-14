@@ -224,7 +224,8 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
     etr_text = etr_text.replace("_", "")
     for full_name, short_name in full_name_to_short_name.items():
         full_name = full_name.replace("_", "")
-        etr_text = etr_text.replace(full_name, short_name)
+        # Use word boundaries \b to prevent partial matches
+        etr_text = re.sub(fr'\b{re.escape(full_name)}\b', short_name, etr_text)
     # print(f"Converted to short names: {etr_text}")
 
     # Add '()' as needed, so like {B(a)} becomes {B(a())}, so any short name that isn't followed by a '(' should have '()' inserted right after. But only do this if the '(' is not already there.
