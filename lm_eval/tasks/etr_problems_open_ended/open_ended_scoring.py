@@ -42,10 +42,10 @@ def score_answer(question, model_answer):
     print("-" * 80)
     print(f"Starting Open Ended Scoring. Got this answer text: {answer_text}")
     try:
-        print(f"Compare to predicted:", question["scoring_guide"]["etr_predicted"])
-
         short_name_to_full_name: dict[str, str] = question["scoring_guide"]["open_ended"]["short_name_to_full_name"]
         model_answer = use_model_get_etr_text(answer_text, short_name_to_full_name)
+
+        print(f"Compare to predicted:", question["scoring_guide"]["etr_predicted"])
 
         # Try to see if it follows!
         model_view_etr: View = View.from_str(model_answer)
@@ -215,7 +215,7 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
     for full_name, short_name in full_name_to_short_name.items():
         full_name = full_name.replace("_", "")
         etr_text = etr_text.replace(full_name, short_name)
-    print(f"Converted to short names: {etr_text}")
+    # print(f"Converted to short names: {etr_text}")
 
     # Add '()' as needed, so like {B(a)} becomes {B(a())}, so any short name that isn't followed by a '(' should have '()' inserted right after. But only do this if the '(' is not already there.
     for short_name in full_name_to_short_name.values():
@@ -223,8 +223,9 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
         pattern = f"({short_name})([^(]|$)"
         etr_text = re.sub(pattern, r"\1()\2", etr_text)
     
-    print(f"Added missing parentheses: {etr_text}")
+    # print(f"Added missing parentheses: {etr_text}")
 
+    # Remove spaces, except the needed spaces
     etr_text = etr_text.replace(" ", "")
     etr_text = etr_text.replace("{", " {").strip()
 
