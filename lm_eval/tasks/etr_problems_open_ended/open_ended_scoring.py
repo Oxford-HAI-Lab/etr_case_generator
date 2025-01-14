@@ -87,7 +87,7 @@ def score_answer(question, model_answer):
         print(f"Error: {str(e)[:100]}")
         # print(json.dumps(question, indent=4))
         # print(model_answer)
-        # raise e
+        raise e
         return {
             "correct": 0.0,
             "len_response": len(original_model_answer),
@@ -164,7 +164,14 @@ def get_etr_substr(answer_text):
 
 def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str, str], temperature: float = 0):
     # Reverse short_name_to_full_name
-    full_name_to_short_name = {v: k for k, v in short_name_to_full_name.items()}
+    full_name_to_short_name = {v: k for k, v in short_name_to_full_name.items() if k and v}
+
+    try:
+        full_names = [fn for fn in short_name_to_full_name.values() if fn]
+        name_options = ', '.join(full_names)
+    except Exception as e:
+        print(short_name_to_full_name)
+        raise e
 
     prompt = textwrap.dedent(f"""
         I am evaluating a logical claim, and I need to rewrite it into a format I can use.
@@ -184,7 +191,7 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
         - Wrap a statement in curly braces, like "{{f(x)g(x)}}", or "∀x {{f(x)g(x)}}", if there's a quantifier
         - Don't use unnecessary parentheses, like write "f(x)g(x)" instead of "(f(x))(g(x))"
         
-        You can use these predicates in your answer: {', '.join(short_name_to_full_name.values())}
+        You can use these predicates in your answer: {name_options}
         
         Please rewrite the claim in this format. 
         
@@ -217,4 +224,10 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
         etr_text = re.sub(pattern, r"\1()\2", etr_text)
     
     print(f"Added missing parentheses: {etr_text}")
+
+    etr_text = etr_text.replace(" ", "")
+    etr_text = etr_text.replace("{", " {").strip()
+
+    print(f"Final ETR text: {etr_text}")
+
     return etr_text
