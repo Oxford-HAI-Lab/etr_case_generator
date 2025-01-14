@@ -36,10 +36,10 @@ def atom_to_natural_language(atom: PredicateAtom, obj_map: dict[str, str], ontol
         # For now, since these predicates are all arity 1, we just take the
         # name property straightaway
         available_predicates = [
-            p for p in ontology.predicates if p.name not in obj_map.values()
+            p.name for p in ontology.predicates if p.name not in obj_map.values()
         ]
         # print("DEBUG ATOM - available_predicates:", [p.name for p in available_predicates])
-        predicate_nl = random.sample(available_predicates, k=1)[0].name
+        predicate_nl = random.sample(available_predicates, k=1)[0]
         obj_map[predicate_name] = predicate_nl
 
     # Check if term is arbitrary or not

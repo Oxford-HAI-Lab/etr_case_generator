@@ -78,9 +78,9 @@ def smt_to_english(fnode: FNode, ontology: Ontology) -> str:
     def _logical_to_english(text: str):
         if text in ontology.short_name_to_full_name:
             text = ontology.short_name_to_full_name[text]
-        else:
-            print(f"Couldn't find {text} in ontology mapping.")
-            print(ontology.short_name_to_full_name)
+        # else:
+        #     print(f"Couldn't find {text} in ontology mapping.")
+        #     print(ontology.short_name_to_full_name)
         text.replace("_", " ")
         return text
 

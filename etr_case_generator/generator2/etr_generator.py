@@ -1,3 +1,5 @@
+import random
+
 from collections import deque
 from dataclasses import dataclass, field
 from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
@@ -27,30 +29,57 @@ class ETRGenerator:
         Create an initial seed problem.
 
         Returns:
-            PartialProblem: for now, just the initial disjunction fallacy example
+            PartialProblem: a random pick from a list of simple problems
         """
+        possible_seeds = [
+            (  # Modus ponens
+                [
+                    View.from_str("{ A(a()) }^{ B(a()) }"),
+                    View.from_str("{ B(a()) }")
+                ],
+                View.from_str("{ A(a()) }")
+            ),
+            (  # Modus tollens
+                [
+                    View.from_str("{ A(a()) }^{ B(a()) }"),
+                    View.from_str("{ ~A(a()) }")
+                ],
+                View.from_str("{ ~B(a()) }")
+            ),
+            (  # Quantified modus ponens
+                [
+                    View.from_str("Aa { A(a*) }^{ B(a*) }"),
+                    View.from_str("Aa { B(a*) }")
+                ],
+                View.from_str("Aa { A(a*) }")
+            ),
+            (  # Disjunction fallacy
+                [
+                    View.from_str("{ A(a()) B(a()), C(b()) D(b()) }"),
+                    View.from_str("{ A(a()) }")
+                ],
+                View.from_str("{ B(a()) }")
+            ),
+        ]
+
+        seed = random.choice(possible_seeds)
+
         return PartialProblem(
             premises=[
                 ReifiedView(
                     logical_form_smt=None,
                     logical_form_smt_fnode=None,
-                    logical_form_etr_view=View.from_str("{ A(a()) B(a()), C(b()) D(b()) }"),
-                    english_form=None,  # TODO
-                ),
-                ReifiedView(
-                    logical_form_smt=None,
-                    logical_form_smt_fnode=None,
-                    logical_form_etr_view=View.from_str("{ A(a()) }"),
-                    english_form=None,  # TODO
-                ),
-            ],  # TODO
+                    logical_form_etr_view=v,
+                    english_form=None,
+                ) for v in seed[0]
+            ],
             possible_conclusions_from_logical=None,
-            possible_conclusions_from_etr=None,  # TODO
+            possible_conclusions_from_etr=None,
             etr_what_follows=ReifiedView(
                 logical_form_smt=None,
                 logical_form_smt_fnode=None,
-                logical_form_etr_view=View.from_str("{ B(a()) }"),
-                english_form=None,  # TODO
+                logical_form_etr_view=seed[1],
+                english_form=None,
             ),
         )
 
@@ -99,12 +128,6 @@ class ETRGenerator:
                 etr_what_follows = default_inference_procedure(mutated_premises)
                 premises = []
                 for p in mutated_premises:
-                    # english_form, obj_map = view_to_natural_language(
-                    #     ontology=ontology, 
-                    #     view=p,
-                    #     obj_map=ontology.short_name_to_full_name
-                    # )
-                    # ontology.short_name_to_full_name.update(obj_map)
                     premises.append(
                         ReifiedView(
                             logical_form_etr_view=p,
