@@ -46,7 +46,7 @@ def score_answer(question, model_answer):
         num_attempts = 3
         for i in range(num_attempts):
             try:
-                model_answer = use_model_get_etr_text(answer_text, short_name_to_full_name, temperature=0.2 + 0.2 * i)
+                model_answer = use_model_get_etr_text(answer_text, short_name_to_full_name, question["scoring_guide"]["generation_details"]["premises_etr"], temperature=0.2 + 0.2 * i)
                 break
             except Exception as e:
                 print(f"ETR Text Translation Failure {i}: {e}")
@@ -171,9 +171,19 @@ def get_etr_substr(answer_text):
     print(f"Matched and parsed: {model_answer}")
     return model_answer
 
-def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str, str], temperature: float = 0):
+def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str, str], premises: list[str], temperature: float = 0):
     # Reverse short_name_to_full_name
     full_name_to_short_name = {v: k for k, v in short_name_to_full_name.items() if k and v}
+
+    # Generate some example premises
+    full_premises: list[str] = []
+    for p in premises:
+        for full_name, short_name in full_name_to_short_name.items():
+            p = p.replace(short_name, full_name)
+        full_premises.append(p)
+
+    print("PREMISES!!!")
+    print("\n".join(full_premises))
 
     try:
         full_names = [fn for fn in short_name_to_full_name.values() if fn]
@@ -202,11 +212,12 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
         - Don't use unnecessary parentheses, like write "f(x)g(x)" instead of "(f(x))(g(x))"
         
         You can use these predicates in your answer: {name_options}
+        Here are some examples of logical formulas that are formatted this way: PREMISES_STR
         
         Please rewrite the claim in this format. 
         
         Give your answer like this: `Answer: {{f(x)g(x)}}`
-    """)
+    """).replace("PREMISES_STR", "\n".join(full_premises))
     response = openai.chat.completions.create(
         model="gpt-4-turbo-preview",
         messages=[
