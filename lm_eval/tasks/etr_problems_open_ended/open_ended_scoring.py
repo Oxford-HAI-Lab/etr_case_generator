@@ -197,6 +197,7 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
         - You can represent "or" by writing multiple predicates with a "," between them, like "f(x),g(x)"
         - You can use the "∀" to represent "for all", like "∀x f(x)"
         - You can use the "∃" to represent "there exists", like "∃x f(x)"
+        - If nothing is concluded, write "{{0}}"
         - Wrap a statement in curly braces, like "{{f(x)g(x)}}", or "∀x {{f(x)g(x)}}", if there's a quantifier
         - Don't use unnecessary parentheses, like write "f(x)g(x)" instead of "(f(x))(g(x))"
         
