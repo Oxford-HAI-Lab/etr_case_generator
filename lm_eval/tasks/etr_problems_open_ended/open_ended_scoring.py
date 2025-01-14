@@ -31,33 +31,6 @@ def score_answer(question, model_answer):
     Returns:
         dict: A dictionary containing the score and response length
     """
-    num_attempts = 3
-    for i in range(num_attempts):
-        try:
-            return attempt_score_answer(question, model_answer)
-        except Exception as e:
-            print(f"Failure {i}/{num_attempts}: {e}")
-            if i == num_attempts - 1:
-                break
-            continue
-    return {
-        "correct": 0.0,
-        "len_response": len(model_answer),
-        "parse_error": 1,  # This is the important part here. The rest are just filled in to prevent errors
-        "is_etr_predicted": 0.0,
-        "is_etr_predicted_exact": 0.0,
-        "model_answer": model_answer,
-        "full_model_response": model_answer,
-
-        # Full quadrants
-        "correct_and_etr": 0.0,
-        "correct_and_not_etr": 0.0,
-        "not_correct_and_etr": 0.0,
-        "not_correct_and_not_etr": 0.0,
-    }
-
-
-def attempt_score_answer(question, model_answer):
     # Extract answer text
     if isinstance(model_answer, dict):
         answer_text = model_answer.get("text", "")
@@ -68,9 +41,37 @@ def attempt_score_answer(question, model_answer):
     original_model_answer: str = answer_text
     print("-" * 80)
     print(f"Starting Open Ended Scoring. Got this answer text: {answer_text}")
+
+    num_attempts = 3
+    for i in range(num_attempts):
+        try:
+            return attempt_score_answer(question, answer_text, original_model_answer, attempt_num=i)
+        except Exception as e:
+            print(f"Failure {i+1}/{num_attempts}: {str(e)[:100]...}")
+            if i == num_attempts - 1:
+                break
+            continue
+    return {
+        "correct": 0.0,
+        "len_response": len(original_model_answer),
+        "parse_error": 1,  # This is the important part here. The rest are just filled in to prevent errors
+        "is_etr_predicted": 0.0,
+        "is_etr_predicted_exact": 0.0,
+        "model_answer": answer_text,
+        "full_model_response": original_model_answer,
+
+        # Full quadrants
+        "correct_and_etr": 0.0,
+        "correct_and_not_etr": 0.0,
+        "not_correct_and_etr": 0.0,
+        "not_correct_and_not_etr": 0.0,
+    }
+
+
+def attempt_score_answer(question: dict, answer_text: str, original_model_answer: str, attempt_num: int = 0):
     try:
         short_name_to_full_name: dict[str, str] = question["scoring_guide"]["open_ended"]["short_name_to_full_name"]
-        model_answer = use_model_get_etr_text(answer_text, short_name_to_full_name, question["scoring_guide"]["generation_details"]["premises_etr"], temperature=0.2 + 0.2 * i)
+        model_answer = use_model_get_etr_text(answer_text, short_name_to_full_name, question["scoring_guide"]["generation_details"]["premises_etr"], temperature=0.2 + 0.2 * attempt_num)
 
         print(f"Compare to predicted:", question["scoring_guide"]["etr_predicted"])
 
