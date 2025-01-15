@@ -29,7 +29,12 @@ def score_answer(question, answer):
     # Find YES/NO in the response
     match = re.search(r"\b(YES|NO)\b", answer_text.upper())
     if not match:
-        return {"correct": 0.0, "len_response": len(answer_text)}
+        return {
+            "correct": 0.0,
+            "etr_agreement": 0.0,
+            "len_response": len(answer_text),
+            "parse_error": 1.0,
+        }
 
     # print(json.dumps(question, indent=4))
 
@@ -46,4 +51,5 @@ def score_answer(question, answer):
         "correct": float(model_answer.lower() == logically_correct_str.lower()),
         "etr_agreement": float(model_answer.lower() == etr_predicted_str.lower()),
         "len_response": len(answer_text),
+        "parse_error": 0.0,
     }

@@ -47,7 +47,7 @@ def score_answer(question, model_answer):
         try:
             return attempt_score_answer(question, answer_text, original_model_answer, attempt_num=i)
         except Exception as e:
-            print(f"Failure {i+1}/{num_attempts}: {str(e)[:100]...}")
+            print(f"Failure {i+1}/{num_attempts}: {str(e)[:100]}...")
             if i == num_attempts - 1:
                 break
             continue
