@@ -31,6 +31,11 @@ class ETRGenerator:
         Returns:
             PartialProblem: a random pick from a list of simple problems
         """
+        # TODO what this should really be: iterate over all cases.py BaseExamples
+        # in a try/catch and try to coerce them into premises + query structure
+        # keep a whitelist of ones we like
+        # TODO Might need to "wash" these to replace the names of stuff with like A(a())
+        # or B(b()), etc.
         possible_seeds = [
             (  # Modus ponens
                 [
@@ -95,15 +100,20 @@ class ETRGenerator:
         for i, view in enumerate(problem.premises):
             assert view.logical_form_etr_view is not None
             for mut in get_view_mutations(view.logical_form_etr_view):
-                mutations.add(
+                new_mutation = (
                     tuple([p.logical_form_etr_view for p in problem.premises[:i]]) +
                     (mut,) +
                     tuple([p.logical_form_etr_view for p in problem.premises[i+1:]])
                 )
+                mutations.add(new_mutation)
+        # Add a mutation where we add a new premise
         mutations.add(
             tuple([p.logical_form_etr_view for p in problem.premises]) +
             (View.from_str("{A(a())}"),)
         )
+
+        # Add a mutation where we remove a random premise
+
         return mutations
 
     def _generate_problems(self) -> Generator[PartialProblem, None, None]:
@@ -116,14 +126,21 @@ class ETRGenerator:
 
         mutation_count = 0
         while mutation_count < self.max_mutations:
+            # TODO Consider iterating through this data structure in a more chaotic way than
+            # just queueing stuff (priority queue, randomizing at each step, etc.)
             # Get the most recent problem from the queue to mutate
             if not self.problem_queue:
                 # If queue is empty, we've exhausted this line of problems
                 return
 
+            # Another way to bias generation is to pick a problem from the queue that is
+            # e.g. "largest" -> (then you can also think about just mutating by adding
+            # or removing premises if you want to "bias" the walk in a certain direction)
             base_problem = self.problem_queue[-1]  # Look at last problem without removing it
 
             possible_mutations = self.get_mutated_premises(base_problem)
+            # Sanity check: everything in possible_mutations should have the same number
+            # of premises as base_problem EXCEPT one (which has n+1 premises)
             for mutated_premises in possible_mutations:
                 etr_what_follows = default_inference_procedure(mutated_premises)
                 premises = []
@@ -162,10 +179,13 @@ class ETRGenerator:
             if len(self.problem_queue) < self.max_queue_size:
                 self.problem_queue.append(new_problem)
 
+    # TODO: this could be passed an optional vocab_size, filter the list of problems
+    # to match
+    # If there isn't one, try to generate until you get one
     def get_next_problem(self) -> PartialProblem:
         """Get the next problem from the queue, generating more if needed."""
-        self.ensure_queue_filled()
-        return self.problem_queue.popleft()
+        self.ensure_queue_filled()  # This could also take seeds near or at a certain vocab_size
+        return self.problem_queue.popleft()  # TODO this can pop a random item
 
 # Global state instance
 _etr_generator = ETRGenerator()

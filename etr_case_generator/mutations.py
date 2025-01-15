@@ -142,6 +142,8 @@ def get_view_mutations(view: View) -> set[View]:
             )
             mutations.add(View.from_str(new_stage_str))
 
+        # TODO add a mutation where this atom is dropped entirely
+
         # Disjunctions
         mutations.add(
             View.from_str(
