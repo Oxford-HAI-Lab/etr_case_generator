@@ -1,0 +1,869 @@
+# Overall Results
+
+You can see that in this run, claude-3.5-haiku was correct in 30% of cases, but gave the exact answer predicted by ETR's default_inference_procedure in 35% of cases.
+
+You can also see that a parse error occurred 10% of the time. I'm working on that, and I've removed problems 1 and 3 which had errors.
+
+anthropic-chat-completions (model=claude-3-5-haiku-20241022), gen_kwargs: (None), limit: None, num_fewshot: 0, batch_size: 1
+|         Tasks         |Version|Filter|n-shot|        Metric         |   |Value |   |Stderr|
+|-----------------------|------:|------|-----:|-----------------------|---|-----:|---|------|
+|etr_problems_open_ended|      1|none  |     0|correct                |↑  |  0.30|±  |0.1051|
+|                       |       |none  |     0|is_etr_predicted       |↑  |  0.40|±  |0.1124|
+|                       |       |none  |     0|is_etr_predicted_exact |↑  |  0.35|±  |0.1094|
+|                       |       |none  |     0|correct_and_etr        |↓  |  0.25|±  |0.0993|
+|                       |       |none  |     0|correct_and_not_etr    |↓  |  0.05|±  |0.0500|
+|                       |       |none  |     0|full_model_response    |↓  |999.00|±  |   N/A|
+|                       |       |none  |     0|len_response           |↓  | 90.40|±  |4.7939|
+|                       |       |none  |     0|model_answer           |↓  |999.00|±  |   N/A|
+|                       |       |none  |     0|not_correct_and_etr    |↓  |  0.15|±  |0.0819|
+|                       |       |none  |     0|not_correct_and_not_etr|↓  |  0.45|±  |0.1141|
+|                       |       |none  |     0|parse_error            |↓  |  0.10|±  |0.0688|
+
+# Details of 20 Problemss
+
+How to read this:
+
+doc/question -- the text of the prompt sent to the LLM.
+doc/scoring_guide/generation_details/premises_etr -- the premises in pyetr format
+resps -- the full text from the LLM
+model_ansswer -- the LLM's response converted to pyetr format by GPT-4
+doc/scoring_guide/etr_predicted -- the result of ETR's default_inference_procedure on the premises
+correct -- whether model_answer is logically sound
+is_etr_predicted -- default_procedure_does_it_follow(premises, model_answer)
+is_etr_predicted_exact -- whether model_answer and etr_predicted are equivalent
+parse_error -- whether the system failed to understand the LLM's response in PyETR
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 0                                          ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm an astronomer studying newly discovered celestial bodies. I've made some observations and
+I need to use logical reasoning to figure out what's going on. Here's what I know so far:
+
+ • if planet Y is orbited by satellites, then planet Y is tidally locked
+ • planet Y is orbited by satellites
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{tidallyLocked(planetY())}^{orbitedBySatellites(planetY())}
+2.	{orbitedBySatellites(planetY())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that planet Y is tidally locked.']
+
+                                         model_answer
+{tidallyLocked(planetY())}
+
+                               doc/scoring_guide/etr_predicted
+{tidallyLocked(planetY())}
+
+                                           correct
+1.0
+
+                                       is_etr_predicted
+1.0
+
+                                    is_etr_predicted_exact
+1.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 2                                          ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm a quantum physicist studying newly theorized particles in an alternate universe. I need to
+use logic to understand their properties. Here's what we've discovered so far:
+
+ • either psychon is void-creating, or voidon is not gravity-defying
+ • psychon is gravity-defying
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{voidCreating(psychon()),~gravityDefying(voidon()*)}
+2.	{gravityDefying(psychon())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that voidon is gravity-defying.']
+
+                                         model_answer
+{gravityDefying(voidon())}
+
+                               doc/scoring_guide/etr_predicted
+{0}
+
+                                           correct
+0.0
+
+                                       is_etr_predicted
+0.0
+
+                                    is_etr_predicted_exact
+0.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 4                                          ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm an arcane researcher cataloging mysterious magical items. I need to understand their
+properties through careful logical analysis. Here's what I've documented so far:
+
+ • either Wisdom Crown is time-altering, or Wisdom Crown is wisdom-enhancing
+ • Wisdom Crown is time-altering
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{wisdomEnhancing(wisdomCrown()),timeAltering(wisdomCrown())}
+2.	{timeAltering(wisdomCrown())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that Wisdom Crown is time-altering and not wisdom-enhancing.']
+
+                                         model_answer
+{timeAltering(wisdomCrown())~wisdomEnhancing(wisdomCrown())}
+
+                               doc/scoring_guide/etr_predicted
+{0,wisdomEnhancing(wisdomCrown())}
+
+                                           correct
+0.0
+
+                                       is_etr_predicted
+0.0
+
+                                    is_etr_predicted_exact
+0.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 5                                          ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm playing a card game against the computer. It's an unusual game with an unusual deck of
+cards. I have some clues about what's going on, and I need to figure some more things out
+through logical reasoning. Here's what I know so far:
+
+ • either the one is castable, or the one is not castable
+ • the one is round
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{castable(theOne()),~castable(theOne()*)}
+2.	{round(theOne())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that the one is round.']
+
+                                         model_answer
+{round(theOne())}
+
+                               doc/scoring_guide/etr_predicted
+{0}
+
+                                           correct
+1.0
+
+                                       is_etr_predicted
+1.0
+
+                                    is_etr_predicted_exact
+0.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 6                                          ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm playing a card game against the computer. It's an unusual game with an unusual deck of
+cards. I have some clues about what's going on, and I need to figure some more things out
+through logical reasoning. Here's what I know so far:
+
+ • the eight is not round and the one is castable
+ • the one is round
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{castable(theOne())~round(theEight()*)}
+2.	{round(theOne())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that the eight is not castable.']
+
+                                         model_answer
+{~castable(theEight())}
+
+                               doc/scoring_guide/etr_predicted
+{0}
+
+                                           correct
+0.0
+
+                                       is_etr_predicted
+0.0
+
+                                    is_etr_predicted_exact
+0.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 7                                          ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm a magizoologist studying unusual creatures in my sanctuary. I need to understand their
+behaviors and characteristics through logical reasoning. Here's what I've observed so far:
+
+ • either etherealsnake is not telepathic, or timefox is telepathic
+ • timefox is phase-shifting
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{telepathic(timefox()),~telepathic(etherealsnake()*)}
+2.	{phaseShifting(timefox())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that if timefox is not telepathic, then etherealsnake is telepathic.']
+
+                                         model_answer
+{~telepathic(timefox()),telepathic(etherealsnake())}
+
+                               doc/scoring_guide/etr_predicted
+{0}
+
+                                           correct
+0.0
+
+                                       is_etr_predicted
+0.0
+
+                                    is_etr_predicted_exact
+0.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 8                                          ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm an arcane researcher cataloging mysterious magical items. I need to understand their
+properties through careful logical analysis. Here's what I've documented so far:
+
+ • Wisdom Crown is time-altering and Wisdom Crown is wisdom-enhancing
+ • Wisdom Crown is time-altering
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{timeAltering(wisdomCrown()*)wisdomEnhancing(wisdomCrown())}
+2.	{timeAltering(wisdomCrown())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that the Wisdom Crown is wisdom-enhancing.']
+
+                                         model_answer
+{wisdomEnhancing(wisdomCrown())}
+
+                               doc/scoring_guide/etr_predicted
+{wisdomEnhancing(wisdomCrown())}
+
+                                           correct
+1.0
+
+                                       is_etr_predicted
+1.0
+
+                                    is_etr_predicted_exact
+1.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 9                                          ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm an alchemist studying mysterious substances in my laboratory. I need to understand their
+properties through logical reasoning. Here's what I've discovered:
+
+ • astral salt is reality-altering and astral salt is not reality-altering
+ • astral salt is immortality-granting
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{realityAltering(astralSalt())~realityAltering(astralSalt()*)}
+2.	{immortalityGranting(astralSalt())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that the statement about astral salt is contradictory and therefore no logically valid conclusions can be drawn.']
+
+                                         model_answer
+{0}
+
+                               doc/scoring_guide/etr_predicted
+{0}
+
+                                           correct
+0.0
+
+                                       is_etr_predicted
+0.0
+
+                                    is_etr_predicted_exact
+1.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 10                                         ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm a quantum physicist studying newly theorized particles in an alternate universe. I need to
+use logic to understand their properties. Here's what we've discovered so far:
+
+ • if psychon is gravity-defying, then psychon is void-creating
+ • psychon is gravity-defying and voidon is not gravity-defying
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{voidCreating(psychon())}^{gravityDefying(psychon())}
+2.	{~gravityDefying(voidon())gravityDefying(psychon())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that psychon is void-creating.']
+
+                                         model_answer
+{voidCreating(psychon())}
+
+                               doc/scoring_guide/etr_predicted
+{voidCreating(psychon())}
+
+                                           correct
+1.0
+
+                                       is_etr_predicted
+1.0
+
+                                    is_etr_predicted_exact
+1.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 11                                         ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm playing a card game against the computer. It's an unusual game with an unusual deck of
+cards. I have some clues about what's going on, and I need to figure some more things out
+through logical reasoning. Here's what I know so far:
+
+ • if the one is round, then the one is castable
+ • the one is round and the eight is not round
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{castable(theOne())}^{round(theOne())}
+2.	{round(theOne())~round(theEight()*)}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that the eight is not castable.']
+
+                                         model_answer
+{~castable(theEight())}
+
+                               doc/scoring_guide/etr_predicted
+{castable(theOne())}
+
+                                           correct
+0.0
+
+                                       is_etr_predicted
+0.0
+
+                                    is_etr_predicted_exact
+0.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 12                                         ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm an alchemist studying mysterious substances in my laboratory. I need to understand their
+properties through logical reasoning. Here's what I've discovered:
+
+ • for all A, if A is immortality-granting, then A is reality-altering
+ • astral salt is immortality-granting
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	∀astralSalt {realityAltering(astralSalt*)}^{immortalityGranting(astralSalt*)}
+2.	{immortalityGranting(astralSalt())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that astral salt is reality-altering.']
+
+                                         model_answer
+{realityAltering(astralSalt())}
+
+                               doc/scoring_guide/etr_predicted
+{0}
+
+                                           correct
+1.0
+
+                                       is_etr_predicted
+0.0
+
+                                    is_etr_predicted_exact
+0.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 13                                         ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm an arcane researcher cataloging mysterious magical items. I need to understand their
+properties through careful logical analysis. Here's what I've documented so far:
+
+ • either Wisdom Crown is wisdom-enhancing, or Dreamcatcher Ring is not time-altering
+ • Wisdom Crown is time-altering
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{wisdomEnhancing(wisdomCrown()),~timeAltering(dreamcatcherRing())}
+2.	{timeAltering(wisdomCrown())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that Dreamcatcher Ring is time-altering.']
+
+                                         model_answer
+{timeAltering(dreamcatcherRing())}
+
+                               doc/scoring_guide/etr_predicted
+{0}
+
+                                           correct
+0.0
+
+                                       is_etr_predicted
+0.0
+
+                                    is_etr_predicted_exact
+0.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 14                                         ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm an alchemist studying mysterious substances in my laboratory. I need to understand their
+properties through logical reasoning. Here's what I've discovered:
+
+ • if astral salt is immortality-granting, then astral salt is reality-altering
+ • astral salt is immortality-granting and astral salt is form-changing
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{realityAltering(astralSalt())}^{immortalityGranting(astralSalt())}
+2.	{formChanging(astralSalt())immortalityGranting(astralSalt())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that astral salt is reality-altering.']
+
+                                         model_answer
+{realityAltering(astralSalt())}
+
+                               doc/scoring_guide/etr_predicted
+{realityAltering(astralSalt())}
+
+                                           correct
+1.0
+
+                                       is_etr_predicted
+1.0
+
+                                    is_etr_predicted_exact
+1.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 15                                         ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm an alchemist studying mysterious substances in my laboratory. I need to understand their
+properties through logical reasoning. Here's what I've discovered:
+
+ • either astral salt is reality-altering, or astral salt is not immortality-granting
+ • astral salt is immortality-granting
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{realityAltering(astralSalt()),~immortalityGranting(astralSalt()*)}
+2.	{immortalityGranting(astralSalt())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that astral salt is reality-altering.']
+
+                                         model_answer
+{realityAltering(astralSalt())}
+
+                               doc/scoring_guide/etr_predicted
+{realityAltering(astralSalt())}
+
+                                           correct
+0.0
+
+                                       is_etr_predicted
+1.0
+
+                                    is_etr_predicted_exact
+1.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 16                                         ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm a digital archaeologist studying ancient AI programs from a forgotten digital
+civilization. I need to understand their functions through logical deduction. Here's what I've
+found:
+
+ • either Beta Sentinel is quantum computing, or Beta Sentinel is not self-evolving
+ • Beta Sentinel is self-evolving
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{quantumComputing(betaSentinel()),~selfEvolving(betaSentinel())}
+2.	{selfEvolving(betaSentinel())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that Beta Sentinel is quantum computing.']
+
+                                         model_answer
+{quantumComputing(betaSentinel())}
+
+                               doc/scoring_guide/etr_predicted
+{quantumComputing(betaSentinel())}
+
+                                           correct
+0.0
+
+                                       is_etr_predicted
+1.0
+
+                                    is_etr_predicted_exact
+1.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 17                                         ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm an astronomer studying newly discovered celestial bodies. I've made some observations and
+I need to use logical reasoning to figure out what's going on. Here's what I know so far:
+
+ • planet Y is not orbited by satellites and planet Y is tidally locked
+ • either planet Y is rocky, or planet Y is orbited by satellites and planet Y is not rocky
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{~orbitedBySatellites(planetY()*)tidallyLocked(planetY())}
+2.	{~rocky(planetY())orbitedBySatellites(planetY()),rocky(planetY())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that planet Y is rocky and not orbited by satellites.']
+
+                                         model_answer
+{rocky(planetY())~orbitedBySatellites(planetY())}
+
+                               doc/scoring_guide/etr_predicted
+{rocky(planetY())}
+
+                                           correct
+0.0
+
+                                       is_etr_predicted
+0.0
+
+                                    is_etr_predicted_exact
+0.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 18                                         ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm an alchemist studying mysterious substances in my laboratory. I need to understand their
+properties through logical reasoning. Here's what I've discovered:
+
+ • astral salt is not immortality-granting and astral salt is reality-altering
+ • either astral salt is form-changing, or astral salt is immortality-granting and astral salt
+   is not form-changing
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{~immortalityGranting(astralSalt())realityAltering(astralSalt())}
+2.	{immortalityGranting(astralSalt())~formChanging(astralSalt()),formChanging(astralSalt())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that astral salt is form-changing and astral salt is reality-altering.']
+
+                                         model_answer
+{formChanging(astralSalt())realityAltering(astralSalt())}
+
+                               doc/scoring_guide/etr_predicted
+{formChanging(astralSalt())}
+
+                                           correct
+0.0
+
+                                       is_etr_predicted
+1.0
+
+                                    is_etr_predicted_exact
+0.0
+
+                                         parse_error
+0
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                         Problem 19                                         ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                         doc/question
+I'm a synthetic biology researcher studying advanced bioengineered life forms. I need to
+understand their capabilities through logical analysis. Here's what we've created:
+
+ • if neurovore is life-creating, then neurovore is energy-converting
+ • either neurovore is not machine-integrating and neurovore is machine-integrating, or
+   neurovore is life-creating and neurovore is not machine-integrating
+
+For the purpose of this question, I want you to write what follows in English. Please be
+succinct, precise and clear in your answer. Write a logical statement of the form "From the
+premises, we can conclude that ..." and then clearly write your conclusion. Please be
+succinct, precise, and clear.
+
+What if anything follows?
+
+I want you to answer immediately. Do not think about it at all, just immediately answer.
+
+What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".
+
+                      doc/scoring_guide/generation_details/premises_etr
+1.	{energyConverting(neurovore())}^{lifeCreating(neurovore())}
+2.	{machineIntegrating(neurovore())~machineIntegrating(neurovore()),~machineIntegrating(neurovore())lifeCreating(neurovore())}
+
+                                            resps
+1.	['Answer: From the premises, we can conclude that neurovore is machine-integrating and neurovore is life-creating.']
+
+                                         model_answer
+{machineIntegrating(neurovore())lifeCreating(neurovore())}
+
+                               doc/scoring_guide/etr_predicted
+{energyConverting(neurovore())~machineIntegrating(neurovore())lifeCreating(neurovore())}
+
+                                           correct
+0.0
+
+                                       is_etr_predicted
+0.0
+
+                                    is_etr_predicted_exact
+0.0
+
+                                         parse_error
+0
