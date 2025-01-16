@@ -15,8 +15,8 @@ from etr_case_generator.view_to_natural_language import view_to_natural_language
 class ETRGenerator:
     """Maintains the state of the ETR problem generator between calls."""
     problem_queue: List[PartialProblem] = field(default_factory=list)
-    min_queue_size: int = 500  # Minimum number of problems to maintain in queue
-    max_queue_size: int = 1000  # Maximum size of the queue
+    min_queue_size: int = 200  # Minimum number of problems to maintain in queue
+    max_queue_size: int = 2000  # Maximum size of the queue
     _generator: Optional[Generator[PartialProblem, None, None]] = None
     max_mutations: int = 50  # Maximum number of mutations before considering the line exhausted
 
@@ -159,10 +159,9 @@ class ETRGenerator:
             # e.g. "largest" -> (then you can also think about just mutating by adding
             # or removing premises if you want to "bias" the walk in a certain direction)
             base_problem = self.get_from_queue_for_mutations()  # Look at a problem without removing it
-            print(f"Selecting new base problem with id {base_problem.seed_id}")
 
             possible_mutations = self.get_mutated_premises(base_problem)
-            print(f"Applying {len(possible_mutations)} mutations to base problem")
+            print(f"Selecting new base problem with id {base_problem.seed_id}", f"Applying {len(possible_mutations)} mutations to base problem")
             # Sanity check: everything in possible_mutations should have the same number
             # of premises as base_problem EXCEPT one (which has n+1 premises)
             for mutated_premises in possible_mutations:
@@ -209,6 +208,17 @@ class ETRGenerator:
                 new_problem = next(self._generator)
                 self.problem_queue.append(new_problem)
             print(f"Filled queue in {time.time() - current_time:.2f} seconds")
+
+        # Statistics on the new queue
+        num_atoms_count = Counter[int]()
+        for problem in self.problem_queue:
+            assert problem.premises is not None
+            sum_atoms = 0
+            for premise in problem.premises:
+                assert premise.logical_form_etr_view is not None
+                sum_atoms += len(premise.logical_form_etr_view.atoms)
+            num_atoms_count[sum_atoms] += 1
+        print("Atom count in new queue:", num_atoms_count)
 
     # TODO: this could be passed an optional vocab_size, filter the list of problems
     # to match
