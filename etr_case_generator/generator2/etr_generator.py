@@ -1,20 +1,19 @@
 import random
 
-from collections import deque
 from dataclasses import dataclass, field
 from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
 from etr_case_generator.mutations import get_view_mutations
 from etr_case_generator.ontology import Ontology
 from pyetr import View
 from pyetr.inference import default_inference_procedure
-from typing import Optional, Generator, Deque, Tuple, Set, Counter
+from typing import Optional, Generator, Tuple, Set, Counter, List
 
 from etr_case_generator.view_to_natural_language import view_to_natural_language
 
 @dataclass
 class ETRGenerator:
     """Maintains the state of the ETR problem generator between calls."""
-    problem_queue: list[PartialProblem] = field(default_factory=list)
+    problem_queue: List[PartialProblem] = field(default_factory=list)
     min_queue_size: int = 5  # Minimum number of problems to maintain in queue
     max_queue_size: int = 10  # Maximum size of the queue
     _generator: Optional[Generator[PartialProblem, None, None]] = None
