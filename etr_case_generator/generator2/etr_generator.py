@@ -16,7 +16,7 @@ class ETRGenerator:
     """Maintains the state of the ETR problem generator between calls."""
     problem_queue: List[PartialProblem] = field(default_factory=list)
     min_queue_size: int = 200  # Minimum number of problems to maintain in queue
-    max_queue_size: int = 2000  # Maximum size of the queue
+    max_queue_size: int = 500  # Maximum size of the queue. This should be >=1000 to maintain diversity
     _generator: Optional[Generator[PartialProblem, None, None]] = None
     max_mutations: int = 50  # Maximum number of mutations before considering the line exhausted
 
@@ -28,6 +28,10 @@ class ETRGenerator:
 
         # Fill the queue with initial problems
         self.problem_queue.extend(self.create_starting_problems())
+
+        if self.max_queue_size < 1000:
+            print("!" * 80)
+            print("WARNING: max_queue_size is less than 1000, which may lead to a lack of diversity in generated problems")
 
     def get_from_queue_for_mutations(self):
         # Return an element whose seed_id has been used least often
@@ -141,7 +145,7 @@ class ETRGenerator:
         """Internal generator function that creates new problems."""
         # # First, try to create a starting problem
         # seed_problem = self.create_starting_problems()
-        #
+
         # # Add the seed problem to the queue
         # yield seed_problem
 
