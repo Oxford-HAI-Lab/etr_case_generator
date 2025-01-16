@@ -14,8 +14,8 @@ from etr_case_generator.view_to_natural_language import view_to_natural_language
 class ETRGenerator:
     """Maintains the state of the ETR problem generator between calls."""
     problem_queue: List[PartialProblem] = field(default_factory=list)
-    min_queue_size: int = 5  # Minimum number of problems to maintain in queue
-    max_queue_size: int = 10  # Maximum size of the queue
+    min_queue_size: int = 500  # Minimum number of problems to maintain in queue
+    max_queue_size: int = 1000  # Maximum size of the queue
     _generator: Optional[Generator[PartialProblem, None, None]] = None
     max_mutations: int = 50  # Maximum number of mutations before considering the line exhausted
 
@@ -158,12 +158,12 @@ class ETRGenerator:
             # e.g. "largest" -> (then you can also think about just mutating by adding
             # or removing premises if you want to "bias" the walk in a certain direction)
             base_problem = self.get_from_queue_for_mutations()  # Look at a problem without removing it
+            print(f"Selecting new base problem with id {base_problem.seed_id}")
 
-            print("All seeds")
-            for p in self.problem_queue:
-                print(p.seed_id)
+            print("All seeds in problem queue:", ", ".join([p.seed_id for p in self.problem_queue]))
 
             possible_mutations = self.get_mutated_premises(base_problem)
+            print(f"Applying {len(possible_mutations)} mutations to base problem")
             # Sanity check: everything in possible_mutations should have the same number
             # of premises as base_problem EXCEPT one (which has n+1 premises)
             for mutated_premises in possible_mutations:
@@ -190,9 +190,8 @@ class ETRGenerator:
                     ),
                     seed_id=base_problem.seed_id,
                 )
-                print("-" * 80)
-                print("New problem:")
-                print(new_problem)
+                # print("-" * 80)
+                print("New problem with seed id:", new_problem.seed_id)
                 self.seed_ids_yielded[base_problem.seed_id] += 1
                 yield new_problem
 
@@ -214,6 +213,10 @@ class ETRGenerator:
     # If there isn't one, try to generate until you get one
     def get_next_problem(self) -> PartialProblem:
         """Get the next problem from the queue, generating more if needed."""
+
+        # Print counts in counter
+        print("Seed id counts:", self.seed_ids_yielded)
+
         self.ensure_queue_filled()  # This could also take seeds near or at a certain vocab_size
         idx = random.randrange(len(self.problem_queue))
         return self.problem_queue.pop(idx)
@@ -234,7 +237,9 @@ def random_etr_problem() -> PartialProblem:
     Raises:
         RuntimeError: If unable to generate viable problems after multiple attempts
     """
-    return _etr_generator.get_next_problem()
+    problem = _etr_generator.get_next_problem()
+    print("Returning problem with seed id:", problem.seed_id)
+    return problem
 
 def reset_generator_state():
     """Reset the generator state to initial conditions."""
