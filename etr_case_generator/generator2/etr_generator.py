@@ -14,7 +14,7 @@ from etr_case_generator.view_to_natural_language import view_to_natural_language
 @dataclass
 class ETRGenerator:
     """Maintains the state of the ETR problem generator between calls."""
-    problem_queue: List[PartialProblem] = field(default_factory=list)
+    problem_set: List[PartialProblem] = field(default_factory=list)
     min_queue_size: int = 50  # Minimum number of problems to maintain in queue
     max_queue_size: int = 100  # Maximum size of the queue. This should be >=1000 to maintain diversity
     _generator: Optional[Generator[PartialProblem, None, None]] = None
@@ -28,14 +28,14 @@ class ETRGenerator:
         self._generator = self._generate_problems()
 
         # Fill the queue with initial problems
-        self.problem_queue.extend(self.create_starting_problems())
+        self.problem_set.extend(self.create_starting_problems())
 
     def get_from_queue_for_mutations(self):
         # Return an element whose seed_id has been used least often
         min_count = float('inf')
         candidates = []
         
-        for problem in self.problem_queue:
+        for problem in self.problem_set:
             count = self.seed_ids_yielded[problem.seed_id]
             if count < min_count:
                 min_count = count
@@ -151,7 +151,7 @@ class ETRGenerator:
             # TODO Consider iterating through this data structure in a more chaotic way than
             # just queueing stuff (priority queue, randomizing at each step, etc.)
             # Get the most recent problem from the queue to mutate
-            if not self.problem_queue:
+            if not self.problem_set:
                 print(f"Queue is empty after {mutation_count} mutations")
                 # If queue is empty, we've exhausted this line of problems
                 return
@@ -208,18 +208,18 @@ class ETRGenerator:
         if self._generator is None:
             self.initialize_generator()
 
-        if len(self.problem_queue) < self.min_queue_size:
-            print(f"Queue has {len(self.problem_queue)} problems, filling to {self.max_queue_size}")
+        if len(self.problem_set) < self.min_queue_size:
+            print(f"Queue has {len(self.problem_set)} problems, filling to {self.max_queue_size}")
             current_time = time.time()
-            while len(self.problem_queue) < self.max_queue_size:
+            while len(self.problem_set) < self.max_queue_size:
                 assert self._generator is not None
                 new_problem = next(self._generator)
-                self.problem_queue.append(new_problem)
+                self.problem_set.append(new_problem)
             print(f"Filled queue in {time.time() - current_time:.2f} seconds")
 
         # Statistics on the new queue
         num_atoms_count = Counter[int]()
-        for problem in self.problem_queue:
+        for problem in self.problem_set:
             assert problem.premises is not None
             sum_atoms = 0
             for premise in problem.premises:
@@ -238,8 +238,8 @@ class ETRGenerator:
         # print("Seed id counts:", self.seed_ids_yielded)
 
         self.ensure_queue_filled()  # This could also take seeds near or at a certain vocab_size
-        idx = random.randrange(len(self.problem_queue))
-        return self.problem_queue.pop(idx)
+        idx = random.randrange(len(self.problem_set))
+        return self.problem_set.pop(idx)
 
 # Global state instance
 _etr_generator = ETRGenerator()
@@ -281,4 +281,4 @@ def set_max_mutations(max_mutations: int):
 
 def get_queue_size() -> int:
     """Get the current size of the problem queue."""
-    return len(_etr_generator.problem_queue)
+    return len(_etr_generator.problem_set)
