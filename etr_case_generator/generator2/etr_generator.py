@@ -30,8 +30,21 @@ class ETRGenerator:
         self.problem_queue.extend(self.create_starting_problems())
 
     def get_from_queue_for_mutations(self):
-        # Return a random element from the queue
-        return random.choice(self.problem_queue)
+        # Return an element whose seed_id has been used least often
+        min_count = float('inf')
+        candidates = []
+        
+        for problem in self.problem_queue:
+            count = self.seed_ids_yielded[problem.seed_id]
+            if count < min_count:
+                min_count = count
+                candidates = [problem]
+            elif count == min_count:
+                candidates.append(problem)
+                
+        # If there are multiple candidates with the same minimum count,
+        # randomly choose one of them
+        return random.choice(candidates)
 
     def create_starting_problems(self) -> list[PartialProblem]:
         """
