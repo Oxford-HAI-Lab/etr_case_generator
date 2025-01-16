@@ -14,7 +14,7 @@ from etr_case_generator.view_to_natural_language import view_to_natural_language
 @dataclass
 class ETRGenerator:
     """Maintains the state of the ETR problem generator between calls."""
-    problem_queue: Deque[PartialProblem] = field(default_factory=deque)
+    problem_queue: list[PartialProblem] = field(default_factory=list)
     min_queue_size: int = 5  # Minimum number of problems to maintain in queue
     max_queue_size: int = 10  # Maximum size of the queue
     _generator: Optional[Generator[PartialProblem, None, None]] = None
