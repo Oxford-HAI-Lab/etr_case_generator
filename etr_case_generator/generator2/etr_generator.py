@@ -6,6 +6,7 @@ from etr_case_generator.generator2.reified_problem import PartialProblem, Reifie
 from etr_case_generator.mutations import get_view_mutations
 from etr_case_generator.ontology import Ontology
 from pyetr import View
+from pyetr.cases import BaseExample
 from pyetr.inference import default_inference_procedure
 from typing import Optional, Generator, Tuple, Set, Counter, List, Callable
 
