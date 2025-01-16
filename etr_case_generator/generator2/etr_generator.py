@@ -24,7 +24,14 @@ class ETRGenerator:
         """Initialize the problem generator."""
         self._generator = self._generate_problems()
 
-    def create_starting_problem(self) -> PartialProblem:
+        # Fill the queue with initial problems
+        self.problem_queue.extend(self.create_starting_problems())
+
+    def get_from_queue_for_mutations(self):
+        # Return a random element from the queue
+        return random.choice(self.problem_queue)
+
+    def create_starting_problems(self) -> list[PartialProblem]:
         """
         Create an initial seed problem.
 
@@ -67,26 +74,25 @@ class ETRGenerator:
             ),
         ]
 
-        seed = random.choice(possible_seeds)
+        starter_problems = []
+        for i, seed in enumerate(possible_seeds):
+            starter_problems.append(PartialProblem(
+                premises=[
+                    ReifiedView(
+                        logical_form_etr_view=v,
+                    ) for v in seed[0]
+                ],
+                possible_conclusions_from_logical=None,
+                possible_conclusions_from_etr=None,
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=seed[1],
+                ),
+                seed_id=str(i),
+            ))
 
-        return PartialProblem(
-            premises=[
-                ReifiedView(
-                    logical_form_smt=None,
-                    logical_form_smt_fnode=None,
-                    logical_form_etr_view=v,
-                    english_form=None,
-                ) for v in seed[0]
-            ],
-            possible_conclusions_from_logical=None,
-            possible_conclusions_from_etr=None,
-            etr_what_follows=ReifiedView(
-                logical_form_smt=None,
-                logical_form_smt_fnode=None,
-                logical_form_etr_view=seed[1],
-                english_form=None,
-            ),
-        )
+        random.shuffle(starter_problems)
+
+        return starter_problems
 
     def get_mutated_premises(self, problem: PartialProblem) -> Set[Tuple[View, ...]]:
         """
@@ -118,11 +124,11 @@ class ETRGenerator:
 
     def _generate_problems(self) -> Generator[PartialProblem, None, None]:
         """Internal generator function that creates new problems."""
-        # First, try to create a starting problem
-        seed_problem = self.create_starting_problem()
-
-        # Add the seed problem to the queue
-        yield seed_problem
+        # # First, try to create a starting problem
+        # seed_problem = self.create_starting_problems()
+        #
+        # # Add the seed problem to the queue
+        # yield seed_problem
 
         mutation_count = 0
         while mutation_count < self.max_mutations:
@@ -130,13 +136,14 @@ class ETRGenerator:
             # just queueing stuff (priority queue, randomizing at each step, etc.)
             # Get the most recent problem from the queue to mutate
             if not self.problem_queue:
+                print(f"Queue is empty after {mutation_count} mutations")
                 # If queue is empty, we've exhausted this line of problems
                 return
 
             # Another way to bias generation is to pick a problem from the queue that is
             # e.g. "largest" -> (then you can also think about just mutating by adding
             # or removing premises if you want to "bias" the walk in a certain direction)
-            base_problem = self.problem_queue[-1]  # Look at last problem without removing it
+            base_problem = self.get_from_queue_for_mutations()  # Look at a problem without removing it
 
             possible_mutations = self.get_mutated_premises(base_problem)
             # Sanity check: everything in possible_mutations should have the same number
@@ -162,8 +169,12 @@ class ETRGenerator:
                         # Generator is not responsible for generating English forms,
                         # since it's agnostic to the ontology
                         english_form=None,
-                    )
+                    ),
+                    seed_id=base_problem.seed_id,
                 )
+                print("-" * 80)
+                print("New problem:")
+                print(new_problem)
                 yield new_problem
 
             mutation_count += 1

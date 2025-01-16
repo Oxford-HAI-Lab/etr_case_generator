@@ -91,6 +91,9 @@ class PartialProblem:
     # The result of the default_inference_procedure
     etr_what_follows: Optional[ReifiedView] = None
 
+    # Used during generation
+    seed_id: Optional[str] = None
+
     def fill_out_conclusion(self, conclusion: Conclusion, ontology: Optional[Ontology] = None):
         conclusion.view.fill_out(ontology)
 
