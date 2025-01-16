@@ -7,7 +7,7 @@ from etr_case_generator.mutations import get_view_mutations
 from etr_case_generator.ontology import Ontology
 from pyetr import View
 from pyetr.inference import default_inference_procedure
-from typing import Optional, Generator, Tuple, Set, Counter, List
+from typing import Optional, Generator, Tuple, Set, Counter, List, Callable
 
 from etr_case_generator.view_to_natural_language import view_to_natural_language
 
@@ -231,7 +231,7 @@ class ETRGenerator:
     # TODO: this could be passed an optional vocab_size, filter the list of problems
     # to match
     # If there isn't one, try to generate until you get one
-    def get_next_problem(self, filter_fn=None) -> PartialProblem:
+    def get_next_problem(self, filter_fn: Optional[Callable[[PartialProblem], bool]] = None) -> PartialProblem:
         """Get the next problem from the queue that matches the filter, generating more if needed.
         
         Args:
@@ -264,7 +264,7 @@ class ETRGenerator:
 # Global state instance
 _etr_generator = ETRGenerator()
 
-def random_etr_problem(filter_fn=None) -> PartialProblem:
+def random_etr_problem(filter_fn: Optional[Callable[[PartialProblem], bool]] = None) -> PartialProblem:
     """
     Generate a random ETR problem that matches the filter criteria.
     
