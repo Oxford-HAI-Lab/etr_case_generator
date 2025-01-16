@@ -231,34 +231,55 @@ class ETRGenerator:
     # TODO: this could be passed an optional vocab_size, filter the list of problems
     # to match
     # If there isn't one, try to generate until you get one
-    def get_next_problem(self) -> PartialProblem:
-        """Get the next problem from the queue, generating more if needed."""
+    def get_next_problem(self, filter_fn=None) -> PartialProblem:
+        """Get the next problem from the queue that matches the filter, generating more if needed.
+        
+        Args:
+            filter_fn: Optional function that takes a PartialProblem and returns bool.
+                      If provided, only problems that pass this filter will be considered.
+                      Defaults to None (no filtering).
+        
+        Returns:
+            A randomly selected problem that passes the filter.
+            
+        Raises:
+            RuntimeError: If no problems match the filter after filling the queue.
+        """
+        self.ensure_queue_filled()
 
-        # Print counts in counter
-        # print("Seed id counts:", self.seed_ids_yielded)
+        # If no filter provided, use a function that accepts everything
+        if filter_fn is None:
+            filter_fn = lambda _: True
 
-        self.ensure_queue_filled()  # This could also take seeds near or at a certain vocab_size
-        idx = random.randrange(len(self.problem_set))
+        # Get indices of all problems that pass the filter
+        valid_indices = [i for i, p in enumerate(self.problem_set) if filter_fn(p)]
+        
+        if not valid_indices:
+            raise RuntimeError("No problems match the provided filter criteria")
+            
+        # Select random valid index and remove that problem
+        idx = random.choice(valid_indices)
         return self.problem_set.pop(idx)
 
 # Global state instance
 _etr_generator = ETRGenerator()
 
-def random_etr_problem() -> PartialProblem:
+def random_etr_problem(filter_fn=None) -> PartialProblem:
     """
-    Generate a random ETR problem, maintaining a queue of pre-generated problems.
+    Generate a random ETR problem that matches the filter criteria.
     
     Args:
-        ontology: The ontology to use for problem generation
+        filter_fn: Optional function that takes a PartialProblem and returns bool.
+                  If provided, only problems that pass this filter will be returned.
+                  Defaults to None (no filtering).
         
     Returns:
-        A new PartialProblem instance
+        A new PartialProblem instance that passes the filter
         
     Raises:
-        RuntimeError: If unable to generate viable problems after multiple attempts
+        RuntimeError: If no problems match the filter criteria
     """
-    problem = _etr_generator.get_next_problem()
-    # print("Returning problem with seed id:", problem.seed_id)
+    problem = _etr_generator.get_next_problem(filter_fn)
     return problem
 
 def reset_generator_state():
