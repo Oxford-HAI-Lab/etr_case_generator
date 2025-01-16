@@ -8,6 +8,9 @@ from etr_case_generator.generator2.smt_generator import random_smt_problem, SMTP
 from etr_case_generator.view_to_natural_language import view_to_natural_language
 from pyetr import View
 
+# TODO write similar method to below that takes any View and returns something like
+# {A(a())}^{B(a())}
+# This method would automatically be a way to map anything into our queue
 
 def renamed_view(view: View, renames: dict[str, str]) -> View:
     new_view_str = ""
