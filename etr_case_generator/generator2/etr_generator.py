@@ -15,10 +15,11 @@ from etr_case_generator.view_to_natural_language import view_to_natural_language
 class ETRGenerator:
     """Maintains the state of the ETR problem generator between calls."""
     problem_queue: List[PartialProblem] = field(default_factory=list)
-    min_queue_size: int = 200  # Minimum number of problems to maintain in queue
-    max_queue_size: int = 500  # Maximum size of the queue. This should be >=1000 to maintain diversity
+    min_queue_size: int = 50  # Minimum number of problems to maintain in queue
+    max_queue_size: int = 100  # Maximum size of the queue. This should be >=1000 to maintain diversity
     _generator: Optional[Generator[PartialProblem, None, None]] = None
-    max_mutations: int = 50  # Maximum number of mutations before considering the line exhausted
+    max_mutations: int = 50  # Maximum number of mutations before considering the line exhausted # TODO(Andrew->Ryan) I don't understand the thinking behind this
+    max_mutations_per_base_problem: int = 20  # Maximum number of mutations per base problem
 
     seed_ids_yielded: Counter[str] = field(default_factory=Counter)
 
@@ -28,10 +29,6 @@ class ETRGenerator:
 
         # Fill the queue with initial problems
         self.problem_queue.extend(self.create_starting_problems())
-
-        if self.max_queue_size < 1000:
-            print("!" * 80)
-            print("WARNING: max_queue_size is less than 1000, which may lead to a lack of diversity in generated problems")
 
     def get_from_queue_for_mutations(self):
         # Return an element whose seed_id has been used least often
@@ -165,10 +162,17 @@ class ETRGenerator:
             base_problem = self.get_from_queue_for_mutations()  # Look at a problem without removing it
 
             possible_mutations = self.get_mutated_premises(base_problem)
-            print(f"Selecting new base problem with id {base_problem.seed_id}", f"Applying {len(possible_mutations)} mutations to base problem")
+            print(f"Selecting new base problem with id {base_problem.seed_id}", f"Applying {self.max_mutations_per_base_problem} out of {len(possible_mutations)} mutations to base problem")
+
+            # Randomly select a subset of the mutations to apply
+            possible_mutations = list(possible_mutations)
+            random.shuffle(possible_mutations)
+            used_mutations = possible_mutations[:self.max_mutations_per_base_problem]
+            remaining_mutations = possible_mutations[self.max_mutations_per_base_problem:]
+
             # Sanity check: everything in possible_mutations should have the same number
             # of premises as base_problem EXCEPT one (which has n+1 premises)
-            for mutated_premises in possible_mutations:
+            for mutated_premises in used_mutations:
                 etr_what_follows = default_inference_procedure(mutated_premises)
                 premises = []
                 for p in mutated_premises:
@@ -222,7 +226,7 @@ class ETRGenerator:
                 assert premise.logical_form_etr_view is not None
                 sum_atoms += len(premise.logical_form_etr_view.atoms)
             num_atoms_count[sum_atoms] += 1
-        print("Atom count in new queue:", num_atoms_count)
+        # print("Atom count in new queue:", num_atoms_count)
 
     # TODO: this could be passed an optional vocab_size, filter the list of problems
     # to match
@@ -231,7 +235,7 @@ class ETRGenerator:
         """Get the next problem from the queue, generating more if needed."""
 
         # Print counts in counter
-        print("Seed id counts:", self.seed_ids_yielded)
+        # print("Seed id counts:", self.seed_ids_yielded)
 
         self.ensure_queue_filled()  # This could also take seeds near or at a certain vocab_size
         idx = random.randrange(len(self.problem_queue))
@@ -254,7 +258,7 @@ def random_etr_problem() -> PartialProblem:
         RuntimeError: If unable to generate viable problems after multiple attempts
     """
     problem = _etr_generator.get_next_problem()
-    print("Returning problem with seed id:", problem.seed_id)
+    # print("Returning problem with seed id:", problem.seed_id)
     return problem
 
 def reset_generator_state():
