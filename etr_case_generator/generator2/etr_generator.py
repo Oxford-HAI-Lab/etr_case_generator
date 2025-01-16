@@ -1,4 +1,5 @@
 import random
+import time
 
 from dataclasses import dataclass, field
 from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
@@ -160,8 +161,6 @@ class ETRGenerator:
             base_problem = self.get_from_queue_for_mutations()  # Look at a problem without removing it
             print(f"Selecting new base problem with id {base_problem.seed_id}")
 
-            print("All seeds in problem queue:", ", ".join([p.seed_id for p in self.problem_queue]))
-
             possible_mutations = self.get_mutated_premises(base_problem)
             print(f"Applying {len(possible_mutations)} mutations to base problem")
             # Sanity check: everything in possible_mutations should have the same number
@@ -191,7 +190,7 @@ class ETRGenerator:
                     seed_id=base_problem.seed_id,
                 )
                 # print("-" * 80)
-                print("New problem with seed id:", new_problem.seed_id)
+                # print("New problem with seed id:", new_problem.seed_id)
                 self.seed_ids_yielded[base_problem.seed_id] += 1
                 yield new_problem
 
@@ -202,11 +201,14 @@ class ETRGenerator:
         if self._generator is None:
             self.initialize_generator()
 
-        while len(self.problem_queue) < self.min_queue_size:
-            assert self._generator is not None
-            new_problem = next(self._generator)
-            if len(self.problem_queue) < self.max_queue_size:
+        if len(self.problem_queue) < self.min_queue_size:
+            print(f"Queue has {len(self.problem_queue)} problems, filling to {self.max_queue_size}")
+            current_time = time.time()
+            while len(self.problem_queue) < self.max_queue_size:
+                assert self._generator is not None
+                new_problem = next(self._generator)
                 self.problem_queue.append(new_problem)
+            print(f"Filled queue in {time.time() - current_time:.2f} seconds")
 
     # TODO: this could be passed an optional vocab_size, filter the list of problems
     # to match
