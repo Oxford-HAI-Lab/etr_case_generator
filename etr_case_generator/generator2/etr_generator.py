@@ -18,7 +18,7 @@ class ETRGenerator:
     min_queue_size: int = 50  # Minimum number of problems to maintain in queue
     max_queue_size: int = 100  # Maximum size of the queue. This should be >=1000 to maintain diversity
     _generator: Optional[Generator[PartialProblem, None, None]] = None
-    max_mutations: int = 50  # Maximum number of mutations before considering the line exhausted # TODO(Andrew->Ryan) I don't understand the thinking behind this
+    max_mutations: int = 500_000  # Maximum number of mutations before considering the line exhausted # TODO(Andrew->Ryan) I don't understand the thinking behind this
     max_mutations_per_base_problem: int = 20  # Maximum number of mutations per base problem
 
     seed_ids_yielded: Counter[str] = field(default_factory=Counter)
