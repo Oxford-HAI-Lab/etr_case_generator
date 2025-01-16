@@ -216,7 +216,8 @@ class ETRGenerator:
     def get_next_problem(self) -> PartialProblem:
         """Get the next problem from the queue, generating more if needed."""
         self.ensure_queue_filled()  # This could also take seeds near or at a certain vocab_size
-        return self.problem_queue.popleft()  # TODO this can pop a random item
+        idx = random.randrange(len(self.problem_queue))
+        return self.problem_queue.pop(idx)
 
 # Global state instance
 _etr_generator = ETRGenerator()
