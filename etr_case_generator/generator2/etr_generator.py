@@ -160,6 +160,10 @@ class ETRGenerator:
             # or removing premises if you want to "bias" the walk in a certain direction)
             base_problem = self.get_from_queue_for_mutations()  # Look at a problem without removing it
 
+            print("All seeds")
+            for p in self.problem_queue:
+                print(p.seed_id)
+
             possible_mutations = self.get_mutated_premises(base_problem)
             # Sanity check: everything in possible_mutations should have the same number
             # of premises as base_problem EXCEPT one (which has n+1 premises)
