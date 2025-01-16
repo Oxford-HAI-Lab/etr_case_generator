@@ -7,7 +7,7 @@ from etr_case_generator.mutations import get_view_mutations
 from etr_case_generator.ontology import Ontology
 from pyetr import View
 from pyetr.inference import default_inference_procedure
-from typing import Optional, Generator, Deque, Tuple, Set
+from typing import Optional, Generator, Deque, Tuple, Set, Counter
 
 from etr_case_generator.view_to_natural_language import view_to_natural_language
 
@@ -19,6 +19,8 @@ class ETRGenerator:
     max_queue_size: int = 10  # Maximum size of the queue
     _generator: Optional[Generator[PartialProblem, None, None]] = None
     max_mutations: int = 50  # Maximum number of mutations before considering the line exhausted
+
+    seed_ids_yielded: Counter[str] = field(default_factory=Counter)
 
     def initialize_generator(self) -> None:
         """Initialize the problem generator."""
@@ -175,6 +177,7 @@ class ETRGenerator:
                 print("-" * 80)
                 print("New problem:")
                 print(new_problem)
+                self.seed_ids_yielded[base_problem.seed_id] += 1
                 yield new_problem
 
             mutation_count += 1
