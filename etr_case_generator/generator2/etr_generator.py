@@ -226,7 +226,7 @@ class ETRGenerator:
                 assert premise.logical_form_etr_view is not None
                 sum_atoms += len(premise.logical_form_etr_view.atoms)
             num_atoms_count[sum_atoms] += 1
-        # print("Atom count in new queue:", num_atoms_count)
+        print("Atom count in new queue:", num_atoms_count)
 
     # TODO: this could be passed an optional vocab_size, filter the list of problems
     # to match
