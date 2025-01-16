@@ -50,65 +50,67 @@ class ETRGenerator:
 
     def create_starting_problems(self) -> list[PartialProblem]:
         """
-        Create an initial seed problem.
+        Create a list of initial seed problems.
 
         Returns:
-            PartialProblem: a random pick from a list of simple problems
+            list[PartialProblem]: A shuffled list of basic logical problems
         """
-        # TODO what this should really be: iterate over all cases.py BaseExamples
-        # in a try/catch and try to coerce them into premises + query structure
-        # keep a whitelist of ones we like
-        # TODO Might need to "wash" these to replace the names of stuff with like A(a())
-        # or B(b()), etc.
-        possible_seeds = [
-            (  # Modus ponens
-                [
-                    View.from_str("{ A(a()) }^{ B(a()) }"),
-                    View.from_str("{ B(a()) }")
-                ],
-                View.from_str("{ A(a()) }")
-            ),
-            (  # Modus tollens
-                [
-                    View.from_str("{ A(a()) }^{ B(a()) }"),
-                    View.from_str("{ ~A(a()) }")
-                ],
-                View.from_str("{ ~B(a()) }")
-            ),
-            (  # Quantified modus ponens
-                [
-                    View.from_str("Aa { A(a*) }^{ B(a*) }"),
-                    View.from_str("Aa { B(a*) }")
-                ],
-                View.from_str("Aa { A(a*) }")
-            ),
-            (  # Disjunction fallacy
-                [
-                    View.from_str("{ A(a()) B(a()), C(b()) D(b()) }"),
-                    View.from_str("{ A(a()) }")
-                ],
-                View.from_str("{ B(a()) }")
-            ),
-        ]
-
-        starter_problems = []
-        for i, seed in enumerate(possible_seeds):
-            starter_problems.append(PartialProblem(
+        starter_problems = [
+            # Modus ponens
+            PartialProblem(
                 premises=[
-                    ReifiedView(
-                        logical_form_etr_view=v,
-                    ) for v in seed[0]
+                    ReifiedView(logical_form_etr_view=View.from_str("{ A(a()) }^{ B(a()) }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ B(a()) }"))
                 ],
                 possible_conclusions_from_logical=None,
                 possible_conclusions_from_etr=None,
                 etr_what_follows=ReifiedView(
-                    logical_form_etr_view=seed[1],
+                    logical_form_etr_view=View.from_str("{ A(a()) }")
                 ),
-                seed_id=str(i),
-            ))
+                seed_id="0"
+            ),
+            # Modus tollens
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("{ A(a()) }^{ B(a()) }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ ~A(a()) }"))
+                ],
+                possible_conclusions_from_logical=None,
+                possible_conclusions_from_etr=None,
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("{ ~B(a()) }")
+                ),
+                seed_id="1"
+            ),
+            # Quantified modus ponens
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("Aa { A(a*) }^{ B(a*) }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("Aa { B(a*) }"))
+                ],
+                possible_conclusions_from_logical=None,
+                possible_conclusions_from_etr=None,
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("Aa { A(a*) }")
+                ),
+                seed_id="2"
+            ),
+            # Disjunction fallacy
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("{ A(a()) B(a()), C(b()) D(b()) }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ A(a()) }"))
+                ],
+                possible_conclusions_from_logical=None,
+                possible_conclusions_from_etr=None,
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("{ B(a()) }")
+                ),
+                seed_id="3"
+            )
+        ]
 
         random.shuffle(starter_problems)
-
         return starter_problems
 
     def get_mutated_premises(self, problem: PartialProblem) -> Set[Tuple[View, ...]]:
