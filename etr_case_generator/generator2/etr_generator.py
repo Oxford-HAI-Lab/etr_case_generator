@@ -55,7 +55,9 @@ def boost_low_num_atom_problems(problem: PartialProblem, all_problems: List[Part
     
     # Boost problems with fewer than average atoms
     if problem_atoms < avg_atoms:
-        return 2.0 - (problem_atoms / avg_atoms)  # Scales from 1.0 to 2.0
+        max_boost = 10.0
+        percent_less = (avg_atoms - problem_atoms) / avg_atoms
+        return 1.0 + max_boost * percent_less
     return 1.0
 
 @dataclass
@@ -235,7 +237,7 @@ class ETRGenerator:
                 assert self._generator is not None
                 new_problem = next(self._generator)
                 self.problem_set.append(new_problem)
-            print(f"Filled queue in {time.time() - current_time:.2f} seconds")
+            print(f"Filled queue to size {len(self.problem_set)} in {time.time() - current_time:.2f} seconds")
 
         # Statistics on the new queue
         num_atoms_count = Counter[int]()
