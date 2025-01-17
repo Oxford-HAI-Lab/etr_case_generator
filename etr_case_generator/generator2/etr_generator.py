@@ -14,6 +14,11 @@ from typing import Optional, Generator, Tuple, Set, Counter, List, Callable
 
 from etr_case_generator.view_to_natural_language import view_to_natural_language
 
+# Generation Parameters
+UNDER_REPRESENTED_SEED_BOOST = 3.0
+ATOMS_PER_PROBLEM_BOOST = 5.0
+SOFTMAX_TEMPERATURE = 2.0
+
 def boost_low_num_atom_problems(problem: PartialProblem, all_problems: List[PartialProblem]) -> float:
     """
     A helper function to bias generation towards problems with fewer atoms. It first counts the number of atoms in all the problems, and then boosts the problem if it has fewer atoms than the average.
@@ -55,7 +60,7 @@ def boost_low_num_atom_problems(problem: PartialProblem, all_problems: List[Part
     
     # Boost problems with fewer than average atoms
     if problem_atoms < avg_atoms:
-        max_boost = 10.0
+        max_boost = ATOMS_PER_PROBLEM_BOOST
         percent_less = (avg_atoms - problem_atoms) / avg_atoms
         return 1.0 + max_boost * percent_less
     return 1.0
@@ -73,8 +78,8 @@ class ETRGenerator:
     seed_ids_yielded: Counter[str] = field(default_factory=Counter)  # To help maintain diversity
 
     generation_bias_function: Optional[Callable[[PartialProblem, List[PartialProblem]], float]] = None  # Bias generation toward certain types of problem, output is softmaxed
-    softmax_temperature: float = 1.0  # Temperature for softmax function
-    unused_seed_boost: float = 10.0  # Boost for seed ids that have not been used yet
+    softmax_temperature: float = SOFTMAX_TEMPERATURE  # Temperature for softmax function
+    unused_seed_boost: float = UNDER_REPRESENTED_SEED_BOOST  # Boost for seed ids that have not been used as much yet
 
     def initialize_generator(self) -> None:
         """Initialize the problem generator."""
