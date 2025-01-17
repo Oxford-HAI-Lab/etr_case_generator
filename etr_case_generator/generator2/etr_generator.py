@@ -65,7 +65,7 @@ class ETRGenerator:
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("{ A(a()) }")
                 ),
-                seed_id="0"
+                seed_id="e32_1"
             ),
             # Modus tollens -- from e41
             PartialProblem(
@@ -168,7 +168,7 @@ class ETRGenerator:
                     logical_form_etr_view=View.from_str("∃y { A(y) C(y) B(y*) }")
                 ),
                 seed_id="p5"
-            )
+            ),
 
             # From e15 - Negation of conjunction
             PartialProblem(
@@ -218,7 +218,7 @@ class ETRGenerator:
             )
         ]
 
-        random.shuffle(starter_problems)
+        random.shuffle(starter_problems + potential_starter_problems)
         return starter_problems
 
     def get_mutated_premises(self, problem: PartialProblem) -> Set[Tuple[View, ...]]:
