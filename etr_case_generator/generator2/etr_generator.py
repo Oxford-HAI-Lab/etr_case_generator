@@ -100,21 +100,23 @@ class ETRGenerator:
         if not self.problem_set:
             raise ValueError("Cannot select from empty problem set")
             
-        # Calculate scores for each problem
-        scores = []
-        for problem in self.problem_set:
+        def calculate_score(problem: PartialProblem, all_problems: List[PartialProblem]) -> float:
+            """Calculate selection score for a problem."""
             # Start with base score of 1.0
             score = 1.0
             
             # Add generation bias if function provided
             if self.generation_bias_function is not None:
-                score *= self.generation_bias_function(problem)
+                score *= self.generation_bias_function(problem, all_problems)
                 
             # Add boost for unused seeds
             if self.seed_ids_yielded[problem.seed_id] == 0:
                 score *= self.unused_seed_boost
                 
-            scores.append(score)
+            return score
+            
+        # Calculate scores for each problem
+        scores = [calculate_score(p, self.problem_set) for p in self.problem_set]
             
         # Apply softmax with temperature
         exp_scores = [
