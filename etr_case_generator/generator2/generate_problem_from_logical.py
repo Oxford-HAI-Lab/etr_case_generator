@@ -1,4 +1,6 @@
-from etr_case_generator.generator2.etr_generator import random_etr_problem
+from typing import Callable
+
+from etr_case_generator.generator2.etr_generator import random_etr_problem, boost_low_num_atom_problems
 from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType, PartialProblem, Conclusion, \
     ReifiedView
 from etr_case_generator.generator2.full_problem_creator import full_problem_from_partial_problem
@@ -22,14 +24,22 @@ def renamed_view(view: View, renames: dict[str, str]) -> View:
     return View.from_str(new_view_str)
 
 
-def generate_problem(args, ontology: Ontology = ELEMENTS) -> FullProblem:
+def generate_problem(args, ontology: Ontology = ELEMENTS, generation_filter: Callable[[PartialProblem], bool] = None) -> FullProblem:
     # Generate partial problems
     if args.generate_function == "random_smt_problem":
+        if args.balance_num_atoms or args.num_atoms_set:
+            raise NotImplementedError("Balancing num atoms not implemented for SMT problems")
         small_ontology = ontology.create_smaller_ontology(args.num_predicates_per_problem, args.num_objects_per_problem)
         smt_problem: SMTProblem = random_smt_problem(ontology=small_ontology, total_num_pieces=args.num_pieces)
         partial_problem = smt_problem.to_partial_problem()
     elif args.generate_function == "random_etr_problem":
-        partial_problem: PartialProblem = random_etr_problem()
+        random_etr_problem_kwargs = {}
+        if args.balance_num_atoms:
+            # partial_problem: PartialProblem = random_etr_problem()
+            random_etr_problem_kwargs["bias_function"] = boost_low_num_atom_problems
+        if generation_filter:
+            random_etr_problem_kwargs["filter_fn"] = generation_filter
+        partial_problem: PartialProblem = random_etr_problem(**random_etr_problem_kwargs)
 
         # Use this space to update the natural language object mapping for the ontology.
         assert partial_problem.premises is not None

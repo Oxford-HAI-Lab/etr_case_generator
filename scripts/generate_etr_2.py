@@ -1,11 +1,12 @@
 import argparse
 import json
+import math
 import random
 from typing import get_args
 from tqdm import tqdm
 
 from etr_case_generator.generator2.generate_problem_from_logical import generate_problem
-from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType
+from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType, PartialProblem
 
 from etr_case_generator.ontology import Ontology, get_all_ontologies, natural_name_to_logical_name
 
@@ -31,6 +32,11 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
     }
     num_needed_per_quadrant: int = (n_problems + 3) // 4
 
+    if args.num_atoms_set:
+        num_atoms_counts = {i : 0 for i in args.num_atoms_set}
+
+    pbar_postfix = {}
+
     problems: list[FullProblem] = []
     pbar = tqdm(range(n_problems), desc="Generating problems")
     for _ in pbar:
@@ -40,7 +46,20 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
             current_counter += 1
             
             try:
-                problem: FullProblem = generate_problem(args, ontology=ontology)
+                def has_good_num_atoms(pp: PartialProblem):
+                    acceptable_num_atoms = args.num_atoms_set
+                    count_per_bin = math.ceil(n_problems / len(acceptable_num_atoms))
+
+                    # Filter out elements of acceptable_num_atoms whose counts have exceeded the count_ber_bin limit
+                    acceptable_num_atoms = [num_atoms for num_atoms in acceptable_num_atoms if num_atoms_counts[num_atoms] < count_per_bin]
+
+                    assert len(acceptable_num_atoms) > 0, f"This shouldn't be possible: {num_atoms_counts}"
+
+                    return pp.num_atoms() in acceptable_num_atoms
+
+                problem: FullProblem = generate_problem(args, ontology=ontology, generation_filter=has_good_num_atoms if args.num_atoms_set else None)
+
+                pbar_postfix = {}
 
                 if args.balance:
                     problem_is_erotetic: bool = problem.get_yes_no_conclusion().is_etr_predicted
@@ -48,25 +67,32 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                     current_quadrant = (problem_is_erotetic, problem_is_classical)
 
                     # Update the progress bar with current counts
-                    pbar.set_postfix({
+                    pbar_postfix = {
                         'EC': quadrant_counts[(True, True)],    # Erotetic Classical
                         'EN': quadrant_counts[(True, False)],   # Erotetic Non-classical
                         'NC': quadrant_counts[(False, True)],   # Non-erotetic Classical
                         'NN': quadrant_counts[(False, False)],  # Non-erotetic Non-classical
                         'T': current_counter,                   # Try number
-                    })
+                    }
+                    pbar.set_postfix(pbar_postfix)
                     
                     if quadrant_counts[current_quadrant] >= num_needed_per_quadrant:
                         continue  # Try again if this quadrant is full
                     
                     quadrant_counts[current_quadrant] += 1
+
+                if args.num_atoms_set:
+                    num_atoms = sum(len(view.logical_form_etr_view.atoms) for view in problem.views)
+                    if num_atoms not in args.num_atoms_set:
+                        continue
+                    num_atoms_counts[num_atoms] += 1
                 
                 problems.append(problem)
                 break  # Successfully generated a problem, move to next iteration
 
             except Exception as e:
                 print(f"Failed to generate problem: {e}")
-                raise e
+                raise e  # Just for debugging
                 continue  # Try again
     
     return problems
@@ -101,6 +127,8 @@ def main():
     parser.add_argument("--generate_function", type=str, default="random_smt_problem", help="Which function to use in generation.", choices=["random_smt_problem", "random_etr_problem"])
     parser.add_argument("--balance", help="Balance the dataset through the 4 quadrants of erotetic and classical yes/no.", action="store_true")
     # TODO(Ryan): Add parameters for problem generation here
+    parser.add_argument("--balance_num_atoms", action="store_true", help="Balance the dataset by number of atoms in the problem.")
+    parser.add_argument("--num_atoms_set", nargs="+", type=int, help="Set the number of atoms in the problem.")
     args = parser.parse_args()
 
     if args.question_type == "all":

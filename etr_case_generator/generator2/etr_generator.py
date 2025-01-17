@@ -34,22 +34,14 @@ def boost_low_num_atom_problems(problem: PartialProblem, all_problems: List[Part
         return 1.0
         
     # Count atoms in the target problem
-    problem_atoms = sum(
-        len(premise.logical_form_etr_view.atoms)
-        for premise in problem.premises
-        if premise.logical_form_etr_view is not None
-    )
+    problem_atoms = problem.num_atoms()
     
     # Calculate average atoms across all problems
     total_atoms = 0
     valid_problems = 0
     for p in all_problems:
         if p.premises:
-            atoms = sum(
-                len(premise.logical_form_etr_view.atoms)
-                for premise in p.premises
-                if premise.logical_form_etr_view is not None
-            )
+            atoms = p.num_atoms()
             total_atoms += atoms
             valid_problems += 1
             
@@ -277,19 +269,24 @@ class ETRGenerator:
         self.ensure_queue_filled()
 
         # If no filter provided, use a function that accepts everything
+        has_filter = filter_fn is not None
         if filter_fn is None:
             filter_fn = lambda _: True
 
         # Get indices of all problems that pass the filter
         valid_indices = [i for i, p in enumerate(self.problem_set) if filter_fn(p)]
+        print(f"Found {len(valid_indices)} problems that match the filter ({has_filter})")
 
         if not valid_indices:
             # Temporarily increase the queue size to try to find a problem that matches the filter
             self.max_queue_size = self.max_queue_size * 2
+            prev_min_queue_size = self.min_queue_size
+            self.min_queue_size = self.max_queue_size
             print(f"Temporarily increasing queue size to {self.max_queue_size} to attempt to find a problem that matches the filter")
             self.ensure_queue_filled()
             valid_indices = [i for i, p in enumerate(self.problem_set) if filter_fn(p)]
             self.max_queue_size = self.max_queue_size // 2
+            self.min_queue_size = prev_min_queue_size
         
         if not valid_indices:
             raise RuntimeError("No problems match the provided filter criteria")

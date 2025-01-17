@@ -94,6 +94,9 @@ class PartialProblem:
     # Used during generation
     seed_id: Optional[str] = None
 
+    def num_atoms(self) -> int:
+        return sum(len(view.logical_form_etr_view.atoms) for view in self.premises if view.logical_form_etr_view is not None)
+
     def fill_out_conclusion(self, conclusion: Conclusion, ontology: Optional[Ontology] = None):
         conclusion.view.fill_out(ontology)
 
