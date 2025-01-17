@@ -170,8 +170,52 @@ class ETRGenerator:
                 seed_id="p5"
             )
 
-            # Add more here
-            # ...
+            # From e15 - Negation of conjunction
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("{ ~A() ~B() ~C() }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ A() }"))
+                ],
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("{ ~B(), ~C() }")
+                ),
+                seed_id="p6"
+            ),
+            # From e28 - Basic step with multiple premises
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("{ ~A(), A() }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ B() A() }^{ A() }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ B() }"))
+                ],
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("{ A() B() }")
+                ),
+                seed_id="p7"
+            ),
+            # From e40i - Mutual exclusivity
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("{ ~A() ~B() C(), A() ~B() ~C(), ~A() B() ~C() }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ D() C() }^{ D() }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ B() }"))
+                ],
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("{ 0 }")
+                ),
+                seed_id="p8"
+            ),
+            # From e61 - Universal with existential
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("∀x ∃a { ~A(x), B(a*) A(x) C(x,a) }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ B(b()*) }"))
+                ],
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("∀x ∃a { B(b()*) B(a*) A(x) C(x,a), B(b()*) ~A(x) }")
+                ),
+                seed_id="p9"
+            )
         ]
 
         random.shuffle(starter_problems)
