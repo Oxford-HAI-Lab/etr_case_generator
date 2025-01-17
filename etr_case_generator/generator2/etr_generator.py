@@ -72,7 +72,7 @@ class ETRGenerator:
 
     seed_ids_yielded: Counter[str] = field(default_factory=Counter)  # To help maintain diversity
 
-    generation_bias_function: Optional[Callable[[PartialProblem], float]] = None  # Bias generation toward certain types of problem, output is softmaxed
+    generation_bias_function: Optional[Callable[[PartialProblem, List[PartialProblem]], float]] = None  # Bias generation toward certain types of problem, output is softmaxed
     softmax_temperature: float = 1.0  # Temperature for softmax function
     unused_seed_boost: float = 10.0  # Boost for seed ids that have not been used yet
 
