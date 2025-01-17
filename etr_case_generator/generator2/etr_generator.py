@@ -76,7 +76,7 @@ class ETRGenerator:
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("{ ~B(a()) }")
                 ),
-                seed_id="1"
+                seed_id="e41"
             ),
             # Quantified modus ponens -- from e51
             PartialProblem(
@@ -87,7 +87,7 @@ class ETRGenerator:
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("Aa { A(a*) }")
                 ),
-                seed_id="2"
+                seed_id="e51"
             ),
             # Disjunction fallacy -- from e13
             PartialProblem(
@@ -98,7 +98,7 @@ class ETRGenerator:
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("{ B(a()) }")
                 ),
-                seed_id="3"
+                seed_id="e13"
             )
         ]
 
@@ -112,7 +112,7 @@ class ETRGenerator:
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("{ C(a()) D(a()) }")
                 ),
-                seed_id="p0"
+                seed_id="e3"
             ),
             # From e42 - Only if with negation
             PartialProblem(
@@ -123,7 +123,7 @@ class ETRGenerator:
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("{ ~A(a()) }")
                 ),
-                seed_id="p1"
+                seed_id="e42"
             ),
             # From e47 - Existential quantifier
             PartialProblem(
@@ -134,7 +134,7 @@ class ETRGenerator:
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("{ B(a()) }")
                 ),
-                seed_id="p2"
+                seed_id="e47"
             ),
             # From e52 - Universal quantifier with multiple predicates
             PartialProblem(
@@ -145,7 +145,7 @@ class ETRGenerator:
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("{ B(a()*) A(a()) }")
                 ),
-                seed_id="p3"
+                seed_id="e52"
             ),
             # From e54 - Universal quantifier with optional case
             PartialProblem(
@@ -156,7 +156,7 @@ class ETRGenerator:
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("{ A(a()*) B(a()) }")
                 ),
-                seed_id="p4"
+                seed_id="e54"
             ),
             # From e57 - Universal and existential mix
             PartialProblem(
@@ -167,7 +167,7 @@ class ETRGenerator:
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("∃y { A(y) C(y) B(y*) }")
                 ),
-                seed_id="p5"
+                seed_id="e57"
             ),
 
             # From e15 - Negation of conjunction
@@ -179,7 +179,7 @@ class ETRGenerator:
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("{ ~B(), ~C() }")
                 ),
-                seed_id="p6"
+                seed_id="e15"
             ),
             # From e28 - Basic step with multiple premises
             PartialProblem(
@@ -191,7 +191,7 @@ class ETRGenerator:
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("{ A() B() }")
                 ),
-                seed_id="p7"
+                seed_id="e28"
             ),
             # From e40i - Mutual exclusivity
             PartialProblem(
@@ -203,7 +203,7 @@ class ETRGenerator:
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("{ 0 }")
                 ),
-                seed_id="p8"
+                seed_id="e40i"
             ),
             # From e61 - Universal with existential
             PartialProblem(
@@ -214,7 +214,7 @@ class ETRGenerator:
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("∀x ∃a { B(b()*) B(a*) A(x) C(x,a), B(b()*) ~A(x) }")
                 ),
-                seed_id="p9"
+                seed_id="e61"
             )
         ]
 
