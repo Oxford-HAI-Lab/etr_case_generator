@@ -38,6 +38,7 @@ def full_problem_from_partial_problem(partial_problem: PartialProblem, ontology:
         multiple_choices=multiple_choices if multiple_choices else None,
         # Open ended question
         etr_predicted_conclusion=Conclusion(view=etr_predicted_conclusion),
+        seed_id=partial_problem.seed_id,
     )
 
     full_problem.ontology = ontology

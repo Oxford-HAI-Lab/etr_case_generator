@@ -66,6 +66,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
 
             except Exception as e:
                 print(f"Failed to generate problem: {e}")
+                raise e
                 continue  # Try again
     
     return problems

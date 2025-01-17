@@ -151,6 +151,7 @@ class FullProblem:
 
     # Generation Details
     ontology: Ontology = None
+    seed_id: Optional[str] = None  # The "base" problem that this problem was generated from, as documented in cases.py
 
     # Yes or No format
     yes_or_no_conclusion_chosen_index: int = 0  # Indexes into possible_conclusions

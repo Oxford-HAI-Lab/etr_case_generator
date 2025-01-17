@@ -17,7 +17,7 @@ class ETRGenerator:
     """Maintains the state of the ETR problem generator between calls."""
     problem_set: List[PartialProblem] = field(default_factory=list)
     min_queue_size: int = 50  # Minimum number of problems to maintain in queue
-    max_queue_size: int = 100  # Maximum size of the queue. This should be >=1000 to maintain diversity
+    max_queue_size: int = 100  # Maximum size of the queue. This should be large relative to max_mutations_per_base_problem to maintain diversity
     _generator: Optional[Generator[PartialProblem, None, None]] = None
     max_mutations: int = 500_000  # Maximum number of mutations before considering the line exhausted # TODO(Andrew->Ryan) I don't understand the thinking behind this
     max_mutations_per_base_problem: int = 20  # Maximum number of mutations per base problem
@@ -30,6 +30,9 @@ class ETRGenerator:
 
         # Fill the queue with initial problems
         self.problem_set.extend(self.create_starting_problems())
+
+        if self.max_queue_size < self.max_mutations_per_base_problem * 5:
+            print("Warning: max_queue_size is less than 5 times max_mutations_per_base_problem. This may lead to a lack of diversity during sampling.")
 
     def get_from_queue_for_mutations(self):
         # Return an element whose seed_id has been used least often
@@ -147,17 +150,6 @@ class ETRGenerator:
                 ),
                 seed_id="e52"
             ),
-            # From e54 - Universal quantifier with optional case
-            PartialProblem(
-                premises=[
-                    ReifiedView(logical_form_etr_view=View.from_str("∀x { 0, A(x*) B(x) }^{ A(x*) }")),
-                    ReifiedView(logical_form_etr_view=View.from_str("{ A(a()*) }"))
-                ],
-                etr_what_follows=ReifiedView(
-                    logical_form_etr_view=View.from_str("{ A(a()*) B(a()) }")
-                ),
-                seed_id="e54"
-            ),
             # From e57 - Universal and existential mix
             PartialProblem(
                 premises=[
@@ -169,7 +161,32 @@ class ETRGenerator:
                 ),
                 seed_id="e57"
             ),
+        ]
 
+        # These seem good but they have problems :(
+        error_problems: list[PartialProblem] = [
+            # From e54 - Universal quantifier with optional case
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("∀x { 0, A(x*) B(x) }^{ A(x*) }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ A(a()*) }"))
+                ],
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("{ A(a()*) B(a()) }")
+                ),
+                seed_id="e54"
+            ),
+            # From e61 - Universal with existential
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("∀x ∃a { ~A(x), B(a*) A(x) C(x,a) }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ B(b()*) }"))
+                ],
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("∀x ∃a { B(b()*) B(a*) A(x) C(x,a), B(b()*) ~A(x) }")
+                ),
+                seed_id="e61"
+            ),
             # From e15 - Negation of conjunction
             PartialProblem(
                 premises=[
@@ -180,18 +197,6 @@ class ETRGenerator:
                     logical_form_etr_view=View.from_str("{ ~B(), ~C() }")
                 ),
                 seed_id="e15"
-            ),
-            # From e28 - Basic step with multiple premises
-            PartialProblem(
-                premises=[
-                    ReifiedView(logical_form_etr_view=View.from_str("{ ~A(), A() }")),
-                    ReifiedView(logical_form_etr_view=View.from_str("{ B() A() }^{ A() }")),
-                    ReifiedView(logical_form_etr_view=View.from_str("{ B() }"))
-                ],
-                etr_what_follows=ReifiedView(
-                    logical_form_etr_view=View.from_str("{ A() B() }")
-                ),
-                seed_id="e28"
             ),
             # From e40i - Mutual exclusivity
             PartialProblem(
@@ -205,21 +210,23 @@ class ETRGenerator:
                 ),
                 seed_id="e40i"
             ),
-            # From e61 - Universal with existential
+            # From e28 - Basic step with multiple premises
             PartialProblem(
                 premises=[
-                    ReifiedView(logical_form_etr_view=View.from_str("∀x ∃a { ~A(x), B(a*) A(x) C(x,a) }")),
-                    ReifiedView(logical_form_etr_view=View.from_str("{ B(b()*) }"))
+                    ReifiedView(logical_form_etr_view=View.from_str("{ ~A(), A() }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ B() A() }^{ A() }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ B() }"))
                 ],
                 etr_what_follows=ReifiedView(
-                    logical_form_etr_view=View.from_str("∀x ∃a { B(b()*) B(a*) A(x) C(x,a), B(b()*) ~A(x) }")
+                    logical_form_etr_view=View.from_str("{ A() B() }")
                 ),
-                seed_id="e61"
-            )
+                seed_id="e28"
+            ),
         ]
 
-        random.shuffle(starter_problems + potential_starter_problems)
-        return starter_problems
+        all_problems = starter_problems + potential_starter_problems
+        random.shuffle(all_problems)
+        return all_problems
 
     def get_mutated_premises(self, problem: PartialProblem) -> Set[Tuple[View, ...]]:
         """
@@ -271,6 +278,7 @@ class ETRGenerator:
             # e.g. "largest" -> (then you can also think about just mutating by adding
             # or removing premises if you want to "bias" the walk in a certain direction)
             base_problem = self.get_from_queue_for_mutations()  # Look at a problem without removing it
+            print(f"Chose base problem with seed id {base_problem.seed_id}")
 
             possible_mutations = self.get_mutated_premises(base_problem)
             print(f"Selecting new base problem with id {base_problem.seed_id}", f"Applying {self.max_mutations_per_base_problem} out of {len(possible_mutations)} mutations to base problem")
