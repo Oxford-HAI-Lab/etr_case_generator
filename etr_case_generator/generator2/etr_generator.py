@@ -55,15 +55,13 @@ class ETRGenerator:
         Returns:
             list[PartialProblem]: A shuffled list of basic logical problems
         """
-        starter_problems = [
+        starter_problems: list[PartialProblem] = [
             # Modus ponens
             PartialProblem(
                 premises=[
                     ReifiedView(logical_form_etr_view=View.from_str("{ A(a()) }^{ B(a()) }")),
                     ReifiedView(logical_form_etr_view=View.from_str("{ B(a()) }"))
                 ],
-                possible_conclusions_from_logical=None,
-                possible_conclusions_from_etr=None,
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("{ A(a()) }")
                 ),
@@ -75,8 +73,6 @@ class ETRGenerator:
                     ReifiedView(logical_form_etr_view=View.from_str("{ A(a()) }^{ B(a()) }")),
                     ReifiedView(logical_form_etr_view=View.from_str("{ ~A(a()) }"))
                 ],
-                possible_conclusions_from_logical=None,
-                possible_conclusions_from_etr=None,
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("{ ~B(a()) }")
                 ),
@@ -88,8 +84,6 @@ class ETRGenerator:
                     ReifiedView(logical_form_etr_view=View.from_str("Aa { A(a*) }^{ B(a*) }")),
                     ReifiedView(logical_form_etr_view=View.from_str("Aa { B(a*) }"))
                 ],
-                possible_conclusions_from_logical=None,
-                possible_conclusions_from_etr=None,
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("Aa { A(a*) }")
                 ),
@@ -101,13 +95,15 @@ class ETRGenerator:
                     ReifiedView(logical_form_etr_view=View.from_str("{ A(a()) B(a()), C(b()) D(b()) }")),
                     ReifiedView(logical_form_etr_view=View.from_str("{ A(a()) }"))
                 ],
-                possible_conclusions_from_logical=None,
-                possible_conclusions_from_etr=None,
                 etr_what_follows=ReifiedView(
                     logical_form_etr_view=View.from_str("{ B(a()) }")
                 ),
                 seed_id="3"
             )
+        ]
+
+        potential_starter_problems: list[PartialProblem] = [
+            ...
         ]
 
         random.shuffle(starter_problems)
