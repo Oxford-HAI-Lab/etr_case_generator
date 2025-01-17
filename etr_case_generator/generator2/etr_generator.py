@@ -301,7 +301,8 @@ class ETRGenerator:
 # Global state instance
 _etr_generator = ETRGenerator()
 
-def random_etr_problem(filter_fn: Optional[Callable[[PartialProblem], bool]] = None) -> PartialProblem:
+def random_etr_problem(filter_fn: Optional[Callable[[PartialProblem], bool]] = None,
+                       bias_function: Optional[Callable[[PartialProblem, List[PartialProblem]], float]] = None) -> PartialProblem:
     """
     Generate a random ETR problem that matches the filter criteria.
     
@@ -309,6 +310,12 @@ def random_etr_problem(filter_fn: Optional[Callable[[PartialProblem], bool]] = N
         filter_fn: Optional function that takes a PartialProblem and returns bool.
                   If provided, only problems that pass this filter will be returned.
                   Defaults to None (no filtering).
+        bias_function: Optional function that takes a PartialProblem and a list of all problems
+                       and returns a float. This function can be used to bias the generation
+                       towards certain types of problems. Defaults to None.
+
+    Side Effect:
+        Updates the global generator state and sets the generation bias function
         
     Returns:
         A new PartialProblem instance that passes the filter
@@ -316,6 +323,9 @@ def random_etr_problem(filter_fn: Optional[Callable[[PartialProblem], bool]] = N
     Raises:
         RuntimeError: If no problems match the filter criteria
     """
+    if bias_function is not None:
+        _etr_generator.generation_bias_function = bias_function
+
     problem = _etr_generator.get_next_problem(filter_fn)
     return problem
 
