@@ -14,6 +14,12 @@ from typing import Optional, Generator, Tuple, Set, Counter, List, Callable
 
 from etr_case_generator.view_to_natural_language import view_to_natural_language
 
+def boost_low_num_atom_problems(problem: PartialProblem, all_problems: List[PartialProblem]) -> float:
+    """
+    A helper function to bias generation towards problems with fewer atoms. It first counts the number of atoms in all the problems, and then boosts the problem if it has fewer atoms than the average.
+    """
+    ...
+
 @dataclass
 class ETRGenerator:
     """Maintains the state of the ETR problem generator between calls."""
@@ -135,7 +141,7 @@ class ETRGenerator:
             # e.g. "largest" -> (then you can also think about just mutating by adding
             # or removing premises if you want to "bias" the walk in a certain direction)
             base_problem = self.get_from_queue_for_mutations()  # Look at a problem without removing it
-            print(f"Chose base problem with seed id {base_problem.seed_id}")
+            # print(f"Chose base problem with seed id {base_problem.seed_id}")
 
             possible_mutations = self.get_mutated_premises(base_problem)
             print(f"Selecting new base problem with id {base_problem.seed_id}", f"Applying {self.max_mutations_per_base_problem} out of {len(possible_mutations)} mutations to base problem")
