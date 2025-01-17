@@ -5,6 +5,7 @@ import random
 from typing import get_args
 from tqdm import tqdm
 
+from etr_case_generator.generator2.etr_generator import set_queue_sizes
 from etr_case_generator.generator2.generate_problem_from_logical import generate_problem
 from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType, PartialProblem
 
@@ -129,6 +130,7 @@ def main():
     # TODO(Ryan): Add parameters for problem generation here
     parser.add_argument("--balance_num_atoms", action="store_true", help="Balance the dataset by number of atoms in the problem.")
     parser.add_argument("--num_atoms_set", nargs="+", type=int, help="Set the number of atoms in the problem.")
+    parser.add_argument("--generator_max_queue_size", type=int, default=100, help="Maximum number of problems to generate at once.")
     args = parser.parse_args()
 
     if args.question_type == "all":
@@ -136,6 +138,8 @@ def main():
     else:
         assert args.question_type in get_args(QuestionType), f"Invalid question type: {args.question_type}, must be in: {get_args(QuestionType)}"
         question_types = [args.question_type]
+
+    set_queue_sizes(args.generator_max_queue_size // 2, args.generator_max_queue_size)
 
     # Most of the logic occurs here!
     problems: list[FullProblem] = generate_problem_list(n_problems=args.n_problems, args=args, question_types=question_types)
