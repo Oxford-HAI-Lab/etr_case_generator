@@ -69,13 +69,13 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                     current_quadrant = (problem_is_erotetic, problem_is_classical)
 
                     # Update the progress bar with current counts
-                    pbar_postfix = {
+                    pbar_postfix.update({
                         'EC': quadrant_counts[(True, True)],    # Erotetic Classical
                         'EN': quadrant_counts[(True, False)],   # Erotetic Non-classical
                         'NC': quadrant_counts[(False, True)],   # Non-erotetic Classical
                         'NN': quadrant_counts[(False, False)],  # Non-erotetic Non-classical
                         'T': current_counter,                   # Try number
-                    }
+                    })
                     pbar.set_postfix(pbar_postfix)
                     
                     if quadrant_counts[current_quadrant] >= num_needed_per_quadrant:
