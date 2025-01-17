@@ -17,8 +17,46 @@ from etr_case_generator.view_to_natural_language import view_to_natural_language
 def boost_low_num_atom_problems(problem: PartialProblem, all_problems: List[PartialProblem]) -> float:
     """
     A helper function to bias generation towards problems with fewer atoms. It first counts the number of atoms in all the problems, and then boosts the problem if it has fewer atoms than the average.
+    
+    Args:
+        problem: The problem to calculate the boost for
+        all_problems: List of all problems in the queue for comparison
+        
+    Returns:
+        float: A boost multiplier, where values > 1.0 increase selection probability
     """
-    ...
+    if not problem.premises or not all_problems:
+        return 1.0
+        
+    # Count atoms in the target problem
+    problem_atoms = sum(
+        len(premise.logical_form_etr_view.atoms)
+        for premise in problem.premises
+        if premise.logical_form_etr_view is not None
+    )
+    
+    # Calculate average atoms across all problems
+    total_atoms = 0
+    valid_problems = 0
+    for p in all_problems:
+        if p.premises:
+            atoms = sum(
+                len(premise.logical_form_etr_view.atoms)
+                for premise in p.premises
+                if premise.logical_form_etr_view is not None
+            )
+            total_atoms += atoms
+            valid_problems += 1
+            
+    if valid_problems == 0:
+        return 1.0
+        
+    avg_atoms = total_atoms / valid_problems
+    
+    # Boost problems with fewer than average atoms
+    if problem_atoms < avg_atoms:
+        return 2.0 - (problem_atoms / avg_atoms)  # Scales from 1.0 to 2.0
+    return 1.0
 
 @dataclass
 class ETRGenerator:
