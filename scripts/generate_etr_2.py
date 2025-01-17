@@ -33,8 +33,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
     }
     num_needed_per_quadrant: int = (n_problems + 3) // 4
 
-    if args.num_atoms_set:
-        num_atoms_counts = {i : 0 for i in args.num_atoms_set}
+    num_atoms_counts = {i : 0 for i in args.num_atoms_set} if args.num_atoms_set else {}
 
     pbar_postfix = {}
 
@@ -60,7 +59,9 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
 
                 problem: FullProblem = generate_problem(args, ontology=ontology, generation_filter=has_good_num_atoms if args.num_atoms_set else None)
 
-                pbar_postfix = {}
+                if args.num_atoms_set:
+                    for na, c in num_atoms_counts.items():
+                        pbar_postfix[f"NA{na}"] = c
 
                 if args.balance:
                     problem_is_erotetic: bool = problem.get_yes_no_conclusion().is_etr_predicted
@@ -89,11 +90,12 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                     num_atoms_counts[num_atoms] += 1
                 
                 problems.append(problem)
+                pbar.set_postfix(pbar_postfix)
                 break  # Successfully generated a problem, move to next iteration
 
             except Exception as e:
                 print(f"Failed to generate problem: {e}")
-                raise e  # Just for debugging
+                # raise e  # Just for debugging
                 continue  # Try again
     
     return problems
