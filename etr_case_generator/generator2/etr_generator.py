@@ -56,7 +56,7 @@ class ETRGenerator:
             list[PartialProblem]: A shuffled list of basic logical problems
         """
         starter_problems: list[PartialProblem] = [
-            # Modus ponens
+            # Modus ponens -- from e32_1
             PartialProblem(
                 premises=[
                     ReifiedView(logical_form_etr_view=View.from_str("{ A(a()) }^{ B(a()) }")),
@@ -67,7 +67,7 @@ class ETRGenerator:
                 ),
                 seed_id="0"
             ),
-            # Modus tollens
+            # Modus tollens -- from e41
             PartialProblem(
                 premises=[
                     ReifiedView(logical_form_etr_view=View.from_str("{ A(a()) }^{ B(a()) }")),
@@ -78,7 +78,7 @@ class ETRGenerator:
                 ),
                 seed_id="1"
             ),
-            # Quantified modus ponens
+            # Quantified modus ponens -- from e51
             PartialProblem(
                 premises=[
                     ReifiedView(logical_form_etr_view=View.from_str("Aa { A(a*) }^{ B(a*) }")),
@@ -89,7 +89,7 @@ class ETRGenerator:
                 ),
                 seed_id="2"
             ),
-            # Disjunction fallacy
+            # Disjunction fallacy -- from e13
             PartialProblem(
                 premises=[
                     ReifiedView(logical_form_etr_view=View.from_str("{ A(a()) B(a()), C(b()) D(b()) }")),
@@ -103,7 +103,72 @@ class ETRGenerator:
         ]
 
         potential_starter_problems: list[PartialProblem] = [
-            ...
+            # From e3 - Disjunction with negation
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("{ A(a()) B(a()), C(a()) D(a()) }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ ~A(a()) }"))
+                ],
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("{ C(a()) D(a()) }")
+                ),
+                seed_id="p0"
+            ),
+            # From e42 - Only if with negation
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("{ ~A(a()) ~B(a()) }^{ ~B(a()) }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ ~B(a()) }"))
+                ],
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("{ ~A(a()) }")
+                ),
+                seed_id="p1"
+            ),
+            # From e47 - Existential quantifier
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("∃x { B(x) A(x*) }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ A(a()*) }"))
+                ],
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("{ B(a()) }")
+                ),
+                seed_id="p2"
+            ),
+            # From e52 - Universal quantifier with multiple predicates
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("∀x { A(x) B(x*) }^{ A(x) }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ B(a()*) }"))
+                ],
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("{ B(a()*) A(a()) }")
+                ),
+                seed_id="p3"
+            ),
+            # From e54 - Universal quantifier with optional case
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("∀x { 0, A(x*) B(x) }^{ A(x*) }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("{ A(a()*) }"))
+                ],
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("{ A(a()*) B(a()) }")
+                ),
+                seed_id="p4"
+            ),
+            # From e57 - Universal and existential mix
+            PartialProblem(
+                premises=[
+                    ReifiedView(logical_form_etr_view=View.from_str("∀x { B(x*) A(x) }^{ B(x*) }")),
+                    ReifiedView(logical_form_etr_view=View.from_str("∃x { B(x*) C(x) }"))
+                ],
+                etr_what_follows=ReifiedView(
+                    logical_form_etr_view=View.from_str("∃y { A(y) C(y) B(y*) }")
+                ),
+                seed_id="p5"
+            )
         ]
 
         random.shuffle(starter_problems)
