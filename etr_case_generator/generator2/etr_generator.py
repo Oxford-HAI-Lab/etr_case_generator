@@ -372,6 +372,14 @@ class ETRGenerator:
 
         # Get indices of all problems that pass the filter
         valid_indices = [i for i, p in enumerate(self.problem_set) if filter_fn(p)]
+
+        if not valid_indices:
+            # Temporarily increase the queue size to try to find a problem that matches the filter
+            self.max_queue_size = self.max_queue_size * 2
+            print(f"Temporarily increasing queue size to {self.max_queue_size} to attempt to find a problem that matches the filter")
+            self.ensure_queue_filled()
+            valid_indices = [i for i, p in enumerate(self.problem_set) if filter_fn(p)]
+            self.max_queue_size = self.max_queue_size // 2
         
         if not valid_indices:
             raise RuntimeError("No problems match the provided filter criteria")
