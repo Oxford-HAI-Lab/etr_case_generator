@@ -1,5 +1,6 @@
 import random
 import time
+import math
 
 from dataclasses import dataclass, field
 from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
@@ -40,24 +41,49 @@ class ETRGenerator:
             print("Warning: max_queue_size is less than 5 times max_mutations_per_base_problem. This may lead to a lack of diversity during sampling.")
 
     def get_from_queue_for_mutations(self):
-        # Return an element whose seed_id has been used least often
-        min_count = float('inf')
-        candidates = []
-
-        # TODO Need to use generation_bias_function here
-        # TODO Use unused_seed_boost in the softmax instead of just filtering
+        """Select a problem from the queue using softmax-weighted random selection.
         
+        The selection probability is influenced by:
+        1. The generation_bias_function if provided
+        2. A boost for previously unused seed_ids
+        3. Temperature scaling for the softmax
+        
+        Returns:
+            PartialProblem: The selected problem for mutation
+        """
+        if not self.problem_set:
+            raise ValueError("Cannot select from empty problem set")
+            
+        # Calculate scores for each problem
+        scores = []
         for problem in self.problem_set:
-            count = self.seed_ids_yielded[problem.seed_id]
-            if count < min_count:
-                min_count = count
-                candidates = [problem]
-            elif count == min_count:
-                candidates.append(problem)
+            # Start with base score of 1.0
+            score = 1.0
+            
+            # Add generation bias if function provided
+            if self.generation_bias_function is not None:
+                score *= self.generation_bias_function(problem)
                 
-        # If there are multiple candidates with the same minimum count,
-        # randomly choose one of them
-        return random.choice(candidates)
+            # Add boost for unused seeds
+            if self.seed_ids_yielded[problem.seed_id] == 0:
+                score *= self.unused_seed_boost
+                
+            scores.append(score)
+            
+        # Apply softmax with temperature
+        exp_scores = [
+            math.exp(score / self.softmax_temperature) 
+            for score in scores
+        ]
+        total = sum(exp_scores)
+        probabilities = [score / total for score in exp_scores]
+        
+        # Select problem based on calculated probabilities
+        return random.choices(
+            self.problem_set,
+            weights=probabilities,
+            k=1
+        )[0]
 
     def get_mutated_premises(self, problem: PartialProblem) -> Set[Tuple[View, ...]]:
         """
