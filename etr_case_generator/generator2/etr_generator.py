@@ -116,6 +116,8 @@ class ETRGenerator:
                     boost_factor = (avg_uses - current_uses) / avg_uses
                     score += self.unused_seed_boost * boost_factor
 
+            # Add boost for underrepresented atom counts, similar to what's done in get_some_good_mutations
+
             return score
             
         # Calculate scores for each problem
