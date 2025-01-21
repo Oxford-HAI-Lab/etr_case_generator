@@ -170,13 +170,12 @@ class ETRGenerator:
         other_mutations = []
 
         # Count how many problems have each number of atoms in problem_set
-        problem_atom_counts = Counter()
+        problem_atom_counts = Counter[int]()
         for p in self.problem_set:
-            if p.premises:
-                total_atoms = sum(len(premise.logical_form_etr_view.atoms) for premise in p.premises if premise.logical_form_etr_view)
-                problem_atom_counts[total_atoms] += 1
+            total_atoms = sum(len(premise.logical_form_etr_view.atoms) for premise in p.premises if premise.logical_form_etr_view)
+            problem_atom_counts[total_atoms] += 1
 
-        # Find the median frequency to determine what counts as "under-represented"
+        # Find the mean frequency to determine what counts as "under-represented"
         frequencies = sorted(problem_atom_counts.values())
         median_freq = frequencies[len(frequencies)//2] if frequencies else 0
 
@@ -192,7 +191,7 @@ class ETRGenerator:
                 other_mutations.append(mutation)
 
         print(f"Found {len(definitely_good_mutations)} under-represented mutations out of {len(mutations)} total mutations")
-        print("Current atom count distribution:", dict(problem_atom_counts))
+        print("Atom counts in problem_set:", {k: problem_atom_counts[k] for k in sorted(problem_atom_counts.keys())})
 
         random.shuffle(definitely_good_mutations)
         random.shuffle(other_mutations)
