@@ -116,7 +116,24 @@ class ETRGenerator:
                     boost_factor = (avg_uses - current_uses) / avg_uses
                     score += self.unused_seed_boost * boost_factor
 
-            # Add boost for underrepresented atom counts, similar to what's done in get_some_good_mutations
+            # Add boost for underrepresented atom counts
+            problem_atom_counts = Counter()
+            for p in all_problems:
+                if p.premises:
+                    total_atoms = sum(len(premise.logical_form_etr_view.atoms) for premise in p.premises if premise.logical_form_etr_view)
+                    problem_atom_counts[total_atoms] += 1
+
+            # Find the median frequency to determine what counts as "under-represented"
+            frequencies = sorted(problem_atom_counts.values())
+            median_freq = frequencies[len(frequencies)//2] if frequencies else 0
+
+            # Calculate atoms in current problem
+            current_atoms = sum(len(premise.logical_form_etr_view.atoms) for premise in problem.premises if premise.logical_form_etr_view)
+            
+            # Add boost if this atom count is underrepresented
+            if problem_atom_counts[current_atoms] < median_freq:
+                boost_factor = 1.0 - (problem_atom_counts[current_atoms] / median_freq)
+                score += self.unused_seed_boost * boost_factor
 
             return score
             
