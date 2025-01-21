@@ -107,9 +107,14 @@ class ETRGenerator:
             if self.generation_bias_function is not None:
                 score *= self.generation_bias_function(problem, all_problems)
                 
-            # Add boost for unused seeds
-            if self.seed_ids_yielded[problem.seed_id] == 0:
-                score *= self.unused_seed_boost
+            # Add boost for underrepresented seeds
+            if self.seed_ids_yielded:
+                avg_uses = sum(self.seed_ids_yielded.values()) / len(self.seed_ids_yielded)
+                current_uses = self.seed_ids_yielded[problem.seed_id]
+                if current_uses < avg_uses:
+                    # Calculate boost proportional to how underrepresented this seed is
+                    boost_factor = (avg_uses - current_uses) / avg_uses
+                    score *= (1.0 + (self.unused_seed_boost - 1.0) * boost_factor)
                 
             return score
             
