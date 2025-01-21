@@ -29,12 +29,23 @@ def count_atoms_in_problem(problem: PartialProblem) -> int:
         if premise.logical_form_etr_view
     )
 
-def get_atom_count_distribution(problems: List[PartialProblem]) -> Counter[int]:
-    """Get distribution of atom counts across a list of problems."""
+def get_atom_count_distribution(problems: List[PartialProblem]) -> tuple[Counter[int], float]:
+    """Get distribution of atom counts across a list of problems and the median frequency.
+    
+    Returns:
+        tuple[Counter[int], float]: A tuple containing:
+            - Counter mapping atom counts to their frequencies
+            - The median frequency (0.0 if no problems)
+    """
     counts = Counter[int]()
     for problem in problems:
         counts[count_atoms_in_problem(problem)] += 1
-    return counts
+    
+    # Calculate median frequency
+    frequencies = sorted(counts.values())
+    median_freq = frequencies[len(frequencies)//2] if frequencies else 0.0
+    
+    return counts, median_freq
 
 def boost_low_num_atom_problems(problem: PartialProblem, all_problems: List[PartialProblem]) -> float:
     """
@@ -134,11 +145,7 @@ class ETRGenerator:
                     score += self.unused_seed_boost * boost_factor
 
             # Add boost for underrepresented atom counts
-            problem_atom_counts = get_atom_count_distribution(all_problems)
-
-            # Find the median frequency to determine what counts as "under-represented"
-            frequencies = sorted(problem_atom_counts.values())
-            median_freq = frequencies[len(frequencies)//2] if frequencies else 0
+            problem_atom_counts, median_freq = get_atom_count_distribution(all_problems)
 
             # Calculate atoms in current problem
             current_atoms = count_atoms_in_problem(problem)
@@ -202,11 +209,7 @@ class ETRGenerator:
         other_mutations = []
 
         # Get distribution of atom counts across problems
-        problem_atom_counts = get_atom_count_distribution(self.problem_set)
-
-        # Find the median frequency to determine what counts as "under-represented"
-        frequencies = sorted(problem_atom_counts.values())
-        median_freq = frequencies[len(frequencies)//2] if frequencies else 0
+        problem_atom_counts, median_freq = get_atom_count_distribution(self.problem_set)
 
         for mutation in mutations:
             num_atoms = sum(len(view.atoms) for view in mutation)
@@ -305,8 +308,9 @@ class ETRGenerator:
             print(f"Filled queue to size {len(self.problem_set)} in {time.time() - current_time:.2f} seconds")
 
         # Statistics on the new queue
-        num_atoms_count = get_atom_count_distribution(self.problem_set)
+        num_atoms_count, median_freq = get_atom_count_distribution(self.problem_set)
         print("Atom count in new queue:", {k: num_atoms_count[k] for k in sorted(num_atoms_count.keys())})
+        print(f"Median frequency: {median_freq}")
 
     # TODO: this could be passed an optional vocab_size, filter the list of problems
     # to match
