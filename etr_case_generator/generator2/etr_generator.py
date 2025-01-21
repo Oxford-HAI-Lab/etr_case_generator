@@ -184,6 +184,11 @@ class ETRGenerator:
             else:
                 other_mutations.append(mutation)
 
+        print(f"Found {len(definitely_good_mutations)} under-represented mutations out of {len(mutations)} total mutations")
+
+        # Print the number of atoms of each number
+        print("Atom count in new queue:", {k: num_atoms_count[k] for k in sorted(num_atoms_count.keys())})
+
         random.shuffle(definitely_good_mutations)
         random.shuffle(other_mutations)
         mutations = definitely_good_mutations + other_mutations
