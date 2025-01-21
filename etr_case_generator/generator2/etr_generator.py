@@ -117,7 +117,7 @@ class ETRGenerator:
                     score += self.unused_seed_boost * boost_factor
 
             # Add boost for underrepresented atom counts
-            problem_atom_counts = Counter()
+            problem_atom_counts = Counter[int]()
             for p in all_problems:
                 if p.premises:
                     total_atoms = sum(len(premise.logical_form_etr_view.atoms) for premise in p.premises if premise.logical_form_etr_view)
