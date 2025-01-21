@@ -170,8 +170,12 @@ class ETRGenerator:
         for mutation in mutations:
             num_atoms = sum(len(view.atoms) for view in mutation)
 
-            # Check if num_atoms is less than the average
-            under_represented_num_atoms = ...
+            # Calculate average number of atoms across all mutations
+            total_atoms = sum(sum(len(view.atoms) for view in mut) for mut in mutations)
+            avg_atoms = total_atoms / len(mutations)
+            
+            # Check if this mutation has fewer atoms than average
+            under_represented_num_atoms = num_atoms < avg_atoms
 
             if under_represented_num_atoms:
                 definitely_good_mutations.append(mutation)
