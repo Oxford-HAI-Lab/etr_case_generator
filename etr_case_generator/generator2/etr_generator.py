@@ -100,12 +100,12 @@ class ETRGenerator:
             
         def calculate_score(problem: PartialProblem, all_problems: List[PartialProblem]) -> float:
             """Calculate selection score for a problem."""
-            # Start with base score of 1.0
-            score = 1.0
+            # Start with base score of 0.0
+            score = 0.0
             
             # Add generation bias if function provided
             if self.generation_bias_function is not None:
-                score *= self.generation_bias_function(problem, all_problems)
+                score += self.generation_bias_function(problem, all_problems) - 1.0
                 
             # Add boost for underrepresented seeds
             if self.seed_ids_yielded:
@@ -114,7 +114,10 @@ class ETRGenerator:
                 if current_uses < avg_uses:
                     # Calculate boost proportional to how underrepresented this seed is
                     boost_factor = (avg_uses - current_uses) / avg_uses
-                    score *= (1.0 + (self.unused_seed_boost - 1.0) * boost_factor)
+                    score += (self.unused_seed_boost - 1.0) * boost_factor
+                    
+            # Ensure final score is positive for softmax by adding 1.0
+            score += 1.0
                 
             return score
             
