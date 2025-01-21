@@ -168,7 +168,12 @@ class ETRGenerator:
         definitely_good_mutations = []
         other_mutations = []
         for mutation in mutations:
-            if random.random() < 0.1:
+            num_atoms = sum(len(view.atoms) for view in mutation)
+
+            # Check if num_atoms is less than the average
+            under_represented_num_atoms = ...
+
+            if under_represented_num_atoms:
                 definitely_good_mutations.append(mutation)
             else:
                 other_mutations.append(mutation)
