@@ -218,7 +218,7 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
         Please rewrite the claim in this format. 
         
         Give your answer like this: `Answer: {{f(x)g(x)}}`
-    """).replace("PREMISES_STR", "\n".join(full_premises))
+    """).replace("PREMISES_STR", "\n".join(full_premises))  # Doing it this way to not mess up textwrap
     response = openai.chat.completions.create(
         model="gpt-4-turbo-preview",
         messages=[

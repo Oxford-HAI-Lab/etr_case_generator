@@ -190,7 +190,7 @@ class ETRGenerator:
             possible_mutations = list(possible_mutations)
             random.shuffle(possible_mutations)
             used_mutations = possible_mutations[:self.max_mutations_per_base_problem]
-            remaining_mutations = possible_mutations[self.max_mutations_per_base_problem:]
+            remaining_mutations = possible_mutations[self.max_mutations_per_base_problem:]  # We don't use these mutations, but we could
 
             # Sanity check: everything in possible_mutations should have the same number
             # of premises as base_problem EXCEPT one (which has n+1 premises)

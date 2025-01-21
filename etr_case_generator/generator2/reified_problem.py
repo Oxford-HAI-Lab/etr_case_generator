@@ -265,6 +265,12 @@ class FullProblem:
         elif format == "open_ended":
             return f"{self.etr_predicted_conclusion.view.logical_form_etr}"
 
+    def num_disjuncts(self) -> int:
+        return sum(str(view.logical_form_smt_fnode).count("|") for view in self.views)
+
+    def num_conjuncts(self) -> int:
+        return sum(str(view.logical_form_smt_fnode).count("&") for view in self.views)
+
     def to_dict_for_jsonl(self, args, format: QuestionType = "yes_no", chain_of_thought: bool = False) -> dict:
         total_num_atoms = sum(len(view.logical_form_etr_view.atoms) for view in self.views)
         dict = {
@@ -275,13 +281,13 @@ class FullProblem:
                 "generation_details": {
                     "atoms_distributed_over_views_SMT_ONLY": args.num_pieces,
                     "total_num_atoms": total_num_atoms,
+                    "num_disjuncts": self.num_disjuncts(),
+                    "num_conjuncts": self.num_conjuncts(),
                     "num_predicates_per_problem": args.num_predicates_per_problem,
                     "num_objects_per_problem": args.num_objects_per_problem,
                     "premises_etr": [view.logical_form_etr for view in self.views],
                     "premises_fnodes": [format_smt(view.logical_form_smt_fnode) for view in self.views],
                     "is_chain_of_thought": chain_of_thought,
-                    # TODO Number of disjunctions in premises
-                    # TODO Number of conjunctions in premises
                 }
             },
         }
