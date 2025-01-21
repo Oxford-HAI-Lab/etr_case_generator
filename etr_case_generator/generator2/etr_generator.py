@@ -173,7 +173,9 @@ class ETRGenerator:
             else:
                 other_mutations.append(mutation)
 
-        mutations = random.shuffle(definitely_good_mutations) + random.shuffle(other_mutations)
+        random.shuffle(definitely_good_mutations)
+        random.shuffle(other_mutations)
+        mutations = definitely_good_mutations + other_mutations
         return mutations[:self.max_mutations_per_base_problem]
 
     def _generate_problems(self) -> Generator[PartialProblem, None, None]:
