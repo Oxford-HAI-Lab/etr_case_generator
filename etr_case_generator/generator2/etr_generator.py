@@ -169,15 +169,22 @@ class ETRGenerator:
         definitely_good_mutations = []
         other_mutations = []
 
-        # Calculate average atoms in problem set
-        total_atoms = sum(p.num_atoms() for p in self.problem_set if p.premises)
-        avg_atoms = total_atoms / len([p for p in self.problem_set if p.premises]) if self.problem_set else 0
+        # Count how many problems have each number of atoms in problem_set
+        problem_atom_counts = Counter()
+        for p in self.problem_set:
+            if p.premises:
+                total_atoms = sum(len(premise.logical_form_etr_view.atoms) for premise in p.premises if premise.logical_form_etr_view)
+                problem_atom_counts[total_atoms] += 1
+
+        # Find the median frequency to determine what counts as "under-represented"
+        frequencies = sorted(problem_atom_counts.values())
+        median_freq = frequencies[len(frequencies)//2] if frequencies else 0
 
         for mutation in mutations:
             num_atoms = sum(len(view.atoms) for view in mutation)
             
-            # Check if this mutation has fewer atoms than average in problem set
-            under_represented_num_atoms = num_atoms < avg_atoms
+            # Check if this mutation's atom count occurs less often than the median
+            under_represented_num_atoms = problem_atom_counts[num_atoms] < median_freq
 
             if under_represented_num_atoms:
                 definitely_good_mutations.append(mutation)
@@ -185,9 +192,7 @@ class ETRGenerator:
                 other_mutations.append(mutation)
 
         print(f"Found {len(definitely_good_mutations)} under-represented mutations out of {len(mutations)} total mutations")
-
-        # Print the number of atoms of each number
-        print("Atom count in new queue:", {k: num_atoms_count[k] for k in sorted(num_atoms_count.keys())})
+        print("Current atom count distribution:", dict(problem_atom_counts))
 
         random.shuffle(definitely_good_mutations)
         random.shuffle(other_mutations)
