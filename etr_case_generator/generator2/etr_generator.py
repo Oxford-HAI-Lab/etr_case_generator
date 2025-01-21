@@ -164,6 +164,18 @@ class ETRGenerator:
 
         return mutations
 
+    def get_some_good_mutations(self, mutations: Set[Tuple[View, ...]]):
+        definitely_good_mutations = []
+        other_mutations = []
+        for mutation in mutations:
+            if random.random() < 0.1:
+                definitely_good_mutations.append(mutation)
+            else:
+                other_mutations.append(mutation)
+
+        mutations = random.shuffle(definitely_good_mutations) + random.shuffle(other_mutations)
+        return mutations[:self.max_mutations_per_base_problem]
+
     def _generate_problems(self) -> Generator[PartialProblem, None, None]:
         """Internal generator function that creates new problems."""
         # # First, try to create a starting problem
@@ -188,14 +200,11 @@ class ETRGenerator:
             base_problem = self.get_from_queue_for_mutations()  # Look at a problem without removing it
             # print(f"Chose base problem with seed id {base_problem.seed_id}")
 
-            possible_mutations = self.get_mutated_premises(base_problem)
+            possible_mutations: Set[Tuple[View, ...]] = self.get_mutated_premises(base_problem)
             print(f"Selecting new base problem with id {base_problem.seed_id}", f"Applying {self.max_mutations_per_base_problem} out of {len(possible_mutations)} mutations to base problem")
 
             # Randomly select a subset of the mutations to apply
-            possible_mutations = list(possible_mutations)
-            random.shuffle(possible_mutations)
-            used_mutations = possible_mutations[:self.max_mutations_per_base_problem]
-            remaining_mutations = possible_mutations[self.max_mutations_per_base_problem:]  # We don't use these mutations, but we could
+            used_mutations = self.get_some_good_mutations(possible_mutations)
 
             # Sanity check: everything in possible_mutations should have the same number
             # of premises as base_problem EXCEPT one (which has n+1 premises)
