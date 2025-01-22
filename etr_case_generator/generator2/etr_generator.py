@@ -92,6 +92,7 @@ class ETRGenerator:
     # Queue sizes are OVERRIDDEN in generate_etr_2.py
     min_queue_size: int = 50  # Minimum number of problems to maintain in queue
     max_queue_size: int = 100  # Maximum size of the queue. This should be large relative to max_mutations_per_base_problem to maintain diversity
+    max_queue_size_init: int = None
     _generator: Optional[Generator[PartialProblem, None, None]] = None
     max_mutations: int = 500_000  # Maximum number of mutations before considering the line exhausted # TODO(Andrew->Ryan) I don't understand the thinking behind this
     max_mutations_per_base_problem: int = 20  # Maximum number of mutations per base problem
@@ -101,6 +102,7 @@ class ETRGenerator:
     generation_bias_function: Optional[Callable[[PartialProblem, List[PartialProblem]], float]] = None  # Bias generation toward certain types of problem, output is softmaxed
     softmax_temperature: float = SOFTMAX_TEMPERATURE  # Temperature for softmax function
     unused_seed_boost: float = UNDER_REPRESENTED_SEED_BOOST  # Boost for seed ids that have not been used as much yet
+    unused_atom_count_boost: float = ATOMS_PER_PROBLEM_BOOST  # Boost for problems with fewer atoms than average
 
     def initialize_generator(self) -> None:
         """Initialize the problem generator."""
@@ -108,6 +110,8 @@ class ETRGenerator:
 
         # Fill the queue with initial problems
         self.problem_set.extend(create_starting_problems())
+
+        self.max_queue_size_init = self.max_queue_size
 
         if self.max_queue_size < self.max_mutations_per_base_problem * 5:
             print("Warning: max_queue_size is less than 5 times max_mutations_per_base_problem. This may lead to a lack of diversity during sampling.")
@@ -255,7 +259,7 @@ class ETRGenerator:
             # print(f"Chose base problem with seed id {base_problem.seed_id}")
 
             possible_mutations: Set[Tuple[View, ...]] = self.get_mutated_premises(base_problem)
-            print(f"Selecting new base problem with id {base_problem.seed_id}", f"Applying {self.max_mutations_per_base_problem} out of {len(possible_mutations)} mutations to base problem")
+            print(f"Selecting new base problem with id {base_problem.seed_id} and atom count {count_atoms_in_problem(base_problem)}", f"Applying {self.max_mutations_per_base_problem} out of {len(possible_mutations)} mutations to base problem")
 
             # Randomly select a subset of the mutations to apply
             used_mutations = self.get_some_good_mutations(possible_mutations)
@@ -342,20 +346,26 @@ class ETRGenerator:
 
         if not valid_indices:
             # Temporarily increase the queue size to try to find a problem that matches the filter
-            self.max_queue_size = self.max_queue_size * 2
-            prev_min_queue_size = self.min_queue_size
-            self.min_queue_size = self.max_queue_size
-            print(f"Temporarily increasing queue size to {self.max_queue_size} to attempt to find a problem that matches the filter")
+            self.max_queue_size += self.max_queue_size_init
+            self.min_queue_size = self.max_queue_size + 1
+            print(f"Increasing queue size to {self.max_queue_size} to attempt to find a problem that matches the filter")
+
+            # Print atom stats
+            num_atoms_count, _ = get_atom_count_distribution(self.problem_set)
+            print("Atom count in queue:", {k: num_atoms_count[k] for k in sorted(num_atoms_count.keys())})
+
             self.ensure_queue_filled()
             valid_indices = [i for i, p in enumerate(self.problem_set) if filter_fn(p)]
-            self.max_queue_size = self.max_queue_size // 2
-            self.min_queue_size = prev_min_queue_size
         
         if not valid_indices:
             raise RuntimeError("No problems match the provided filter criteria")
             
         # Select random valid index and remove that problem
-        idx = random.choice(valid_indices)
+        if len(valid_indices) <= 1:
+            print(f"Warning, only {len(valid_indices)} valid problem found, returning a random problem")
+            idx = random.randint(0, len(self.problem_set) - 1)
+        else:
+            idx = random.choice(valid_indices)
         return self.problem_set.pop(idx)
 
 # Global state instance
