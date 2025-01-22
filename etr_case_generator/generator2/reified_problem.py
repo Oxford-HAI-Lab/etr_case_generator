@@ -184,8 +184,9 @@ class FullProblem:
          Examples:
          - Write "the cat is red" as "{Red(cat())}"
          - Write "the cat is red and furry" as "{Red(cat())Furry(cat())}"
-         - Write "the cat is red or furry" as "{Red(cat()), Furry(cat())}"
+         - Write "the cat is red or furry" as "{Red(cat()),Furry(cat())}"
          - Write "the cat is red and furry, or the dog is tall" as "{Red(cat())Furry(cat()),Tall(dog())}"
+         - If nothing is concluded, write "0" or "{0}"
 
          Atoms and Terms:
          - Atoms are predicates applied to terms: "Red(cat())", "Likes(dog(),cat())"
@@ -196,8 +197,7 @@ class FullProblem:
 
          Conjunction and Disjunction:
          - Write "the cat is red and furry" as "{Red(cat())Furry(cat())}"
-         - Write "the cat is red or furry" as "{Red(cat()), Furry(cat())}"
-         - The empty conjunction is written as "0"
+         - Write "the cat is red or furry" as "{Red(cat()),Furry(cat())}"
 
          Quantifiers:
          - Universal quantifiers "∀" (or "A") and existential "∃" (or "E") go before the braces
@@ -205,15 +205,15 @@ class FullProblem:
          - Write "everything likes cats" as "∀x {Likes(x,cat())}"
 
          Logical Relationships:
-         - Write "if the cat is red then it is furry" as "{~Red(cat()), Furry(cat())}"
+         - Write "if the cat is red then it is furry" as "{~Red(cat()),Furry(cat())}"
          - Write "the cat is red if and only if it is furry" as "{~Red(cat()),Furry(cat())},{Red(cat()),~Furry(cat())}"
-         - Write "being red implies being furry" as "{~Red(cat()), Furry(cat())}"
+         - Write "being red implies being furry" as "{~Red(cat()),Furry(cat())}"
 
          Examples:
          - Write "the cat is red" as "{Red(cat())}"
          - Write "the cat is red and furry" as "{Red(cat())Furry(cat())}"
-         - Write "the cat is red or furry" as "{Red(cat()), Furry(cat())}"
-         - Write "if the cat is red then it is furry" as "{~Red(cat()), Furry(cat())}"
+         - Write "the cat is red or furry" as "{Red(cat()),Furry(cat())}"
+         - Write "if the cat is red then it is furry" as "{~Red(cat()),Furry(cat())}"
          - Write "everything likes cats" as "∀x {Likes(x,cat())}"
          """).strip()
     open_ended_formatting_advice_smt = textwrap.dedent("""
