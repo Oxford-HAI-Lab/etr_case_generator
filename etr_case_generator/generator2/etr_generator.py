@@ -17,6 +17,7 @@ from etr_case_generator.view_to_natural_language import view_to_natural_language
 # Generation Parameters
 UNDER_REPRESENTED_SEED_BOOST = 3.0
 ATOMS_PER_PROBLEM_BOOST = 5.0
+OVERUSED_ATOM_COUNT_DEMERIT = 8.0
 SOFTMAX_TEMPERATURE = 2.0
 
 def count_atoms_in_problem(problem: PartialProblem) -> int:
@@ -102,7 +103,9 @@ class ETRGenerator:
     generation_bias_function: Optional[Callable[[PartialProblem, List[PartialProblem]], float]] = None  # Bias generation toward certain types of problem, output is softmaxed
     softmax_temperature: float = SOFTMAX_TEMPERATURE  # Temperature for softmax function
     unused_seed_boost: float = UNDER_REPRESENTED_SEED_BOOST  # Boost for seed ids that have not been used as much yet
-    unused_atom_count_boost: float = ATOMS_PER_PROBLEM_BOOST  # Boost for problems with fewer atoms than average
+    overused_atom_count_demerit: float = OVERUSED_ATOM_COUNT_DEMERIT  # Boost for problems with fewer atoms than average
+
+    filtering_fn: Optional[Callable[[PartialProblem], bool]] = None  # Optional filter function for problems
 
     def initialize_generator(self) -> None:
         """Initialize the problem generator."""
@@ -150,14 +153,10 @@ class ETRGenerator:
 
             # Add boost for underrepresented atom counts
             problem_atom_counts, median_freq = get_atom_count_distribution(all_problems)
-
-            # Calculate atoms in current problem
             current_atoms = count_atoms_in_problem(problem)
-            
-            # Add boost if this atom count is underrepresented
-            if problem_atom_counts[current_atoms] < median_freq:
-                boost_factor = 1.0 - (problem_atom_counts[current_atoms] / median_freq)
-                score += self.unused_seed_boost * boost_factor
+            # Add large negative if this problem has more atoms than the median
+            if problem_atom_counts[current_atoms] > median_freq:
+                score -= self.overused_atom_count_demerit
 
             return score
             
@@ -340,6 +339,8 @@ class ETRGenerator:
         if filter_fn is None:
             filter_fn = lambda _: True
 
+        self.filtering_fn = filter_fn
+
         # Get indices of all problems that pass the filter
         valid_indices = [i for i, p in enumerate(self.problem_set) if filter_fn(p)]
         print(f"Found {len(valid_indices)} problems that match the filter ({has_filter})")
@@ -362,10 +363,8 @@ class ETRGenerator:
             
         # Select random valid index and remove that problem
         if len(valid_indices) <= 1:
-            print(f"Warning, only {len(valid_indices)} valid problem found, returning a random problem")
-            idx = random.randint(0, len(self.problem_set) - 1)
-        else:
-            idx = random.choice(valid_indices)
+            print(f"Warning, only {len(valid_indices)} valid problem found")
+        idx = random.choice(valid_indices)
         return self.problem_set.pop(idx)
 
 # Global state instance
