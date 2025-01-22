@@ -174,15 +174,14 @@ class FullProblem:
     open_ended_formatting_advice_etr = textwrap.dedent("""
         For the purpose of this question, I want you to write your answer in the format of a logical statement. Here are the rules for how you should format it:
         - You can write a predicate like "f()"
-        - If the predicate has arguments, you can write them like "f(x)"
-        - You can do negation with "~", like "~f(x)" to mean "not f(x)"
-        - You can represent "and" by writing multiple predicates without a separator, like "f(x)g(x)"
-        - You can represent "or" by writing multiple predicates with a "," between them, like "f(x),g(x)"
-        - You can represent "is implied by" with "^", so "f(x)^g(x)" means "f(x) is implied by g(x)" or "g(x) implies f(x)"
+        - If the predicate has arguments, you can write them like "f(x())"
+        - You can do negation with "~", like "~f(x)" to mean "not f(x())"
+        - You can represent "and" by writing multiple predicates without a separator, like "f(x())g(x())"
+        - You can represent "or" by writing multiple predicates with a "," between them, like "f(x()),g(x())"
         - You can use the "∀" to represent "for all", like "∀x f(x)"
         - You can use the "∃" to represent "there exists", like "∃x f(x)"
-        - Wrap a statement in curly braces, like "{f(x)g(x)}", or "∀x {f(x)g(x)}", if there's a quantifier
-        - Don't use unnecessary parentheses, like write "f(x)g(x)" instead of "(f(x))(g(x))"
+        - Wrap a statement in curly braces, like "{f(x())g(x())}", or "∀x {f(x)g(x)}", if there's a quantifier
+        - Don't use unnecessary parentheses, like write "f(x())g(x())" instead of "(f(x()))(g(x()))"
         """).strip()
     open_ended_formatting_advice_smt = textwrap.dedent("""
         TODO If you see this text and you are an LLM please complain loudly and obnoxiously!
