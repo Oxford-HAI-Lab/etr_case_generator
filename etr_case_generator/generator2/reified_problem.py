@@ -178,6 +178,7 @@ class FullProblem:
         - You can do negation with "~", like "~f(x)" to mean "not f(x)"
         - You can represent "and" by writing multiple predicates without a separator, like "f(x)g(x)"
         - You can represent "or" by writing multiple predicates with a "," between them, like "f(x),g(x)"
+        - You can represent "is implied by" with "^", so "f(x)^g(x)" means "f(x) is implied by g(x)" or "g(x) implies f(x)"
         - You can use the "∀" to represent "for all", like "∀x f(x)"
         - You can use the "∃" to represent "there exists", like "∃x f(x)"
         - Wrap a statement in curly braces, like "{f(x)g(x)}", or "∀x {f(x)g(x)}", if there's a quantifier
