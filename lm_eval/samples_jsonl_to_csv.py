@@ -135,7 +135,7 @@ def load_jsonl_files(pattern: str):
     return results
 
 
-def write_to_csv(results: dict, output_file: str):
+def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
     """Write JSON data to CSV file using specified keys."""
     # Create output directory if it doesn't exist
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
@@ -197,6 +197,8 @@ def write_to_csv(results: dict, output_file: str):
                     continue
                 break  # Only reached if we hit an exception and break in except block
                 writer.writerow(row)
+        
+        return total_entries, processed_entries, skipped_entries
 
 
 def main():
@@ -211,7 +213,7 @@ def main():
     #     print(f"{file}: {len(data)} samples")
     
     # Write results to CSV
-    write_to_csv(results, args.output)
+    total_entries, processed_entries, skipped_entries = write_to_csv(results, args.output)
     print(f"\nWrote results to: {args.output}")
     print(f"Total entries: {total_entries}")
     print(f"Processed entries: {processed_entries}")
