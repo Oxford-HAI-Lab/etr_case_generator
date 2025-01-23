@@ -10,6 +10,7 @@ NONE_STR = "None"
 
 
 JSON_KEYS = [
+    "model_name",
     "doc_id",
     "doc/question",
     "doc/scoring_guide/etr_predicted",
@@ -108,13 +109,15 @@ def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
         
         # Write each JSON entry as a CSV row
         for filename, file_data in results.items():
+            # Extract model name from directory path
+            model_name = Path(filename).parent.name
             for entry_idx, entry in enumerate(file_data):
                 # Count lines before writing
                 with open(output_file, 'r', encoding='utf-8') as f:
                     prev_line_count = sum(1 for _ in f)
 
                 processed_entries += 1
-                row = {}
+                row = {"model_name": model_name}
                 for key in JSON_KEYS:
                     # Handle nested keys (e.g., "doc/question")
                     try:
