@@ -137,6 +137,7 @@ def load_jsonl_files(pattern: str):
 
 def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
     """Write JSON data to CSV file using specified keys."""
+    rows_written = 0  # Track actual rows written
     # Create output directory if it doesn't exist
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     
@@ -195,8 +196,19 @@ def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
                         row[key] = "None"
                 else:
                     writer.writerow(row)
+                    rows_written += 1
+                    if rows_written % 100 == 0:
+                        print(f"Wrote {rows_written} rows...")
                     continue
                 break  # Only reached if we hit an exception and break in except block
+        
+        print("\nDebug Statistics:")
+        print(f"Actual rows written (counted): {rows_written}")
+        
+        # Check CSV file directly
+        with open(output_file, 'r', encoding='utf-8') as f:
+            actual_lines = sum(1 for _ in f)
+        print(f"Actual lines in CSV file: {actual_lines}")
         
         return total_entries, processed_entries, skipped_entries
 
