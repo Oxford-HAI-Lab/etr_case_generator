@@ -1,5 +1,6 @@
 
 #!/bin/bash
+set -o pipefail
 
 # Define model configurations
 declare -A MODEL_CONFIGS=(
@@ -35,15 +36,16 @@ run_evaluation() {
     echo "Running evaluation for ${model_class} - ${model} on ${dataset_type}"
     echo "Logging to: ${log_file}"
     
-    # Run the evaluation command and redirect output to log file
+    # Run the evaluation command and tee output to both terminal and log file
     ./lm_eval/tasks/etr_problems/run_evaluation.sh \
         --dataset "$dataset" \
         -c "$model_class" \
         -m "$model" \
-        --good > "$log_file" 2>&1
+        --good 2>&1 | tee "$log_file"
     
-    # Check if the command succeeded
-    if [ $? -eq 0 ]; then
+    # Need to check the exit status of the evaluation command, not tee
+    # This uses bash's pipefail option to get the first command's status
+    if [ ${PIPESTATUS[0]} -eq 0 ]; then
         echo "✓ Evaluation completed successfully for ${model_class} - ${model} on ${dataset_type}"
     else
         echo "✗ Evaluation failed for ${model_class} - ${model} on ${dataset_type}. Check ${log_file} for details"
