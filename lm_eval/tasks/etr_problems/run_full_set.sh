@@ -7,8 +7,11 @@ declare -A MODEL_CONFIGS=(
     ["anthropic-chat-completions"]="claude-3-haiku-20240307 claude-3-sonnet-20240229 claude-3-5-haiku-20241022 claude-3-opus-20240229"
 )
 
-# Dataset path
-DATASET="/home/keenan/Dev/etr_case_generator/datasets/balance_atoms_open_ended.jsonl"
+# Dataset paths
+DATASETS=(
+    "/home/keenan/Dev/etr_case_generator/datasets/balance_atoms_open_ended.jsonl"
+    "/home/keenan/Dev/etr_case_generator/datasets/balance_atoms_yes_no.jsonl"
+)
 
 # Create a log directory
 LOG_DIR="evaluation_logs"
@@ -18,24 +21,26 @@ mkdir -p "$LOG_DIR"
 run_evaluation() {
     local model_class="$1"
     local model="$2"
+    local dataset="$3"
     local timestamp=$(date +%Y%m%d_%H%M%S)
-    local log_file="${LOG_DIR}/${model_class}_${model}_${timestamp}.log"
+    local dataset_type=$(basename "$dataset" | sed 's/balance_atoms_\(.*\)\.jsonl/\1/')
+    local log_file="${LOG_DIR}/${model_class}_${model}_${dataset_type}_${timestamp}.log"
     
-    echo "Running evaluation for ${model_class} - ${model}"
+    echo "Running evaluation for ${model_class} - ${model} on ${dataset_type}"
     echo "Logging to: ${log_file}"
     
     # Run the evaluation command and redirect output to log file
     ./lm_eval/tasks/etr_problems/run_evaluation.sh \
-        --dataset "$DATASET" \
+        --dataset "$dataset" \
         -c "$model_class" \
         -m "$model" \
         --good > "$log_file" 2>&1
     
     # Check if the command succeeded
     if [ $? -eq 0 ]; then
-        echo "✓ Evaluation completed successfully for ${model_class} - ${model}"
+        echo "✓ Evaluation completed successfully for ${model_class} - ${model} on ${dataset_type}"
     else
-        echo "✗ Evaluation failed for ${model_class} - ${model}. Check ${log_file} for details"
+        echo "✗ Evaluation failed for ${model_class} - ${model} on ${dataset_type}. Check ${log_file} for details"
     fi
 }
 
@@ -45,7 +50,9 @@ for model_class in "${!MODEL_CONFIGS[@]}"; do
     IFS=' ' read -r -a models <<< "${MODEL_CONFIGS[$model_class]}"
     
     for model in "${models[@]}"; do
-        run_evaluation "$model_class" "$model"
+        for dataset in "${DATASETS[@]}"; do
+            run_evaluation "$model_class" "$model" "$dataset"
+        done
     done
 done
 
