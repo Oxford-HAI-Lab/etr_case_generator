@@ -65,9 +65,9 @@ def write_to_csv(results: dict, output_file: str):
         writer = csv.DictWriter(
             csvfile,
             fieldnames=JSON_KEYS,
-            quoting=csv.QUOTE_ALL,  # Quote all fields
-            quotechar='"',          # Use double quotes
-            escapechar='\\'         # Escape quotes with backslash
+            quoting=csv.QUOTE_MINIMAL,
+            quotechar='"',
+            doublequote=True
         )
         writer.writeheader()
         
@@ -80,9 +80,9 @@ def write_to_csv(results: dict, output_file: str):
                     value = entry
                     for k in key.split('/'):
                         value = value.get(k, '')
-                    # Replace newlines with spaces
+                    # Replace newlines with paragraph mark for readability
                     if isinstance(value, str):
-                        value = ' '.join(value.splitlines())
+                        value = " ¶ ".join(line.strip() for line in value.splitlines())
                     row[key] = value
                 writer.writerow(row)
 
