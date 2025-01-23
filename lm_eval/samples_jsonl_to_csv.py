@@ -15,6 +15,12 @@ def parse_args():
         default="open_ended",
         help="Pattern to match in filenames (default: 'open_ended')",
     )
+    parser.add_argument(
+        "--output",
+        type=str,
+        default="lm_eval/tasks/etr_problems/good_results/all_results.csv",
+        help="Output CSV file location (default: good_results/all_results.csv)",
+    )
     return parser.parse_args()
 
 
