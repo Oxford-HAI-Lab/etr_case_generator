@@ -140,6 +140,10 @@ def write_to_csv(results: dict, output_file: str):
     # Create output directory if it doesn't exist
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     
+    total_entries = sum(len(data) for data in results.values())
+    processed_entries = 0
+    skipped_entries = 0
+    
     with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.DictWriter(
             csvfile,
@@ -151,8 +155,9 @@ def write_to_csv(results: dict, output_file: str):
         writer.writeheader()
         
         # Write each JSON entry as a CSV row
-        for file_data in results.values():
-            for entry in file_data:
+        for filename, file_data in results.items():
+            for entry_idx, entry in enumerate(file_data):
+                processed_entries += 1
                 row = {}
                 for key in JSON_KEYS:
                     # Handle nested keys (e.g., "doc/question")
@@ -180,7 +185,17 @@ def write_to_csv(results: dict, output_file: str):
                             value = str(value)
                         row[key] = value if value is not None else "None"
                     except Exception as e:
+                        if key in ["resps", "filtered_resps"]:
+                            print(f"Error in {filename}, entry {entry_idx}:")
+                            print(f"  Key: {key}")
+                            print(f"  Value: {value}")
+                            print(f"  Error: {str(e)}")
+                            skipped_entries += 1
+                            break
                         row[key] = "None"
+                else:
+                    continue
+                break  # Only reached if we hit an exception and break in except block
                 writer.writerow(row)
 
 
@@ -198,6 +213,10 @@ def main():
     # Write results to CSV
     write_to_csv(results, args.output)
     print(f"\nWrote results to: {args.output}")
+    print(f"Total entries: {total_entries}")
+    print(f"Processed entries: {processed_entries}")
+    print(f"Skipped entries: {skipped_entries}")
+    print(f"Written entries: {processed_entries - skipped_entries}")
 
 
 if __name__ == "__main__":
