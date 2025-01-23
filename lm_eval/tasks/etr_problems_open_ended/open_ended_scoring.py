@@ -182,13 +182,14 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
     # Generate some example premises
     full_premises: list[str] = []
     for p in premises:
-        for full_name, short_name in full_name_to_short_name.items():
-            p = p.replace(short_name, full_name)
+        # TODO Why did this ever seem like a good idea?
+        # for full_name, short_name in full_name_to_short_name.items():
+        #     p = p.replace(short_name, full_name)
         full_premises.append(p)
 
     try:
-        full_names = [fn for fn in short_name_to_full_name.values() if fn]
-        name_options = ', '.join(full_names)
+        short_names = [sn for sn in short_name_to_full_name.keys() if sn]
+        name_options = ', '.join(short_names)
     except Exception as e:
         print(short_name_to_full_name)
         raise e
@@ -228,9 +229,10 @@ I want you to write your answer in the format of a
          - Write "the cat is red or furry" as "{{Red(cat()),Furry(cat())}}"
 
          Quantifiers:
-         - Universal quantifiers "∀" (or "A") and existential "∃" (or "E") go before the braces
+         - Universal quantifiers "∀" and existential "∃" go before the braces
          - Only arbitrary objects (without parentheses) can be quantified
          - Write "everything likes cats" as "∀x {{Likes(x,cat())}}"
+         - If there is no quantifier, do not write any "∀" or "∃", just {{...}}
 
          Logical Relationships:
          - Write "if the cat is red then it is furry" as "{{~Red(cat()),Furry(cat())}}"
@@ -243,13 +245,17 @@ I want you to write your answer in the format of a
          - Write "if the cat is red then it is furry" as "{{~Red(cat()),Furry(cat())}}"
          - Write "everything likes cats" as "∀x {{Likes(x,cat())}}"
         
-        You can use these predicates in your answer: {name_options}
-        Here are some examples of logical formulas that are formatted this way: PREMISES_STR
+        # Predicates
+        You can ONLY use these predicates in your answer. You may not use any other terms, you MUST use only these: {name_options}
+        Here are some examples of logical formulas that are formatted this way, also showing the predicates you may use: PREMISES_STR
         
-        Please rewrite the claim in this format. 
+        Please rewrite the claim in this format. Do not comment or try to fix the claim, just format it correctly.
         
         Give your answer like this: `Answer: {{f(x)g(x)}}`
     """).replace("PREMISES_STR", "\n".join(full_premises))  # Doing it this way to not mess up textwrap
+    # print("Name Options:", name_options)
+    # print("Premises:", ", ".join(full_premises))
+    # print("Name Substitutions:", short_name_to_full_name)
     response = openai.chat.completions.create(
         model="gpt-4-turbo-preview",
         messages=[

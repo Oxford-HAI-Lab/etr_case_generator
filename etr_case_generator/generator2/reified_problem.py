@@ -306,6 +306,7 @@ class FullProblem:
 
     def to_dict_for_jsonl(self, args, format: QuestionType = "yes_no", chain_of_thought: bool = False) -> dict:
         total_num_atoms = sum(len(view.logical_form_etr_view.atoms) for view in self.views)
+        print("Storing these premises:", [view.logical_form_etr for view in self.views])
         dict = {
             "question": self.to_prompt(format, chain_of_thought),
             "scoring_guide": {
