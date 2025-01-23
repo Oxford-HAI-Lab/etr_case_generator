@@ -230,7 +230,7 @@ I want you to write your answer in the format of a
          Quantifiers:
          - Universal quantifiers "∀" (or "A") and existential "∃" (or "E") go before the braces
          - Only arbitrary objects (without parentheses) can be quantified
-         - Write "everything likes cats" as "∀x {{Likes(x,cat())}"
+         - Write "everything likes cats" as "∀x {{Likes(x,cat())}}"
 
          Logical Relationships:
          - Write "if the cat is red then it is furry" as "{{~Red(cat()),Furry(cat())}}"
