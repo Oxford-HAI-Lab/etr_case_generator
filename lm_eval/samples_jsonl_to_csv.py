@@ -88,6 +88,7 @@ def load_jsonl_files(pattern: str):
 def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
     """Write JSON data to CSV file using specified keys."""
     rows_written = 0  # Track actual rows written
+    prev_line_count = 0  # Track previous line count
     # Create output directory if it doesn't exist
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     
@@ -108,7 +109,9 @@ def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
         # Write each JSON entry as a CSV row
         for filename, file_data in results.items():
             for entry_idx, entry in enumerate(file_data):
-                # TODO Count the number of lines in the file and save it to a variable
+                # Count lines before writing
+                with open(output_file, 'r', encoding='utf-8') as f:
+                    prev_line_count = sum(1 for _ in f)
 
                 processed_entries += 1
                 row = {}
@@ -157,6 +160,12 @@ def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
                     rows_written += 1
                     if rows_written % 100 == 0:
                         print(f"Wrote {rows_written} rows...")
+                    
+                    # Check if line count increased by exactly 1
+                    with open(output_file, 'r', encoding='utf-8') as f:
+                        current_lines = sum(1 for _ in f)
+                    if current_lines != prev_line_count + 1:
+                        print(f"ERROR: Line count changed from {prev_line_count} to {current_lines}")
                 else:
                     skipped_entries += 1
                     print(f"Skipped entry {entry_idx} in {filename}")
