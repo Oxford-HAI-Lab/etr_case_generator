@@ -156,13 +156,21 @@ def write_to_csv(results: dict, output_file: str):
                 row = {}
                 for key in JSON_KEYS:
                     # Handle nested keys (e.g., "doc/question")
-                    value = entry
-                    for k in key.split('/'):
-                        value = value.get(k, '')
-                    # Replace newlines with paragraph mark for readability
-                    if isinstance(value, str):
-                        value = " ¶ ".join(line.strip() for line in value.splitlines())
-                    row[key] = value
+                    try:
+                        value = entry
+                        for k in key.split('/'):
+                            if not isinstance(value, dict):
+                                print(f"Error accessing {k} in {key}, value was: {value}")
+                                value = ''
+                                break
+                            value = value.get(k, '')
+                        # Replace newlines with paragraph mark for readability
+                        if isinstance(value, str):
+                            value = " ¶ ".join(line.strip() for line in value.splitlines())
+                        row[key] = value
+                    except Exception as e:
+                        print(f"Error processing key {key}: {str(e)}")
+                        row[key] = ''
                 writer.writerow(row)
 
 
