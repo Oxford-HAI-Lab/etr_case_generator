@@ -171,6 +171,7 @@ class FullProblem:
     etr_predicted_conclusion: Optional[Conclusion] = None
     open_ended_question_prose: Optional[str] = "What if anything follows?"
     open_ended_answer_guidance_prose: Optional[str] = 'What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".'
+    # WARNING! NOTE THAT THE FOLLOWING INSTRUCTIONS ARE DUPLICATED IN open_ended_scoring.py
     open_ended_formatting_advice_etr = textwrap.dedent("""
          For the purpose of this question, I want you to write your answer in the format of a
      logical statement. Here are the rules for how you should format it:
