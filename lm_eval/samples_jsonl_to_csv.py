@@ -22,10 +22,10 @@ def load_jsonl_files(pattern: str):
     """Load all JSONL files matching pattern from good_results dir and subdirs."""
     base_dir = "lm_eval/tasks/etr_problems/good_results"
     
-    # Get files in base dir and one level deep
+    # Get files in base dir and one level deep that contain "samples"
     search_paths = [
-        f"{base_dir}/*{pattern}*.jsonl",
-        f"{base_dir}/*/*{pattern}*.jsonl"
+        f"{base_dir}/*samples*{pattern}*.jsonl",
+        f"{base_dir}/*/*samples*{pattern}*.jsonl"
     ]
     
     files = []
