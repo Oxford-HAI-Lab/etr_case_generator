@@ -160,17 +160,18 @@ def write_to_csv(results: dict, output_file: str):
                         value = entry
                         for k in key.split('/'):
                             if not isinstance(value, dict):
-                                print(f"Error accessing {k} in {key}, value was: {value}")
-                                value = ''
+                                value = None
                                 break
-                            value = value.get(k, '')
-                        # Replace newlines with paragraph mark for readability
+                            value = value.get(k, None)
+                        # Replace newlines with paragraph mark for readability if string
                         if isinstance(value, str):
                             value = " ¶ ".join(line.strip() for line in value.splitlines())
-                        row[key] = value
+                        # Convert lists to string representation
+                        elif isinstance(value, list):
+                            value = str(value)
+                        row[key] = value if value is not None else "None"
                     except Exception as e:
-                        print(f"Error processing key {key}: {str(e)}")
-                        row[key] = ''
+                        row[key] = "None"
                 writer.writerow(row)
 
 
