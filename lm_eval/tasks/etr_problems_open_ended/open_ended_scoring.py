@@ -177,6 +177,7 @@ def get_etr_substr(answer_text):
 
 def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str, str], premises: list[str], temperature: float = 0):
     # Reverse short_name_to_full_name
+    # Here, "short names" are useful for logical statements, and they might be like "matterEating", and "long names" are for English, like "matter eating"
     full_name_to_short_name = {v: k for k, v in short_name_to_full_name.items() if k and v}
 
     # Generate some example premises
@@ -233,6 +234,7 @@ I want you to write your answer in the format of a
          - Only arbitrary objects (without parentheses) can be quantified
          - Write "everything likes cats" as "∀x {{Likes(x,cat())}}"
          - If there is no quantifier, do not write any "∀" or "∃", just {{...}}
+         - Only include a quantifier like "∃x" if x appears in the statement
 
          Logical Relationships:
          - Write "if the cat is red then it is furry" as "{{~Red(cat()),Furry(cat())}}"
@@ -268,14 +270,19 @@ I want you to write your answer in the format of a
     print(f"Rewritten by model: {rewritten_by_model}")
     etr_text = get_etr_substr(rewritten_by_model)
 
+    # Why did this ever seem like a good idea?
     # Use full_name_to_short_name to convert the etr_text back to the short names
-    print(f"Converting {etr_text} back to short names")
-    etr_text = etr_text.replace("_", "")
-    for full_name, short_name in full_name_to_short_name.items():
-        full_name = full_name.replace("_", "")
-        # Use word boundaries \b to prevent partial matches
-        etr_text = re.sub(fr'\b{re.escape(full_name)}\b', short_name, etr_text)
+    # print(f"Converting {etr_text} back to short names")
+    # etr_text = etr_text.replace("_", "")
+    # for full_name, short_name in full_name_to_short_name.items():
+    #     full_name = full_name.replace("_", "")
+    #     # Use word boundaries \b to prevent partial matches
+    #     etr_text = re.sub(fr'\b{re.escape(full_name)}\b', short_name, etr_text)
     # print(f"Converted to short names: {etr_text}")
+
+    # Check that all strings matching the regex "{[A-Z][a-z]+}" are in the short_name_to_full_name.keys() set
+    # If not, try to see if they can be matched in a case-insensitive way to the short_name_to_full_name.keys() set, and do a replacement
+    ...
 
     # Add '()' as needed, so like {B(a)} becomes {B(a())}, so any short name that isn't followed by a '(' should have '()' inserted right after. But only do this if the '(' is not already there.
     for short_name in full_name_to_short_name.values():
