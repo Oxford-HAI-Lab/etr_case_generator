@@ -61,8 +61,14 @@ def write_to_csv(results: dict, output_file: str):
     # Create output directory if it doesn't exist
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     
-    with open(output_file, 'w', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=JSON_KEYS)
+    with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.DictWriter(
+            csvfile,
+            fieldnames=JSON_KEYS,
+            quoting=csv.QUOTE_ALL,  # Quote all fields
+            quotechar='"',          # Use double quotes
+            escapechar='\\'         # Escape quotes with backslash
+        )
         writer.writeheader()
         
         # Write each JSON entry as a CSV row
