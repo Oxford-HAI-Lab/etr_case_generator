@@ -207,7 +207,6 @@ class FullProblem:
 
          Logical Relationships:
          - Write "if the cat is red then it is furry" as "{~Red(cat()),Furry(cat())}"
-         - Write "the cat is red if and only if it is furry" as "{~Red(cat()),Furry(cat()),~Furry(cat()),Red(cat())}"
          - Write "being red implies being furry" as "{~Red(cat()),Furry(cat())}"
 
          Examples:
