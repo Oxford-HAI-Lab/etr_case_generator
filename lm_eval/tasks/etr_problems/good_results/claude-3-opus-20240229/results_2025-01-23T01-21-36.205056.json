@@ -1,0 +1,182 @@
+{
+  "results": {
+    "etr_problems_open_ended": {
+      "alias": "etr_problems_open_ended",
+      "correct,none": 0.24333333333333335,
+      "correct_stderr,none": 0.024815184572325923,
+      "is_etr_predicted,none": 0.41333333333333333,
+      "is_etr_predicted_stderr,none": 0.028478055207315906,
+      "is_etr_predicted_exact,none": 0.16666666666666666,
+      "is_etr_predicted_exact_stderr,none": 0.021552525004661323,
+      "len_response,none": 144.74333333333334,
+      "len_response_stderr,none": 5.7345082246190655,
+      "parse_error,none": 0.023333333333333334,
+      "parse_error_stderr,none": 0.008730235947285763,
+      "model_answer,none": 999,
+      "model_answer_stderr,none": "N/A",
+      "full_model_response,none": 999,
+      "full_model_response_stderr,none": "N/A",
+      "correct_and_etr,none": 0.12,
+      "correct_and_etr_stderr,none": 0.01879301086907267,
+      "correct_and_not_etr,none": 0.12333333333333334,
+      "correct_and_not_etr_stderr,none": 0.019016119040222528,
+      "not_correct_and_etr,none": 0.29333333333333333,
+      "not_correct_and_etr_stderr,none": 0.026330094490574305,
+      "not_correct_and_not_etr,none": 0.44,
+      "not_correct_and_not_etr_stderr,none": 0.028706798281217784
+    }
+  },
+  "group_subtasks": {
+    "etr_problems_open_ended": []
+  },
+  "configs": {
+    "etr_problems_open_ended": {
+      "task": "etr_problems_open_ended",
+      "dataset_path": "json",
+      "dataset_kwargs": {
+        "data_files": "datasets/etr_for_lm_eval.jsonl"
+      },
+      "test_split": "train",
+      "fewshot_split": "train",
+      "doc_to_text": "{{question}}",
+      "doc_to_target": "{{scoring_guide}}",
+      "process_results": "def score_answer(question, model_answer):\n    \"\"\"\n    Score the given answer based on whether it correctly identifies if the conclusion follows.\n\n    Args:\n        question (dict): A dictionary containing the question and scoring guide\n        model_answer (str or dict): The model's response to the ETR question\n\n    Returns:\n        dict: A dictionary containing the score and response length\n    \"\"\"\n    # Extract answer text\n    if isinstance(model_answer, dict):\n        answer_text = model_answer.get(\"text\", \"\")\n    elif isinstance(model_answer, list) and len(model_answer) > 0:\n        answer_text = str(model_answer[0])\n    else:\n        answer_text = str(model_answer)\n    original_model_answer: str = answer_text\n    print(\"-\" * 80)\n    print(f\"Starting Open Ended Scoring. Got this answer text: {answer_text}\")\n\n    num_attempts = 3\n    for i in range(num_attempts):\n        try:\n            return attempt_score_answer(question, answer_text, original_model_answer, attempt_num=i)\n        except Exception as e:\n            print(f\"!!!! Failure {i+1}/{num_attempts}: {str(e)[:100]}...\")\n            if i == num_attempts - 1:\n                break\n            continue\n    return {\n        \"correct\": 0.0,\n        \"len_response\": len(original_model_answer),\n        \"parse_error\": 1,  # This is the important part here. The rest are just filled in to prevent errors\n        \"is_etr_predicted\": 0.0,\n        \"is_etr_predicted_exact\": 0.0,\n        \"model_answer\": answer_text,\n        \"full_model_response\": original_model_answer,\n\n        # Full quadrants\n        \"correct_and_etr\": 0.0,\n        \"correct_and_not_etr\": 0.0,\n        \"not_correct_and_etr\": 0.0,\n        \"not_correct_and_not_etr\": 0.0,\n    }\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "correct",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "is_etr_predicted",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "is_etr_predicted_exact",
+          "aggregation": "mean",
+          "higher_is_better": true
+        },
+        {
+          "metric": "len_response",
+          "aggregation": "mean",
+          "higher_is_better": false
+        },
+        {
+          "metric": "parse_error",
+          "aggregation": "mean",
+          "higher_is_better": false
+        },
+        {
+          "metric": "model_answer",
+          "aggregation": "bypass",
+          "higher_is_better": false
+        },
+        {
+          "metric": "full_model_response",
+          "aggregation": "bypass",
+          "higher_is_better": false
+        },
+        {
+          "metric": "correct_and_etr",
+          "aggregation": "mean",
+          "higher_is_better": false
+        },
+        {
+          "metric": "correct_and_not_etr",
+          "aggregation": "mean",
+          "higher_is_better": false
+        },
+        {
+          "metric": "not_correct_and_etr",
+          "aggregation": "mean",
+          "higher_is_better": false
+        },
+        {
+          "metric": "not_correct_and_not_etr",
+          "aggregation": "mean",
+          "higher_is_better": false
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [
+          "Done."
+        ],
+        "do_sample": false,
+        "temperature": 0.2,
+        "max_gen_toks": 1000
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0
+      }
+    }
+  },
+  "versions": {
+    "etr_problems_open_ended": 1.0
+  },
+  "n-shot": {
+    "etr_problems_open_ended": 0
+  },
+  "higher_is_better": {
+    "etr_problems_open_ended": {
+      "correct": true,
+      "is_etr_predicted": true,
+      "is_etr_predicted_exact": true,
+      "len_response": false,
+      "parse_error": false,
+      "model_answer": false,
+      "full_model_response": false,
+      "correct_and_etr": false,
+      "correct_and_not_etr": false,
+      "not_correct_and_etr": false,
+      "not_correct_and_not_etr": false
+    }
+  },
+  "n-samples": {
+    "etr_problems_open_ended": {
+      "original": 300,
+      "effective": 300
+    }
+  },
+  "config": {
+    "model": "anthropic-chat-completions",
+    "model_args": "model=claude-3-opus-20240229",
+    "batch_size": "1",
+    "batch_sizes": [],
+    "device": null,
+    "use_cache": null,
+    "limit": null,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": null,
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234
+  },
+  "git_hash": "a06ce34",
+  "date": 1737623086.9449577,
+  "pretty_env_info": "PyTorch version: 2.5.1+cu124\nIs debug build: False\nCUDA used to build PyTorch: 12.4\nROCM used to build PyTorch: N/A\n\nOS: Pop!_OS 24.04 LTS (x86_64)\nGCC version: (Ubuntu 13.2.0-23ubuntu4) 13.2.0\nClang version: 18.1.3 (1ubuntu1)\nCMake version: version 3.28.3\nLibc version: glibc-2.39\n\nPython version: 3.12.3 (main, Nov  6 2024, 18:32:19) [GCC 13.2.0] (64-bit runtime)\nPython platform: Linux-6.9.3-76060903-generic-x86_64-with-glibc2.39\nIs CUDA available: False\nCUDA runtime version: 11.2.67\nCUDA_MODULE_LOADING set to: N/A\nGPU models and configuration: Could not collect\nNvidia driver version: Could not collect\ncuDNN version: Could not collect\nHIP runtime version: N/A\nMIOpen runtime version: N/A\nIs XNNPACK available: True\n\nCPU:\nArchitecture:                         x86_64\nCPU op-mode(s):                       32-bit, 64-bit\nAddress sizes:                        39 bits physical, 48 bits virtual\nByte Order:                           Little Endian\nCPU(s):                               12\nOn-line CPU(s) list:                  0-11\nVendor ID:                            GenuineIntel\nModel name:                           13th Gen Intel(R) Core(TM) i5-1335U\nCPU family:                           6\nModel:                                186\nThread(s) per core:                   2\nCore(s) per socket:                   10\nSocket(s):                            1\nStepping:                             3\nCPU(s) scaling MHz:                   53%\nCPU max MHz:                          4600.0000\nCPU min MHz:                          400.0000\nBogoMIPS:                             4992.00\nFlags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb intel_pt sha_ni xsaveopt xsavec xgetbv1 xsaves split_lock_detect user_shstk avx_vnni dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp hwp_pkg_req hfi vnmi umip pku ospke waitpkg gfni vaes vpclmulqdq rdpid movdiri movdir64b fsrm md_clear serialize arch_lbr ibt flush_l1d arch_capabilities\nVirtualization:                       VT-x\nL1d cache:                            352 KiB (10 instances)\nL1i cache:                            576 KiB (10 instances)\nL2 cache:                             6.5 MiB (4 instances)\nL3 cache:                             12 MiB (1 instance)\nNUMA node(s):                         1\nNUMA node0 CPU(s):                    0-11\nVulnerability Gather data sampling:   Not affected\nVulnerability Itlb multihit:          Not affected\nVulnerability L1tf:                   Not affected\nVulnerability Mds:                    Not affected\nVulnerability Meltdown:               Not affected\nVulnerability Mmio stale data:        Not affected\nVulnerability Reg file data sampling: Mitigation; Clear Register File\nVulnerability Retbleed:               Not affected\nVulnerability Spec rstack overflow:   Not affected\nVulnerability Spec store bypass:      Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:             Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:             Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI BHI_DIS_S\nVulnerability Srbds:                  Not affected\nVulnerability Tsx async abort:        Not affected\n\nVersions of relevant libraries:\n[pip3] mypy-extensions==1.0.0\n[pip3] numpy==2.1.3\n[pip3] torch==2.5.1\n[pip3] triton==3.1.0\n[conda] Could not collect",
+  "transformers_version": "4.47.0",
+  "upper_git_hash": null,
+  "task_hashes": {
+    "etr_problems_open_ended": "3ab5c977d88ff0cdcdc1226df4ce850317364b82cea0be9dc7a165df2c7d8a76"
+  },
+  "model_source": "anthropic-chat-completions",
+  "model_name": "claude-3-opus-20240229",
+  "model_name_sanitized": "claude-3-opus-20240229",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": false,
+  "chat_template": "",
+  "chat_template_sha": null,
+  "start_time": 404604.70759818,
+  "end_time": 405618.998740737,
+  "total_evaluation_time_seconds": "1014.291142556991"
+}
