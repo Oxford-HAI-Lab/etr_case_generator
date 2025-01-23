@@ -19,7 +19,6 @@ from pathlib import Path
             "etr_predicted_is_classically_correct": bool
             "generation_details": dict (9 items)
             {
-                "atoms_distributed_over_views_SMT_ONLY": int
                 "total_num_atoms": int
                 "num_disjuncts": int
                 "num_conjuncts": int
@@ -65,7 +64,6 @@ JSON_KEYS = [
     "doc/question",
     "doc/scoring_guide/etr_predicted",
     "doc/scoring_guide/etr_predicted_is_classically_correct",
-    "doc/scoring_guide/generation_details/atoms_distributed_over_views_SMT_ONLY",
     "doc/scoring_guide/generation_details/total_num_atoms",
     "doc/scoring_guide/generation_details/num_disjuncts",
     "doc/scoring_guide/generation_details/num_conjuncts",
