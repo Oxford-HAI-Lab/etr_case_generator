@@ -1,4 +1,5 @@
 import argparse
+import csv
 import glob
 import json
 import os
@@ -55,6 +56,28 @@ def load_jsonl_files(pattern: str):
     return results
 
 
+def write_to_csv(results: dict, output_file: str):
+    """Write JSON data to CSV file using specified keys."""
+    # Create output directory if it doesn't exist
+    os.makedirs(os.path.dirname(output_file), exist_ok=True)
+    
+    with open(output_file, 'w', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=JSON_KEYS)
+        writer.writeheader()
+        
+        # Write each JSON entry as a CSV row
+        for file_data in results.values():
+            for entry in file_data:
+                row = {}
+                for key in JSON_KEYS:
+                    # Handle nested keys (e.g., "doc/question")
+                    value = entry
+                    for k in key.split('/'):
+                        value = value.get(k, '')
+                    row[key] = value
+                writer.writerow(row)
+
+
 def main():
     args = parse_args()
     
@@ -65,6 +88,10 @@ def main():
     print(f"\nFound {len(results)} files matching pattern '{args.pattern}':")
     for file, data in results.items():
         print(f"{file}: {len(data)} samples")
+    
+    # Write results to CSV
+    write_to_csv(results, args.output)
+    print(f"\nWrote results to: {args.output}")
 
 
 if __name__ == "__main__":
