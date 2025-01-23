@@ -108,6 +108,8 @@ def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
         # Write each JSON entry as a CSV row
         for filename, file_data in results.items():
             for entry_idx, entry in enumerate(file_data):
+                # TODO Count the number of lines in the file and save it to a variable
+
                 processed_entries += 1
                 row = {}
                 for key in JSON_KEYS:
@@ -155,6 +157,11 @@ def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
                     rows_written += 1
                     if rows_written % 100 == 0:
                         print(f"Wrote {rows_written} rows...")
+                else:
+                    skipped_entries += 1
+                    print(f"Skipped entry {entry_idx} in {filename}")
+
+                # TODO Count the number of lines in the file, and make sure it went up by 1. Print an error if not
         
         print("\nDebug Statistics:")
         print(f"Actual rows written (counted): {rows_written}")
