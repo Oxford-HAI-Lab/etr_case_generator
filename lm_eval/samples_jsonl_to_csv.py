@@ -80,6 +80,9 @@ def write_to_csv(results: dict, output_file: str):
                     value = entry
                     for k in key.split('/'):
                         value = value.get(k, '')
+                    # Replace newlines with spaces
+                    if isinstance(value, str):
+                        value = ' '.join(value.splitlines())
                     row[key] = value
                 writer.writerow(row)
 
