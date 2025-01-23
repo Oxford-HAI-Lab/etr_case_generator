@@ -142,15 +142,19 @@ def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
                             print(f"  Value: {value}")
                             print(f"  Error: {str(e)}")
                             skipped_entries += 1
+                            # Skip this entry entirely
                             break
                         row[key] = "None"
-                else:
+                        # Continue processing other keys
+                        continue
+                
+                # If we get here, we've either processed all keys successfully
+                # or hit a break in the except block for resps/filtered_resps
+                if key == JSON_KEYS[-1]:  # Successfully processed all keys
                     writer.writerow(row)
                     rows_written += 1
                     if rows_written % 100 == 0:
                         print(f"Wrote {rows_written} rows...")
-                    continue
-                break  # Only reached if we hit an exception and break in except block
         
         print("\nDebug Statistics:")
         print(f"Actual rows written (counted): {rows_written}")
