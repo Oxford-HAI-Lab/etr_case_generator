@@ -12,6 +12,7 @@ show_help() {
     echo "  -i, --include PATH     Path to include for task definitions"
     echo "  -d, --dataset PATH     Path to dataset JSONL file to evaluate"
     echo "  -v, --verbosity LEVEL  Verbosity level (default: WARNING)"
+    echo "  -g, --good            Use 'good_results' directory instead of 'results'"
     echo "  -h, --help            Show this help message"
     echo
     echo "Example:"
@@ -25,6 +26,7 @@ INCLUDE_PATH="/home/keenan/Dev/etr_case_generator/"
 DATASET=""
 TASK="etr_problems"
 VERBOSITY="WARNING"
+GOOD_RESULTS=false
 
 # Check for required environment variables
 if [ -z "$OPENAI_API_KEY" ]; then
@@ -62,6 +64,10 @@ while [[ $# -gt 0 ]]; do
         -v|--verbosity)
             VERBOSITY="$2"
             shift 2
+            ;;
+        -g|--good)
+            GOOD_RESULTS=true
+            shift
             ;;
         -h|--help)
             show_help
@@ -128,7 +134,7 @@ lm_eval --model $MODEL_CLASS \
     --tasks $TASK \
     --num_fewshot 0 \
     --batch_size 1 \
-    --output_path lm_eval/tasks/etr_problems/results \
+    --output_path "lm_eval/tasks/etr_problems/$([ "$GOOD_RESULTS" = true ] && echo "good_results" || echo "results")" \
     --apply_chat_template \
     --log_samples \
     --write_out \
