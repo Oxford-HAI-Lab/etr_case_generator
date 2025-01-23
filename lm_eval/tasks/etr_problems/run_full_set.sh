@@ -3,8 +3,12 @@
 
 # Define model configurations
 declare -A MODEL_CONFIGS=(
-    ["openai-chat-completions"]="gpt-3.5-turbo-0125 gpt-4-turbo"
-    ["anthropic-chat-completions"]="claude-3-haiku-20240307 claude-3-sonnet-20240229 claude-3-5-haiku-20241022 claude-3-opus-20240229"
+    ["openai-chat-completions"]="gpt-3.5-turbo-0125 \
+                                gpt-4-turbo"
+    ["anthropic-chat-completions"]="claude-3-haiku-20240307 \
+                                  claude-3-sonnet-20240229 \
+                                  claude-3-5-haiku-20241022 \
+                                  claude-3-opus-20240229"
 )
 
 # Dataset paths
