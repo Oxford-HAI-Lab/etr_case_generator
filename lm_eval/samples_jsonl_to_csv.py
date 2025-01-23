@@ -194,9 +194,9 @@ def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
                             break
                         row[key] = "None"
                 else:
+                    writer.writerow(row)
                     continue
                 break  # Only reached if we hit an exception and break in except block
-                writer.writerow(row)
         
         return total_entries, processed_entries, skipped_entries
 
@@ -209,8 +209,8 @@ def main():
     
     # Print stats
     print(f"\nFound {len(results)} files matching pattern '{args.pattern}':")
-    # for file, data in results.items():
-    #     print(f"{file}: {len(data)} samples")
+    for file, data in results.items():
+        print(f"{file}: {len(data)} samples")
     
     # Write results to CSV
     total_entries, processed_entries, skipped_entries = write_to_csv(results, args.output)
