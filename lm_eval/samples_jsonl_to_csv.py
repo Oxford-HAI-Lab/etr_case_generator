@@ -5,6 +5,14 @@ import os
 from pathlib import Path
 
 
+JSON_KEYS = [
+    "doc_id",
+    "doc/question",
+    "doc/scoring_guide/etr_predicted",
+    # TODO(andrew): Add more
+]
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Convert JSONL results files to CSV format"
