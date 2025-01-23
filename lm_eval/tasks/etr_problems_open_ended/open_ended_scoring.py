@@ -280,9 +280,20 @@ I want you to write your answer in the format of a
     #     etr_text = re.sub(fr'\b{re.escape(full_name)}\b', short_name, etr_text)
     # print(f"Converted to short names: {etr_text}")
 
-    # Check that all strings matching the regex "{[A-Z][a-z]+}" are in the short_name_to_full_name.keys() set
-    # If not, try to see if they can be matched in a case-insensitive way to the short_name_to_full_name.keys() set, and do a replacement
-    ...
+    # Check that all predicate names in the ETR text match the allowed names (case-insensitive)
+    predicates = re.findall(r'[A-Z][a-zA-Z]*(?=\()', etr_text)
+    valid_names = set(full_name_to_short_name.values())
+    
+    for pred in predicates:
+        if pred not in valid_names:
+            # Try case-insensitive match
+            matches = [valid for valid in valid_names 
+                      if valid.lower() == pred.lower()]
+            if matches:
+                # Replace with correct case version
+                etr_text = re.sub(fr'\b{pred}\b', matches[0], etr_text)
+            else:
+                print(f"Warning: Predicate {pred} not found in valid names {valid_names}")
 
     # Add '()' as needed, so like {B(a)} becomes {B(a())}, so any short name that isn't followed by a '(' should have '()' inserted right after. But only do this if the '(' is not already there.
     for short_name in full_name_to_short_name.values():
