@@ -124,11 +124,8 @@ def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
                                 value = None
                                 break
                             value = value.get(k, None)
-                        # Replace newlines with paragraph mark for readability if string
-                        if isinstance(value, str):
-                            value = " ¶ ".join(line.strip() for line in value.splitlines())
                         # Special handling for known list fields
-                        elif key == "resps":
+                        if key == "resps":
                             assert isinstance(value, list) and len(value) == 1 and isinstance(value[0], list) and len(value[0]) == 1, \
                                 f"Expected resps to be list[list[str]] with single items, got {value}"
                             value = value[0][0]
@@ -139,9 +136,12 @@ def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
                         # Convert other lists to string representation
                         elif isinstance(value, list):
                             value = str(value)
+                        # Replace newlines with paragraph mark for readability if string. Do this at the end, to catch resps.
+                        if isinstance(value, str):
+                            value = " ¶ ".join(line.strip() for line in value.splitlines())
                         row[key] = value if value is not None else NONE_STR
                     except Exception as e:
-                        if key in ["resps", "filtered_resps"]:
+                        if "open_ended" not in key and "yes_no" not in key:
                             print(f"Error in {filename}, entry {entry_idx}:")
                             print(f"  Key: {key}")
                             print(f"  Value: {value}")
@@ -153,27 +153,28 @@ def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
                         # Continue processing other keys
                         continue
                 
-                # If we get here, we've either processed all keys successfully
-                # or hit a break in the except block for resps/filtered_resps
-                if key == JSON_KEYS[-1]:  # Successfully processed all keys
-                    writer.writerow(row)
-                    rows_written += 1
-                    if rows_written % 100 == 0:
-                        print(f"Wrote {rows_written} rows...")
-                    
-                    # Check if line count increased by exactly 1
-                    with open(output_file, 'r', encoding='utf-8') as f:
-                        current_lines = sum(1 for _ in f)
-                    if current_lines != prev_line_count + 1:
-                        print(f"ERROR: Line count changed from {prev_line_count} to {current_lines}")
-                else:
-                    skipped_entries += 1
-                    print(f"Skipped entry {entry_idx} in {filename}")
+                # This happens after all keys have been processed
+                # Assert that there are no unescaped new lines in the row
+                for k, v in row.items():
+                    assert v is not str or "\n" not in v, f"Newline found in {k}: {v}"
 
-                # TODO Count the number of lines in the file, and make sure it went up by 1. Print an error if not
+                writer.writerow(row)
+                csvfile.flush()
+
+                rows_written += 1
+                if rows_written % 100 == 0:
+                    print(f"Wrote {rows_written} rows...")
+
+                # Check if line count increased by exactly 1
+                with open(output_file, 'r', encoding='utf-8') as f:
+                    current_lines = sum(1 for _ in f)
+                if current_lines != prev_line_count + 1 and rows_written > 1:  # Skip first row
+                    print(f"ERROR: Line count changed from {prev_line_count} to {current_lines}")
+                    print("Contents of row:")
+                    print(row)
         
         print("\nDebug Statistics:")
-        print(f"Actual rows written (counted): {rows_written}")
+        print(f"Rows written (counted): {rows_written}")
         
         # Check CSV file directly
         with open(output_file, 'r', encoding='utf-8') as f:
@@ -193,6 +194,8 @@ def main():
     print(f"\nFound {len(results)} files matching pattern '{args.pattern}':")
     for file, data in results.items():
         print(f"{file}: {len(data)} samples")
+
+    print(f"Total entries: {sum(len(data) for data in results.values())}")
     
     # Write results to CSV
     total_entries, processed_entries, skipped_entries = write_to_csv(results, args.output)
