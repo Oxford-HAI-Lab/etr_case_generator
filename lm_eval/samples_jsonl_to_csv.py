@@ -6,6 +6,60 @@ import os
 from pathlib import Path
 
 
+# TODO: JSON_KEYS needs to have all of these values (just the leaf nodes)
+"""
+{
+    "doc_id": int
+    "doc": dict (2 items)
+    {
+        "question": str (985 characters)
+        "scoring_guide": dict (4 items)
+        {
+            "etr_predicted": str (60 characters)
+            "etr_predicted_is_classically_correct": bool
+            "generation_details": dict (9 items)
+            {
+                "atoms_distributed_over_views_SMT_ONLY": int
+                "total_num_atoms": int
+                "num_disjuncts": int
+                "num_conjuncts": int
+                "num_predicates_per_problem": int
+                "num_objects_per_problem": int
+                "premises_etr": list[str] (2 items)
+                "premises_fnodes": list[str] (2 items)
+                "is_chain_of_thought": bool
+            }
+            "open_ended": dict (2 items)
+            {
+                "conclusion_agrees_in_yes_no_case": bool
+            }
+            "yes_no": dict (4 items)
+            {
+                "conclusion_etr": str (31 characters)
+                "conclusion_is_classically_correct": bool
+                "conclusion_english": str (30 characters)
+                "conclusion_is_etr_predicted": bool
+            }
+        }
+    }
+    "resps": list[list[str]] (1 items)
+    "filtered_resps": list[str] (1 items)
+    "correct": float
+    "is_etr_predicted": float
+    "is_etr_predicted_exact": float
+    "len_response": int
+    "parse_error": int
+    "model_answer": str (31 characters)
+    "full_model_response": str (79 characters)
+    "correct_and_etr": float
+    "correct_and_not_etr": float
+    "not_correct_and_etr": float
+    "not_correct_and_not_etr": float
+}
+"""
+
+
+
 JSON_KEYS = [
     "doc_id",
     "doc/question",
@@ -95,8 +149,8 @@ def main():
     
     # Print stats
     print(f"\nFound {len(results)} files matching pattern '{args.pattern}':")
-    for file, data in results.items():
-        print(f"{file}: {len(data)} samples")
+    # for file, data in results.items():
+    #     print(f"{file}: {len(data)} samples")
     
     # Write results to CSV
     write_to_csv(results, args.output)
