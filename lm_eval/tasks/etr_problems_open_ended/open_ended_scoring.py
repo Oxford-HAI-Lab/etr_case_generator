@@ -47,7 +47,7 @@ def score_answer(question, model_answer):
         try:
             return attempt_score_answer(question, answer_text, original_model_answer, attempt_num=i)
         except Exception as e:
-            print(f"Failure {i+1}/{num_attempts}: {str(e)[:100]}...")
+            print(f"!!!! Failure {i+1}/{num_attempts}: {str(e)[:100]}...")
             if i == num_attempts - 1:
                 break
             continue
@@ -192,7 +192,7 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
         short_names = [sn for sn in short_name_to_full_name.keys() if sn]
         name_options = ', '.join(short_names)
     except Exception as e:
-        print(short_name_to_full_name)
+        print("Contents of short_name_to_full_name:", short_name_to_full_name)
         raise e
 
     prompt = textwrap.dedent(f"""
@@ -281,7 +281,7 @@ I want you to write your answer in the format of a
     # print(f"Converted to short names: {etr_text}")
 
     # Check that all predicate names in the ETR text match the allowed names (case-insensitive)
-    predicates = re.findall(r'[A-Z][a-zA-Z]*(?=\()', etr_text)
+    predicates = re.findall(r'[a-zA-Z]+(?=\()', etr_text)
     valid_names = set(full_name_to_short_name.values())
     
     for pred in predicates:
@@ -294,6 +294,7 @@ I want you to write your answer in the format of a
                 etr_text = re.sub(fr'\b{pred}\b', matches[0], etr_text)
             else:
                 print(f"Warning: Predicate {pred} not found in valid names {valid_names}")
+                raise ValueError(f"Predicate {pred} not found in valid names {valid_names}")
 
     # Add '()' as needed, so like {B(a)} becomes {B(a())}, so any short name that isn't followed by a '(' should have '()' inserted right after. But only do this if the '(' is not already there.
     for short_name in full_name_to_short_name.values():
