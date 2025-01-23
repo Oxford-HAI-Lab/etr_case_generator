@@ -117,8 +117,11 @@ def write_to_csv(results: dict, output_file: str) -> tuple[int, int, int]:
                     prev_line_count = sum(1 for _ in f)
 
                 processed_entries += 1
-                row = {"model_name": model_name}
+                row = {}
                 for key in JSON_KEYS:
+                    if key == "model_name":
+                        row[key] = model_name
+                        continue
                     # Handle nested keys (e.g., "doc/question")
                     try:
                         value = entry
