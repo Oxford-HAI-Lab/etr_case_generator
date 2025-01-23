@@ -1,15 +1,57 @@
+import argparse
+import glob
+import json
+import os
+from pathlib import Path
 
 
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Convert JSONL results files to CSV format"
+    )
+    parser.add_argument(
+        "--pattern",
+        type=str,
+        default="open_ended",
+        help="Pattern to match in filenames (default: 'open_ended')",
+    )
+    return parser.parse_args()
+
+
+def load_jsonl_files(pattern: str):
+    """Load all JSONL files matching pattern from good_results dir and subdirs."""
+    base_dir = "lm_eval/tasks/etr_problems/good_results"
+    
+    # Get files in base dir and one level deep
+    search_paths = [
+        f"{base_dir}/*{pattern}*.jsonl",
+        f"{base_dir}/*/*{pattern}*.jsonl"
+    ]
+    
+    files = []
+    for path in search_paths:
+        files.extend(glob.glob(path))
+    
+    results = {}
+    for file in files:
+        with open(file) as f:
+            lines = f.readlines()
+            results[file] = [json.loads(line) for line in lines]
+            
+    return results
 
 
 def main():
-    # TODO argparse
-    # TODO get a file string to match, default of "open_ended"
+    args = parse_args()
+    
+    # Load matching files
+    results = load_jsonl_files(args.pattern)
+    
+    # Print stats
+    print(f"\nFound {len(results)} files matching pattern '{args.pattern}':")
+    for file, data in results.items():
+        print(f"{file}: {len(data)} samples")
 
-    # TODO Load all the files in the "lm_eval/tasks/etr_problems/good_results" directory, (including the files one directory deep)
-
-    # TODO Print the number of lines in each file loaded
-    ...
 
 if __name__ == "__main__":
     main()
