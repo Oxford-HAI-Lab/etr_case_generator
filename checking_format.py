@@ -11,14 +11,23 @@ def test_format(s: str) -> None:
 
 # Test different formats for "cat is red if and only if furry"
 formats = [
-    # Single set of braces, all states comma-separated
+    # Original format
     "{~Red(cat()),Furry(cat()),Red(cat()),~Furry(cat())}",
     
-    # Nested braces (incorrect format)
-    "{~Red(cat()),Furry(cat())},{Red(cat()),~Furry(cat())}",
+    # With parentheses grouping implications
+    "{(~Red(cat()),Furry(cat())),(~Furry(cat()),Red(cat()))}",
     
-    # Single state with all conditions (incorrect logical form)
-    "{~Red(cat())Furry(cat())Red(cat())~Furry(cat())}",
+    # With parentheses around each atom pair
+    "{(~Red(cat()),Furry(cat())),(~Furry(cat()),Red(cat()))}",
+    
+    # With parentheses and no commas between grouped atoms
+    "{(~Red(cat())Furry(cat()))(~Furry(cat())Red(cat()))}",
+    
+    # With nested parentheses
+    "{((~Red(cat()),Furry(cat())),(~Furry(cat()),Red(cat())))}",
+    
+    # With parentheses but still using commas
+    "{(~Red(cat())),Furry(cat()),(~Furry(cat())),Red(cat())}",
 ]
 
 if __name__ == "__main__":
