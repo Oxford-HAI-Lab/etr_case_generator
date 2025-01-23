@@ -166,7 +166,16 @@ def write_to_csv(results: dict, output_file: str):
                         # Replace newlines with paragraph mark for readability if string
                         if isinstance(value, str):
                             value = " ¶ ".join(line.strip() for line in value.splitlines())
-                        # Convert lists to string representation
+                        # Special handling for known list fields
+                        elif key == "resps":
+                            assert isinstance(value, list) and len(value) == 1 and isinstance(value[0], list) and len(value[0]) == 1, \
+                                f"Expected resps to be list[list[str]] with single items, got {value}"
+                            value = value[0][0]
+                        elif key == "filtered_resps":
+                            assert isinstance(value, list) and len(value) == 1, \
+                                f"Expected filtered_resps to be list[str] with single item, got {value}"
+                            value = value[0]
+                        # Convert other lists to string representation
                         elif isinstance(value, list):
                             value = str(value)
                         row[key] = value if value is not None else "None"
