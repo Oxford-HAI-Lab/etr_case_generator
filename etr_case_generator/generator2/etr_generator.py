@@ -95,7 +95,6 @@ class ETRGenerator:
     max_queue_size: int = 100  # Maximum size of the queue. This should be large relative to max_mutations_per_base_problem to maintain diversity
     max_queue_size_init: int = None
     _generator: Optional[Generator[PartialProblem, None, None]] = None
-    max_mutations: int = 500_000  # Maximum number of mutations before considering the line exhausted # TODO(Andrew->Ryan) I don't understand the thinking behind this
     max_mutations_per_base_problem: int = 20  # Maximum number of mutations per base problem
 
     seed_ids_yielded: Counter[str] = field(default_factory=Counter)  # To help maintain diversity
@@ -140,7 +139,7 @@ class ETRGenerator:
             
             # Add generation bias if function provided
             if self.generation_bias_function is not None:
-                score += self.generation_bias_function(problem, all_problems) - 1.0
+                score += self.generation_bias_function(problem, all_problems) - 1.0  # TODO Why -1 here?
                 
             # Add boost for underrepresented seeds
             if self.seed_ids_yielded:
@@ -242,14 +241,14 @@ class ETRGenerator:
         # yield seed_problem
 
         mutation_count = 0
-        while mutation_count < self.max_mutations:
+        while True:
             # TODO Consider iterating through this data structure in a more chaotic way than
             # just queueing stuff (priority queue, randomizing at each step, etc.)
             # Get the most recent problem from the queue to mutate
             if not self.problem_set:
                 print(f"Queue is empty after {mutation_count} mutations")
                 # If queue is empty, we've exhausted this line of problems
-                return
+                raise StopIteration("Queue is empty")
 
             # Another way to bias generation is to pick a problem from the queue that is
             # e.g. "largest" -> (then you can also think about just mutating by adding
