@@ -61,7 +61,20 @@ def set_of_states_to_str(set_of_states) -> str:
     return "{" + ",".join([state_to_str(s) for s in set_of_states]) + "}"
 
 
-def get_view_mutations(view: View) -> set[View]:
+def get_view_mutations(view: View, only_increase: bool = False) -> set[View]:
+    """_summary_
+
+    Args:
+        view (View): The base View to mutate.
+        only_increase (bool, optional): If set to True, will only return views that are
+        larger than view in terms of number of atoms. Defaults to False.
+
+    Raises:
+        ValueError: _description_
+
+    Returns:
+        set[View]: _description_
+    """
     mutations = set()
 
     # Assemble lists of strings of predicates, constants, and arbitrary objects
@@ -71,8 +84,8 @@ def get_view_mutations(view: View) -> set[View]:
         raise ValueError
     predicates = predicates["1"]  # For now we only do unary predicates
 
-    max_predicate = max(predicates)
-    new_predicate = chr(ord(max_predicate) + 1)
+    max_predicate = max(predicates) # From P, Q, R, you get R
+    new_predicate = chr(ord(max_predicate) + 1)  # This would give S
 
     if len(arb_objs) == 0:
         arb_objs = set(["a"])
@@ -81,20 +94,21 @@ def get_view_mutations(view: View) -> set[View]:
         max_arb_obj = max(arb_objs)
         new_arb_obj = chr(ord(max_arb_obj) + 1)
 
-    for o in constants:
-        # Also append problems where the variable is taken to be at issue in all
-        # occurrences (can I do this with issue only occurring sometimes?)
-        for is_at_issue in [new_arb_obj, new_arb_obj + "*"]:
-            mutations.add(
-                View.from_str(
-                    f"A{new_arb_obj} " + view.to_str().replace(o + "()", is_at_issue)
+    if not only_increase:
+        for o in constants:
+            # Also append problems where the variable is taken to be at issue in all
+            # occurrences (can I do this with issue only occurring sometimes?)
+            for is_at_issue in [new_arb_obj, new_arb_obj + "*"]:
+                mutations.add(
+                    View.from_str(
+                        f"A{new_arb_obj} " + view.to_str().replace(o + "()", is_at_issue)
+                    )
                 )
-            )
-            mutations.add(
-                View.from_str(
-                    f"E{new_arb_obj} " + view.to_str().replace(o + "()", is_at_issue)
+                mutations.add(
+                    View.from_str(
+                        f"E{new_arb_obj} " + view.to_str().replace(o + "()", is_at_issue)
+                    )
                 )
-            )
 
     if len(constants) == 0:
         constants = set(["a"])
@@ -103,12 +117,21 @@ def get_view_mutations(view: View) -> set[View]:
         max_constant = max(constants)
         new_constant = chr(ord(max_constant) + 1)
 
-    predicates.add(new_predicate)
+    predicates.add(new_predicate)  # Now, e.g., predicates are P, Q, R, S
     constants.add(new_constant)
 
-    atoms = [atom_to_str(a) for a in view.atoms] + [
+    atoms = [
         f"{p}({o}())" for p in predicates for o in constants
     ]
+
+    # If only_increase is set to true, filter atoms to the set of atoms that are not
+    # already in the view
+    if only_increase:
+        existing_atoms = set([atom_to_str(a) for a in view.atoms])
+        atoms = [a for a in atoms if a not in existing_atoms]
+    else:
+        atoms += [atom_to_str(a) for a in view.atoms]
+        atoms = list(set(atoms))
 
     # We also don't do anything with suppositions in this version
     # TODO: prepend all possible quantifier strings given the current set of arbitrary
@@ -129,7 +152,8 @@ def get_view_mutations(view: View) -> set[View]:
             )
             mutations.add(View.from_str(new_stage_str))
 
-            # Also add one where the new atom is at issue
+            # Also add one where the new atom is at issue -- this can also be done
+            # before the for loop with atoms (same as below TODO)
             new_state_str = state_to_str(list(view.stage)[i]) + atom_at_issue
             new_stage_str = (
                 "{"
@@ -161,7 +185,8 @@ def get_view_mutations(view: View) -> set[View]:
                 + "}"
             )
         )
-
+    
+        # TODO: refactor to only have to loop once (negate every atom before for loop)
         # Now, negate
         if atom[0] == "~":
             atom = atom[1:]
@@ -171,10 +196,11 @@ def get_view_mutations(view: View) -> set[View]:
         atom_at_issue = atom[:-1] + "*)"
         # All conjunctions
         for i in range(len(list(view.stage))):
+            # Add atom directly into state string (P(a()) becomes P(a())Q(a()))
             new_state_str = state_to_str(list(view.stage)[i]) + atom
             new_stage_str = (
                 "{"
-                + ",".join(
+                + ",".join(  # Now that we're disjoining, the delimiter is a comma
                     list([state_to_str(s) for s in view.stage])[:i]
                     + [new_state_str]
                     + list([state_to_str(s) for s in view.stage])[i + 1 :]
@@ -213,6 +239,11 @@ def get_view_mutations(view: View) -> set[View]:
                 + "}"
             )
         )
+
+    # Add an assertion that if only_increase is passed as True, we only return views
+    # that are larger than the original view
+    if only_increase:
+        assert all([len(m.atoms) > len(view.atoms) for m in mutations])
 
     return mutations
 
