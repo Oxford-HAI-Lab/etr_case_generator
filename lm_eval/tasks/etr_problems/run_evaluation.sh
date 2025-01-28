@@ -28,12 +28,22 @@ TASK="etr_problems"
 VERBOSITY="WARNING"
 GOOD_RESULTS=false
 
-# Check for required environment variables
-if [ -z "$OPENAI_API_KEY" ]; then
-    echo "Error: OPENAI_API_KEY environment variable is not set"
-    echo "Please ensure it is exported in your ~/.bashrc or set it before running this script"
-    exit 1
-fi
+# Check for required environment variables based on model
+check_api_key() {
+    if [[ "$MODEL" == "deepseek-r1" ]]; then
+        if [ -z "$OPENROUTER_API_KEY" ]; then
+            echo "Error: OPENROUTER_API_KEY environment variable is not set"
+            echo "Please ensure it is exported in your ~/.bashrc or set it before running this script"
+            exit 1
+        fi
+    else
+        if [ -z "$OPENAI_API_KEY" ]; then
+            echo "Error: OPENAI_API_KEY environment variable is not set"
+            echo "Please ensure it is exported in your ~/.bashrc or set it before running this script"
+            exit 1
+        fi
+    fi
+}
 
 # Default model class
 MODEL_CLASS="openai-chat-completions"  # Supported model names: local-completions, local-chat-completions, openai-completions, openai-chat-completions, anthropic-completions, anthropic-chat, anthropic-chat-completions, dummy, gguf, ggml, hf-auto, hf, huggingface, hf-multimodal, watsonx_llm, mamba_ssm, nemo_lm, sparseml, deepsparse, neuronx, openvino, textsynth, vllm, vllm-vlm
@@ -132,15 +142,33 @@ echo ""
 #--model_args api_key=OPENROUTER_API_KEY,model=deepseek-r1 \
 #--api_base_url "https://openrouter.ai/api/v1"
 
+# Check API key requirements
+check_api_key
+
 # Run evaluation
-lm_eval --model $MODEL_CLASS \
-    --model_args model=$MODEL \
-    --include_path "$INCLUDE_PATH" \
-    --tasks $TASK \
-    --num_fewshot 0 \
-    --batch_size 1 \
-    --output_path "lm_eval/tasks/etr_problems/$([ "$GOOD_RESULTS" = true ] && echo "good_results" || echo "results")" \
-    --apply_chat_template \
-    --log_samples \
-    --write_out \
-    ${VERBOSITY:+--verbosity "$VERBOSITY"}
+if [[ "$MODEL" == "deepseek-r1" ]]; then
+    lm_eval --model openrouter \
+        --model_args "api_key=$OPENROUTER_API_KEY,model=deepseek-r1" \
+        --api_base_url "https://openrouter.ai/api/v1" \
+        --include_path "$INCLUDE_PATH" \
+        --tasks $TASK \
+        --num_fewshot 0 \
+        --batch_size 1 \
+        --output_path "lm_eval/tasks/etr_problems/$([ "$GOOD_RESULTS" = true ] && echo "good_results" || echo "results")" \
+        --apply_chat_template \
+        --log_samples \
+        --write_out \
+        ${VERBOSITY:+--verbosity "$VERBOSITY"}
+else
+    lm_eval --model $MODEL_CLASS \
+        --model_args model=$MODEL \
+        --include_path "$INCLUDE_PATH" \
+        --tasks $TASK \
+        --num_fewshot 0 \
+        --batch_size 1 \
+        --output_path "lm_eval/tasks/etr_problems/$([ "$GOOD_RESULTS" = true ] && echo "good_results" || echo "results")" \
+        --apply_chat_template \
+        --log_samples \
+        --write_out \
+        ${VERBOSITY:+--verbosity "$VERBOSITY"}
+fi
