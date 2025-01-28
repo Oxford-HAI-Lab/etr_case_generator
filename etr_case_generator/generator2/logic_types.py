@@ -1,0 +1,1 @@
+AtomCount = int

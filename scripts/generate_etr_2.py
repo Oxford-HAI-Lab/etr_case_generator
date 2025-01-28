@@ -10,6 +10,7 @@ from tqdm import tqdm
 from etr_case_generator.generator2.etr_generator import set_queue_sizes
 from etr_case_generator.generator2.generate_problem_from_logical import generate_problem
 from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType, PartialProblem
+from etr_case_generator.generator2.logic_types import AtomCount
 
 from etr_case_generator.ontology import Ontology, get_all_ontologies, natural_name_to_logical_name
 
@@ -50,7 +51,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
             try:
                 # Calculate remaining capacity needed for each atom count
                 count_per_size = math.ceil(n_problems / len(args.num_atoms_set)) if args.num_atoms_set else 0
-                needed_counts = Counter[int]()
+                needed_counts = Counter[AtomCount]()
                 if args.num_atoms_set:
                     for size in args.num_atoms_set:
                         remaining = count_per_size - num_atoms_counts[size]
