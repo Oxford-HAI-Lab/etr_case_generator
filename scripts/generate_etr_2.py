@@ -73,7 +73,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
 
                     return pp.num_atoms() in acceptable_num_atoms
 
-                problem: FullProblem = generate_problem(args, ontology=ontology, generation_filter=has_good_num_atoms if args.num_atoms_set else None)
+                problem: FullProblem = generate_problem(args, ontology=ontology, needed_counts=needed_counts, generation_filter=has_good_num_atoms if args.num_atoms_set else None)
 
                 if args.num_atoms_set:
                     for na, c in num_atoms_counts.items():

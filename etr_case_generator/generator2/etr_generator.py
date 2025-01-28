@@ -3,6 +3,8 @@ import time
 import math
 
 from dataclasses import dataclass, field
+
+from etr_case_generator.generator2.logic_types import AtomCount
 from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
 from etr_case_generator.generator2.seed_problems import create_starting_problems
 from etr_case_generator.mutations import get_view_mutations
@@ -105,6 +107,8 @@ class ETRGenerator:
     overused_atom_count_demerit: float = OVERUSED_ATOM_COUNT_DEMERIT  # Boost for problems with fewer atoms than average
 
     filtering_fn: Optional[Callable[[PartialProblem], bool]] = None  # Optional filter function for problems
+
+    needed_counts: Counter[AtomCount] = None  # Atom counts needed for the queue
 
     def initialize_generator(self) -> None:
         """Initialize the problem generator."""
@@ -370,7 +374,8 @@ class ETRGenerator:
 _etr_generator = ETRGenerator()
 
 def random_etr_problem(filter_fn: Optional[Callable[[PartialProblem], bool]] = None,
-                       bias_function: Optional[Callable[[PartialProblem, List[PartialProblem]], float]] = None) -> PartialProblem:
+                       bias_function: Optional[Callable[[PartialProblem, List[PartialProblem]], float]] = None,
+                       needed_counts: Counter[AtomCount] = None) -> PartialProblem:
     """
     Generate a random ETR problem that matches the filter criteria.
     
@@ -393,6 +398,8 @@ def random_etr_problem(filter_fn: Optional[Callable[[PartialProblem], bool]] = N
     """
     if bias_function is not None:
         _etr_generator.generation_bias_function = bias_function
+    if needed_counts is not None:
+        _etr_generator.needed_counts = needed_counts
 
     problem = _etr_generator.get_next_problem(filter_fn)
     return problem
