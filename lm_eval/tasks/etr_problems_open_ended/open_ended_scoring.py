@@ -16,8 +16,13 @@ from smt_interface.smt_encoder import view_to_smt
 # This is necessary because of the way that lm_eval runs this file
 sys.path.append(os.getcwd())
 
-# Set up openai client
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Handle API key swapping for OpenRouter
+original_openai_key = os.getenv("ORIGINAL_OPENAI_KEY")
+if original_openai_key:
+    os.environ["OPENAI_API_KEY"] = original_openai_key
+else:
+    # If no original key stored, use the current OPENAI_API_KEY
+    openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 def score_answer(question, model_answer):
