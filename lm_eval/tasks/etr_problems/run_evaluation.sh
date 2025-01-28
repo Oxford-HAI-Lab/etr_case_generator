@@ -137,19 +137,13 @@ echo "  Include path: $INCLUDE_PATH"
 echo "  Task: $TASK"
 echo ""
 
-# TODO: If the user passes in deepseek as the model, do it like this (OPENROUTER_API_KEY has been exported)
-#lm_eval --model openrouter \
-#--model_args api_key=OPENROUTER_API_KEY,model=deepseek-r1 \
-#--api_base_url "https://openrouter.ai/api/v1"
-
 # Check API key requirements
 check_api_key
 
 # Run evaluation
 if [[ "$MODEL" == "deepseek-r1" ]]; then
-    lm_eval --model openrouter \
-        --model_args "api_key=$OPENROUTER_API_KEY,model=deepseek-r1" \
-        --api_base_url "https://openrouter.ai/api/v1" \
+    lm_eval --model openai-chat-completions \
+        --model_args "base_url=https://openrouter.ai/api/v1/chat/completions,model=deepseek-r1" \
         --include_path "$INCLUDE_PATH" \
         --tasks $TASK \
         --num_fewshot 0 \

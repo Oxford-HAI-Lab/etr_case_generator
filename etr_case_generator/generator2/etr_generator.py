@@ -108,7 +108,7 @@ class ETRGenerator:
 
     filtering_fn: Optional[Callable[[PartialProblem], bool]] = None  # Optional filter function for problems
 
-    needed_counts: Counter[AtomCount] = None  # Atom counts needed for the queue
+    needed_counts: Counter[AtomCount] = None  # Atom counts needed for the queue  # TODO Need to actually use this
 
     def initialize_generator(self) -> None:
         """Initialize the problem generator."""
