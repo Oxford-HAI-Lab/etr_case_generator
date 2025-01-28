@@ -142,7 +142,13 @@ check_api_key
 
 # Run evaluation
 if [[ "$MODEL" == "deepseek-r1" ]]; then
-    # TODO The command below needs to see the OPENROUTER_API_KEY in the OPENAI_API_KEY environment variable
+    # Store original OPENAI_API_KEY if it exists
+    if [ -n "$OPENAI_API_KEY" ]; then
+        ORIGINAL_OPENAI_KEY=$OPENAI_API_KEY
+    fi
+    
+    # Set OPENAI_API_KEY to OPENROUTER_API_KEY
+    export OPENAI_API_KEY=$OPENROUTER_API_KEY
 
     lm_eval --model openai-chat-completions \
         --model_args "base_url=https://openrouter.ai/api/v1/chat/completions,model=deepseek-r1" \
@@ -156,7 +162,12 @@ if [[ "$MODEL" == "deepseek-r1" ]]; then
         --write_out \
         ${VERBOSITY:+--verbosity "$VERBOSITY"}
 
-    # TODO Put the OPENAI_API_KEY back in the OPENAI_API_KEY environment variable
+    # Restore original OPENAI_API_KEY if it existed
+    if [ -n "$ORIGINAL_OPENAI_KEY" ]; then
+        export OPENAI_API_KEY=$ORIGINAL_OPENAI_KEY
+    else
+        unset OPENAI_API_KEY
+    fi
 else
     lm_eval --model $MODEL_CLASS \
         --model_args model=$MODEL \
