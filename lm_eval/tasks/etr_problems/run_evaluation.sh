@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Source private keys if available
+if [ -f "/home/keenan/Dev/private_keys.sh" ]; then
+    source "/home/keenan/Dev/private_keys.sh"
+fi
+
 # Help text function
 show_help() {
     echo "Usage: $0 [OPTIONS]"
