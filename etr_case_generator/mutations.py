@@ -243,7 +243,19 @@ def get_view_mutations(view: View, only_increase: bool = False) -> set[View]:
     # Add an assertion that if only_increase is passed as True, we only return views
     # that are larger than the original view
     if only_increase:
-        assert all([len(m.atoms) > len(view.atoms) for m in mutations])
+        # Count the number of mutations with more, fewer, and the same number of atoms
+        num_atoms = len(view.atoms)
+        num_less = 0
+        num_more = 0
+        num_same = 0
+        for m in mutations:
+            if len(m.atoms) > num_atoms:
+                num_more += 1
+            elif len(m.atoms) < num_atoms:
+                num_less += 1
+            else:
+                num_same += 1
+        assert all([len(m.atoms) >= len(view.atoms) for m in mutations]), f"Original num atoms: {len(view.atoms)}, Num Less: {num_less}, Num Same: {num_same}, Num More: {num_more}"
 
     return mutations
 

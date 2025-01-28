@@ -188,7 +188,7 @@ class ETRGenerator:
         assert problem.premises is not None
         for i, view in enumerate(problem.premises):
             assert view.logical_form_etr_view is not None
-            for mut in get_view_mutations(view.logical_form_etr_view):
+            for mut in get_view_mutations(view.logical_form_etr_view, only_increase=True):
                 new_mutation = (
                     tuple([p.logical_form_etr_view for p in problem.premises[:i]]) +
                     (mut,) +
@@ -311,8 +311,8 @@ class ETRGenerator:
 
         # Statistics on the new queue
         num_atoms_count, median_freq = get_atom_count_distribution(self.problem_set)
-        print("Atom count in new queue:", {k: num_atoms_count[k] for k in sorted(num_atoms_count.keys())})
-        print(f"Median frequency: {median_freq}")
+        # print("Atom count in new queue:", {k: num_atoms_count[k] for k in sorted(num_atoms_count.keys())})
+        # print(f"Median frequency: {median_freq}")
 
     # TODO: this could be passed an optional vocab_size, filter the list of problems
     # to match
