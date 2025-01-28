@@ -30,13 +30,13 @@ def set_openai_key():
         os.system("source /home/keenan/Dev/private_keys.sh")
         found_api_key = os.getenv("OPENAI_API_KEY")
         print("Ran file to find API key")
-    else:
-        print("No file to run to find API key")
+    # else:
+    #     print("No file to run to find API key")
 
-    # Print both, for debugging
-    print(f"Original OpenAI Key: {original_openai_key}")
-    print(f"Current OpenAI Key: {openai.api_key}")
-    print(f"Found API Key: {found_api_key}")
+    # # Print for debugging
+    # print(f"Original OpenAI Key: {original_openai_key}")
+    # print(f"Current OpenAI Key: {openai.api_key}")
+    # print(f"Found API Key: {found_api_key}")
 
 
 def score_answer(question, model_answer):
@@ -61,7 +61,11 @@ def score_answer(question, model_answer):
         answer_text = str(model_answer)
     original_model_answer: str = answer_text
     print("-" * 80)
-    print(f"Starting Open Ended Scoring. Got this answer text: {answer_text}")
+    print(f"Starting Open Ended Scoring. Got this answer text: `{answer_text}`")
+
+    if len(answer_text.strip()) == 0:
+        print("Empty answer text, debug printing")
+        print(model_answer)
 
     num_attempts = 3
     for i in range(num_attempts):
