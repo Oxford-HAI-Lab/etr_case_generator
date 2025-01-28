@@ -147,9 +147,14 @@ check_api_key
 
 # Run evaluation
 if [[ "$MODEL" == "deepseek-r1" ]]; then
-    # Store original OPENAI_API_KEY if it exists
+    # Store original OPENAI_API_KEY if it exists and set up restoration trap
     if [ -n "$OPENAI_API_KEY" ]; then
         ORIGINAL_OPENAI_KEY=$OPENAI_API_KEY
+        # This will run on any exit (normal, interrupt, error)
+        trap 'export OPENAI_API_KEY=$ORIGINAL_OPENAI_KEY; echo "Restored original OpenAI API key"' EXIT
+    else
+        # If there was no original key, we should unset it on exit
+        trap 'unset OPENAI_API_KEY; echo "Unset OpenAI API key"' EXIT
     fi
     
     # Set OPENAI_API_KEY to OPENROUTER_API_KEY. We need to do this because the evaluation harness looks directly at OPENAI_API_KEY
@@ -167,12 +172,7 @@ if [[ "$MODEL" == "deepseek-r1" ]]; then
         --write_out \
         ${VERBOSITY:+--verbosity "$VERBOSITY"}
 
-    # Restore original OPENAI_API_KEY if it existed
-    if [ -n "$ORIGINAL_OPENAI_KEY" ]; then
-        export OPENAI_API_KEY=$ORIGINAL_OPENAI_KEY
-    else
-        unset OPENAI_API_KEY
-    fi
+    # The trap will handle key restoration on exit
 else
     lm_eval --model $MODEL_CLASS \
         --model_args model=$MODEL \
