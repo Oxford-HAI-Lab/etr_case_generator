@@ -25,6 +25,19 @@ def set_openai_key():
         # If no original key stored, use the current OPENAI_API_KEY
         openai.api_key = os.getenv("OPENAI_API_KEY")
 
+    # Execute (source) the file `/home/keenan/Dev/private_keys.sh` if it exists
+    if os.path.exists("/home/keenan/Dev/private_keys.sh"):
+        os.system("source /home/keenan/Dev/private_keys.sh")
+        found_api_key = os.getenv("OPENAI_API_KEY")
+        print("Ran file to find API key")
+    else:
+        print("No file to run to find API key")
+
+    # Print both, for debugging
+    print(f"Original OpenAI Key: {original_openai_key}")
+    print(f"Current OpenAI Key: {openai.api_key}")
+    print(f"Found API Key: {found_api_key}")
+
 
 def score_answer(question, model_answer):
     """

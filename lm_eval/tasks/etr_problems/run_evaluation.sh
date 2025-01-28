@@ -149,12 +149,9 @@ check_api_key
 if [[ "$MODEL" == "deepseek-r1" ]]; then
     # Store original OPENAI_API_KEY if it exists and set up restoration trap
     if [ -n "$OPENAI_API_KEY" ]; then
-        ORIGINAL_OPENAI_KEY=$OPENAI_API_KEY
+        export ORIGINAL_OPENAI_KEY=$OPENAI_API_KEY
         # This will run on any exit (normal, interrupt, error)
-        trap 'export OPENAI_API_KEY=$ORIGINAL_OPENAI_KEY; echo "Restored original OpenAI API key"' EXIT
-    else
-        # If there was no original key, we should unset it on exit
-        trap 'unset OPENAI_API_KEY; echo "Unset OpenAI API key"' EXIT
+        trap 'export OPENAI_API_KEY=$ORIGINAL_OPENAI_KEY; echo "Restored original OpenAI API key"' EXIT SIGINT SIGTERM
     fi
     
     # Set OPENAI_API_KEY to OPENROUTER_API_KEY. We need to do this because the evaluation harness looks directly at OPENAI_API_KEY
