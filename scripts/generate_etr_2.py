@@ -4,6 +4,7 @@ import json
 import math
 import random
 from typing import get_args
+from collections import Counter
 from tqdm import tqdm
 
 from etr_case_generator.generator2.etr_generator import set_queue_sizes
@@ -49,7 +50,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
             try:
                 # Calculate remaining capacity needed for each atom count
                 count_per_size = math.ceil(n_problems / len(args.num_atoms_set)) if args.num_atoms_set else 0
-                needed_counts = {size: count_per_size - num_atoms_counts[size] for size in args.num_atoms_set} if args.num_atoms_set else {}
+                needed_counts = Counter({size: count_per_size - num_atoms_counts[size] for size in args.num_atoms_set}) if args.num_atoms_set else Counter()
 
                 def has_good_num_atoms(pp: PartialProblem):
                     if not args.num_atoms_set:
