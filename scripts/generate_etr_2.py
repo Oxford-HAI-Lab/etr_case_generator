@@ -51,7 +51,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
             try:
                 # Calculate remaining capacity needed for each atom count
                 count_per_size = math.ceil(n_problems / len(args.num_atoms_set)) if args.num_atoms_set else 0
-                needed_counts = Counter[AtomCount]()
+                needed_counts = Counter[int]()  # We use int since Counter will store the raw int values
                 if args.num_atoms_set:
                     for size in args.num_atoms_set:
                         remaining = count_per_size - num_atoms_counts[size]
