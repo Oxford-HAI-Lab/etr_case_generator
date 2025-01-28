@@ -127,6 +127,11 @@ echo "  Include path: $INCLUDE_PATH"
 echo "  Task: $TASK"
 echo ""
 
+# TODO: If the user passes in deepseek as the model, do it like this (OPENROUTER_API_KEY has been exported)
+#lm_eval --model openrouter \
+#--model_args api_key=OPENROUTER_API_KEY,model=deepseek-r1 \
+#--api_base_url "https://openrouter.ai/api/v1"
+
 # Run evaluation
 lm_eval --model $MODEL_CLASS \
     --model_args model=$MODEL \
@@ -139,8 +144,3 @@ lm_eval --model $MODEL_CLASS \
     --log_samples \
     --write_out \
     ${VERBOSITY:+--verbosity "$VERBOSITY"}
-
-# Uncomment to use Anthropic's Claude model instead
-# TODO Make this an argument
-#lm_eval --model anthropic-chat-completions \
-#    --model_args model=claude-3-5-sonnet-20240620 \
