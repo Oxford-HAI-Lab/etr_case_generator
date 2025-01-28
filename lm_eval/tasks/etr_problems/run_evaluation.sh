@@ -147,11 +147,11 @@ if [[ "$MODEL" == "deepseek-r1" ]]; then
         ORIGINAL_OPENAI_KEY=$OPENAI_API_KEY
     fi
     
-    # Set OPENAI_API_KEY to OPENROUTER_API_KEY
+    # Set OPENAI_API_KEY to OPENROUTER_API_KEY. We need to do this because the evaluation harness looks directly at OPENAI_API_KEY
     export OPENAI_API_KEY=$OPENROUTER_API_KEY
 
     lm_eval --model openai-chat-completions \
-        --model_args "base_url=https://openrouter.ai/api/v1/chat/completions,model=deepseek-r1" \
+        --model_args "base_url=https://openrouter.ai/api/v1/chat/completions,model=deepseek/deepseek-r1" \
         --include_path "$INCLUDE_PATH" \
         --tasks $TASK \
         --num_fewshot 0 \
