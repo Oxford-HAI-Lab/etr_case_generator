@@ -60,12 +60,17 @@ def parse_args():
         default="lm_eval/tasks/etr_problems/good_results/all_results.csv",
         help="Output CSV file location (default: good_results/all_results.csv)",
     )
+    parser.add_argument(
+        "--base-dir",
+        type=str,
+        default="lm_eval/tasks/etr_problems/good_results",
+        help="Base directory to search for JSONL files (default: lm_eval/tasks/etr_problems/good_results)",
+    )
     return parser.parse_args()
 
 
-def load_jsonl_files(pattern: str):
-    """Load all JSONL files matching pattern from good_results dir and subdirs."""
-    base_dir = "lm_eval/tasks/etr_problems/good_results"
+def load_jsonl_files(pattern: str, base_dir: str):
+    """Load all JSONL files matching pattern from base_dir and subdirs."""
     
     # Get files in base dir and one level deep that contain "samples"
     search_paths = [
@@ -194,7 +199,7 @@ def main():
     args = parse_args()
     
     # Load matching files
-    results = load_jsonl_files(args.pattern)
+    results = load_jsonl_files(args.pattern, args.base_dir)
     
     # Print stats
     print(f"\nFound {len(results)} files matching pattern '{args.pattern}':")
