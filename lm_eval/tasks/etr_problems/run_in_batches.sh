@@ -34,7 +34,9 @@ split -l "$lines_per_batch" temp_shuffled.jsonl "batch_files/${base_name}_batch_
 
 # Process each batch file
 for batch_file in batch_files/${base_name}_batch_*.jsonl; do
+    echo "----------------------------------------------------------------------------------------"
     echo "Processing $batch_file"
+    echo "----------------------------------------------------------------------------------------"
     max_attempts=3
     attempt=1
     

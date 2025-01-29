@@ -63,12 +63,12 @@ def score_answer(question, model_answer):
     print("-" * 80)
     print(f"Starting Open Ended Scoring. Got this answer text: `{answer_text}`")
 
-    if len(answer_text.strip()) == 0:
-        print("Empty answer text, debug printing")
-        print(model_answer)
-
     num_attempts = 3
     for i in range(num_attempts):
+        if len(answer_text.strip()) == 0:
+            print("Empty answer text, debug printing, returning early")
+            print(model_answer)
+            break
         try:
             return attempt_score_answer(question, answer_text, original_model_answer, attempt_num=i)
         except Exception as e:
