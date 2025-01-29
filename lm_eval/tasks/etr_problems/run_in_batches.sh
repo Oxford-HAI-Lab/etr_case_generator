@@ -26,11 +26,14 @@ shuf "$INPUT_FILE" > temp_shuffled.jsonl
 total_lines=$(wc -l < temp_shuffled.jsonl)
 lines_per_batch=$((total_lines / N_BATCHES + 1))
 
+# Get base filename without extension
+base_name=$(basename "$INPUT_FILE" .jsonl)
+
 # Split the shuffled file into N batches
-split -l "$lines_per_batch" temp_shuffled.jsonl batch_files/batch_ --additional-suffix=.jsonl
+split -l "$lines_per_batch" temp_shuffled.jsonl "batch_files/${base_name}_batch_" --additional-suffix=.jsonl
 
 # Process each batch file
-for batch_file in batch_files/batch_*.jsonl; do
+for batch_file in batch_files/${base_name}_batch_*.jsonl; do
     echo "Processing $batch_file"
     max_attempts=3
     attempt=1
