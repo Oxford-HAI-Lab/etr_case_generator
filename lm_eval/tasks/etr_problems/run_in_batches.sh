@@ -1,10 +1,55 @@
+#!/bin/bash
 
+# Function to handle cleanup on script exit
+cleanup() {
+    rm -f temp_shuffled.jsonl
+    rm -rf batch_files 2>/dev/null
+}
+trap cleanup EXIT
 
-# TODO Take a file like /home/keenan/Dev/etr_case_generator/datasets/balance_atoms_open_ended.jsonl
-# TODO Shuffle that file line by line
-# TODO Split that file up into n=20 evenly sized files, line by line
+# Check if input file is provided
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <input_jsonl_file>"
+    exit 1
+fi
 
-# TODO For each of those files, run a command like this:
-# lm_eval/tasks/etr_problems/run_evaluation.sh --dataset partial_dataset.jsonl -m deepseek-r1
+INPUT_FILE="$1"
+N_BATCHES=20
 
-# TODO The run_evaluation.sh script might crash, and in that case, try to run it again
+# Create directory for batch files
+mkdir -p batch_files
+
+# Shuffle the input file
+shuf "$INPUT_FILE" > temp_shuffled.jsonl
+
+# Count total lines
+total_lines=$(wc -l < temp_shuffled.jsonl)
+lines_per_batch=$((total_lines / N_BATCHES + 1))
+
+# Split the shuffled file into N batches
+split -l "$lines_per_batch" temp_shuffled.jsonl batch_files/batch_ --additional-suffix=.jsonl
+
+# Process each batch file
+for batch_file in batch_files/batch_*.jsonl; do
+    echo "Processing $batch_file"
+    max_attempts=3
+    attempt=1
+    
+    while [ $attempt -le $max_attempts ]; do
+        if ./run_evaluation.sh --dataset "$batch_file" -m deepseek-r1; then
+            echo "Successfully processed $batch_file"
+            break
+        else
+            echo "Attempt $attempt failed for $batch_file"
+            if [ $attempt -eq $max_attempts ]; then
+                echo "All attempts failed for $batch_file"
+            else
+                echo "Retrying..."
+                sleep 5
+            fi
+            ((attempt++))
+        fi
+    done
+done
+
+echo "All batches processed"
