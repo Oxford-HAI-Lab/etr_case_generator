@@ -1,6 +1,7 @@
 from typing import Callable, Counter
 
 from etr_case_generator.generator2.etr_generator import random_etr_problem, boost_low_num_atom_problems
+from etr_case_generator.generator2.etr_generator2 import ETRGeneratorIndependent
 from etr_case_generator.generator2.logic_types import AtomCount
 from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType, PartialProblem, Conclusion, \
     ReifiedView
@@ -25,7 +26,7 @@ def renamed_view(view: View, renames: dict[str, str]) -> View:
     return View.from_str(new_view_str)
 
 
-def generate_problem(args, ontology: Ontology = ELEMENTS, needed_counts: Counter[AtomCount] = None) -> FullProblem:
+def generate_problem(args, ontology: Ontology = ELEMENTS, needed_counts: Counter[AtomCount] = None, generator: ETRGeneratorIndependent=None) -> FullProblem:
     # Generate partial problems
     if args.generate_function == "random_smt_problem":
         if args.balance_num_atoms or args.num_atoms_set:
@@ -40,7 +41,10 @@ def generate_problem(args, ontology: Ontology = ELEMENTS, needed_counts: Counter
             random_etr_problem_kwargs["bias_function"] = boost_low_num_atom_problems
         if needed_counts:
             random_etr_problem_kwargs["needed_counts"] = needed_counts
-        partial_problem: PartialProblem = random_etr_problem(**random_etr_problem_kwargs)
+        if generator is not None:
+            partial_problem = generator.generate_problem(needed_counts=needed_counts)
+        else:
+            partial_problem: PartialProblem = random_etr_problem(**random_etr_problem_kwargs)
 
         # Use this space to update the natural language object mapping for the ontology.
         assert partial_problem.premises is not None

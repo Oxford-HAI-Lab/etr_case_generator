@@ -167,11 +167,13 @@ class ETRGenerator:
         # Filter problems to only those with the chosen seed ID
         seed_problems = [p for p in self.problem_set if p.seed_id == chosen_seed_id]
         if not seed_problems:
+            print("!" * 80)
+            print(f"WARNING: Seed ID {chosen_seed_id} not found in problem set")
             return random.choice(self.problem_set), random.choice([True, False])
             
         # Pick a random needed size to target
         target_size = random.choice(needed_sizes)
-        print(f"Selecting problem with {target_size} atoms to target needed counts, at {self.needed_counts[AtomCount(target_size)]} needed")
+        print(f"Selecting problem with {target_size} atoms, with seed id {chosen_seed_id}, to target needed counts, at {self.needed_counts[AtomCount(target_size)]} needed")
         
         # Try strategy a) Find problem with same atom count
         same_size_problems = [p for p in seed_problems if p.num_atoms() == target_size]
@@ -274,6 +276,7 @@ class ETRGenerator:
             # e.g. "largest" -> (then you can also think about just mutating by adding
             # or removing premises if you want to "bias" the walk in a certain direction)
             base_problem, should_increase = self.get_from_queue_for_mutations()  # Look at a problem without removing it
+            print(f"Chose base problem with seed id {base_problem.seed_id} and atom count {count_atoms_in_problem(base_problem)}")
             # print(f"Chose base problem with seed id {base_problem.seed_id}")
 
             possible_mutations: Set[Tuple[View, ...]] = self.get_mutated_premises(base_problem, only_increase=should_increase)
