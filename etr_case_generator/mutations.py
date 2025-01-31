@@ -1,3 +1,4 @@
+import random
 from typing import cast
 from pyetr import ArbitraryObject, FunctionalTerm, PredicateAtom, View
 
