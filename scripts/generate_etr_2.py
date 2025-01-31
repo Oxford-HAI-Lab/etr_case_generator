@@ -41,6 +41,9 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
 
     pbar_postfix = {}
 
+    # This counter will track errors that come up
+    exception_type_counter = Counter[str]()
+
     problem_generator = ETRGeneratorIndependent()
 
     problems: list[FullProblem] = []
@@ -62,9 +65,10 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
 
                 problem: FullProblem = generate_problem(args, ontology=ontology, needed_counts=needed_counts, generator=problem_generator)
 
-                if args.num_atoms_set:
-                    for na, c in num_atoms_counts.items():
-                        pbar_postfix[f"NA{na}"] = c
+                # This is helpful for small numbers of atom counts, but it gets annoying for large numbers
+                # if args.num_atoms_set:
+                #     for na, c in num_atoms_counts.items():
+                #         pbar_postfix[f"NA{na}"] = c
 
                 if args.balance:
                     problem_is_erotetic: bool = problem.get_yes_no_conclusion().is_etr_predicted
@@ -98,9 +102,15 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
 
             except Exception as e:
                 print(f"Failed to generate problem: {e}")
-                traceback.print_exc()
+                exception_type_counter[type(e).__name__] += 1
+                print("Exception type counts:\t", exception_type_counter)
+                # traceback.print_exc()
                 # raise e
                 continue  # Try again
+
+    print(f"Succeeded, but overcame these Exceptions:")
+    for k, v in exception_type_counter.items():
+        print(f"{k}: {v}")
     
     return problems
 
