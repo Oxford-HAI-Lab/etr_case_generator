@@ -106,7 +106,7 @@ class ETRGeneratorIndependent:
                         only_increase = False
                     else:
                         only_increase = current_count < target_count
-                    for mut in get_view_mutations(view.logical_form_etr_view, only_increase=(only_increase)):
+                    for mut in get_view_mutations(view.logical_form_etr_view, only_increase=only_increase, only_do_one=True):
                         new_premises = (
                             current_problem.premises[:i] + 
                             [ReifiedView(logical_form_etr_view=mut)] +
