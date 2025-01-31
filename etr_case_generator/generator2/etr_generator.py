@@ -133,7 +133,7 @@ class ETRGenerator:
         if self.max_queue_size < self.max_mutations_per_base_problem * 5:
             print("Warning: max_queue_size is less than 5 times max_mutations_per_base_problem. This may lead to a lack of diversity during sampling.")
 
-    def get_from_queue_for_mutations(self):
+    def get_from_queue_for_mutations(self) -> tuple[PartialProblem, bool]:
         """Select a problem from the queue for mutation.
         
         35% of the time: returns a random problem
@@ -143,19 +143,20 @@ class ETRGenerator:
             c) problem with highest possible atom count less than needed count
         
         Returns:
-            PartialProblem: The selected problem for mutation
+            tuple[PartialProblem, bool]: The selected problem and whether to only increase atoms
+                                       (True if using strategy b/c, False if strategy a, random if random pick)
         """
         if not self.problem_set:
             raise ValueError("Cannot select from empty problem set")
             
         # 35% chance to return random problem
         if random.random() < 0.35:
-            return random.choice(self.problem_set)
+            return random.choice(self.problem_set), random.choice([True, False])
             
         # Get atom counts that still need problems
         needed_sizes = [size for size, count in self.needed_counts.items() if count > 0]
         if not needed_sizes:
-            return random.choice(self.problem_set)
+            return random.choice(self.problem_set), random.choice([True, False])
             
         # Pick a random needed size to target
         target_size = random.choice(needed_sizes).value
@@ -163,12 +164,12 @@ class ETRGenerator:
         # Try strategy a) Find problem with same atom count
         same_size_problems = [p for p in self.problem_set if p.num_atoms() == target_size]
         if same_size_problems:
-            return random.choice(same_size_problems)
+            return random.choice(same_size_problems), False
             
         # Try strategy b) Find problem with n-1 atoms
         smaller_problems = [p for p in self.problem_set if p.num_atoms() == target_size - 1]
         if smaller_problems:
-            return random.choice(smaller_problems)
+            return random.choice(smaller_problems), True
             
         # Try strategy c) Find problem with highest atom count < target
         problems_by_size = [(p, p.num_atoms()) for p in self.problem_set]
@@ -176,10 +177,10 @@ class ETRGenerator:
         
         for problem, size in problems_by_size:
             if size < target_size:
-                return problem
+                return problem, True
                 
         # If all else fails, return random problem
-        return random.choice(self.problem_set)
+        return random.choice(self.problem_set), random.choice([True, False])
 
     def get_mutated_premises(self, problem: PartialProblem) -> Set[Tuple[View, ...]]:
         """
