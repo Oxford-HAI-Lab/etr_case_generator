@@ -69,6 +69,7 @@ def get_view_mutations(view: View, only_increase: bool = False, only_do_one: boo
         view (View): The base View to mutate.
         only_increase (bool, optional): If set to True, will only return views that are
         larger than view in terms of number of atoms. Defaults to False.
+        only_do_one (bool, optional): If set to True, will only return one mutation, in a set of size 1. Defaults to False.
 
     Raises:
         ValueError: _description_
@@ -76,7 +77,7 @@ def get_view_mutations(view: View, only_increase: bool = False, only_do_one: boo
     Returns:
         set[View]: _description_
     """
-    mutation_strings = set()
+    mutation_strings = set[str]()
 
     # Assemble lists of strings of predicates, constants, and arbitrary objects
     predicates, constants, arb_objs = get_object_sets_for_view(view)

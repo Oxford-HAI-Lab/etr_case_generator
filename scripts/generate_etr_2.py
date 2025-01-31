@@ -8,6 +8,7 @@ from collections import Counter
 from tqdm import tqdm
 
 from etr_case_generator.generator2.etr_generator import set_queue_sizes
+from etr_case_generator.generator2.etr_generator2 import ETRGeneratorIndependent
 from etr_case_generator.generator2.generate_problem_from_logical import generate_problem
 from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType, PartialProblem
 from etr_case_generator.generator2.logic_types import AtomCount
@@ -40,6 +41,8 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
 
     pbar_postfix = {}
 
+    problem_generator = ETRGeneratorIndependent()
+
     problems: list[FullProblem] = []
     pbar = tqdm(range(n_problems), desc="Generating problems")
     for _ in pbar:
@@ -57,7 +60,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                         remaining = count_per_size - num_atoms_counts[size]
                         needed_counts[AtomCount(size)] = remaining
 
-                problem: FullProblem = generate_problem(args, ontology=ontology, needed_counts=needed_counts)
+                problem: FullProblem = generate_problem(args, ontology=ontology, needed_counts=needed_counts, generator=problem_generator)
 
                 if args.num_atoms_set:
                     for na, c in num_atoms_counts.items():

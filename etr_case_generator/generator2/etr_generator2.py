@@ -56,7 +56,7 @@ class ETRGeneratorIndependent:
     def __init__(self):
         self.already_generated = set()
 
-    def generate_problem(self, needed_counts: Counter[AtomCount] = None) -> PartialProblem:
+    def generate_problem(self, needed_counts: Counter[AtomCount]) -> PartialProblem:
         """
         Generate a single ETR problem.
 
@@ -67,11 +67,6 @@ class ETRGeneratorIndependent:
         - Check if the problem has already been generated, and if so, repeat the process
         - Return the generated problem
         """
-        if needed_counts is None:
-            # If no counts specified, accept any problem
-            seed_problem = random.choice(create_starting_problems())
-            return seed_problem
-
         max_attempts = 10
         for attempt in range(max_attempts):
             # Choose random seed problem
@@ -80,14 +75,14 @@ class ETRGeneratorIndependent:
             # Choose target atom count from needed_counts
             possible_counts = [count for count, needed in needed_counts.items() if needed > 0]
             if not possible_counts:
-                return seed_problem
+                raise ValueError("No more problems needed for any atom count")
                 
             target_count = random.choice(possible_counts)
             current_problem = seed_problem
 
             # Try up to 200 sequential mutations to reach target count
             mutation_attempts = 200
-            for _ in range(mutation_attempts):
+            for mut_count in range(mutation_attempts):
                 current_count = AtomCount(count_atoms_in_problem(current_problem))
                 
                 if current_count == target_count:
@@ -96,10 +91,14 @@ class ETRGeneratorIndependent:
                     if problem_key not in self.already_generated:
                         self.already_generated.add(problem_key)
                         return current_problem
-                    break  # Try a new seed problem
+                    # Keep going with mutations, to try to get a novel problem
                 
                 # Randomly choose a premise to mutate
-                premise_idx = random.randrange(len(current_problem.premises))
+                if len(current_problem.premises) == 1:
+                    premise_idx = 0
+                else:
+                    # Try to keep the last premise unchanged
+                    premise_idx = random.randrange(len(current_problem.premises) - 1)
                 view = current_problem.premises[premise_idx]
                 
                 # Decide whether to try to increase atoms or allow any mutation
@@ -112,8 +111,7 @@ class ETRGeneratorIndependent:
                 mutations = get_view_mutations(view.logical_form_etr_view, 
                                             only_increase=only_increase, 
                                             only_do_one=True)
-                if not mutations:
-                    continue
+                assert len(mutations) == 1, f"Expected exactly one mutation, got {len(mutations)}"
                     
                 # Apply the mutation to create new problem
                 mut = next(iter(mutations))  # Get the single mutation
