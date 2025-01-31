@@ -25,7 +25,7 @@ def renamed_view(view: View, renames: dict[str, str]) -> View:
     return View.from_str(new_view_str)
 
 
-def generate_problem(args, ontology: Ontology = ELEMENTS, generation_filter: Callable[[PartialProblem], bool] = None, needed_counts: Counter[AtomCount] = None) -> FullProblem:
+def generate_problem(args, ontology: Ontology = ELEMENTS, needed_counts: Counter[AtomCount] = None) -> FullProblem:
     # Generate partial problems
     if args.generate_function == "random_smt_problem":
         if args.balance_num_atoms or args.num_atoms_set:
@@ -38,8 +38,6 @@ def generate_problem(args, ontology: Ontology = ELEMENTS, generation_filter: Cal
         if args.balance_num_atoms:
             # partial_problem: PartialProblem = random_etr_problem()
             random_etr_problem_kwargs["bias_function"] = boost_low_num_atom_problems
-        if generation_filter:
-            random_etr_problem_kwargs["filter_fn"] = generation_filter
         if needed_counts:
             random_etr_problem_kwargs["needed_counts"] = needed_counts
         partial_problem: PartialProblem = random_etr_problem(**random_etr_problem_kwargs)

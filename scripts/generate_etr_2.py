@@ -57,23 +57,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                         remaining = count_per_size - num_atoms_counts[size]
                         needed_counts[AtomCount(size)] = remaining
 
-                def has_good_num_atoms(pp: PartialProblem):
-                    if not args.num_atoms_set:
-                        return True
-                    acceptable_num_atoms = args.num_atoms_set
-                    count_per_bin = math.ceil(n_problems / len(acceptable_num_atoms))
-
-                    # Filter out elements of acceptable_num_atoms whose counts have exceeded the count_ber_bin limit
-                    acceptable_num_atoms = [num_atoms for num_atoms in acceptable_num_atoms if num_atoms_counts[num_atoms] < count_per_bin]
-
-                    # Debugging prints
-                    # print(f"Acceptable num atoms: {acceptable_num_atoms}", f"Num atoms counts: {num_atoms_counts}", f"Count per bin: {count_per_bin}")
-
-                    assert len(acceptable_num_atoms) > 0, f"This shouldn't be possible: {num_atoms_counts}"
-
-                    return pp.num_atoms() in acceptable_num_atoms
-
-                problem: FullProblem = generate_problem(args, ontology=ontology, needed_counts=needed_counts, generation_filter=has_good_num_atoms if args.num_atoms_set else None)
+                problem: FullProblem = generate_problem(args, ontology=ontology, needed_counts=needed_counts)
 
                 if args.num_atoms_set:
                     for na, c in num_atoms_counts.items():
