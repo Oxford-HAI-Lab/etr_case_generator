@@ -334,48 +334,42 @@ class ETRGenerator:
     # TODO: this could be passed an optional vocab_size, filter the list of problems
     # to match
     # If there isn't one, try to generate until you get one
-    def get_next_problem(self, filter_fn: Optional[Callable[[PartialProblem], bool]] = None) -> PartialProblem:
-        """Get the next problem from the queue that matches the filter, generating more if needed.
-        
-        Args:
-            filter_fn: Optional function that takes a PartialProblem and returns bool.
-                      If provided, only problems that pass this filter will be considered.
-                      Defaults to None (no filtering).
+    def get_next_problem(self) -> PartialProblem:
+        """Get the next problem from the queue that matches our needed atom counts.
         
         Returns:
-            A randomly selected problem that passes the filter.
+            A randomly selected problem that has an acceptable number of atoms.
             
         Raises:
-            RuntimeError: If no problems match the filter after filling the queue.
+            RuntimeError: If no problems match the needed atom counts after filling the queue.
         """
         self.ensure_queue_filled()
 
-        # If no filter provided, use a function that accepts everything
-        has_filter = filter_fn is not None
-        if filter_fn is None:
-            filter_fn = lambda _: True
-
-        self.filtering_fn = filter_fn
-
-        # Get indices of all problems that pass the filter
-        valid_indices = [i for i, p in enumerate(self.problem_set) if filter_fn(p)]
-        print(f"Found {len(valid_indices)} problems that match the filter ({has_filter})")
+        # Get indices of problems with acceptable atom counts
+        valid_indices = []
+        for i, problem in enumerate(self.problem_set):
+            num_atoms = problem.num_atoms()
+            if self.needed_counts[AtomCount(num_atoms)] > 0:
+                valid_indices.append(i)
+                
+        print(f"Found {len(valid_indices)} problems with needed atom counts")
 
         if not valid_indices:
-            # Temporarily increase the queue size to try to find a problem that matches the filter
+            # Temporarily increase the queue size to try to find a problem with needed atom count
             self.max_queue_size += self.max_queue_size_init
             self.min_queue_size = self.max_queue_size + 1
-            print(f"Increasing queue size to {self.max_queue_size} to attempt to find a problem that matches the filter")
+            print(f"Increasing queue size to {self.max_queue_size} to attempt to find a problem with needed atom count")
 
             # Print atom stats
             num_atoms_count, _ = get_atom_count_distribution(self.problem_set)
             print("Atom count in queue:", {k: num_atoms_count[k] for k in sorted(num_atoms_count.keys())})
 
             self.ensure_queue_filled()
-            valid_indices = [i for i, p in enumerate(self.problem_set) if filter_fn(p)]
+            valid_indices = [i for i, problem in enumerate(self.problem_set) 
+                           if self.needed_counts[AtomCount(problem.num_atoms())] > 0]
         
         if not valid_indices:
-            raise RuntimeError("No problems match the provided filter criteria")
+            raise RuntimeError("No problems match the needed atom counts")
             
         # Select random valid index and remove that problem
         if len(valid_indices) <= 1:
