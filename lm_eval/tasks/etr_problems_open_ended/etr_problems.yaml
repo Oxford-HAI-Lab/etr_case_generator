@@ -55,7 +55,7 @@ generation_kwargs:
     - "Done."
   do_sample: false
   temperature: 0.2
-  max_gen_toks: 10000
+  max_gen_toks: 2000
 
 process_results: !function open_ended_scoring.score_answer
 

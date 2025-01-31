@@ -4,20 +4,21 @@ set -o pipefail
 
 # Define model configurations
 declare -A MODEL_CONFIGS=(
-    ["openai-chat-completions"]="gpt-3.5-turbo-0125 \
-                                gpt-4o-mini \
-                                gpt-4-turbo"
-    ["anthropic-chat-completions"]="claude-3-haiku-20240307 \
-                                  claude-3-sonnet-20240229 \
+#    ["openai-chat-completions"]="gpt-3.5-turbo-0125 \
+#                                gpt-4o-mini \
+#                                gpt-4-turbo"
+    ["anthropic-chat-completions"]="claude-3-sonnet-20240229 \
                                   claude-3-5-haiku-20241022 \
-                                  claude-3-opus-20240229"
+                                  claude-3-opus-20240229 \
+                                  claude-3-5-sonnet-20241022"
 )
-# Other models: claude-3-5-sonnet-20241022
+# Other models: claude-3-haiku-20240307
 
 # Dataset paths
+# NOTE: !!! Also change the regex in run_evaluation !!!
 DATASETS=(
-    "/home/keenan/Dev/etr_case_generator/datasets/balance_atoms_open_ended.jsonl"
-    "/home/keenan/Dev/etr_case_generator/datasets/balance_atoms_yes_no.jsonl"
+    "/home/keenan/Dev/etr_case_generator/datasets/fully_balanced_open_ended.jsonl"
+#    "/home/keenan/Dev/etr_case_generator/datasets/fully_balanced_yes_no.jsonl"
 )
 
 # Create a log directory
@@ -30,7 +31,7 @@ run_evaluation() {
     local model="$2"
     local dataset="$3"
     local timestamp=$(date +%Y%m%d_%H%M%S)
-    local dataset_type=$(basename "$dataset" | sed 's/balance_atoms_\(.*\)\.jsonl/\1/')
+    local dataset_type=$(basename "$dataset" | sed 's/fully_balanced_\(.*\)\.jsonl/\1/')
     local log_file="${LOG_DIR}/${model_class}_${model}_${dataset_type}_${timestamp}.log"
     
     echo "Running evaluation for ${model_class} - ${model} on ${dataset_type}"
