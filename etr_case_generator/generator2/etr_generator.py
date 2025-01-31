@@ -160,7 +160,7 @@ class ETRGenerator:
             return random.choice(self.problem_set), random.choice([True, False])
             
         # Pick a random needed size to target
-        target_size = random.choice(needed_sizes).value
+        target_size = random.choice(needed_sizes)
         
         # Try strategy a) Find problem with same atom count
         same_size_problems = [p for p in self.problem_set if p.num_atoms() == target_size]
