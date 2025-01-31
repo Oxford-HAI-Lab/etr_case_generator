@@ -182,7 +182,7 @@ class ETRGenerator:
         # If all else fails, return random problem
         return random.choice(self.problem_set), random.choice([True, False])
 
-    def get_mutated_premises(self, problem: PartialProblem) -> Set[Tuple[View, ...]]:
+    def get_mutated_premises(self, problem: PartialProblem, only_increase: bool=False) -> Set[Tuple[View, ...]]:
         """
         Get all possible mutations of the premises of a problem.
         
@@ -193,7 +193,7 @@ class ETRGenerator:
         assert problem.premises is not None
         for i, view in enumerate(problem.premises):
             assert view.logical_form_etr_view is not None
-            for mut in get_view_mutations(view.logical_form_etr_view, only_increase=True):
+            for mut in get_view_mutations(view.logical_form_etr_view, only_increase=only_increase):
                 new_mutation = (
                     tuple([p.logical_form_etr_view for p in problem.premises[:i]]) +
                     (mut,) +
@@ -258,10 +258,10 @@ class ETRGenerator:
             # Another way to bias generation is to pick a problem from the queue that is
             # e.g. "largest" -> (then you can also think about just mutating by adding
             # or removing premises if you want to "bias" the walk in a certain direction)
-            base_problem = self.get_from_queue_for_mutations()  # Look at a problem without removing it
+            base_problem, should_increase = self.get_from_queue_for_mutations()  # Look at a problem without removing it
             # print(f"Chose base problem with seed id {base_problem.seed_id}")
 
-            possible_mutations: Set[Tuple[View, ...]] = self.get_mutated_premises(base_problem)
+            possible_mutations: Set[Tuple[View, ...]] = self.get_mutated_premises(base_problem, only_increase=should_increase)
             print(f"Selecting new base problem with id {base_problem.seed_id} and atom count {count_atoms_in_problem(base_problem)}", f"Applying {self.max_mutations_per_base_problem} out of {len(possible_mutations)} mutations to base problem")
 
             # Randomly select a subset of the mutations to apply
