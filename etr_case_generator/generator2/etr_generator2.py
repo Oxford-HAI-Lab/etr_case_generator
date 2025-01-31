@@ -51,7 +51,7 @@ def get_atom_count_distribution(problems: List[PartialProblem]) -> tuple[Counter
 # GENERATOR CLASS
 
 class ETRGeneratorIndependent:
-    already_generated: Set[PartialProblem]  # Used to prevent duplicate problems
+    already_generated: Set[str]  # Used to prevent duplicate problems. str(PartialProblem) is used as key.
 
     def __init__(self):
         self.already_generated = set()
@@ -72,7 +72,7 @@ class ETRGeneratorIndependent:
             seed_problem = random.choice(create_starting_problems())
             return seed_problem
 
-        max_attempts = 1000
+        max_attempts = 10
         for attempt in range(max_attempts):
             # Choose random seed problem
             seed_problem = random.choice(create_starting_problems())
@@ -101,8 +101,12 @@ class ETRGeneratorIndependent:
                 # Get all possible mutations
                 mutations = set()
                 for i, view in enumerate(current_problem.premises):
-                    for mut in get_view_mutations(view.logical_form_etr_view, 
-                                                only_increase=(current_count < target_count)):
+                    if random.random() < 0.5:
+                        # Sometimes just goof around
+                        only_increase = False
+                    else:
+                        only_increase = current_count < target_count
+                    for mut in get_view_mutations(view.logical_form_etr_view, only_increase=(only_increase)):
                         new_premises = (
                             current_problem.premises[:i] + 
                             [ReifiedView(logical_form_etr_view=mut)] +
@@ -121,5 +125,5 @@ class ETRGeneratorIndependent:
                 )
 
         # If we failed to generate a novel problem with desired count
-        return seed_problem
+        raise ValueError(f"Failed to generate problem with desired atom count after {max_attempts} attempts")
 
