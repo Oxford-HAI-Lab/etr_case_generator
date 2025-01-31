@@ -23,17 +23,17 @@ OVERUSED_ATOM_COUNT_DEMERIT = 8.0
 SOFTMAX_TEMPERATURE = 2.0
 
 # TODO A plan for fixing the generator for producing well balanced problems
-# * If the problem_set has a problem in a needed bucket, great
-# * If not, then we go into ensure_queue_filled and fill up the problem_set
-# * That process iteratively generates problems, and we can bias the generation
-# * Some amount of the time, like maybe 40%, we should mutate a random problem, to keep diversity
-# * Also for diversity, we should sometimes trim buckets that are overrepresented
-# * The rest of the time, we should be clever about selecting which problem to mutate and which mutations to keep
-# * If a bucket has more problems in problem_set that meet the criteria than are needed, we should ignore that bucket
-# * Instead, we should focus on the buckets that are underrepresented
-# * That means picking an underrepresented bucket, and trying to target that bucket with mutations
-# * Here that means picking a problem from problem_set that has the same number of atoms or n-1 atoms as the target
-# * We can pass `only_increase=True` to get_view_mutations if we find a problem with n-1 atoms
+# [ ] If the problem_set has a problem in a needed bucket, great
+# [ ] If not, then we go into ensure_queue_filled and fill up the problem_set
+# [ ] That process iteratively generates problems, and we can bias the generation
+# [ ] Some amount of the time, like maybe 40%, we should mutate a random problem, to keep diversity
+# [ ] Also for diversity, we should sometimes trim buckets that are overrepresented
+# [ ] The rest of the time, we should be clever about selecting which problem to mutate and which mutations to keep
+# [ ] If a bucket has more problems in problem_set that meet the criteria than are needed, we should ignore that bucket
+# [ ] Instead, we should focus on the buckets that are underrepresented
+# [ ] That means picking an underrepresented bucket, and trying to target that bucket with mutations
+# [ ] Here that means picking a problem from problem_set that has the same number of atoms or n-1 atoms as the target
+# [ ] We can pass `only_increase=True` to get_view_mutations if we find a problem with n-1 atoms
 
 def count_atoms_in_problem(problem: PartialProblem) -> int:
     """Count total number of atoms in a problem's premises."""
