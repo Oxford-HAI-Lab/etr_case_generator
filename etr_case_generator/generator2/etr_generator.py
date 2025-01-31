@@ -160,24 +160,31 @@ class ETRGenerator:
         if not needed_sizes:
             return random.choice(self.problem_set), random.choice([True, False])
 
-        # TODO Choose a seed id at random from all possible seed ids. For the rest of the function, only consider problems with that seed id
+        # Get all unique seed IDs from the problem set
+        seed_ids = list(set(p.seed_id for p in self.problem_set))
+        chosen_seed_id = random.choice(seed_ids)
+        
+        # Filter problems to only those with the chosen seed ID
+        seed_problems = [p for p in self.problem_set if p.seed_id == chosen_seed_id]
+        if not seed_problems:
+            return random.choice(self.problem_set), random.choice([True, False])
             
         # Pick a random needed size to target
         target_size = random.choice(needed_sizes)
         print(f"Selecting problem with {target_size} atoms to target needed counts, at {self.needed_counts[AtomCount(target_size)]} needed")
         
         # Try strategy a) Find problem with same atom count
-        same_size_problems = [p for p in self.problem_set if p.num_atoms() == target_size]
+        same_size_problems = [p for p in seed_problems if p.num_atoms() == target_size]
         if same_size_problems:
             return random.choice(same_size_problems), False
             
         # Try strategy b) Find problem with n-1 atoms
-        smaller_problems = [p for p in self.problem_set if p.num_atoms() == target_size - 1]
+        smaller_problems = [p for p in seed_problems if p.num_atoms() == target_size - 1]
         if smaller_problems:
             return random.choice(smaller_problems), True
             
         # Try strategy c) Find problem with highest atom count < target
-        problems_by_size = [(p, p.num_atoms()) for p in self.problem_set]
+        problems_by_size = [(p, p.num_atoms()) for p in seed_problems]
         problems_by_size.sort(key=lambda x: x[1], reverse=True)
         
         for problem, size in problems_by_size:
