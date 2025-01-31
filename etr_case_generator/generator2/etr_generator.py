@@ -304,32 +304,56 @@ class ETRGenerator:
 
             mutation_count += 1
 
+    def _group_by_atom_count_and_seed(self) -> dict[AtomCount, dict[str, list[int]]]:
+        """Group problems by atom count and seed ID.
+        
+        Returns:
+            dict mapping atom count -> (seed_id -> list of problem indices)
+        """
+        grouped = {}
+        for i, problem in enumerate(self.problem_set):
+            count = AtomCount(problem.num_atoms())
+            if count not in grouped:
+                grouped[count] = {}
+            
+            seed_id = problem.seed_id
+            if seed_id not in grouped[count]:
+                grouped[count][seed_id] = []
+            grouped[count][seed_id].append(i)
+            
+        return grouped
+
     def trim_overfull_buckets(self) -> None:
         """Remove problems from buckets that have more problems than needed.
         
         Uses needed_counts to determine which buckets are overfull.
-        Randomly removes problems from overfull buckets until they match needed_counts.
+        Only removes problems if there are multiple problems with the same seed_id
+        at that atom count, to preserve seed diversity.
         """
         if not self.needed_counts:
             return
             
-        # Group problems by atom count
-        problems_by_count = {}
-        for i, problem in enumerate(self.problem_set):
-            count = AtomCount(problem.num_atoms())
-            if count not in problems_by_count:
-                problems_by_count[count] = []
-            problems_by_count[count].append(i)
+        # Group problems by atom count and seed ID
+        grouped = self._group_by_atom_count_and_seed()
             
-        # Find and trim overfull buckets
+        # Find and trim overfull buckets while preserving seed diversity
         indices_to_remove = []
-        for count_int, problem_indices in problems_by_count.items():
-            count = AtomCount(count_int)
-            needed = self.needed_counts[count] + KEEP_EXTRA_STUFF
-            if len(problem_indices) > needed:
-                # Randomly select indices to remove
-                num_to_remove = len(problem_indices) - needed
-                indices_to_remove.extend(random.sample(problem_indices, num_to_remove))
+        for atom_count, seed_groups in grouped.items():
+            needed = self.needed_counts[atom_count] + KEEP_EXTRA_STUFF
+            current = sum(len(indices) for indices in seed_groups.values())
+            
+            while current > needed:
+                # Find seed IDs with multiple problems at this atom count
+                removable = [seed_id for seed_id, indices in seed_groups.items() 
+                            if len(indices) > 1]
+                if not removable:
+                    break  # Can't remove more without losing seed diversity
+                    
+                # Remove one problem from a seed ID with extras
+                seed_id = random.choice(removable)
+                idx = seed_groups[seed_id].pop()
+                indices_to_remove.append(idx)
+                current -= 1
                 
         # Remove problems in reverse order to maintain correct indices
         for idx in sorted(indices_to_remove, reverse=True):
