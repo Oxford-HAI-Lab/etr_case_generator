@@ -137,8 +137,8 @@ class ETRGenerator:
     def get_from_queue_for_mutations(self) -> tuple[PartialProblem, bool]:
         """Select a problem from the queue for mutation.
         
-        35% of the time: returns a random problem
-        65% of the time: tries to find a problem that will help generate needed atom counts:
+        15% of the time: returns a random problem
+        rest of the time: tries to find a problem that will help generate needed atom counts:
             a) problem with same atom count as a needed count
             b) problem with atom count n-1 of a needed count
             c) problem with highest possible atom count less than needed count
@@ -150,8 +150,8 @@ class ETRGenerator:
         if not self.problem_set:
             raise ValueError("Cannot select from empty problem set")
             
-        # 35% chance to return random problem
-        if random.random() < 0.35:
+        # XX% chance to return random problem
+        if random.random() < 0.15:
             return random.choice(self.problem_set), random.choice([True, False])
             
         # Get atom counts that still need problems
@@ -161,6 +161,7 @@ class ETRGenerator:
             
         # Pick a random needed size to target
         target_size = random.choice(needed_sizes)
+        print(f"Selecting problem with {target_size} atoms to target needed counts, at {self.needed_counts[AtomCount(target_size)]} needed")
         
         # Try strategy a) Find problem with same atom count
         same_size_problems = [p for p in self.problem_set if p.num_atoms() == target_size]
@@ -232,6 +233,7 @@ class ETRGenerator:
 
         print(f"Found {len(definitely_good_mutations)} under-represented mutations out of {len(mutations)} total mutations")
         print("Atom counts in problem_set:", {k: problem_atom_counts[k] for k in sorted(problem_atom_counts.keys())})
+        print("Needed counts for p-set:   ", {k: self.needed_counts[k] for k in sorted(self.needed_counts.keys())})
 
         random.shuffle(definitely_good_mutations)
         random.shuffle(other_mutations)
