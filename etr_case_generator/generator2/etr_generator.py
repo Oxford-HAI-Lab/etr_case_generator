@@ -134,12 +134,13 @@ class ETRGenerator:
             print("Warning: max_queue_size is less than 5 times max_mutations_per_base_problem. This may lead to a lack of diversity during sampling.")
 
     def get_from_queue_for_mutations(self):
-        """Select a problem from the queue using softmax-weighted random selection.
+        """Select a problem from the queue for mutation.
         
-        The selection probability is influenced by:
-        1. The generation_bias_function if provided
-        2. A boost for previously unused seed_ids
-        3. Temperature scaling for the softmax
+        35% of the time: returns a random problem
+        65% of the time: tries to find a problem that will help generate needed atom counts:
+            a) problem with same atom count as a needed count
+            b) problem with atom count n-1 of a needed count
+            c) problem with highest possible atom count less than needed count
         
         Returns:
             PartialProblem: The selected problem for mutation
@@ -147,50 +148,38 @@ class ETRGenerator:
         if not self.problem_set:
             raise ValueError("Cannot select from empty problem set")
             
-        def calculate_score(problem: PartialProblem, all_problems: List[PartialProblem]) -> float:
-            """Calculate selection score for a problem."""
-            # Start with a positive base score for softmax
-            score = 1.0
+        # 35% chance to return random problem
+        if random.random() < 0.35:
+            return random.choice(self.problem_set)
             
-            # Add generation bias if function provided
-            if self.generation_bias_function is not None:
-                score += self.generation_bias_function(problem, all_problems) - 1.0  # TODO Why -1 here?
-                
-            # Add boost for underrepresented seeds
-            if self.seed_ids_yielded:
-                avg_uses = sum(self.seed_ids_yielded.values()) / len(self.seed_ids_yielded)
-                current_uses = self.seed_ids_yielded[problem.seed_id]
-                if current_uses < avg_uses:
-                    # Calculate boost proportional to how underrepresented this seed is
-                    boost_factor = (avg_uses - current_uses) / avg_uses
-                    score += self.unused_seed_boost * boost_factor
-
-            # Add boost for underrepresented atom counts
-            problem_atom_counts, median_freq = get_atom_count_distribution(all_problems)
-            current_atoms = count_atoms_in_problem(problem)
-            # Add large negative if this problem has more atoms than the median
-            if problem_atom_counts[current_atoms] > median_freq:
-                score -= self.overused_atom_count_demerit
-
-            return score
+        # Get atom counts that still need problems
+        needed_sizes = [size for size, count in self.needed_counts.items() if count > 0]
+        if not needed_sizes:
+            return random.choice(self.problem_set)
             
-        # Calculate scores for each problem
-        scores = [calculate_score(p, self.problem_set) for p in self.problem_set]
-            
-        # Apply softmax with temperature
-        exp_scores = [
-            math.exp(score / self.softmax_temperature) 
-            for score in scores
-        ]
-        total = sum(exp_scores)
-        probabilities = [score / total for score in exp_scores]
+        # Pick a random needed size to target
+        target_size = random.choice(needed_sizes).value
         
-        # Select problem based on calculated probabilities
-        return random.choices(
-            self.problem_set,
-            weights=probabilities,
-            k=1
-        )[0]
+        # Try strategy a) Find problem with same atom count
+        same_size_problems = [p for p in self.problem_set if p.num_atoms() == target_size]
+        if same_size_problems:
+            return random.choice(same_size_problems)
+            
+        # Try strategy b) Find problem with n-1 atoms
+        smaller_problems = [p for p in self.problem_set if p.num_atoms() == target_size - 1]
+        if smaller_problems:
+            return random.choice(smaller_problems)
+            
+        # Try strategy c) Find problem with highest atom count < target
+        problems_by_size = [(p, p.num_atoms()) for p in self.problem_set]
+        problems_by_size.sort(key=lambda x: x[1], reverse=True)
+        
+        for problem, size in problems_by_size:
+            if size < target_size:
+                return problem
+                
+        # If all else fails, return random problem
+        return random.choice(self.problem_set)
 
     def get_mutated_premises(self, problem: PartialProblem) -> Set[Tuple[View, ...]]:
         """
