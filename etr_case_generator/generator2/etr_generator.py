@@ -300,6 +300,9 @@ class ETRGenerator:
 
             mutation_count += 1
 
+    def trim_overfull_buckets(self) -> None:
+        ...
+
     def ensure_queue_filled(self) -> None:
         """Ensure the queue has at least min_queue_size problems."""
         if self._generator is None:
@@ -313,6 +316,8 @@ class ETRGenerator:
                 new_problem = next(self._generator)
                 self.problem_set.append(new_problem)
             print(f"Filled queue to size {len(self.problem_set)} in {time.time() - current_time:.2f} seconds")
+
+        self.trim_overfull_buckets()
 
         # Statistics on the new queue
         num_atoms_count, median_freq = get_atom_count_distribution(self.problem_set)
