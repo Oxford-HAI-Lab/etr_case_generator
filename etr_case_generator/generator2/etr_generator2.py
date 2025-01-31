@@ -83,6 +83,7 @@ class ETRGeneratorIndependent:
 
     def __init__(self):
         self.already_generated = set()
+        self.count_of_atom_counts_generated = Counter[AtomCount]()
 
     def generate_problem(self, needed_counts: Counter[AtomCount]) -> PartialProblem:
         """
@@ -126,14 +127,10 @@ class ETRGeneratorIndependent:
                         print(f"Already generated this problem, retrying")
                     else:
                         self.already_generated.add(problem_key)
+                        self.count_of_atom_counts_generated[current_count] += 1
 
-                        # # Stats on what we've already generated
-                        # atom_counter = Counter[AtomCount]()
-                        # for problem_str in self.already_generated:
-                        #     problem = PartialProblem.from_str(problem_str)
-                        #     atom_count = count_atoms_in_problem(problem)
-                        #     atom_counter[AtomCount(atom_count)] += 1
-                        # print(f"Generated atom counts:", {k: atom_counter[k] for k in sorted(atom_counter.keys())})
+                        # Stats on what we've already generated
+                        print(f"Generated atom counts:", {k: self.count_of_atom_counts_generated[k] for k in sorted(self.count_of_atom_counts_generated.keys())})
 
                         return current_problem
                     # Keep going with mutations, to try to get a novel problem
