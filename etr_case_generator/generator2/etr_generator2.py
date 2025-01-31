@@ -4,6 +4,8 @@ import math
 
 from dataclasses import dataclass, field
 
+from pyparsing import ParseException
+
 from etr_case_generator.generator2.logic_types import AtomCount
 from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
 from etr_case_generator.generator2.seed_problems import create_starting_problems
@@ -48,10 +50,9 @@ def get_atom_count_distribution(problems: List[PartialProblem]) -> tuple[Counter
 
     return counts, median_freq
 
-def create_partial_problem(premises: Tuple[ReifiedView], seed_problem: PartialProblem) -> PartialProblem:
-    # TODO
-    premises = []
-    for p in premises:
+def create_partial_problem(views: Tuple[View], seed_problem: PartialProblem) -> PartialProblem:
+    premises: list[ReifiedView] = []
+    for p in views:
         premises.append(
             ReifiedView(
                 logical_form_etr_view=p,
@@ -60,7 +61,7 @@ def create_partial_problem(premises: Tuple[ReifiedView], seed_problem: PartialPr
                 english_form=None,
             )
         )
-    etr_what_follows = default_inference_procedure(premises)
+    etr_what_follows = default_inference_procedure(views)
     new_problem = PartialProblem(
         premises=premises,
         possible_conclusions_from_logical=None,
@@ -111,12 +112,29 @@ class ETRGeneratorIndependent:
             mutation_attempts = 200
             for mut_count in range(mutation_attempts):
                 current_count = AtomCount(count_atoms_in_problem(current_problem))
+
+                print(f"Problem currently has this many premises: {current_count}, trying to get to {target_count}")
+                if current_count > target_count + 2:
+                    # Oops, try again
+                    print(f"Too many atoms, retrying -- 2")
+                    break
                 
                 if current_count == target_count:
                     # Check if we've generated this exact problem before
                     problem_key = str(current_problem)
-                    if problem_key not in self.already_generated:
+                    if problem_key in self.already_generated:
+                        print(f"Already generated this problem, retrying")
+                    else:
                         self.already_generated.add(problem_key)
+
+                        # # Stats on what we've already generated
+                        # atom_counter = Counter[AtomCount]()
+                        # for problem_str in self.already_generated:
+                        #     problem = PartialProblem.from_str(problem_str)
+                        #     atom_count = count_atoms_in_problem(problem)
+                        #     atom_counter[AtomCount(atom_count)] += 1
+                        # print(f"Generated atom counts:", {k: atom_counter[k] for k in sorted(atom_counter.keys())})
+
                         return current_problem
                     # Keep going with mutations, to try to get a novel problem
                 
@@ -129,27 +147,39 @@ class ETRGeneratorIndependent:
                 view = current_problem.premises[premise_idx]
                 
                 # Decide whether to try to increase atoms or allow any mutation
-                if random.random() < 0.5:
+                if random.random() < 0.5:  # Sometimes mutate sideways
+                    only_increase = False
+                elif current_count >= target_count:  # Don't grow if we're already over
                     only_increase = False
                 else:
                     only_increase = current_count < target_count
                     
                 # Get a single mutation
-                mutations = get_view_mutations(view.logical_form_etr_view, 
-                                            only_increase=only_increase, 
-                                            only_do_one=True)
-                assert len(mutations) == 1, f"Expected exactly one mutation, got {len(mutations)}"
-                    
-                # Apply the mutation to create new problem
-                mut = next(iter(mutations))  # Get the single mutation
-                new_premises: Tuple[ReifiedView] = (
-                    current_problem.premises[:premise_idx] + 
-                    [ReifiedView(logical_form_etr_view=mut)] +
-                    current_problem.premises[premise_idx+1:]
-                )
-                
-                # Update current problem for next iteration
-                current_problem = create_partial_problem(new_premises, seed_problem)
+                try:
+                    mutations = get_view_mutations(view.logical_form_etr_view,
+                                                only_increase=only_increase,
+                                                only_do_one=True)
+                    if not mutations or len(mutations) != 1:
+                        print(f"Expected exactly one mutation, got {len(mutations)}")
+                        print(f"Seed id: {seed_problem.seed_id}")
+                        print("View:", view.logical_form_etr_view)
+                        print("Current Problem:", current_problem)
+                        raise ValueError("Expected exactly one mutation")
+
+                    # Apply the mutation to create new problem
+                    mut = next(iter(mutations))  # Get the single mutation
+                    new_premises: Tuple[ReifiedView] = (
+                        current_problem.premises[:premise_idx] +
+                        [ReifiedView(logical_form_etr_view=mut)] +
+                        current_problem.premises[premise_idx+1:]
+                    )
+                    base_views = [p.logical_form_etr_view for p in new_premises]
+
+                    # Update current problem for next iteration
+                    current_problem = create_partial_problem(base_views, seed_problem)
+                except ParseException as e:
+                    print(f"Failed to mutate problem: {e}, retrying")
+                    continue
 
         # If we failed to generate a novel problem with desired count
         raise ValueError(f"Failed to generate problem with desired atom count after {max_attempts} attempts")

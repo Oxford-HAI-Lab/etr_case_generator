@@ -230,8 +230,12 @@ def get_view_mutations(view: View, only_increase: bool = False, only_do_one: boo
             + "}"
         )
 
+    if not mutation_strings:
+        print("No mutations found for:", view)
+        raise ValueError(f"No mutations found for {view}")
+
     # Convert strings to Views at the end
-    if only_do_one and mutation_strings:
+    if only_do_one:
         # If we only need one, randomly select a string and convert just that one
         chosen_string = random.choice(list(mutation_strings))
         mutations = {View.from_str(chosen_string)}

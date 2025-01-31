@@ -1,5 +1,7 @@
 from typing import Callable, Counter
 
+import pyetr
+
 from etr_case_generator.generator2.etr_generator import random_etr_problem, boost_low_num_atom_problems
 from etr_case_generator.generator2.etr_generator2 import ETRGeneratorIndependent
 from etr_case_generator.generator2.logic_types import AtomCount
@@ -59,10 +61,17 @@ def generate_problem(args, ontology: Ontology = ELEMENTS, needed_counts: Counter
             ontology.logical_placeholder_to_short_name.update(obj_map)
 
             # Now that we have the English form, replace placeholders in the ETR view
-            p.logical_form_etr_view = renamed_view(
-                p.logical_form_etr_view,
-                renames=ontology.logical_placeholder_to_short_name
-            )
+            try:
+                p.logical_form_etr_view = renamed_view(
+                    p.logical_form_etr_view,
+                    renames=ontology.logical_placeholder_to_short_name
+                )
+            except Exception as e:
+                # TODO This should make sure it's a pyetr.parsing.common.ParsingError
+                print("ParsingException caught when renaming view.")
+                print(p.logical_form_etr_view)
+                print("The ontology is:", ontology.name)
+                raise e
 
         # Do the ETR supported conclusion in addition to the premises
         assert partial_problem.etr_what_follows is not None
