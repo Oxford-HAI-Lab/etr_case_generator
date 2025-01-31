@@ -28,7 +28,7 @@ KEEP_EXTRA_STUFF=10
 # [x] If not, then we go into ensure_queue_filled and fill up the problem_set
 # [x] That process iteratively generates problems, and we can bias the generation
 # [x] Some amount of the time, like maybe 40%, we should mutate a random problem, to keep diversity
-# [ ] Also for diversity, we should sometimes trim buckets that are overrepresented
+# [x] Also for diversity, we should sometimes trim buckets that are overrepresented
 # [x] The rest of the time, we should be clever about selecting which problem to mutate and which mutations to keep
 # [x] If a bucket has more problems in problem_set that meet the criteria than are needed, we should ignore that bucket
 # [x] Instead, we should focus on the buckets that are underrepresented
