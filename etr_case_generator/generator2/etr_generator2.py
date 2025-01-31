@@ -54,7 +54,7 @@ class ETRGeneratorIndependent:
     already_generated: Set[PartialProblem]  # Used to prevent duplicate problems
 
     def __init__(self):
-        pass
+        self.already_generated = set()
 
     def generate_problem(self, needed_counts: Counter[AtomCount] = None) -> PartialProblem:
         """
@@ -67,5 +67,59 @@ class ETRGeneratorIndependent:
         - Check if the problem has already been generated, and if so, repeat the process
         - Return the generated problem
         """
-        raise NotImplementedError
+        if needed_counts is None:
+            # If no counts specified, accept any problem
+            seed_problem = random.choice(create_starting_problems())
+            return seed_problem
+
+        max_attempts = 1000
+        for attempt in range(max_attempts):
+            # Choose random seed problem
+            seed_problem = random.choice(create_starting_problems())
+            
+            # Choose target atom count from needed_counts
+            possible_counts = [count for count, needed in needed_counts.items() if needed > 0]
+            if not possible_counts:
+                return seed_problem
+                
+            target_count = random.choice(possible_counts)
+            current_problem = seed_problem
+
+            # Try to mutate the problem to reach target count
+            mutation_attempts = 100
+            for _ in range(mutation_attempts):
+                current_count = AtomCount(count_atoms_in_problem(current_problem))
+                
+                if current_count == target_count:
+                    # Check if we've generated this exact problem before
+                    problem_key = str(current_problem)
+                    if problem_key not in self.already_generated:
+                        self.already_generated.add(problem_key)
+                        return current_problem
+                    break  # Try a new seed problem
+                
+                # Get all possible mutations
+                mutations = set()
+                for i, view in enumerate(current_problem.premises):
+                    for mut in get_view_mutations(view.logical_form_etr_view, 
+                                                only_increase=(current_count < target_count)):
+                        new_premises = (
+                            current_problem.premises[:i] + 
+                            [ReifiedView(logical_form_etr_view=mut)] +
+                            current_problem.premises[i+1:]
+                        )
+                        mutations.add(tuple(new_premises))
+                
+                if not mutations:
+                    break
+                    
+                # Choose random mutation
+                new_premises = random.choice(list(mutations))
+                current_problem = PartialProblem(
+                    premises=list(new_premises),
+                    seed_id=current_problem.seed_id
+                )
+
+        # If we failed to generate a novel problem with desired count
+        return seed_problem
 
