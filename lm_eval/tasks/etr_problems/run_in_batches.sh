@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Function to handle cleanup on script exit
-cleanup() {
-    rm -f temp_shuffled.jsonl
-    rm -rf batch_files 2>/dev/null
-}
-trap cleanup EXIT
+#cleanup() {
+#    rm -f temp_shuffled.jsonl
+#    rm -rf batch_files 2>/dev/null
+#}
+#trap cleanup EXIT
 
 # Check if input file is provided
 if [ "$#" -ne 1 ]; then
