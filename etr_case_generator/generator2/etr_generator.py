@@ -46,17 +46,18 @@ def count_atoms_in_problem(problem: PartialProblem) -> int:
         if premise.logical_form_etr_view
     )
 
-def get_atom_count_distribution(problems: List[PartialProblem]) -> tuple[Counter[int], float]:
+def get_atom_count_distribution(problems: List[PartialProblem]) -> tuple[Counter[AtomCount], float]:
     """Get distribution of atom counts across a list of problems and the median frequency.
     
     Returns:
-        tuple[Counter[int], float]: A tuple containing:
+        tuple[Counter[AtomCount], float]: A tuple containing:
             - Counter mapping atom counts to their frequencies
             - The median frequency (0.0 if no problems)
     """
-    counts = Counter[int]()
+    counts = Counter[AtomCount]()
     for problem in problems:
-        counts[count_atoms_in_problem(problem)] += 1
+        count = AtomCount(count_atoms_in_problem(problem))
+        counts[count] += 1
     
     # Calculate median frequency
     frequencies = sorted(counts.values())
@@ -315,15 +316,16 @@ class ETRGenerator:
         # Group problems by atom count
         problems_by_count = {}
         for i, problem in enumerate(self.problem_set):
-            count = problem.num_atoms()
+            count = AtomCount(problem.num_atoms())
             if count not in problems_by_count:
                 problems_by_count[count] = []
             problems_by_count[count].append(i)
             
         # Find and trim overfull buckets
         indices_to_remove = []
-        for count, problem_indices in problems_by_count.items():
-            needed = self.needed_counts[AtomCount(count)] + KEEP_EXTRA_STUFF
+        for count_int, problem_indices in problems_by_count.items():
+            count = AtomCount(count_int)
+            needed = self.needed_counts[count] + KEEP_EXTRA_STUFF
             if len(problem_indices) > needed:
                 # Randomly select indices to remove
                 num_to_remove = len(problem_indices) - needed
@@ -374,8 +376,8 @@ class ETRGenerator:
         # Get indices of problems with acceptable atom counts
         valid_indices = []
         for i, problem in enumerate(self.problem_set):
-            num_atoms = problem.num_atoms()
-            if self.needed_counts[AtomCount(num_atoms)] > 0:
+            num_atoms = AtomCount(problem.num_atoms())
+            if self.needed_counts[num_atoms] > 0:
                 valid_indices.append(i)
                 
         print(f"Found {len(valid_indices)} problems with needed atom counts")
@@ -388,7 +390,7 @@ class ETRGenerator:
 
             # Print atom stats
             num_atoms_count, _ = get_atom_count_distribution(self.problem_set)
-            print("Atom count in queue:", {k: num_atoms_count[k] for k in sorted(num_atoms_count.keys())})
+            print("Atom count in queue:", {AtomCount(k): num_atoms_count[k] for k in sorted(num_atoms_count.keys())})
 
             self.ensure_queue_filled()
             valid_indices = [i for i, problem in enumerate(self.problem_set) 
