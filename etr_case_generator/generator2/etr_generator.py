@@ -301,7 +301,37 @@ class ETRGenerator:
             mutation_count += 1
 
     def trim_overfull_buckets(self) -> None:
-        ...
+        """Remove problems from buckets that have more problems than needed.
+        
+        Uses needed_counts to determine which buckets are overfull.
+        Randomly removes problems from overfull buckets until they match needed_counts.
+        """
+        if not self.needed_counts:
+            return
+            
+        # Group problems by atom count
+        problems_by_count = {}
+        for i, problem in enumerate(self.problem_set):
+            count = problem.num_atoms()
+            if count not in problems_by_count:
+                problems_by_count[count] = []
+            problems_by_count[count].append(i)
+            
+        # Find and trim overfull buckets
+        indices_to_remove = []
+        for count, problem_indices in problems_by_count.items():
+            needed = self.needed_counts[AtomCount(count)]
+            if len(problem_indices) > needed:
+                # Randomly select indices to remove
+                num_to_remove = len(problem_indices) - needed
+                indices_to_remove.extend(random.sample(problem_indices, num_to_remove))
+                
+        # Remove problems in reverse order to maintain correct indices
+        for idx in sorted(indices_to_remove, reverse=True):
+            self.problem_set.pop(idx)
+            
+        if indices_to_remove:
+            print(f"Trimmed {len(indices_to_remove)} problems from overfull buckets")
 
     def ensure_queue_filled(self) -> None:
         """Ensure the queue has at least min_queue_size problems."""
