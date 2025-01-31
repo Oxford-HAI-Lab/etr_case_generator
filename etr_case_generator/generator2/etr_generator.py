@@ -119,8 +119,6 @@ class ETRGenerator:
     unused_seed_boost: float = UNDER_REPRESENTED_SEED_BOOST  # Boost for seed ids that have not been used as much yet
     overused_atom_count_demerit: float = OVERUSED_ATOM_COUNT_DEMERIT  # Boost for problems with fewer atoms than average
 
-    filtering_fn: Optional[Callable[[PartialProblem], bool]] = None  # Optional filter function for problems
-
     needed_counts: Counter[AtomCount] = None  # Atom counts needed for the queue  # TODO Need to actually use this
 
     def initialize_generator(self) -> None:
@@ -366,7 +364,7 @@ class ETRGenerator:
 
             self.ensure_queue_filled()
             valid_indices = [i for i, problem in enumerate(self.problem_set) 
-                           if self.needed_counts[AtomCount(problem.num_atoms())] > 0]
+                             if self.needed_counts[AtomCount(problem.num_atoms())] > 0]
         
         if not valid_indices:
             raise RuntimeError("No problems match the needed atom counts")
@@ -380,19 +378,10 @@ class ETRGenerator:
 # Global state instance
 _etr_generator = ETRGenerator()
 
-def random_etr_problem(filter_fn: Optional[Callable[[PartialProblem], bool]] = None,
-                       bias_function: Optional[Callable[[PartialProblem, List[PartialProblem]], float]] = None,
+def random_etr_problem(bias_function: Optional[Callable[[PartialProblem, List[PartialProblem]], float]] = None,
                        needed_counts: Counter[AtomCount] = None) -> PartialProblem:
     """
     Generate a random ETR problem that matches the filter criteria.
-    
-    Args:
-        filter_fn: Optional function that takes a PartialProblem and returns bool.
-                  If provided, only problems that pass this filter will be returned.
-                  Defaults to None (no filtering).
-        bias_function: Optional function that takes a PartialProblem and a list of all problems
-                       and returns a float. This function can be used to bias the generation
-                       towards certain types of problems. Defaults to None.
 
     Side Effect:
         Updates the global generator state and sets the generation bias function
@@ -408,7 +397,7 @@ def random_etr_problem(filter_fn: Optional[Callable[[PartialProblem], bool]] = N
     if needed_counts is not None:
         _etr_generator.needed_counts = needed_counts
 
-    problem = _etr_generator.get_next_problem(filter_fn)
+    problem = _etr_generator.get_next_problem()
     return problem
 
 def reset_generator_state():
