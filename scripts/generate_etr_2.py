@@ -36,8 +36,21 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
         (False, False): 0  # (non-erotetic, non-classical)
     }
     num_needed_per_quadrant: int = (n_problems + 3) // 4
+    num_needed_per_quadrant_by_atom = num_needed_per_quadrant
 
     num_atoms_counts = {i : 0 for i in args.num_atoms_set} if args.num_atoms_set else {}
+    quadrant_counts_by_atom = {}
+    if args.num_atoms_set:
+        num_needed_per_quadrant_by_atom = num_needed_per_quadrant // len(args.num_atoms_set)
+        print(f"Generating {num_needed_per_quadrant_by_atom} problems per quadrant per atom count.")
+        # TODO Refactor this to be less repeated
+        for size in args.num_atoms_set:
+            quadrant_counts_by_atom[size] = {
+                (True, True): 0,   # (erotetic, classical)
+                (True, False): 0,  # (erotetic, non-classical)
+                (False, True): 0,  # (non-erotetic, classical)
+                (False, False): 0  # (non-erotetic, non-classical)
+            }
 
     pbar_postfix = {}
 
@@ -45,6 +58,8 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
     exception_type_counter = Counter[str]()
 
     problem_generator = ETRGeneratorIndependent()
+    count_per_size = math.ceil(n_problems / len(args.num_atoms_set)) if args.num_atoms_set else 0
+    print(f"Generating {n_problems} problems with {count_per_size} problems per atom count, across {len(args.num_atoms_set)} atom counts.")
 
     problems: list[FullProblem] = []
     pbar = tqdm(range(n_problems), desc="Generating problems")
@@ -56,7 +71,6 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
             
             try:
                 # Calculate remaining capacity needed for each atom count
-                count_per_size = math.ceil(n_problems / len(args.num_atoms_set)) if args.num_atoms_set else 0
                 needed_counts = Counter[AtomCount]()
                 if args.num_atoms_set:
                     for size in args.num_atoms_set:
@@ -84,7 +98,13 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                         'T': current_counter,                   # Try number
                     })
                     pbar.set_postfix(pbar_postfix)
-                    
+
+                    if args.num_atoms_set:
+                        num_atoms = sum(len(view.logical_form_etr_view.atoms) for view in problem.views)
+                        current_count_by_atom_quadrant = quadrant_counts_by_atom[num_atoms][current_quadrant]
+                        if current_count_by_atom_quadrant >= num_needed_per_quadrant:
+                            continue
+                        quadrant_counts_by_atom[num_atoms][current_quadrant] += 1
                     if quadrant_counts[current_quadrant] >= num_needed_per_quadrant:
                         continue  # Try again if this quadrant is full
                     
@@ -150,7 +170,7 @@ def main():
     parser.add_argument("--generate_function", type=str, default="random_smt_problem", help="Which function to use in generation.", choices=["random_smt_problem", "random_etr_problem"])
     parser.add_argument("--balance", help="Balance the dataset through the 4 quadrants of erotetic and classical yes/no.", action="store_true")
     # TODO(Ryan): Add parameters for problem generation here
-    parser.add_argument("--balance_num_atoms", action="store_true", help="Balance the dataset by number of atoms in the problem.")
+    parser.add_argument("--balance_num_atoms", action="store_true", help="Balance the dataset by number of atoms in the problem.")  # TODO Remove this, just use the set
     parser.add_argument("--num_atoms_set", nargs="+", type=int, help="Set the number of atoms in the problem.")
     parser.add_argument("--generator_max_queue_size", type=int, default=100, help="Maximum number of problems to generate at once.")
     args = parser.parse_args()

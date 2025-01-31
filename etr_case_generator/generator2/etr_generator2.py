@@ -114,10 +114,10 @@ class ETRGeneratorIndependent:
             for mut_count in range(mutation_attempts):
                 current_count = AtomCount(count_atoms_in_problem(current_problem))
 
-                print(f"Problem currently has this many premises: {current_count}, trying to get to {target_count}")
+                # print(f"Problem currently has this many premises: {current_count}, trying to get to {target_count}")
                 if current_count > target_count + 2:
                     # Oops, try again
-                    print(f"Too many atoms, retrying -- 2")
+                    # print(f"Too many atoms, retrying -- 2")
                     break
                 
                 if current_count == target_count:
@@ -176,7 +176,8 @@ class ETRGeneratorIndependent:
                     current_problem = create_partial_problem(base_views, seed_problem)
                 except ParseException as e:
                     print(f"Failed to mutate problem: {e}, retrying")
-                    continue
+                    raise e
+                    # continue
 
         # If we failed to generate a novel problem with desired count
         raise ValueError(f"Failed to generate problem with desired atom count after {max_attempts} attempts")
