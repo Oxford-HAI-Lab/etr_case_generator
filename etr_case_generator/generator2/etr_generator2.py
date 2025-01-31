@@ -85,8 +85,8 @@ class ETRGeneratorIndependent:
             target_count = random.choice(possible_counts)
             current_problem = seed_problem
 
-            # Try to mutate the problem to reach target count
-            mutation_attempts = 100
+            # Try up to 200 sequential mutations to reach target count
+            mutation_attempts = 200
             for _ in range(mutation_attempts):
                 current_count = AtomCount(count_atoms_in_problem(current_problem))
                 
@@ -98,27 +98,32 @@ class ETRGeneratorIndependent:
                         return current_problem
                     break  # Try a new seed problem
                 
-                # Get all possible mutations
-                mutations = set()
-                for i, view in enumerate(current_problem.premises):
-                    if random.random() < 0.5:
-                        # Sometimes just goof around
-                        only_increase = False
-                    else:
-                        only_increase = current_count < target_count
-                    for mut in get_view_mutations(view.logical_form_etr_view, only_increase=only_increase, only_do_one=True):
-                        new_premises = (
-                            current_problem.premises[:i] + 
-                            [ReifiedView(logical_form_etr_view=mut)] +
-                            current_problem.premises[i+1:]
-                        )
-                        mutations.add(tuple(new_premises))
+                # Randomly choose a premise to mutate
+                premise_idx = random.randrange(len(current_problem.premises))
+                view = current_problem.premises[premise_idx]
                 
-                if not mutations:
-                    break
+                # Decide whether to try to increase atoms or allow any mutation
+                if random.random() < 0.5:
+                    only_increase = False
+                else:
+                    only_increase = current_count < target_count
                     
-                # Choose random mutation
-                new_premises = random.choice(list(mutations))
+                # Get a single mutation
+                mutations = get_view_mutations(view.logical_form_etr_view, 
+                                            only_increase=only_increase, 
+                                            only_do_one=True)
+                if not mutations:
+                    continue
+                    
+                # Apply the mutation to create new problem
+                mut = next(iter(mutations))  # Get the single mutation
+                new_premises = (
+                    current_problem.premises[:premise_idx] + 
+                    [ReifiedView(logical_form_etr_view=mut)] +
+                    current_problem.premises[premise_idx+1:]
+                )
+                
+                # Update current problem for next iteration
                 current_problem = PartialProblem(
                     premises=list(new_premises),
                     seed_id=current_problem.seed_id
