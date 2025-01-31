@@ -102,7 +102,13 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
 
             except Exception as e:
                 print(f"Failed to generate problem: {e}")
-                exception_type_counter[type(e).__name__] += 1
+                # Get full module path of exception
+                exception_key = f"{type(e).__module__}.{type(e).__name__}"
+                # Get file and line number where exception occurred
+                tb = traceback.extract_tb(e.__traceback__)[-1]  # Get last frame
+                location = f"{tb.filename}:{tb.lineno}"
+                exception_key = f"{exception_key} at {location}"
+                exception_type_counter[exception_key] += 1
                 print("Exception type counts:\t", exception_type_counter)
                 # traceback.print_exc()
                 # raise e
