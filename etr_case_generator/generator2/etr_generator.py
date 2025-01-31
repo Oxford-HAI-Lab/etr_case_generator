@@ -159,6 +159,8 @@ class ETRGenerator:
         needed_sizes = [size for size, count in self.needed_counts.items() if count > 0]
         if not needed_sizes:
             return random.choice(self.problem_set), random.choice([True, False])
+
+        # TODO Choose a seed id at random from all possible seed ids. For the rest of the function, only consider problems with that seed id
             
         # Pick a random needed size to target
         target_size = random.choice(needed_sizes)
@@ -225,7 +227,7 @@ class ETRGenerator:
             num_atoms = sum(len(view.atoms) for view in mutation)
             
             # Check if this mutation's atom count occurs less often than the median
-            under_represented_num_atoms = problem_atom_counts[num_atoms] < median_freq
+            under_represented_num_atoms = problem_atom_counts[AtomCount(num_atoms)] < median_freq
 
             if under_represented_num_atoms:
                 definitely_good_mutations.append(mutation)
@@ -235,6 +237,8 @@ class ETRGenerator:
         print(f"Found {len(definitely_good_mutations)} under-represented mutations out of {len(mutations)} total mutations")
         print("Atom counts in problem_set:", {k: problem_atom_counts[k] for k in sorted(problem_atom_counts.keys())})
         print("Needed counts for p-set:   ", {k: self.needed_counts[k] for k in sorted(self.needed_counts.keys())})
+        seed_counts = Counter[str](p.seed_id for p in self.problem_set)
+        print("Seed counts in problem_set: ", {k: seed_counts[k] for k in sorted(seed_counts.keys())})
 
         random.shuffle(definitely_good_mutations)
         random.shuffle(other_mutations)
