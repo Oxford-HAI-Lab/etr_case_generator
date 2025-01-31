@@ -21,6 +21,7 @@ UNDER_REPRESENTED_SEED_BOOST = 3.0
 ATOMS_PER_PROBLEM_BOOST = 5.0
 OVERUSED_ATOM_COUNT_DEMERIT = 8.0
 SOFTMAX_TEMPERATURE = 2.0
+KEEP_EXTRA_STUFF=10
 
 # TODO A plan for fixing the generator for producing well balanced problems
 # [x] If the problem_set has a problem in a needed bucket, great
@@ -320,7 +321,7 @@ class ETRGenerator:
         # Find and trim overfull buckets
         indices_to_remove = []
         for count, problem_indices in problems_by_count.items():
-            needed = self.needed_counts[AtomCount(count)]
+            needed = self.needed_counts[AtomCount(count)] + KEEP_EXTRA_STUFF
             if len(problem_indices) > needed:
                 # Randomly select indices to remove
                 num_to_remove = len(problem_indices) - needed
