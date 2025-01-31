@@ -48,6 +48,33 @@ def get_atom_count_distribution(problems: List[PartialProblem]) -> tuple[Counter
 
     return counts, median_freq
 
+def create_partial_problem(premises: Tuple[ReifiedView], seed_problem: PartialProblem) -> PartialProblem:
+    # TODO
+    premises = []
+    for p in premises:
+        premises.append(
+            ReifiedView(
+                logical_form_etr_view=p,
+                # Generator is not responsible for generating English forms,
+                # since it's agnostic to the ontology
+                english_form=None,
+            )
+        )
+    etr_what_follows = default_inference_procedure(premises)
+    new_problem = PartialProblem(
+        premises=premises,
+        possible_conclusions_from_logical=None,
+        possible_conclusions_from_etr=None,
+        etr_what_follows=ReifiedView(
+            logical_form_etr_view=etr_what_follows,
+            # Generator is not responsible for generating English forms,
+            # since it's agnostic to the ontology
+            english_form=None,
+        ),
+        seed_id=seed_problem.seed_id,
+    )
+    return new_problem
+
 # GENERATOR CLASS
 
 class ETRGeneratorIndependent:
@@ -70,7 +97,7 @@ class ETRGeneratorIndependent:
         max_attempts = 10
         for attempt in range(max_attempts):
             # Choose random seed problem
-            seed_problem = random.choice(create_starting_problems())
+            seed_problem: PartialProblem = random.choice(create_starting_problems())
             
             # Choose target atom count from needed_counts
             possible_counts = [count for count, needed in needed_counts.items() if needed > 0]
@@ -78,7 +105,7 @@ class ETRGeneratorIndependent:
                 raise ValueError("No more problems needed for any atom count")
                 
             target_count = random.choice(possible_counts)
-            current_problem = seed_problem
+            current_problem: PartialProblem = seed_problem
 
             # Try up to 200 sequential mutations to reach target count
             mutation_attempts = 200
@@ -115,17 +142,14 @@ class ETRGeneratorIndependent:
                     
                 # Apply the mutation to create new problem
                 mut = next(iter(mutations))  # Get the single mutation
-                new_premises = (
+                new_premises: Tuple[ReifiedView] = (
                     current_problem.premises[:premise_idx] + 
                     [ReifiedView(logical_form_etr_view=mut)] +
                     current_problem.premises[premise_idx+1:]
                 )
                 
                 # Update current problem for next iteration
-                current_problem = PartialProblem(
-                    premises=list(new_premises),
-                    seed_id=current_problem.seed_id
-                )
+                current_problem = create_partial_problem(new_premises, seed_problem)
 
         # If we failed to generate a novel problem with desired count
         raise ValueError(f"Failed to generate problem with desired atom count after {max_attempts} attempts")
