@@ -3,6 +3,7 @@ import csv
 import glob
 import json
 import os
+from datetime import datetime, timedelta
 from pathlib import Path
 
 
@@ -66,10 +67,16 @@ def parse_args():
         default="lm_eval/tasks/etr_problems/good_results",
         help="Base directory to search for JSONL files (default: lm_eval/tasks/etr_problems/good_results)",
     )
+    parser.add_argument(
+        "--in-past-hours",
+        type=float,
+        default=24.0,
+        help="Only include files modified within this many hours (default: 24)",
+    )
     return parser.parse_args()
 
 
-def load_jsonl_files(pattern: str, base_dir: str):
+def load_jsonl_files(pattern: str, base_dir: str, in_past_hours: float = 24.0):
     """Load all JSONL files matching pattern from base_dir and subdirs."""
     
     # Get files in base dir and one level deep that contain "samples"
@@ -78,9 +85,17 @@ def load_jsonl_files(pattern: str, base_dir: str):
         f"{base_dir}/*/*samples*{pattern}*.jsonl"
     ]
     
+    # Get current time for comparison
+    now = datetime.now()
+    cutoff_time = now - timedelta(hours=in_past_hours)
+    
     files = []
     for path in search_paths:
-        files.extend(glob.glob(path))
+        for file in glob.glob(path):
+            # Check file modification time
+            mtime = datetime.fromtimestamp(os.path.getmtime(file))
+            if mtime >= cutoff_time:
+                files.append(file)
     
     results = {}
     for file in files:
@@ -199,7 +214,7 @@ def main():
     args = parse_args()
     
     # Load matching files
-    results = load_jsonl_files(args.pattern, args.base_dir)
+    results = load_jsonl_files(args.pattern, args.base_dir, args.in_past_hours)
     
     # Print stats
     print(f"\nFound {len(results)} files matching pattern '{args.pattern}':")
