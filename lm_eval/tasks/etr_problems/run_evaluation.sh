@@ -158,7 +158,7 @@ if [[ "$MODEL" == "deepseek-r1" ]]; then
     export OPENAI_API_KEY=$OPENROUTER_API_KEY
 
     lm_eval --model openai-chat-completions \
-        --model_args "base_url=https://openrouter.ai/api/v1/chat/completions,model=deepseek/deepseek-r1,max_tokens=3000,num_concurrent=20" \
+        --model_args "base_url=https://openrouter.ai/api/v1/chat/completions,model=deepseek/deepseek-r1,max_tokens=3000,num_concurrent=1" \
         --include_path "$INCLUDE_PATH" \
         --tasks $TASK \
         --num_fewshot 0 \
