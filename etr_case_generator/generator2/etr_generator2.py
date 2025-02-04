@@ -101,6 +101,7 @@ class ETRGeneratorIndependent:
         - Check if the problem has already been generated, and if so, repeat the process
         - Return the generated problem
         """
+        print(f"Categorical only: {categorical_only}")
         max_attempts = 10
         for attempt in range(max_attempts):
             # Choose random seed problem
