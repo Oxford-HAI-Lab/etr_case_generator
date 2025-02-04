@@ -36,6 +36,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
         (False, False): 0  # (non-erotetic, non-classical)
     }
     num_needed_per_quadrant: int = (n_problems + 3) // 4
+    # TODO Refactor for cleanup
     num_needed_per_quadrant_by_atom = num_needed_per_quadrant
 
     num_atoms_counts = {i : 0 for i in args.num_atoms_set} if args.num_atoms_set else {}
@@ -169,6 +170,8 @@ def main():
     parser.add_argument("--save_file_name", type=str, default="problems", help="Name for saved jsonl files")
     parser.add_argument("--generate_function", type=str, default="random_smt_problem", help="Which function to use in generation.", choices=["random_smt_problem", "random_etr_problem"])
     parser.add_argument("--balance_quadrants", help="Balance the dataset through the 4 quadrants of erotetic and classical yes/no.", action="store_true")
+    # TODO(andrew) Implement
+    parser.add_argument("--balance_etr_agreement", help="Balance the dataset 50-50 for whether the ETR conclusion is classically correct or not.", action="store_true")
     # TODO(Ryan): Add parameters for problem generation here
     parser.add_argument("--num_atoms_set", nargs="+", type=int, help="Set the number of atoms in the problem.")
     parser.add_argument("--generator_max_queue_size", type=int, default=100, help="Maximum number of problems to generate at once, if using the generator with a queue.")
