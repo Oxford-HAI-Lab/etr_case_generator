@@ -84,7 +84,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                 #     for na, c in num_atoms_counts.items():
                 #         pbar_postfix[f"NA{na}"] = c
 
-                if args.balance:
+                if args.balance_quadrants:
                     problem_is_erotetic: bool = problem.get_yes_no_conclusion().is_etr_predicted
                     problem_is_classical: bool = problem.get_yes_no_conclusion().is_classically_correct
                     current_quadrant = (problem_is_erotetic, problem_is_classical)
@@ -168,10 +168,10 @@ def main():
     parser.add_argument("--question_type", type=str, default="all", help="Type of question to ask. Options are 'all', 'yes_no', 'multiple_choice', 'open_ended'.", choices=["all"] + list(get_args(QuestionType)))
     parser.add_argument("--save_file_name", type=str, default="problems", help="Name for saved jsonl files")
     parser.add_argument("--generate_function", type=str, default="random_smt_problem", help="Which function to use in generation.", choices=["random_smt_problem", "random_etr_problem"])
-    parser.add_argument("--balance", help="Balance the dataset through the 4 quadrants of erotetic and classical yes/no.", action="store_true")
+    parser.add_argument("--balance_quadrants", help="Balance the dataset through the 4 quadrants of erotetic and classical yes/no.", action="store_true")
     # TODO(Ryan): Add parameters for problem generation here
     parser.add_argument("--num_atoms_set", nargs="+", type=int, help="Set the number of atoms in the problem.")
-    parser.add_argument("--generator_max_queue_size", type=int, default=100, help="Maximum number of problems to generate at once.")
+    parser.add_argument("--generator_max_queue_size", type=int, default=100, help="Maximum number of problems to generate at once, if using the generator with a queue.")
     parser.add_argument("--non_categorical_okay", action="store_true", help="If true, it's okay to generate non-categorical, aka problems whose ETR conclusion has disjunctions in it, or which is null.")
 
     args = parser.parse_args()
