@@ -76,6 +76,11 @@ def create_partial_problem(views: Tuple[View], seed_problem: PartialProblem) -> 
     )
     return new_problem
 
+def is_categorical_only(partial_problem: PartialProblem) -> bool:
+    """Check if a partial problem is categorical."""
+    views = [p.logical_form_etr_view for p in partial_problem.premises]
+    return len(default_inference_procedure(views).stage) == 1
+
 # GENERATOR CLASS
 
 class ETRGeneratorIndependent:
@@ -83,9 +88,9 @@ class ETRGeneratorIndependent:
 
     def __init__(self):
         self.already_generated = set()
-        self.count_of_atom_counts_generated = Counter[AtomCount]()
+        self.count_of_atom_counts_generated = Counter[AtomCount]()  # For logging
 
-    def generate_problem(self, needed_counts: Counter[AtomCount]) -> PartialProblem:
+    def generate_problem(self, needed_counts: Counter[AtomCount], categorical_only: bool=True) -> PartialProblem:
         """
         Generate a single ETR problem.
 
@@ -125,15 +130,21 @@ class ETRGeneratorIndependent:
                     problem_key = str(current_problem)
                     if problem_key in self.already_generated:
                         print(f"Already generated this problem, retrying")
+                        # Keep going with mutations, to try to get a novel problem
                     else:
-                        self.already_generated.add(problem_key)
-                        self.count_of_atom_counts_generated[current_count] += 1
+                        problem_is_categorical = is_categorical_only(current_problem)
+                        if categorical_only and not problem_is_categorical:
+                            print(f"Problem is not categorical, retrying")
+                        elif categorical_only and problem_is_categorical:
+                            print(f"Found a categorical problem yay!")
+                        if (not categorical_only) or problem_is_categorical:
+                            self.already_generated.add(problem_key)
+                            self.count_of_atom_counts_generated[current_count] += 1
 
-                        # Stats on what we've already generated
-                        print(f"Generated atom counts:", {k: self.count_of_atom_counts_generated[k] for k in sorted(self.count_of_atom_counts_generated.keys())})
+                            # Stats on what we've already generated
+                            print(f"Generated atom counts:", {k: self.count_of_atom_counts_generated[k] for k in sorted(self.count_of_atom_counts_generated.keys())})
 
-                        return current_problem
-                    # Keep going with mutations, to try to get a novel problem
+                            return current_problem
                 
                 # Randomly choose a premise to mutate
                 if len(current_problem.premises) == 1:

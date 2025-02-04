@@ -173,6 +173,8 @@ def main():
     parser.add_argument("--balance_num_atoms", action="store_true", help="Balance the dataset by number of atoms in the problem.")  # TODO Remove this, just use the set
     parser.add_argument("--num_atoms_set", nargs="+", type=int, help="Set the number of atoms in the problem.")
     parser.add_argument("--generator_max_queue_size", type=int, default=100, help="Maximum number of problems to generate at once.")
+    parser.add_argument("--categorical_only", action="store_true", help="Only generate categorical problems, aka problems whose ETR conclusion has no disjunctions in it, and which is non-null.")
+
     args = parser.parse_args()
 
     if args.question_type == "all":

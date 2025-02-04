@@ -29,6 +29,9 @@ def renamed_view(view: View, renames: dict[str, str]) -> View:
 
 
 def generate_problem(args, ontology: Ontology = ELEMENTS, needed_counts: Counter[AtomCount] = None, generator: ETRGeneratorIndependent=None) -> FullProblem:
+    # TODO Implement args.categorical_only, which is defined as:
+    #  categorical_only(partial_problem) = len(default_inference_procedure(partial_problem.premises).stage) == 1
+
     # Generate partial problems
     if args.generate_function == "random_smt_problem":
         if args.balance_num_atoms or args.num_atoms_set:
@@ -43,6 +46,7 @@ def generate_problem(args, ontology: Ontology = ELEMENTS, needed_counts: Counter
             random_etr_problem_kwargs["bias_function"] = boost_low_num_atom_problems
         if needed_counts:
             random_etr_problem_kwargs["needed_counts"] = needed_counts
+        random_etr_problem_kwargs["categorical_only"] = args.categorical_only
         if generator is not None:
             partial_problem = generator.generate_problem(needed_counts=needed_counts)
         else:
