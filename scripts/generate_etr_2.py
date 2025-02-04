@@ -170,7 +170,6 @@ def main():
     parser.add_argument("--generate_function", type=str, default="random_smt_problem", help="Which function to use in generation.", choices=["random_smt_problem", "random_etr_problem"])
     parser.add_argument("--balance", help="Balance the dataset through the 4 quadrants of erotetic and classical yes/no.", action="store_true")
     # TODO(Ryan): Add parameters for problem generation here
-    parser.add_argument("--balance_num_atoms", action="store_true", help="Balance the dataset by number of atoms in the problem.")  # TODO Remove this, just use the set
     parser.add_argument("--num_atoms_set", nargs="+", type=int, help="Set the number of atoms in the problem.")
     parser.add_argument("--generator_max_queue_size", type=int, default=100, help="Maximum number of problems to generate at once.")
     parser.add_argument("--non_categorical_okay", action="store_true", help="If true, it's okay to generate non-categorical, aka problems whose ETR conclusion has disjunctions in it, or which is null.")

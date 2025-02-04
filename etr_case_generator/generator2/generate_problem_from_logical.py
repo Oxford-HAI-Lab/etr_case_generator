@@ -31,14 +31,14 @@ def renamed_view(view: View, renames: dict[str, str]) -> View:
 def generate_problem(args, ontology: Ontology = ELEMENTS, needed_counts: Counter[AtomCount] = None, generator: ETRGeneratorIndependent=None) -> FullProblem:
     # Generate partial problems
     if args.generate_function == "random_smt_problem":
-        if args.balance_num_atoms or args.num_atoms_set:
+        if args.num_atoms_set:
             raise NotImplementedError("Balancing num atoms not implemented for SMT problems")
         small_ontology = ontology.create_smaller_ontology(args.num_predicates_per_problem, args.num_objects_per_problem)
         smt_problem: SMTProblem = random_smt_problem(ontology=small_ontology, total_num_pieces=args.num_pieces)
         partial_problem = smt_problem.to_partial_problem()
     elif args.generate_function == "random_etr_problem":
         random_etr_problem_kwargs = {}
-        if args.balance_num_atoms:
+        if args.num_atoms_set:
             # partial_problem: PartialProblem = random_etr_problem()
             random_etr_problem_kwargs["bias_function"] = boost_low_num_atom_problems
         if needed_counts:
