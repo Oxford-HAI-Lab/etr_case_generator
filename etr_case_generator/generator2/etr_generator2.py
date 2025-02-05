@@ -79,7 +79,8 @@ def create_partial_problem(views: Tuple[View], seed_problem: PartialProblem) -> 
 def is_categorical_only(partial_problem: PartialProblem) -> bool:
     """Check if a partial problem is categorical."""
     views = [p.logical_form_etr_view for p in partial_problem.premises]
-    return len(default_inference_procedure(views).stage) == 1
+    conclusion = default_inference_procedure(views)
+    return len(conclusion.stage) == 1 and not conclusion.is_verum
 
 # GENERATOR CLASS
 
