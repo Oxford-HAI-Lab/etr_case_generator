@@ -90,6 +90,7 @@ class PartialProblem:
 
     # The result of the default_inference_procedure
     etr_what_follows: Optional[ReifiedView] = None
+    etr_predicted_conclusion_is_categorical: Optional[bool] = None
 
     # Used during generation
     seed_id: Optional[str] = None
@@ -169,6 +170,7 @@ class FullProblem:
 
     # Open Ended
     etr_predicted_conclusion: Optional[Conclusion] = None
+    etr_predicted_conclusion_is_categorical: Optional[bool] = None
     open_ended_question_prose: Optional[str] = "What if anything follows?"
     open_ended_answer_guidance_prose: Optional[str] = 'What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".'
     # WARNING! NOTE THAT THE FOLLOWING INSTRUCTIONS ARE DUPLICATED IN open_ended_scoring.py
@@ -312,6 +314,7 @@ class FullProblem:
             "scoring_guide": {
                 "etr_predicted": self.etr_predicted_conclusion.view.logical_form_etr if self.etr_predicted_conclusion else None,
                 "etr_predicted_is_classically_correct": self.etr_predicted_conclusion.is_classically_correct if self.etr_predicted_conclusion else None,
+                "etr_predicted_conclusion_is_categorical": self.etr_predicted_conclusion_is_categorical,
                 "generation_details": {
                     "atoms_distributed_over_views_SMT_ONLY": args.num_pieces,
                     "total_num_atoms": total_num_atoms,

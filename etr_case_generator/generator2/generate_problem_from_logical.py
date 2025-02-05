@@ -103,5 +103,6 @@ def generate_problem(args, ontology: Ontology = ELEMENTS, needed_counts: Counter
 
     # Flesh out the problems with text and everything
     full_problem: FullProblem = full_problem_from_partial_problem(partial_problem, ontology=ontology)
+    full_problem.etr_predicted_conclusion_is_categorical = partial_problem.etr_predicted_conclusion_is_categorical
 
     return full_problem

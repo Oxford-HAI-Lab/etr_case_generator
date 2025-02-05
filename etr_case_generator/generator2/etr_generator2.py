@@ -134,6 +134,9 @@ class ETRGeneratorIndependent:
                         # Keep going with mutations, to try to get a novel problem
                     else:
                         problem_is_categorical = is_categorical_only(current_problem)
+                        current_problem.etr_predicted_conclusion_is_categorical = (
+                            problem_is_categorical
+                        )
                         if categorical_only and not problem_is_categorical:
                             print(f"Problem is not categorical, retrying")
                         elif categorical_only and problem_is_categorical:
@@ -193,4 +196,3 @@ class ETRGeneratorIndependent:
 
         # If we failed to generate a novel problem with desired count
         raise ValueError(f"Failed to generate problem with desired atom count after {max_attempts} attempts")
-
