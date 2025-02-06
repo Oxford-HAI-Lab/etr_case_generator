@@ -134,10 +134,6 @@ class ETRGeneratorIndependent:
                         # Keep going with mutations, to try to get a novel problem
                     else:
                         problem_is_categorical = is_categorical_only(current_problem)
-                        if categorical_only and not problem_is_categorical:
-                            print(f"Problem is not categorical, retrying")
-                        elif categorical_only and problem_is_categorical:
-                            print(f"Found a categorical problem yay!")
                         if (not categorical_only) or problem_is_categorical:
                             self.already_generated.add(problem_key)
                             self.count_of_atom_counts_generated[current_count] += 1
