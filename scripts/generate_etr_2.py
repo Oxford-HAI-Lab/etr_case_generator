@@ -142,16 +142,15 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                         continue
                     balance_counts[category] += 1
 
-                if args.num_atoms_set:
-                    num_atoms = sum(len(view.logical_form_etr_view.atoms) for view in problem.views)
-                    if num_atoms not in args.num_atoms_set:
-                        continue
-                    num_atoms_counts[num_atoms] += 1
-                
                 problems.append(problem)
                 pbar.set_postfix(pbar_postfix)
                 break  # Successfully generated a problem, move to next iteration
 
+            except ValueError as e:
+                if str(e) == "No more problems needed for any atom count":
+                    print("\nFinished early - all atom count buckets are full")
+                    return problems
+                raise e
             except Exception as e:
                 print(f"Failed to generate problem: {e}")
                 # Get full module path of exception
@@ -162,8 +161,6 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                 exception_key = f"{exception_key} at {location}"
                 exception_type_counter[exception_key] += 1
                 print("Exception type counts:\t", exception_type_counter)
-                # traceback.print_exc()
-                raise e
                 continue  # Try again
 
     print(f"Succeeded, but overcame these Exceptions:")
