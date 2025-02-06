@@ -166,10 +166,13 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                 # raise e  # Uncomment to see the exception
                 continue  # Try again
 
-    print(f"\nSucceeded, but overcame these Exceptions:")
+    print()
+    print("!" * 25, "Error Report", "!" * 25)
+    print(f"Succeeded, but overcame these Exceptions:")
     for k, v in exception_type_counter.items():
-        print(f"{k}: {v}")
-        print(f"  Example: {exception_examples[k]}")
+        print(f" * {k}: {v}")
+        print(f"     Example: {exception_examples[k]}")
+    print("!" * 64, "\n")
     
     return problems
 
