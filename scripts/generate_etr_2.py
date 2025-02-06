@@ -163,7 +163,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                 exception_type_counter[exception_key] += 1
                 print("Exception type counts:\t", exception_type_counter)
                 # traceback.print_exc()
-                # raise e
+                raise e
                 continue  # Try again
 
     print(f"Succeeded, but overcame these Exceptions:")
