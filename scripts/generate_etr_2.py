@@ -17,11 +17,16 @@ from etr_case_generator.ontology import Ontology, get_all_ontologies, natural_na
 
 
 def generate_problem_list(n_problems: int, args, question_types: list[str]) -> list[FullProblem]:
-    """Generate ETR problems.
+    """Generate ETR problems with optional balancing constraints.
 
     Args:
         n_problems (int): The number of problems to generate
-        verbose (bool, optional): Whether to print debugging info. Defaults to False.
+        args: Command line arguments including balancing options
+        question_types (list[str]): List of question types to generate
+
+    The function can balance problems in two ways:
+    - By quadrants (erotetic vs classical correctness) when args.balance_quadrants is True
+    - By ETR agreement (50-50 split on ETR conclusion matching classical) when args.balance_etr_agreement is True
     """
     all_ontologies: list[Ontology] = get_all_ontologies()
 
@@ -29,29 +34,38 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
         o.preferred_name_shortening_scheme = args.name_shortening
         o.fill_mapping()
 
-    quadrant_counts = {
-        (True, True): 0,   # (erotetic, classical)
-        (True, False): 0,  # (erotetic, non-classical)
-        (False, True): 0,  # (non-erotetic, classical)
-        (False, False): 0  # (non-erotetic, non-classical)
-    }
-    num_needed_per_quadrant: int = (n_problems + 3) // 4
-    # TODO Refactor for cleanup
-    num_needed_per_quadrant_by_atom = num_needed_per_quadrant
+    # Initialize tracking based on balancing mode
+    if args.balance_quadrants:
+        balance_counts = {
+            (True, True): 0,   # (erotetic, classical)
+            (True, False): 0,  # (erotetic, non-classical)
+            (False, True): 0,  # (non-erotetic, classical)
+            (False, False): 0  # (non-erotetic, non-classical)
+        }
+        num_needed_per_category = (n_problems + 3) // 4
+    elif args.balance_etr_agreement:
+        balance_counts = {True: 0, False: 0}  # Tracks agreement between ETR and classical
+        num_needed_per_category = n_problems // 2
+    else:
+        balance_counts = None
+        num_needed_per_category = n_problems
 
-    num_atoms_counts = {i : 0 for i in args.num_atoms_set} if args.num_atoms_set else {}
-    quadrant_counts_by_atom = {}
+    # Initialize atom count tracking
+    num_atoms_counts = {i: 0 for i in args.num_atoms_set} if args.num_atoms_set else {}
+    counts_by_atom = {}
     if args.num_atoms_set:
-        num_needed_per_quadrant_by_atom = num_needed_per_quadrant // len(args.num_atoms_set)
-        print(f"Generating {num_needed_per_quadrant_by_atom} problems per quadrant per atom count.")
-        # TODO Refactor this to be less repeated
+        num_needed_per_category_by_atom = num_needed_per_category // len(args.num_atoms_set)
+        print(f"Generating {num_needed_per_category_by_atom} problems per category per atom count.")
         for size in args.num_atoms_set:
-            quadrant_counts_by_atom[size] = {
-                (True, True): 0,   # (erotetic, classical)
-                (True, False): 0,  # (erotetic, non-classical)
-                (False, True): 0,  # (non-erotetic, classical)
-                (False, False): 0  # (non-erotetic, non-classical)
-            }
+            if args.balance_quadrants:
+                counts_by_atom[size] = {
+                    (True, True): 0, (True, False): 0,
+                    (False, True): 0, (False, False): 0
+                }
+            elif args.balance_etr_agreement:
+                counts_by_atom[size] = {True: 0, False: 0}
+            else:
+                counts_by_atom[size] = 0
 
     pbar_postfix = {}
 
@@ -85,31 +99,48 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                 #     for na, c in num_atoms_counts.items():
                 #         pbar_postfix[f"NA{na}"] = c
 
+                # Get problem characteristics
+                conclusion = problem.get_yes_no_conclusion()
+                problem_is_erotetic = conclusion.is_etr_predicted
+                problem_is_classical = conclusion.is_classically_correct
+
+                # Handle balancing logic
                 if args.balance_quadrants:
-                    problem_is_erotetic: bool = problem.get_yes_no_conclusion().is_etr_predicted
-                    problem_is_classical: bool = problem.get_yes_no_conclusion().is_classically_correct
-                    current_quadrant = (problem_is_erotetic, problem_is_classical)
-
-                    # Update the progress bar with current counts
+                    category = (problem_is_erotetic, problem_is_classical)
                     pbar_postfix.update({
-                        'EC': quadrant_counts[(True, True)],    # Erotetic Classical
-                        'EN': quadrant_counts[(True, False)],   # Erotetic Non-classical
-                        'NC': quadrant_counts[(False, True)],   # Non-erotetic Classical
-                        'NN': quadrant_counts[(False, False)],  # Non-erotetic Non-classical
-                        'T': current_counter,                   # Try number
+                        'EC': balance_counts[(True, True)],    # Erotetic Classical
+                        'EN': balance_counts[(True, False)],   # Erotetic Non-classical
+                        'NC': balance_counts[(False, True)],   # Non-erotetic Classical
+                        'NN': balance_counts[(False, False)],  # Non-erotetic Non-classical
                     })
-                    pbar.set_postfix(pbar_postfix)
+                elif args.balance_etr_agreement:
+                    category = (problem_is_erotetic == problem_is_classical)
+                    pbar_postfix.update({
+                        'Agree': balance_counts[True],     # ETR agrees with classical
+                        'Disagree': balance_counts[False], # ETR disagrees with classical
+                    })
+                else:
+                    category = None
 
-                    if args.num_atoms_set:
-                        num_atoms = sum(len(view.logical_form_etr_view.atoms) for view in problem.views)
-                        current_count_by_atom_quadrant = quadrant_counts_by_atom[num_atoms][current_quadrant]
-                        if current_count_by_atom_quadrant >= num_needed_per_quadrant:
+                pbar_postfix['T'] = current_counter
+                pbar.set_postfix(pbar_postfix)
+
+                # Check atom count constraints
+                if args.num_atoms_set:
+                    num_atoms = sum(len(view.logical_form_etr_view.atoms) for view in problem.views)
+                    if num_atoms not in args.num_atoms_set:
+                        continue
+                    if category is not None:
+                        if counts_by_atom[num_atoms][category] >= num_needed_per_category_by_atom:
                             continue
-                        quadrant_counts_by_atom[num_atoms][current_quadrant] += 1
-                    if quadrant_counts[current_quadrant] >= num_needed_per_quadrant:
-                        continue  # Try again if this quadrant is full
-                    
-                    quadrant_counts[current_quadrant] += 1
+                        counts_by_atom[num_atoms][category] += 1
+                    num_atoms_counts[num_atoms] += 1
+
+                # Check category constraints
+                if category is not None:
+                    if balance_counts[category] >= num_needed_per_category:
+                        continue
+                    balance_counts[category] += 1
 
                 if args.num_atoms_set:
                     num_atoms = sum(len(view.logical_form_etr_view.atoms) for view in problem.views)
