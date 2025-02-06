@@ -69,8 +69,9 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
 
     pbar_postfix = {}
 
-    # This counter will track errors that come up
+    # Track errors and their example messages
     exception_type_counter = Counter[str]()
+    exception_examples = {}  # Store first example of each error type
 
     problem_generator = ETRGeneratorIndependent()
     count_per_size = math.ceil(n_problems / len(args.num_atoms_set)) if args.num_atoms_set else 0
@@ -159,13 +160,16 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                 location = f"{tb.filename}:{tb.lineno}"
                 exception_key = f"{exception_key} at {location}"
                 exception_type_counter[exception_key] += 1
+                if exception_key not in exception_examples:
+                    exception_examples[exception_key] = str(e)[:100]  # Store first 100 chars
                 print("Exception type counts:\t", exception_type_counter)
                 # raise e  # Uncomment to see the exception
                 continue  # Try again
 
-    print(f"Succeeded, but overcame these Exceptions:")
+    print(f"\nSucceeded, but overcame these Exceptions:")
     for k, v in exception_type_counter.items():
         print(f"{k}: {v}")
+        print(f"  Example: {exception_examples[k]}")
     
     return problems
 
