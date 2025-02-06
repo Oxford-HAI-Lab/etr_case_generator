@@ -75,6 +75,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
     problem_generator = ETRGeneratorIndependent()
     count_per_size = math.ceil(n_problems / len(args.num_atoms_set)) if args.num_atoms_set else 0
     print(f"Generating {n_problems} problems with {count_per_size} problems per atom count, across {len(args.num_atoms_set)} atom counts.")
+    print(f"Balancing by: {'Quadrants' if args.balance_quadrants else 'ETR agreement' if args.balance_etr_agreement else 'Not balancing'}.")
 
     problems: list[FullProblem] = []
     pbar = tqdm(range(n_problems), desc="Generating problems")
@@ -100,8 +101,9 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                 #         pbar_postfix[f"NA{na}"] = c
 
                 # Get problem characteristics
-                conclusion = problem.get_yes_no_conclusion()
+                conclusion = problem.etr_predicted_conclusion
                 problem_is_erotetic = conclusion.is_etr_predicted
+                assert problem_is_erotetic, "ETR predicted conclusion should be erotetic by definition"
                 problem_is_classical = conclusion.is_classically_correct
 
                 # Handle balancing logic
@@ -115,6 +117,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                     })
                 elif args.balance_etr_agreement:
                     category = (problem_is_erotetic == problem_is_classical)
+                    # print(f"Assessing a problem in category {category}, counts: {balance_counts}")
                     pbar_postfix.update({
                         'Agree': balance_counts[True],     # ETR agrees with classical
                         'Disagree': balance_counts[False], # ETR disagrees with classical
@@ -142,15 +145,11 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                         continue
                     balance_counts[category] += 1
 
+                # print(f"Found problem in category {category}")
+
                 problems.append(problem)
                 pbar.set_postfix(pbar_postfix)
                 break  # Successfully generated a problem, move to next iteration
-
-            except ValueError as e:
-                if str(e) == "No more problems needed for any atom count":
-                    print("\nFinished early - all atom count buckets are full")
-                    return problems
-                raise e
             except Exception as e:
                 print(f"Failed to generate problem: {e}")
                 # Get full module path of exception
@@ -161,6 +160,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                 exception_key = f"{exception_key} at {location}"
                 exception_type_counter[exception_key] += 1
                 print("Exception type counts:\t", exception_type_counter)
+                # raise e  # Uncomment to see the exception
                 continue  # Try again
 
     print(f"Succeeded, but overcame these Exceptions:")

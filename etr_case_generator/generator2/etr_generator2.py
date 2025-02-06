@@ -101,7 +101,7 @@ class ETRGeneratorIndependent:
         - Check if the problem has already been generated, and if so, repeat the process
         - Return the generated problem
         """
-        print(f"Categorical only: {categorical_only}")
+        # print(f"Categorical only: {categorical_only}")
         max_attempts = 10
         for attempt in range(max_attempts):
             # Choose random seed problem
@@ -139,7 +139,7 @@ class ETRGeneratorIndependent:
                             self.count_of_atom_counts_generated[current_count] += 1
 
                             # Stats on what we've already generated
-                            print(f"Generated atom counts:", {k: self.count_of_atom_counts_generated[k] for k in sorted(self.count_of_atom_counts_generated.keys())})
+                            # print(f"Generated atom counts:", {k: self.count_of_atom_counts_generated[k] for k in sorted(self.count_of_atom_counts_generated.keys())})
 
                             return current_problem
                 
