@@ -2,13 +2,17 @@ import random
 import time
 import math
 
+from copy import deepcopy
 from dataclasses import dataclass, field
 
 from pyparsing import ParseException
 
 from etr_case_generator.generator2.logic_types import AtomCount
 from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
-from etr_case_generator.generator2.seed_problems import create_starting_problems
+from etr_case_generator.generator2.seed_problems import (
+    create_starting_problems,
+    ILLUSORY_INFERENCE_FROM_DISJUNCTION,
+)
 from etr_case_generator.mutations import get_view_mutations
 from etr_case_generator.ontology import Ontology
 from pyetr import View
@@ -87,9 +91,11 @@ def is_categorical_only(partial_problem: PartialProblem) -> bool:
 class ETRGeneratorIndependent:
     already_generated: Set[str]  # Used to prevent duplicate problems. str(PartialProblem) is used as key.
 
-    def __init__(self):
+    def __init__(self, seed_bank: Optional[str] = None):
         self.already_generated = set()
         self.count_of_atom_counts_generated = Counter[AtomCount]()  # For logging
+
+        self.seed_bank = seed_bank
 
     def generate_problem(self, needed_counts: Counter[AtomCount], categorical_only: bool=True) -> PartialProblem:
         """
@@ -102,10 +108,17 @@ class ETRGeneratorIndependent:
         - Check if the problem has already been generated, and if so, repeat the process
         - Return the generated problem
         """
-        print(f"Categorical only: {categorical_only}")
+        # print(f"Categorical only: {categorical_only}")
         max_attempts = 10
         for attempt in range(max_attempts):
             # Choose random seed problem
+            if self.seed_bank == "ILLUSORY_INFERENCE_FROM_DISJUNCTION":
+                # print("Loading from seed bank")
+                seed_problem: PartialProblem = random.choice(
+                    ILLUSORY_INFERENCE_FROM_DISJUNCTION
+                )
+                return deepcopy(seed_problem)
+
             seed_problem: PartialProblem = random.choice(create_starting_problems())
             
             # Choose target atom count from needed_counts
@@ -130,7 +143,7 @@ class ETRGeneratorIndependent:
                 if current_count == target_count:
                     # Check if we've generated this exact problem before
                     problem_key = str(current_problem)
-                    if problem_key in self.already_generated:
+                    if problem_key in self.already_generated and self.seed_bank is None:
                         print(f"Already generated this problem, retrying")
                         # Keep going with mutations, to try to get a novel problem
                     else:

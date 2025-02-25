@@ -316,6 +316,7 @@ class FullProblem:
                 "etr_predicted_is_classically_correct": self.etr_predicted_conclusion.is_classically_correct if self.etr_predicted_conclusion else None,
                 "etr_predicted_conclusion_is_categorical": self.etr_predicted_conclusion_is_categorical,
                 "generation_details": {
+                    "seed_id": self.seed_id,
                     "atoms_distributed_over_views_SMT_ONLY": args.num_pieces,
                     "total_num_atoms": total_num_atoms,
                     "num_disjuncts": self.num_disjuncts(),

@@ -58,9 +58,10 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
     # This counter will track errors that come up
     exception_type_counter = Counter[str]()
 
-    problem_generator = ETRGeneratorIndependent()
+    problem_generator = ETRGeneratorIndependent(seed_bank=args.seed_bank)
     count_per_size = math.ceil(n_problems / len(args.num_atoms_set)) if args.num_atoms_set else 0
-    print(f"Generating {n_problems} problems with {count_per_size} problems per atom count, across {len(args.num_atoms_set)} atom counts.")
+    if args.num_atoms_set:
+        print(f"Generating {n_problems} problems with {count_per_size} problems per atom count, across {len(args.num_atoms_set)} atom counts.")
 
     problems: list[FullProblem] = []
     pbar = tqdm(range(n_problems), desc="Generating problems")
@@ -117,6 +118,14 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                         continue
                     num_atoms_counts[num_atoms] += 1
                 
+                if args.seed_bank == "ILLUSORY_INFERENCE_FROM_DISJUNCTION":
+                    n_controls_in_problem_list = len([p for p in problems if str(p.seed_id).startswith("control")])
+                    n_targets_in_problem_list = len([p for p in problems if str(p.seed_id).startswith("target")])
+                    if str(problem.seed_id).startswith("control") and n_controls_in_problem_list >= n_problems // 2:
+                        continue
+                    if str(problem.seed_id).startswith("target") and n_targets_in_problem_list >= n_problems // 2:
+                        continue
+
                 problems.append(problem)
                 pbar.set_postfix(pbar_postfix)
                 break  # Successfully generated a problem, move to next iteration
@@ -176,6 +185,7 @@ def main():
     parser.add_argument("--num_atoms_set", nargs="+", type=int, help="Set the number of atoms in the problem.")
     parser.add_argument("--generator_max_queue_size", type=int, default=100, help="Maximum number of problems to generate at once, if using the generator with a queue.")
     parser.add_argument("--non_categorical_okay", action="store_true", help="If true, it's okay to generate non-categorical, aka problems whose ETR conclusion has disjunctions in it, or which is null.")
+    parser.add_argument("--seed_bank", type=str, default=None, help="Name of the problem seed bank to default to.")
 
     args = parser.parse_args()
 
