@@ -227,8 +227,7 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
         {model_answer}
         
         # Needed Format
-I want you to write your answer in the format of a
-     logical statement. Here are the rules for how you should format it:
+        I want you to write your answer in the format of a logical statement. Here are the rules for how you should format it:
 
          Basic Structure:
          - Every logical statement must be wrapped in curly braces, like "{{...}}"
