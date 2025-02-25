@@ -1,6 +1,6 @@
 from pyetr import View
 
-from pysmt.shortcuts import Symbol, ForAll, Exists, Solver, Not, Real, Or, Times, get_env
+from pysmt.shortcuts import Symbol, ForAll, Exists, Solver, Not, Real, Or, Times, get_env, TRUE
 from pysmt.typing import BOOL, REAL
 from pysmt.logics import QF_LRA
 
@@ -59,7 +59,7 @@ def view_to_smt(view: View) -> FNode:
             if not atom.predicate.verifier:
                 sym = Not(sym)
             terms.append(sym)
-        return And(terms) if terms else Symbol("TRUE", BOOL)
+        return And(terms) if terms else TRUE()
 
     # Convert stage to disjunction of states
     stage_formula = Or([state_to_smt(state) for state in view.stage])
@@ -159,4 +159,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
