@@ -3,7 +3,7 @@ from typing import Callable, Counter
 import pyetr
 
 from etr_case_generator.generator2.etr_generator import random_etr_problem, boost_low_num_atom_problems
-from etr_case_generator.generator2.etr_generator2 import ETRGeneratorIndependent
+from etr_case_generator.generator2.etr_generator_no_queue import ETRGeneratorIndependent
 from etr_case_generator.generator2.logic_types import AtomCount
 from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType, PartialProblem, Conclusion, \
     ReifiedView
@@ -45,7 +45,7 @@ def generate_problem(args, ontology: Ontology = ELEMENTS, needed_counts: Counter
             random_etr_problem_kwargs["needed_counts"] = needed_counts
         random_etr_problem_kwargs["categorical_only"] = not args.non_categorical_okay
         if generator is not None:
-            partial_problem = generator.generate_problem(needed_counts=needed_counts, categorical_only=not args.non_categorical_okay)
+            partial_problem = generator.generate_problem(needed_counts=needed_counts, categorical_only=not args.non_categorical_okay, multi_view=args.multi_view)
         else:
             partial_problem: PartialProblem = random_etr_problem(**random_etr_problem_kwargs)
 

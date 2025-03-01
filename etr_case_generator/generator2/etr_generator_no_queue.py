@@ -97,7 +97,26 @@ class ETRGeneratorIndependent:
 
         self.seed_bank = seed_bank
 
-    def generate_problem(self, needed_counts: Counter[AtomCount], categorical_only: bool=True) -> PartialProblem:
+    def generate_multi_view_problem(self, needed_counts: Counter[AtomCount]) -> PartialProblem:
+        max_attempts = 10
+        for attempt in range(max_attempts):
+            # TODO: Get a random view to start
+            #  - Iteratively add views in this process:
+            #    - Get a random view
+            #    - Check to see whether the erotetic conclusion of the list of views is non-null (use a placeholder for this check!)
+            #    - If it is non-null, add the view to the list of views
+            #    - If it is null, try again with a new random view
+            #    - Check whether the problem can be returned
+            #      - Does it have a desired atom count?
+            #      - Is it categorical, meaning that the erotetic conclusion has only one option? (use a placeholder for this check!)
+            #      - If it meets these criteria, return the problem
+            #    - If the number of atoms exceeds all possible atom counts, delete the last 3 views in the list, and try again
+            ...
+
+        # If we failed to generate a novel problem with desired count
+        raise ValueError(f"Failed to generate problem with desired atom count after {max_attempts} attempts")
+
+    def generate_problem(self, needed_counts: Counter[AtomCount], categorical_only: bool=True, multi_view: bool=False) -> PartialProblem:
         """
         Generate a single ETR problem.
 
@@ -108,6 +127,9 @@ class ETRGeneratorIndependent:
         - Check if the problem has already been generated, and if so, repeat the process
         - Return the generated problem
         """
+        if multi_view:
+            return self.generate_multi_view_problem(needed_counts, categorical_only)
+
         # print(f"Categorical only: {categorical_only}")
         max_attempts = 10
         for attempt in range(max_attempts):
