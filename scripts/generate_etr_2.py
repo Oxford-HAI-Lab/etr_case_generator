@@ -221,7 +221,10 @@ def main():
     parser.add_argument("--generator_max_queue_size", type=int, default=100, help="Maximum number of problems to generate at once, if using the generator with a queue.")
     parser.add_argument("--non_categorical_okay", action="store_true", help="If true, it's okay to generate non-categorical, aka problems whose ETR conclusion has disjunctions in it, or which is null.")
     parser.add_argument("--seed_bank", type=str, default=None, help="Name of the problem seed bank to default to.")
-    parser.add_argument("--multi_view", action="store_true", default=True, help="If true, generate problems with multiple views.")
+    multi_view_group = parser.add_mutually_exclusive_group(required=False)
+    multi_view_group.add_argument("--multi_view", dest="multi_view", action="store_true", help="Generate problems with multiple views")
+    multi_view_group.add_argument("--no-multi_view", dest="multi_view", action="store_false", help="Generate problems with a single view")
+    parser.set_defaults(multi_view=True)  # Default to True
 
     args = parser.parse_args()
 
