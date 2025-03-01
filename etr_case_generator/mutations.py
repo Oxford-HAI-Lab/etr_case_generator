@@ -262,11 +262,52 @@ def get_view_mutations(view: View, only_increase: bool = False, only_do_one: boo
 
     return mutations
 
-def get_random_view() -> View:
-    # TODO Start with a random seed view, selected from all of the views in all of the seed problems
-    # TODO, then mutate it some number of times
-    # TODO: Then return it, I guess
-    ...
+def get_random_view(num_mutations: int = None) -> View:
+    """Generate a random view by selecting a seed problem and applying mutations.
+    
+    Args:
+        num_mutations (int, optional): Number of mutations to apply. If None, a random
+            number between 1 and 3 will be chosen. Defaults to None.
+            
+    Returns:
+        View: A randomly generated and mutated view
+    """
+    from etr_case_generator.generator2.seed_problems import create_starting_problems, ILLUSORY_INFERENCE_FROM_DISJUNCTION
+    
+    # Collect all available views from seed problems
+    all_seed_problems = create_starting_problems() + ILLUSORY_INFERENCE_FROM_DISJUNCTION
+    all_views = []
+    
+    # Extract all views (premises and conclusions) from the seed problems
+    for problem in all_seed_problems:
+        for premise in problem.premises:
+            all_views.append(premise.logical_form_etr_view)
+        if problem.etr_what_follows and problem.etr_what_follows.logical_form_etr_view:
+            all_views.append(problem.etr_what_follows.logical_form_etr_view)
+    
+    # Select a random view as our starting point
+    if not all_views:
+        # Fallback if no views found
+        return View.from_str("{A(a())}")
+    
+    view = random.choice(all_views)
+    
+    # Determine number of mutations if not specified
+    if num_mutations is None:
+        num_mutations = random.randint(1, 3)
+    
+    # Apply mutations
+    for _ in range(num_mutations):
+        try:
+            # Get mutations and select one randomly
+            mutations = get_view_mutations(view, only_do_one=True)
+            if mutations:
+                view = random.choice(list(mutations))
+        except ValueError:
+            # If mutation fails, just return the current view
+            break
+    
+    return view
 
 if __name__ == "__main__":
     print(get_view_mutations(View.from_str("{A(a())}")))
