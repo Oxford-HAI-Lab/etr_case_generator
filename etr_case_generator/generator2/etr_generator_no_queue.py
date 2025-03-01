@@ -97,21 +97,79 @@ class ETRGeneratorIndependent:
 
         self.seed_bank = seed_bank
 
-    def generate_multi_view_problem(self, needed_counts: Counter[AtomCount]) -> PartialProblem:
+    def generate_multi_view_problem(self, needed_counts: Counter[AtomCount], categorical_only: bool=True) -> PartialProblem:
+        """Generate a problem with multiple views that meets the specified atom count requirements.
+        
+        Args:
+            needed_counts: Counter specifying how many problems of each atom count are needed
+            categorical_only: If True, only return problems with categorical conclusions
+            
+        Returns:
+            A PartialProblem with multiple views that meets the requirements
+            
+        Raises:
+            ValueError: If unable to generate a valid problem after max_attempts
+        """
+        from etr_case_generator.mutations import get_random_view
+        from pyetr.inference import default_inference_procedure
+        
         max_attempts = 10
         for attempt in range(max_attempts):
-            # TODO: Get a random view to start
-            #  - Iteratively add views in this process:
-            #    - Get a random view
-            #    - Check to see whether the erotetic conclusion of the list of views is non-null (use a placeholder for this check!)
-            #    - If it is non-null, add the view to the list of views
-            #    - If it is null, try again with a new random view
-            #    - Check whether the problem can be returned
-            #      - Does it have a desired atom count?
-            #      - Is it categorical, meaning that the erotetic conclusion has only one option? (use a placeholder for this check!)
-            #      - If it meets these criteria, return the problem
-            #    - If the number of atoms exceeds all possible atom counts, delete the last 3 views in the list, and try again
-            ...
+            # Start with an empty list of views
+            views = []
+            
+            # Try to build a valid problem by adding views incrementally
+            max_views = 5  # Set a reasonable upper limit on number of views
+            for _ in range(max_views):
+                # 1. Get a random view using mutations.get_random_view()
+                random_view = get_random_view()
+                
+                # 2. Check if adding this view results in a valid erotetic conclusion
+                temp_views = views + [random_view]
+                
+                # Skip empty view lists
+                if not temp_views:
+                    views.append(random_view)
+                    continue
+                
+                try:
+                    # Use ETR's inference procedure to check if a conclusion follows
+                    conclusion = default_inference_procedure(temp_views)
+                    
+                    # If conclusion is null (verum), try a different view
+                    if conclusion.is_verum:
+                        continue
+                except Exception as e:
+                    # If there's an error in inference, try a different view
+                    print(f"Error in inference: {e}")
+                    continue
+                
+                # 3. Add the view since it produces a valid conclusion
+                views.append(random_view)
+                
+                # 4. Check if the current problem meets our requirements
+                current_atom_count = sum(len(view.atoms) for view in views)
+                
+                # Check if this atom count is one we need
+                if AtomCount(current_atom_count) in needed_counts and needed_counts[AtomCount(current_atom_count)] > 0:
+                    # Check if the conclusion is categorical (if required)
+                    conclusion = default_inference_procedure(views)
+                    is_categorical = len(conclusion.stage) == 1 and not conclusion.is_verum
+                    
+                    if not categorical_only or is_categorical:
+                        # We found a valid problem that meets our requirements
+                        seed_problem = random.choice(create_starting_problems())
+                        return create_partial_problem(tuple(views), seed_problem)
+                
+                # 5. If we've exceeded all possible atom counts, backtrack
+                if all(current_atom_count > count.value for count in needed_counts.keys()):
+                    # Remove the last few views and try again with different ones
+                    backtrack_count = min(3, len(views))
+                    if backtrack_count > 0:
+                        views = views[:-backtrack_count]
+            
+        # If we've exhausted all attempts without finding a valid problem
+        raise ValueError("Failed to generate a valid multi-view problem after maximum attempts")
 
         # If we failed to generate a novel problem with desired count
         raise ValueError(f"Failed to generate problem with desired atom count after {max_attempts} attempts")
@@ -126,6 +184,11 @@ class ETRGeneratorIndependent:
         - Repeatedly mutate the seed problem until it has the desired atom count
         - Check if the problem has already been generated, and if so, repeat the process
         - Return the generated problem
+        
+        Args:
+            needed_counts: Counter specifying how many problems of each atom count are needed
+            categorical_only: If True, only return problems with categorical conclusions
+            multi_view: If True, generate a problem with multiple views instead of mutating a seed problem
         """
         if multi_view:
             return self.generate_multi_view_problem(needed_counts, categorical_only)

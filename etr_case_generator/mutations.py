@@ -310,4 +310,12 @@ def get_random_view(num_mutations: int = None) -> View:
     return view
 
 if __name__ == "__main__":
+    # Test get_view_mutations
+    print("Testing get_view_mutations:")
     print(get_view_mutations(View.from_str("{A(a())}")))
+    
+    # Test get_random_view
+    print("\nTesting get_random_view:")
+    for i in range(3):
+        random_view = get_random_view()
+        print(f"Random view {i+1}: {random_view}")
