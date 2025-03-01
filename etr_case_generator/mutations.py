@@ -262,5 +262,11 @@ def get_view_mutations(view: View, only_increase: bool = False, only_do_one: boo
 
     return mutations
 
+def get_random_view() -> View:
+    # TODO Start with a random seed view, selected from all of the views in all of the seed problems
+    # TODO, then mutate it some number of times
+    # TODO: Then return it, I guess
+    ...
+
 if __name__ == "__main__":
     print(get_view_mutations(View.from_str("{A(a())}")))
