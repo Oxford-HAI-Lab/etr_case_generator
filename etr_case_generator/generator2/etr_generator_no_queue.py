@@ -21,6 +21,8 @@ from pyetr.inference import default_inference_procedure
 from typing import Optional, Generator, Tuple, Set, Counter, List, Callable
 
 from etr_case_generator.view_to_natural_language import view_to_natural_language
+from etr_case_generator.mutations import get_random_view
+from pyetr.inference import default_inference_procedure
 
 # HELPER FUNCTIONS
 
@@ -110,13 +112,13 @@ class ETRGeneratorIndependent:
         Raises:
             ValueError: If unable to generate a valid problem after max_attempts
         """
-        from etr_case_generator.mutations import get_random_view
-        from pyetr.inference import default_inference_procedure
-        
         max_attempts = 10
         for attempt in range(max_attempts):
             # Start with an empty list of views
             views = []
+
+            # Start with a random view
+            views.append(get_random_view())
             
             # Try to build a valid problem by adding views incrementally
             max_views = 5  # Set a reasonable upper limit on number of views
@@ -159,17 +161,23 @@ class ETRGeneratorIndependent:
                     if not categorical_only or is_categorical:
                         # We found a valid problem that meets our requirements
                         seed_problem = random.choice(create_starting_problems())
+
+                        print(f"Generated problem with {current_atom_count} atoms")
+                        print(f"Views:")
+                        for v in views:
+                            print(v)
+                        print(f"Conclusion:")
+                        print(conclusion)
+                        print(f"Characteristics: is_cat: {is_categorical}, is_verum: {conclusion.is_verum}, conc stage len: {len(conclusion.stage)}, atoms: {current_atom_count}")
+
                         return create_partial_problem(tuple(views), seed_problem)
                 
                 # 5. If we've exceeded all possible atom counts, backtrack
-                if all(current_atom_count > count.value for count in needed_counts.keys()):
+                if all(current_atom_count > count for count in needed_counts.keys()):
                     # Remove the last few views and try again with different ones
                     backtrack_count = min(3, len(views))
                     if backtrack_count > 0:
                         views = views[:-backtrack_count]
-            
-        # If we've exhausted all attempts without finding a valid problem
-        raise ValueError("Failed to generate a valid multi-view problem after maximum attempts")
 
         # If we failed to generate a novel problem with desired count
         raise ValueError(f"Failed to generate problem with desired atom count after {max_attempts} attempts")
