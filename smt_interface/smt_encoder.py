@@ -1,4 +1,4 @@
-from pyetr import View
+from pyetr import PredicateAtom, View
 
 from pysmt.shortcuts import Symbol, ForAll, Exists, Solver, Not, Real, Or, Times, get_env, TRUE
 from pysmt.typing import BOOL, REAL
@@ -27,6 +27,14 @@ from pyetr.stateset import State
 # {'_stage': {Eight()King()Five(),Eight()King()}, '_supposition': {0}, '_dependency_relation': U={} E={}, '_issue_structure': {}, '_weights': {Eight()King()Five(),Eight()King()}}
 
 
+def atom_to_symbol_name(atom: Atom) -> str:
+    assert type(atom) == PredicateAtom
+    # I think using str() is fine for both functional terms and arbitrary objects
+    terms = ", ".join([str(t) for t in atom.terms])
+    name = f"{atom.predicate.name}({terms})"
+    return name
+
+
 def view_to_smt(view: View) -> FNode:
     """Convert a View object to SMT formula using PySMT.
     
@@ -39,7 +47,7 @@ def view_to_smt(view: View) -> FNode:
     # Create SMT symbols for each predicate atom in the view
     symbols: Dict[str, FNode] = {}
     for atom in view.atoms:
-        name = str(atom)
+        name = atom_to_symbol_name(atom)
         if name not in symbols:
             symbols[name] = Symbol(name, BOOL)
 
@@ -54,7 +62,7 @@ def view_to_smt(view: View) -> FNode:
         """
         terms = []
         for atom in state:
-            sym = symbols[str(atom)]
+            sym = symbols[atom_to_symbol_name(atom)]
             # Handle negation
             if not atom.predicate.verifier:
                 sym = Not(sym)
