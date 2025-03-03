@@ -11,6 +11,7 @@ from etr_case_generator.generator2.formatting_smt import load_fnode_from_string
 from etr_case_generator.generator2.logic_helper import does_it_follow
 from pyetr.inference import default_procedure_does_it_follow
 from pyetr.inference import default_inference_procedure
+from pyetr.issues import IssueStructure
 from smt_interface.smt_encoder import view_to_smt
 
 # This is necessary because of the way that lm_eval runs this file
@@ -101,7 +102,7 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
         print(f"Compare to predicted:", question["scoring_guide"]["etr_predicted"])
 
         # Try to see if it follows!
-        model_view_etr: View = View.from_str(model_answer)
+        model_view_etr: View = View.from_str(model_answer)  # Assuming that this doesn't inclue any issue structure by default...
         model_view_smt_fnode = view_to_smt(model_view_etr)
         premises_etr = question["scoring_guide"]["generation_details"]["premises_etr"]
         premises_view = [View.from_str(p) for p in premises_etr]
@@ -115,7 +116,18 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
 
         # Exact ETR
         etr_strong_predicted: View = default_inference_procedure(premises_view)
-        is_etr_strong_predicted: bool = etr_strong_predicted == model_view_etr
+
+        # Replace with an empty issue structure
+        etr_strong_predicted = View(
+            stage=etr_strong_predicted.stage,
+            supposition=etr_strong_predicted.supposition,
+            dependency_relation=etr_strong_predicted.dependency_relation,
+            issue_structure=IssueStructure(),
+            weights=etr_strong_predicted.weights
+        )
+        # 1. should be equivalence under arbitrary object substitution
+        # 2. should be compared after stripping all issue structure out
+        is_etr_strong_predicted: bool = etr_strong_predicted.is_equivalent_under_arb_sub(model_view_etr)
 
         print(f"ETR predicted: {is_etr_predicted}")
         print(f"Classically correct: {is_classically_correct}")
