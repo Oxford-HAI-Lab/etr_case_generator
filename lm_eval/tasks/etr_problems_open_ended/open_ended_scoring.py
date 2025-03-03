@@ -232,9 +232,10 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
         Basic Structure:
         - Every logical statement must be wrapped in curly braces, like "{{...}}"
         - Inside the braces, you can express conjunctions (and) and disjunctions (or)
-        - Commas separate different disjuncts (the "or" parts)
-        - When there are no commas between atoms, they are conjoined (joined with "and")
+        - Commas separate different disjuncts (the "or" parts). You can also write "∨" between them instead of commas, like "{{Red(cat()) ∨ Furry(cat())}}"
+        - When there are no commas between atoms, they are conjoined (joined with "and"). You can also write "∧" between them instead of commas, like "{{Red(cat()) ∧ Furry(cat())}}"
         - Every atom must have parentheses, even with no arguments
+        - All names are CamelCase or camelCase, and they never have spaces in them
         Examples:
         - Write "the cat is red" as "{{Red(cat())}}"
         - Write "the cat is red and furry" as "{{Red(cat())Furry(cat())}}"
@@ -303,6 +304,12 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
     #     # Use word boundaries \b to prevent partial matches
     #     etr_text = re.sub(fr'\b{re.escape(full_name)}\b', short_name, etr_text)
     # print(f"Converted to short names: {etr_text}")
+
+    # Convert logical symbols
+    etr_text = etr_text.replace(" ∧ ", "∧")
+    etr_text = etr_text.replace(" ∨ ", "∨")
+    etr_text = etr_text.replace("∧", "")  # Conjunction is represented with concatenation
+    etr_text = etr_text.replace("∨", ",")  # Disjunction is represented with commas
 
     # Check that all predicate names in the ETR text match the allowed names (case-insensitive)
     predicates = re.findall(r'[a-zA-Z]+(?=\()', etr_text)
