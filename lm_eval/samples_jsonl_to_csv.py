@@ -96,6 +96,8 @@ def load_jsonl_files(pattern: str, base_dir: str, in_past_hours: float = 24.0):
             mtime = datetime.fromtimestamp(os.path.getmtime(file))
             if mtime >= cutoff_time:
                 files.append(file)
+            # else:
+            #     print(f"Skipping {file} (modified {mtime})")
     
     results = {}
     for file in files:
