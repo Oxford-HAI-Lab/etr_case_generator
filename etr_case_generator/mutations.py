@@ -2,6 +2,9 @@ import random
 from typing import cast
 from pyetr import ArbitraryObject, FunctionalTerm, PredicateAtom, View
 
+from etr_case_generator.generator2.seed_problems import create_starting_problems, ILLUSORY_INFERENCE_FROM_DISJUNCTION
+
+ALL_SEED_PROBLEMS = create_starting_problems() + ILLUSORY_INFERENCE_FROM_DISJUNCTION
 
 def get_object_sets_for_view(
     view: View,
@@ -272,14 +275,11 @@ def get_random_view(num_mutations: int = None) -> View:
     Returns:
         View: A randomly generated and mutated view
     """
-    from etr_case_generator.generator2.seed_problems import create_starting_problems, ILLUSORY_INFERENCE_FROM_DISJUNCTION
-    
     # Collect all available views from seed problems
-    all_seed_problems = create_starting_problems() + ILLUSORY_INFERENCE_FROM_DISJUNCTION
     all_views = []
     
     # Extract all views (premises and conclusions) from the seed problems
-    for problem in all_seed_problems:
+    for problem in ALL_SEED_PROBLEMS:
         for premise in problem.premises:
             all_views.append(premise.logical_form_etr_view)
         if problem.etr_what_follows and problem.etr_what_follows.logical_form_etr_view:
@@ -288,13 +288,13 @@ def get_random_view(num_mutations: int = None) -> View:
     # Select a random view as our starting point
     if not all_views:
         # Fallback if no views found
-        return View.from_str("{A(a())}")
+        raise ValueError("No views found in seed problems")
     
-    view = random.choice(all_views)
+    view: View = random.choice(all_views)
     
     # Determine number of mutations if not specified
     if num_mutations is None:
-        num_mutations = random.randint(1, 3)
+        num_mutations = random.randint(1, 10)
     
     # Apply mutations
     for _ in range(num_mutations):
@@ -303,6 +303,10 @@ def get_random_view(num_mutations: int = None) -> View:
             mutations = get_view_mutations(view, only_do_one=True)
             if mutations:
                 view = random.choice(list(mutations))
+            if len(view.atoms) >= 2 and random.random() < 0.5:
+                break  # Try to keep them small
+            if len(view.atoms) >= 3 and random.random() < 0.5:
+                break  # That's more than big enough
         except ValueError:
             # If mutation fails, just return the current view
             break

@@ -228,48 +228,48 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
         
         # Needed Format
         I want you to write your answer in the format of a logical statement. Here are the rules for how you should format it:
-
-         Basic Structure:
-         - Every logical statement must be wrapped in curly braces, like "{{...}}"
-         - Inside the braces, you can express conjunctions (and) and disjunctions (or)
-         - Commas separate different disjuncts (the "or" parts)
-         - When there are no commas between atoms, they are conjoined (joined with "and")
-         - Every atom must have parentheses, even with no arguments
-         Examples:
-         - Write "the cat is red" as "{{Red(cat())}}"
-         - Write "the cat is red and furry" as "{{Red(cat())Furry(cat())}}"
-         - Write "the cat is red or furry" as "{{Red(cat()),Furry(cat())}}"
-         - Write "the cat is red and furry, or the dog is tall" as "{{Red(cat())Furry(cat()),Tall(dog())}}"
-         - If nothing is concluded, write "0" or "{{0}}"
-
-         Atoms and Terms:
-         - Atoms are predicates applied to terms: "Red(cat())", "Likes(dog(),cat())"
-         - There are two kinds of terms:
-           1. Functional terms: must have parentheses like "cat()" or "pet(dog())"
-           2. Arbitrary objects: no parentheses, only used with quantifiers, like "x" in "∀x"
-         - Negation uses "~", like "~Red(cat())" to mean "not Red(cat())"
-
-         Conjunction and Disjunction:
-         - Write "the cat is red and furry" as "{{Red(cat())Furry(cat())}}"
-         - Write "the cat is red or furry" as "{{Red(cat()),Furry(cat())}}"
-
-         Quantifiers:
-         - Universal quantifiers "∀" and existential "∃" go before the braces
-         - Only arbitrary objects (without parentheses) can be quantified
-         - Write "everything likes cats" as "∀x {{Likes(x,cat())}}"
-         - If there is no quantifier, do not write any "∀" or "∃", just {{...}}
-         - Only include a quantifier like "∃x" if x appears in the statement
-
-         Logical Relationships:
-         - Write "if the cat is red then it is furry" as "{{~Red(cat()),Furry(cat())}}"
-         - Write "being red implies being furry" as "{{~Red(cat()),Furry(cat())}}"
-
-         Examples:
-         - Write "the cat is red" as "{{Red(cat())}}"
-         - Write "the cat is red and furry" as "{{Red(cat())Furry(cat())}}"
-         - Write "the cat is red or furry" as "{{Red(cat()),Furry(cat())}}"
-         - Write "if the cat is red then it is furry" as "{{~Red(cat()),Furry(cat())}}"
-         - Write "everything likes cats" as "∀x {{Likes(x,cat())}}"
+        
+        Basic Structure:
+        - Every logical statement must be wrapped in curly braces, like "{{...}}"
+        - Inside the braces, you can express conjunctions (and) and disjunctions (or)
+        - Commas separate different disjuncts (the "or" parts)
+        - When there are no commas between atoms, they are conjoined (joined with "and")
+        - Every atom must have parentheses, even with no arguments
+        Examples:
+        - Write "the cat is red" as "{{Red(cat())}}"
+        - Write "the cat is red and furry" as "{{Red(cat())Furry(cat())}}"
+        - Write "the cat is red or furry" as "{{Red(cat()),Furry(cat())}}"
+        - Write "the cat is red and furry, or the dog is tall" as "{{Red(cat())Furry(cat()),Tall(dog())}}"
+        - If nothing is concluded, write "0" or "{{0}}"
+        
+        Atoms and Terms:
+        - Atoms are predicates applied to terms: "Red(cat())", "Likes(dog(),cat())"
+        - There are two kinds of terms:
+        1. Functional terms: must have parentheses like "cat()" or "pet(dog())"
+        2. Arbitrary objects: no parentheses, only used with quantifiers, like "x" in "∀x"
+        - Negation uses "~", like "~Red(cat())" to mean "not Red(cat())"
+        
+        Conjunction and Disjunction:
+        - Write "the cat is red and furry" as "{{Red(cat())Furry(cat())}}"
+        - Write "the cat is red or furry" as "{{Red(cat()),Furry(cat())}}"
+        
+        Quantifiers:
+        - Universal quantifiers "∀" and existential "∃" go before the braces
+        - Only arbitrary objects (without parentheses) can be quantified
+        - Write "everything likes cats" as "∀x {{Likes(x,cat())}}"
+        - If there is no quantifier, do not write any "∀" or "∃", just {{...}}
+        - Only include a quantifier like "∃x" if x appears in the statement
+        
+        Logical Relationships:
+        - Write "if the cat is red then it is furry" as "{{~Red(cat()),Furry(cat())}}"
+        - Write "being red implies being furry" as "{{~Red(cat()),Furry(cat())}}"
+        
+        Examples:
+        - Write "the cat is red" as "{{Red(cat())}}"
+        - Write "the cat is red and furry" as "{{Red(cat())Furry(cat())}}"
+        - Write "the cat is red or furry" as "{{Red(cat()),Furry(cat())}}"
+        - Write "if the cat is red then it is furry" as "{{~Red(cat()),Furry(cat())}}"
+        - Write "everything likes cats" as "∀x {{Likes(x,cat())}}"
         
         # Predicates
         You can ONLY use these predicates in your answer. You may not use any other terms, you MUST use only these: {name_options}
