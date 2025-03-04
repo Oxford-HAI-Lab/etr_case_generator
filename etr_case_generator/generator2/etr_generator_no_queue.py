@@ -57,7 +57,7 @@ def get_atom_count_distribution(problems: List[PartialProblem]) -> tuple[Counter
 
     return counts, median_freq
 
-def create_partial_problem(views: Tuple[View], seed_problem: PartialProblem) -> PartialProblem:
+def create_partial_problem(views: Tuple[View], seed_problem_id: str) -> PartialProblem:
     premises: list[ReifiedView] = []
     for p in views:
         premises.append(
@@ -79,7 +79,7 @@ def create_partial_problem(views: Tuple[View], seed_problem: PartialProblem) -> 
             # since it's agnostic to the ontology
             english_form=None,
         ),
-        seed_id=seed_problem.seed_id,
+        seed_id=seed_problem_id,
     )
     return new_problem
 
@@ -122,46 +122,38 @@ class ETRGeneratorIndependent:
             views.append(get_random_view())
             
             # Try to build a valid problem by adding views incrementally
-            max_views = 5  # Set a reasonable upper limit on number of views
-            for _ in range(max_views):
+            max_attempts_to_add_new_view = 10
+            for _ in range(max_attempts_to_add_new_view):
                 # 1. Get a random view using mutations.get_random_view()
                 random_view = get_random_view()
-                
+
                 # 2. Check if adding this view results in a valid erotetic conclusion
                 temp_views = views + [random_view]
-                
-                # Skip empty view lists
-                if not temp_views:
-                    views.append(random_view)
-                    continue
-                
+
                 try:
                     # Use ETR's inference procedure to check if a conclusion follows
                     conclusion = default_inference_procedure(temp_views)
-                    
+
                     # If conclusion is null (verum), try a different view
                     if conclusion.is_verum:
-                        continue
+                        continue  # Try a different continuation
                 except Exception as e:
                     # If there's an error in inference, try a different view
                     print(f"Error in inference: {e}")
                     continue
-                
+
                 # 3. Add the view since it produces a valid conclusion
                 views.append(random_view)
-                
-                # 4. Check if the current problem meets our requirements
+
+                # 4. Check if the current problem meets our requirements, and emit it if so
                 current_atom_count = sum(len(view.atoms) for view in views)
-                
-                # Check if this atom count is one we need
                 if AtomCount(current_atom_count) in needed_counts and needed_counts[AtomCount(current_atom_count)] > 0:
                     # Check if the conclusion is categorical (if required)
                     conclusion = default_inference_procedure(views)
                     is_categorical = len(conclusion.stage) == 1 and not conclusion.is_verum
-                    
+
                     if not categorical_only or is_categorical:
                         # We found a valid problem that meets our requirements
-                        seed_problem = random.choice(create_starting_problems())
 
                         print(f"Generated problem with {current_atom_count} atoms")
                         print(f"Views:")
@@ -171,11 +163,12 @@ class ETRGeneratorIndependent:
                         print(conclusion)
                         print(f"Characteristics: is_cat: {is_categorical}, is_verum: {conclusion.is_verum}, conc stage len: {len(conclusion.stage)}, atoms: {current_atom_count}")
 
-                        return create_partial_problem(tuple(views), seed_problem)
+                        return create_partial_problem(tuple(views), "no_seed")
                 
                 # 5. If we've exceeded all possible atom counts, backtrack
                 if all(current_atom_count > count for count in needed_counts.keys()):
                     # Remove the last few views and try again with different ones
+                    # print(f"Backtracking from {current_atom_count} atoms, {len(views)} views")
                     backtrack_count = min(3, len(views))
                     if backtrack_count > 0:
                         views = views[:-backtrack_count]
@@ -301,7 +294,7 @@ class ETRGeneratorIndependent:
                     base_views = [p.logical_form_etr_view for p in new_premises]
 
                     # Update current problem for next iteration
-                    current_problem = create_partial_problem(base_views, seed_problem)
+                    current_problem = create_partial_problem(base_views, seed_problem.seed_id)
                 except ParseException as e:
                     print(f"Failed to mutate problem: {e}, retrying")
                     raise e
