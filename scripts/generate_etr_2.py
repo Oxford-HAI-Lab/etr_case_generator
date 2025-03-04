@@ -108,6 +108,10 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                 assert problem_is_erotetic, "ETR predicted conclusion should be erotetic by definition"
                 problem_is_classical = conclusion.is_classically_correct
 
+                if args.etr_only_wrong and problem_is_classical:
+                    # print("Skipping problem because ETR conclusion is correct, running with `--etr_only_wrong`.")
+                    raise ValueError("ETR conclusion is correct, but `--etr_only_wrong` is set.")
+
                 # Handle balancing logic
                 if args.balance_quadrants:
                     category = (problem_is_erotetic, problem_is_classical)
@@ -131,8 +135,8 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                 pbar.set_postfix(pbar_postfix)
 
                 # Check atom count constraints
+                num_atoms = sum(len(view.logical_form_etr_view.atoms) for view in problem.views)
                 if args.num_atoms_set:
-                    num_atoms = sum(len(view.logical_form_etr_view.atoms) for view in problem.views)
                     if num_atoms not in args.num_atoms_set:
                         continue
                     if category is not None:
@@ -157,6 +161,14 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                     if str(problem.seed_id).startswith("target") and n_targets_in_problem_list >= n_problems // 2:
                         continue
 
+                # Print out the generated problem
+                print(f"Generated problem with {num_atoms} atoms. Premises:")
+                for v in problem.views:
+                    print(" ***", v.logical_form_etr)
+                print(f"Conclusion:")
+                print(" >>>", conclusion.view.logical_form_etr)
+                print(f"Characteristics: erotetic={problem_is_erotetic}, classical={problem_is_classical}")
+
                 problems.append(problem)
                 pbar.set_postfix(pbar_postfix)
                 break  # Successfully generated a problem, move to next iteration
@@ -171,7 +183,9 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
                 exception_type_counter[exception_key] += 1
                 if exception_key not in exception_examples:
                     exception_examples[exception_key] = str(e)[:100]  # Store first 100 chars
-                print("Exception type counts:\t", exception_type_counter)
+                # print("Exception type counts:")
+                # for k, v in exception_type_counter.items():
+                #     print(f" * {k}: {v}")
                 # raise e  # Uncomment to see the exception
                 continue  # Try again
 
@@ -179,7 +193,7 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
     print("!" * 25, "Error Report", "!" * 25)
     print(f"Succeeded, but overcame these Exceptions:")
     for k, v in exception_type_counter.items():
-        print(f" * {k}: {v}")
+        print(f" * {v} times: {k}")
         print(f"     Example: {exception_examples[k]}")
     print("!" * 64, "\n")
     
@@ -223,7 +237,8 @@ def main():
     parser.add_argument("--seed_bank", type=str, default=None, help="Name of the problem seed bank to default to.")
     multi_view_group = parser.add_mutually_exclusive_group(required=False)
     multi_view_group.add_argument("--multi_view", dest="multi_view", action="store_true", help="Generate problems with multiple views")
-    multi_view_group.add_argument("--no-multi_view", dest="multi_view", action="store_false", help="Generate problems with a single view")
+    multi_view_group.add_argument("--no_multi_view", dest="multi_view", action="store_false", help="Generate problems with a single view")
+    parser.add_argument("--etr_only_wrong", action="store_true", help="Only generate problems where the ETR conclusion is wrong.")
     parser.set_defaults(multi_view=True)  # Default to True
 
     args = parser.parse_args()

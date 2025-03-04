@@ -155,14 +155,6 @@ class ETRGeneratorIndependent:
                     if not categorical_only or is_categorical:
                         # We found a valid problem that meets our requirements
 
-                        print(f"Generated problem with {current_atom_count} atoms")
-                        print(f"Views:")
-                        for v in views:
-                            print(v)
-                        print(f"Conclusion:")
-                        print(conclusion)
-                        print(f"Characteristics: is_cat: {is_categorical}, is_verum: {conclusion.is_verum}, conc stage len: {len(conclusion.stage)}, atoms: {current_atom_count}")
-
                         return create_partial_problem(tuple(views), "no_seed")
                 
                 # 5. If we've exceeded all possible atom counts, backtrack
