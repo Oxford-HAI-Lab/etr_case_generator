@@ -37,11 +37,11 @@ def create_starting_problems() -> list[PartialProblem]:
         # Quantified modus ponens -- from e51
         PartialProblem(
             premises=[
-                ReifiedView(logical_form_etr_view=View.from_str("Aa { A(a*) }^{ B(a*) }")),
-                ReifiedView(logical_form_etr_view=View.from_str("Aa { B(a*) }"))
+                ReifiedView(logical_form_etr_view=View.from_str("Ax { A(x*) }^{ B(x*) }")),
+                ReifiedView(logical_form_etr_view=View.from_str("Ax { B(x*) }"))
             ],
             etr_what_follows=ReifiedView(
-                logical_form_etr_view=View.from_str("Aa { A(a*) }")
+                logical_form_etr_view=View.from_str("Ax { A(x*) }")
             ),
             seed_id="e51"
         ),
@@ -132,11 +132,11 @@ def create_starting_problems() -> list[PartialProblem]:
         # From e61 - Universal with existential
         PartialProblem(
             premises=[
-                ReifiedView(logical_form_etr_view=View.from_str("∀x ∃a { ~A(x), B(a*) A(x) C(x,a) }")),
+                ReifiedView(logical_form_etr_view=View.from_str("∀x ∃y { ~A(x), B(y*) A(x) C(x,y) }")),
                 ReifiedView(logical_form_etr_view=View.from_str("{ B(b()*) }"))
             ],
             etr_what_follows=ReifiedView(
-                logical_form_etr_view=View.from_str("∀x ∃a { B(b()*) B(a*) A(x) C(x,a), B(b()*) ~A(x) }")
+                logical_form_etr_view=View.from_str("∀x ∃y { B(b()*) B(y*) A(x) C(x,y), B(b()*) ~A(x) }")
             ),
             seed_id="e61"
         ),
