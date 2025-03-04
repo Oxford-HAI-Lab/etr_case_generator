@@ -10,6 +10,7 @@ from pyparsing import ParseException
 from etr_case_generator.generator2.logic_types import AtomCount
 from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
 from etr_case_generator.generator2.seed_problems import (
+    ILLUSORY_INFERENCE_FROM_DISJUNCTION_REVERSE_PREMISES_TEST,
     create_starting_problems,
     ILLUSORY_INFERENCE_FROM_DISJUNCTION,
 )
@@ -209,6 +210,11 @@ class ETRGeneratorIndependent:
                 # print("Loading from seed bank")
                 seed_problem: PartialProblem = random.choice(
                     ILLUSORY_INFERENCE_FROM_DISJUNCTION
+                )
+                return deepcopy(seed_problem)
+            elif self.seed_bank == "ILLUSORY_INFERENCE_FROM_DISJUNCTION_REVERSE_PREMISES_TEST":
+                seed_problem: PartialProblem = random.choice(
+                    ILLUSORY_INFERENCE_FROM_DISJUNCTION_REVERSE_PREMISES_TEST
                 )
                 return deepcopy(seed_problem)
 
