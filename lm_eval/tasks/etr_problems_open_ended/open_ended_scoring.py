@@ -129,6 +129,10 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
         # 2. should be compared after stripping all issue structure out
         is_etr_strong_predicted: bool = etr_strong_predicted.is_equivalent_under_arb_sub(model_view_etr)
 
+        # TODO: Check "logical equivalency" in strong prediction
+        #  - Convert both to PySMT
+        #  - Check if they are equivalent
+
         print(f"ETR predicted: {is_etr_predicted}")
         print(f"Classically correct: {is_classically_correct}")
 

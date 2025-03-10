@@ -313,6 +313,7 @@ class FullProblem:
             "question": self.to_prompt(format, chain_of_thought),
             "scoring_guide": {
                 "etr_predicted": self.etr_predicted_conclusion.view.logical_form_etr if self.etr_predicted_conclusion else None,
+                "etr_predicted_english": self.etr_predicted_conclusion.view.english_form if self.etr_predicted_conclusion else None,
                 "etr_predicted_is_classically_correct": self.etr_predicted_conclusion.is_classically_correct if self.etr_predicted_conclusion else None,
                 "etr_predicted_conclusion_is_categorical": self.etr_predicted_conclusion_is_categorical,
                 "generation_details": {
@@ -324,6 +325,8 @@ class FullProblem:
                     "num_predicates_per_problem": args.num_predicates_per_problem,
                     "num_objects_per_problem": args.num_objects_per_problem,
                     "premises_etr": [view.logical_form_etr for view in self.views],
+                    "premises_english": [view.english_form for view in self.views],
+                    # "premises_english_format_2": [view.logical_form_etr_view.to_english() for view in self.views],
                     "premises_fnodes": [format_smt(view.logical_form_smt_fnode) for view in self.views],
                     "is_chain_of_thought": chain_of_thought,
                 }

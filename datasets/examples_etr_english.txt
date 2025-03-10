@@ -1,0 +1,1429 @@
+Found 100 problems                                                                                                   
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                     [1mProblem 0[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either psychon is gravity-defying and psychon is infinite-energy-producing, or psychon is memory-storing and psychon is consciousness-affecting, or psychon is consciousness-affecting
+2.	either psychon is memory-storing, or infinitum is not memory-storing
+3.	either psychon is memory-storing, or psychon is not memory-storing
+4.	psychon is memory-storing and infinitum is memory-storing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{consciousnessAffecting(psychon())}                                                                                  
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+psychon is consciousness-affecting                                                                                   
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                     [1mProblem 1[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Lambda Shifter is not quantum computing, or Gamma Weaver is quantum computing
+2.	either Gamma Weaver is not quantum computing and Gamma Weaver is a future predictor, or Gamma Weaver is quantum computing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{quantumComputing(gammaWeaver()*)}                                                                                   
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Gamma Weaver is quantum computing                                                                                    
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                     [1mProblem 2[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either void essence is immortality-granting, or astral salt is not immortality-granting
+2.	either void essence is reality-altering, or astral salt is not immortality-granting
+3.	either void essence is reality-altering and void essence is immortality-granting, or void essence is not reality-altering
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{immortalityGranting(voidEssence())realityAltering(voidEssence())~immortalityGranting(astralSalt())}                 
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+void essence is reality-altering and astral salt is not immortality-granting and void essence is immortality-granting
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                     [1mProblem 3[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either moonwolf is not light-emitting, or moonwolf is not moonlight-glowing and frostwyrm is not light-emitting
+2.	either moonwolf is not light-emitting and moonwolf is light-emitting and frostwyrm is not light-emitting, or moonwolf is not moonlight-glowing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~lightEmitting(frostwyrm()[3m)~moonlightGlowing(moonwolf()[0m)}                                                           
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+moonwolf is not moonlight-glowing and frostwyrm is not light-emitting                                                
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                     [1mProblem 4[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Lambda Shifter is self-evolving and Lambda Shifter is a virus hunter, or Lambda Shifter is a future predictor and Lambda Shifter is quantum computing and Gamma Weaver is a code healer
+2.	either Epsilon Architect is quantum computing, or Lambda Shifter is a future predictor and Gamma Weaver is a future predictor, or Beta Sentinel is a future predictor and Epsilon Architect is a future predictor
+3.	either Lambda Shifter is a future predictor, or Gamma Weaver is a future predictor
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{quantumComputing(lambdaShifter())aCodeHealer(gammaWeaver()*)aFuturePredictor(gammaWeaver())aFuturePredictor(lambdaSh
+ifter())}                                                                                                            
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Lambda Shifter is a future predictor and Lambda Shifter is quantum computing and Gamma Weaver is a code healer and   
+Gamma Weaver is a future predictor                                                                                   
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                     [1mProblem 5[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Starlight Pendant is not magic-nullifying, or Starlight Pendant is not wisdom-enhancing and Dreamcatcher Ring is dimension-bridging
+2.	Starlight Pendant is not wisdom-enhancing and Starlight Pendant is not starlight-channeling and Dreamcatcher Ring is wisdom-enhancing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{dimensionBridging(dreamcatcherRing())}                                                                              
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Dreamcatcher Ring is dimension-bridging                                                                              
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                     [1mProblem 6[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Void Nexus is not matter-crystallizing and Probability Realm is possibility-branching and Mirror World is not light-absorbing, or Time Spiral is infinity-containing
+2.	either Mirror World is not infinity-containing, or Mirror World is not infinity-containing and Mirror World is not light-absorbing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~lightAbsorbing(mirrorWorld())~infinityContaining(mirrorWorld()*)possibilityBranching(probabilityRealm())~matterCrys
+tallizing(voidNexus())}                                                                                              
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Mirror World is not infinity-containing and Void Nexus is not matter-crystallizing and Probability Realm is          
+possibility-branching and Mirror World is not light-absorbing                                                        
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                     [1mProblem 7[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either void essence is not reality-altering, or astral salt is reality-altering
+2.	either void essence is not reality-altering and astral salt is immortality-granting, or void essence is immortality-granting
+3.	astral salt is not transmuting and astral salt is immortality-granting
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~realityAltering(voidEssence())}                                                                                    
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+void essence is not reality-altering                                                                                 
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                     [1mProblem 8[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either chronium is not time-dilating, or chronium is dark energy absorbing and gravitron is not time-dilating
+2.	either chronium is not dark energy absorbing, or gravitron is not time-dilating
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{darkEnergyAbsorbing(chronium())~timeDilating(gravitron()*)}                                                         
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+chronium is dark energy absorbing and gravitron is not time-dilating                                                 
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                     [1mProblem 9[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	for all A, either A is not orbited by satellites, or planet X is ringed and planet X is orbited by satellites
+2.	planet Z is orbited by satellites and planet Z is in retrograde orbit
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{orbitedBySatellites(planetX())ringed(planetX())}                                                                    
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+planet X is ringed and planet X is orbited by satellites                                                             
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 10[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either chronium is dark energy absorbing, or chronium is dark energy absorbing and gravitron is dark energy absorbing, or mystarium is dark energy absorbing and shadowium is dark energy absorbing
+2.	either chronium is not dark energy absorbing, or shadowium is dark energy absorbing, or chronium is dark energy absorbing and gravitron is not time-dilating
+3.	mystarium is dark energy absorbing and chronium is dark energy absorbing and mystarium is not time-dilating
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{darkEnergyAbsorbing(shadowium()*)~timeDilating(gravitron())}                                                        
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+gravitron is not time-dilating and shadowium is dark energy absorbing                                                
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 11[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either the two is yellow and the two is marked, or the jack is not round
+2.	either the jack is marked, or the two is square and the jack is marked
+3.	either the two is not square, or the four is square and the two is square
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{marked(theJack())square(theTwo())square(theFour())}                                                                 
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+the four is square and the two is square and the jack is marked                                                      
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 12[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	void essence is not reality-altering and astral salt is reality-altering
+2.	either void essence is not reality-altering and astral salt is immortality-granting, or void essence is not transmuting
+3.	either void essence is not consciousness-expanding and void essence is reality-altering and astral salt is immortality-granting, or The Philosopher's Stone is transmuting and Time Crystal is consciousness-expanding
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{immortalityGranting(astralSalt())consciousnessExpanding(timeCrystal())transmuting(thePhilosophersStone())}          
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+The Philosopher's Stone is transmuting and Time Crystal is consciousness-expanding and astral salt is                
+immortality-granting                                                                                                 
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 13[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either planet X is elliptically-orbiting, or asteroid B is elliptically-orbiting, or planet X is not elliptically-orbiting
+2.	either planet X is elliptically-orbiting, or planet Z is not in retrograde orbit and planet Z is not elliptically-orbiting and planet X is not elliptically-orbiting
+3.	either planet Z is elliptically-orbiting and planet Z is not elliptically-orbiting, or planet X is in retrograde orbit
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~ellipticallyOrbiting(planetZ())~inRetrogradeOrbit(planetZ())inRetrogradeOrbit(planetX())~ellipticallyOrbiting(plane
+tX())}                                                                                                               
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+planet Z is not in retrograde orbit and planet X is in retrograde orbit and planet Z is not elliptically-orbiting and
+planet X is not elliptically-orbiting                                                                                
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 14[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either infinitum is memory-storing, or psychon is memory-storing and dimensium is memory-storing
+2.	there is some A such that if A is consciousness-affecting, then A is memory-storing
+3.	either infinitum is infinite-energy-producing and infinitum is gravity-defying, or psychon is memory-storing and psychon is consciousness-affecting and infinitum is not memory-storing
+4.	either psychon is not consciousness-affecting and psychon is consciousness-affecting, or psychon is not gravity-defying
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{memoryStoring(dimensium()*)consciousnessAffecting(psychon())~memoryStoring(infinitum())~gravityDefying(psychon())mem
+oryStoring(psychon())}                                                                                               
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+psychon is consciousness-affecting and psychon is not gravity-defying and infinitum is not memory-storing and psychon
+is memory-storing and dimensium is memory-storing                                                                    
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 15[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either psychon is memory-storing and psychon is consciousness-affecting and infinitum is not memory-storing, or dimensium is not gravity-defying
+2.	either chronoton is memory-storing and chronoton is consciousness-affecting and psychon is not gravity-defying, or psychon is consciousness-affecting
+3.	either infinitum is not gravity-defying, or psychon is not consciousness-affecting
+4.	psychon is not memory-storing and infinitum is memory-storing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{consciousnessAffecting(psychon()[3m)~gravityDefying(infinitum()[0m)~gravityDefying(dimensium()*)}                         
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+infinitum is not gravity-defying and dimensium is not gravity-defying and psychon is consciousness-affecting         
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 16[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either the two is square, or the two is not marked, or the jack is not marked
+2.	either the two is square, or the two is not square
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{square(theTwo())}                                                                                                   
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+the two is square                                                                                                    
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 17[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Starlight Pendant is starlight-channeling, or Moonstone Bracelet is starlight-channeling and Moonstone Bracelet is wisdom-enhancing
+2.	either Starlight Pendant is wisdom-enhancing, or Moonstone Bracelet is starlight-channeling and Moonstone Bracelet is wisdom-enhancing
+3.	either Dreamcatcher Ring is not dimension-bridging, or Starlight Pendant is not dimension-bridging and Starlight Pendant is wisdom-enhancing
+4.	either Dreamcatcher Ring is not dimension-bridging, or Starlight Pendant is not wisdom-enhancing and Starlight Pendant is starlight-channeling
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{wisdomEnhancing(starlightPendant())starlightChanneling(moonstoneBracelet())wisdomEnhancing(moonstoneBracelet())~dime
+nsionBridging(dreamcatcherRing()*)}                                                                                  
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Moonstone Bracelet is starlight-channeling and Moonstone Bracelet is wisdom-enhancing and Starlight Pendant is       
+wisdom-enhancing and Dreamcatcher Ring is not dimension-bridging                                                     
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 18[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either biomatrix is not self-evolving and metacell is time-manipulating, or metacell is self-evolving
+2.	either biomatrix is self-evolving, or metacell is self-evolving, or biomatrix is time-manipulating
+3.	either metacell is not time-manipulating, or biomatrix is not time-manipulating and biomatrix is not self-evolving
+4.	either biomatrix is not self-evolving and nanohive is self-evolving, or metacell is not self-evolving
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~selfEvolving(biomatrix())~timeManipulating(biomatrix())selfEvolving(metacell())selfEvolving(nanohive())}           
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+biomatrix is not time-manipulating and biomatrix is not self-evolving and metacell is self-evolving and nanohive is  
+self-evolving                                                                                                        
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 19[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Mirror World is not infinity-containing, or Time Spiral is possibility-branching and Mirror World is light-absorbing and Mirror World is matter-crystallizing and Mirror World is not light-absorbing
+2.	either Mirror World is light-absorbing and Time Spiral is light-absorbing, or Probability Realm is light-absorbing and Void Nexus is light-absorbing, or Time Spiral is not light-absorbing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{lightAbsorbing(timeSpiral())~infinityContaining(mirrorWorld())lightAbsorbing(mirrorWorld())}                        
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Mirror World is not infinity-containing and Mirror World is light-absorbing and Time Spiral is light-absorbing       
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 20[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either the four is square and the two is not marked, or the four is not yellow
+2.	either the four is square and the two is marked and the six is square, or the two is marked
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{square(theSix())~yellow(theFour()[3m)marked(theTwo())square(theFour()[0m)}                                                
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+the four is square and the four is not yellow and the two is marked and the six is square                            
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 21[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Void Nexus is not matter-crystallizing, or Mirror World is not light-absorbing and Mirror World is infinity-containing and Time Spiral is not light-absorbing
+2.	either Mirror World is light-absorbing, or Time Spiral is not light-absorbing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{infinityContaining(mirrorWorld())~lightAbsorbing(mirrorWorld())~lightAbsorbing(timeSpiral())}                       
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Mirror World is not light-absorbing and Mirror World is infinity-containing and Time Spiral is not light-absorbing   
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 22[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either the two is not marked, or the two is not marked and the two is not square
+2.	either the two is not marked, or the two is not square
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~marked(theTwo()*)~square(theTwo())}                                                                                
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+the two is not marked and the two is not square                                                                      
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 23[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either the two is square, or the two is not square
+2.	either the two is not square, or the jack is not marked
+3.	either the six is not marked, or the four is square and the four is marked
+4.	for all A, A is marked
+5.	the two is marked and the jack is not marked
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~square(theTwo())}                                                                                                  
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+the two is not square                                                                                                
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 24[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either biomech is network forming and biomech is time-manipulating, or biomech is not network forming
+2.	either biomatrix is not time-manipulating, or biomech is time-manipulating, or biomech is self-evolving and biomech is time-manipulating
+3.	biomatrix is not time-manipulating and biomatrix is self-evolving
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{timeManipulating(biomech())networkForming(biomech())}                                                               
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+biomech is network forming and biomech is time-manipulating                                                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 25[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either void essence is reality-altering and void essence is immortality-granting, or void essence is not transmuting
+2.	either void essence is not reality-altering, or void essence is immortality-granting
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{immortalityGranting(voidEssence()*)realityAltering(voidEssence())}                                                  
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+void essence is reality-altering and void essence is immortality-granting                                            
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 26[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Gamma Weaver is not self-evolving and Lambda Shifter is a future predictor and Lambda Shifter is quantum computing, or Gamma Weaver is a virus hunter and Gamma Weaver is self-evolving
+2.	Lambda Shifter is a future predictor and Lambda Shifter is quantum computing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~selfEvolving(gammaWeaver()*)}                                                                                      
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Gamma Weaver is not self-evolving                                                                                    
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 27[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	for all A, either Void Mirror is starlight-channeling and Shadow Cloak is starlight-channeling, or Starlight Pendant is starlight-channeling and A is starlight-channeling
+2.	either Shadow Cloak is wisdom-enhancing, or Starlight Pendant is starlight-channeling and Dreamcatcher Ring is starlight-channeling
+3.	either Dreamcatcher Ring is not dimension-bridging, or Starlight Pendant is not wisdom-enhancing
+4.	either Starlight Pendant is not starlight-channeling, or Shadow Cloak is wisdom-enhancing and Dreamcatcher Ring is not wisdom-enhancing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+∀starlightPendant                                                                                                    
+{starlightChanneling(starlightPendant())~wisdomEnhancing(dreamcatcherRing())wisdomEnhancing(shadowCloak()*)starlightC
+hanneling(starlightPendant)}                                                                                         
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+for all A, Shadow Cloak is wisdom-enhancing and A is starlight-channeling and Dreamcatcher Ring is not               
+wisdom-enhancing and Starlight Pendant is starlight-channeling                                                       
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 28[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Shadow Cloak is dimension-bridging and Void Mirror is magic-nullifying and Starlight Pendant is magic-nullifying and Dreamcatcher Ring is not starlight-channeling, or Starlight Pendant is starlight-channeling and Dreamcatcher Ring is wisdom-enhancing
+2.	Starlight Pendant is starlight-channeling and Starlight Pendant is wisdom-enhancing and Dreamcatcher Ring is dimension-bridging
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{wisdomEnhancing(dreamcatcherRing())}                                                                                
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Dreamcatcher Ring is wisdom-enhancing                                                                                
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 29[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Lambda Shifter is a future predictor and Lambda Shifter is quantum computing, or Gamma Weaver is a virus hunter and Epsilon Architect is not a virus hunter and Gamma Weaver is self-evolving
+2.	either Lambda Shifter is quantum computing and Gamma Weaver is not quantum computing, or Lambda Shifter is not quantum computing and Lambda Shifter is not a future predictor
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{quantumComputing(lambdaShifter())~quantumComputing(gammaWeaver())aFuturePredictor(lambdaShifter())}                 
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Lambda Shifter is a future predictor and Lambda Shifter is quantum computing and Gamma Weaver is not quantum         
+computing                                                                                                            
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 30[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either the two is not yellow and the two is marked, or the jack is marked
+2.	either the two is yellow and the two is round, or the two is square and the two is marked and the jack is red
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~yellow(theTwo())square(theTwo()*)marked(theTwo())red(theJack())}                                                   
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+the two is square and the jack is red and the two is not yellow and the two is marked                                
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 31[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either mind control is object-reading and mind control is matter-moving, or mind control is object-reading and telepathy is future-seeing and telepathy is mindreading
+2.	either mind control is not matter-moving, or telepathy is not future-seeing and telepathy is mindreading
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{objectReading(mindControl())mindreading(telepathy())~matterMoving(mindControl()*)futureSeeing(telepathy())}         
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+mind control is object-reading and telepathy is future-seeing and telepathy is mindreading and mind control is not   
+matter-moving                                                                                                        
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 32[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Dreamcatcher Ring is dimension-bridging, or Starlight Pendant is not wisdom-enhancing and Dreamcatcher Ring is not wisdom-enhancing
+2.	either Starlight Pendant is not starlight-channeling and Dreamcatcher Ring is not wisdom-enhancing, or Dreamcatcher Ring is not starlight-channeling
+3.	Starlight Pendant is not starlight-channeling
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~wisdomEnhancing(dreamcatcherRing())~wisdomEnhancing(starlightPendant())}                                           
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Starlight Pendant is not wisdom-enhancing and Dreamcatcher Ring is not wisdom-enhancing                              
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 33[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either dimensium is consciousness-affecting, or psychon is not memory-storing, or infinitum is not memory-storing
+2.	either psychon is not consciousness-affecting, or psychon is not consciousness-affecting and psychon is not memory-storing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~memoryStoring(psychon())~consciousnessAffecting(psychon())}                                                        
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+psychon is not consciousness-affecting and psychon is not memory-storing                                             
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 34[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either daydream is not memory-weaving and daydream is reality-bridging, or daydream is not dream-shaping
+2.	either daydream is reality-bridging and daydream is memory-weaving, or mindshaper is thought-reading and daydream is not thought-reading and mindshaper is dream-shaping
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{dreamShaping(mindshaper())~memoryWeaving(daydream())realityBridging(daydream())~thoughtReading(daydream())thoughtRea
+ding(mindshaper())}                                                                                                  
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+mindshaper is thought-reading and daydream is not thought-reading and daydream is not memory-weaving and daydream is 
+reality-bridging and mindshaper is dream-shaping                                                                     
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 35[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	planet Z is elliptically-orbiting and planet X is in retrograde orbit
+2.	either planet Z is elliptically-orbiting, or planet Z is not in retrograde orbit and planet Z is not orbited by satellites
+3.	either comet 1 is orbited by satellites, or comet 2 is elliptically-orbiting and comet 2 is in retrograde orbit
+4.	either planet Z is orbited by satellites, or planet Z is not in retrograde orbit
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~inRetrogradeOrbit(planetZ())~orbitedBySatellites(planetZ()*)}                                                      
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+planet Z is not in retrograde orbit and planet Z is not orbited by satellites                                        
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 36[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either biomatrix is self-evolving and biomatrix is time-manipulating, or metacell is not self-evolving
+2.	biomech is self-evolving and biomech is time-manipulating and biomatrix is time-manipulating
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{selfEvolving(biomatrix())}                                                                                          
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+biomatrix is self-evolving                                                                                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 37[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either gravitron is sound-absorbing, or shadowium is not time-dilating and gravitron is dark energy absorbing
+2.	either gravitron is shape-shifting and gravitron is sound-absorbing, or chronium is dark energy absorbing and chronium is time-dilating and gravitron is not gaseous under high pressure
+3.	chronium is dark energy absorbing and shadowium is dark energy absorbing and gravitron is not dark energy absorbing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~gaseousUnderHighPressure(gravitron())soundAbsorbing(gravitron()*)timeDilating(chronium())}                         
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+chronium is time-dilating and gravitron is not gaseous under high pressure and gravitron is sound-absorbing          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 38[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either psychon is gravity-defying, or psychon is not consciousness-affecting and psychon is infinite-energy-producing
+2.	psychon is not consciousness-affecting and psychon is not memory-storing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{infiniteEnergyProducing(psychon())}                                                                                 
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+psychon is infinite-energy-producing                                                                                 
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 39[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either void essence is reality-altering, or astral salt is reality-altering
+2.	either void essence is not immortality-granting, or void essence is reality-altering and astral salt is reality-altering, or Time Crystal is reality-altering and The Philosopher's Stone is reality-altering
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{realityAltering(astralSalt())realityAltering(voidEssence())}                                                        
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+void essence is reality-altering and astral salt is reality-altering                                                 
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 40[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either daydream is dream-shaping and daydream is thought-reading, or daydream is dreamwalking
+2.	morpheus is dream-shaping and morpheus is reality-bridging and morpheus is memory-weaving and daydream is thought-reading
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{dreamShaping(daydream())}                                                                                           
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+daydream is dream-shaping                                                                                            
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 41[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either gravitron is shape-shifting and gravitron is sound-absorbing, or shadowium is not shape-shifting
+2.	either gravitron is sound-absorbing, or chronium is not time-dilating
+3.	either chronium is sound-absorbing, or gravitron is not sound-absorbing and chronium is not time-dilating and chronium is not dark energy absorbing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{shapeShifting(gravitron())soundAbsorbing(chronium())soundAbsorbing(gravitron())~timeDilating(chronium())}           
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+gravitron is shape-shifting and chronium is not time-dilating and chronium is sound-absorbing and gravitron is       
+sound-absorbing                                                                                                      
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 42[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either chronium is dark energy absorbing and chronium is time-dilating, or gravitron is shape-shifting and shadowium is shape-shifting and gravitron is sound-absorbing, or mystarium is dark energy absorbing
+2.	chronium is not sound-absorbing and chronium is time-dilating
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{darkEnergyAbsorbing(chronium())}                                                                                    
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+chronium is dark energy absorbing                                                                                    
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 43[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either the two is square, or the two is marked
+2.	either the eight is not square and the two is square and the two is marked, or the jack is not square
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~square(theEight())square(theTwo())marked(theTwo())}                                                                
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+the eight is not square and the two is square and the two is marked                                                  
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 44[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either planet Z is elliptically-orbiting, or planet Z is not in retrograde orbit
+2.	either planet Z is orbited by satellites, or planet Z is not in retrograde orbit and planet Z is orbited by satellites
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~inRetrogradeOrbit(planetZ()[3m)orbitedBySatellites(planetZ()[0m)}                                                        
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+planet Z is not in retrograde orbit and planet Z is orbited by satellites                                            
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 45[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Starlight Pendant is starlight-channeling and Starlight Pendant is wisdom-enhancing, or Starlight Pendant is dimension-bridging and Starlight Pendant is magic-nullifying and Dreamcatcher Ring is dimension-bridging
+2.	either Starlight Pendant is starlight-channeling, or Starlight Pendant is not starlight-channeling
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{starlightChanneling(starlightPendant())wisdomEnhancing(starlightPendant())}                                         
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Starlight Pendant is starlight-channeling and Starlight Pendant is wisdom-enhancing                                  
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 46[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either comet 2 is elliptically-orbiting and planet Z is in retrograde orbit, or comet 1 is in retrograde orbit
+2.	either planet Z is not in retrograde orbit, or planet Z is in retrograde orbit, or planet Z is not orbited by satellites
+3.	either planet Z is not in retrograde orbit and planet Z is in retrograde orbit, or planet Z is not orbited by satellites
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{inRetrogradeOrbit(planetZ())ellipticallyOrbiting(comet2())~orbitedBySatellites(planetZ())}                          
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+comet 2 is elliptically-orbiting and planet Z is not orbited by satellites and planet Z is in retrograde orbit       
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 47[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Lambda Shifter is not a virus hunter, or Gamma Weaver is a virus hunter and Lambda Shifter is self-evolving and Lambda Shifter is quantum computing
+2.	either Lambda Shifter is a future predictor, or Epsilon Architect is quantum computing and Epsilon Architect is not self-evolving and Lambda Shifter is a future predictor and Gamma Weaver is not a future predictor
+3.	Gamma Weaver is not self-evolving and Epsilon Architect is not self-evolving and Lambda Shifter is quantum computing and Gamma Weaver is not quantum computing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~aFuturePredictor(gammaWeaver())quantumComputing(epsilonArchitect())aFuturePredictor(lambdaShifter())selfEvolving(la
+mbdaShifter())aVirusHunter(gammaWeaver())}                                                                           
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Gamma Weaver is a virus hunter and Lambda Shifter is self-evolving and Gamma Weaver is not a future predictor and    
+Epsilon Architect is quantum computing and Lambda Shifter is a future predictor                                      
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 48[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either shadowium is not dark energy absorbing, or chronium is dark energy absorbing and chronium is time-dilating, or gravitron is shape-shifting and gravitron is sound-absorbing, or chronium is not sound-absorbing
+2.	chronium is not dark energy absorbing
+3.	either chronium is sound-absorbing and chronium is not sound-absorbing and chronium is time-dilating, or chronium is time-dilating
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~soundAbsorbing(chronium())timeDilating(chronium())}                                                                
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+chronium is not sound-absorbing and chronium is time-dilating                                                        
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 49[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either daydream is not reality-bridging, or mindshaper is memory-weaving
+2.	either daydream is reality-bridging, or daydream is not reality-bridging
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~realityBridging(daydream())}                                                                                       
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+daydream is not reality-bridging                                                                                     
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 50[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Theta Healer is not a future predictor, or Theta Healer is a future predictor and Theta Healer is quantum computing
+2.	Theta Healer is quantum computing and Lambda Shifter is not self-evolving
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{aFuturePredictor(thetaHealer())}                                                                                    
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Theta Healer is a future predictor                                                                                   
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 51[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	there is some A such that either A is not self-evolving, or A is quantum computing
+2.	either Lambda Shifter is quantum computing, or Gamma Weaver is not self-evolving and Lambda Shifter is not quantum computing and Lambda Shifter is quantum computing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{quantumComputing(lambdaShifter())~selfEvolving(gammaWeaver()*)}                                                     
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Gamma Weaver is not self-evolving and Lambda Shifter is quantum computing                                            
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 52[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either planet Z is in retrograde orbit, or planet Z is ringed and planet Z is not orbited by satellites
+2.	either planet Z is orbited by satellites and planet Z is ringed, or planet Z is not ringed
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{inRetrogradeOrbit(planetZ())orbitedBySatellites(planetZ())ringed(planetZ())}                                        
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+planet Z is orbited by satellites and planet Z is ringed and planet Z is in retrograde orbit                         
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 53[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Lambda Shifter is self-evolving, or Lambda Shifter is a future predictor and Gamma Weaver is a code healer and Gamma Weaver is quantum computing, or Epsilon Architect is self-evolving and Beta Sentinel is a virus hunter
+2.	either Lambda Shifter is a future predictor, or Lambda Shifter is not a future predictor
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{aCodeHealer(gammaWeaver())quantumComputing(gammaWeaver())aFuturePredictor(lambdaShifter()*)}                        
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Lambda Shifter is a future predictor and Gamma Weaver is a code healer and Gamma Weaver is quantum computing         
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 54[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either visionkeeper is not dreamwalking, or daydream is reality-bridging and daydream is memory-weaving, or mindshaper is thought-reading and mindshaper is dream-shaping
+2.	either daydream is not reality-bridging, or daydream is memory-weaving, or daydream is not memory-weaving and daydream is not reality-bridging
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{realityBridging(daydream())memoryWeaving(daydream())}                                                               
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+daydream is reality-bridging and daydream is memory-weaving                                                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 55[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Mirror World is light-absorbing, or Mirror World is not light-absorbing
+2.	either Mirror World is light-absorbing, or Mirror World is infinity-containing
+3.	either Mirror World is light-absorbing and Mirror World is infinity-containing and Time Spiral is light-absorbing, or Time Spiral is possibility-branching and Time Spiral is matter-crystallizing
+4.	Probability Realm is not matter-crystallizing and Void Nexus is not infinity-containing and Time Spiral is light-absorbing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{infinityContaining(mirrorWorld()*)lightAbsorbing(mirrorWorld())}                                                    
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Mirror World is light-absorbing and Mirror World is infinity-containing                                              
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 56[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either psychon is gravity-defying, or psychon is consciousness-affecting
+2.	either psychon is memory-storing, or psychon is consciousness-affecting
+3.	either infinitum is memory-storing, or dimensium is consciousness-affecting and memeton is memory-storing
+4.	psychon is memory-storing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{consciousnessAffecting(psychon())}                                                                                  
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+psychon is consciousness-affecting                                                                                   
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 57[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Lambda Shifter is not quantum computing and Lambda Shifter is a future predictor and Gamma Weaver is not a future predictor, or Lambda Shifter is not quantum computing
+2.	either Lambda Shifter is a future predictor, or Gamma Weaver is not a future predictor
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~quantumComputing(lambdaShifter()[3m)~aFuturePredictor(gammaWeaver()[0m)aFuturePredictor(lambdaShifter())}                
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Lambda Shifter is not quantum computing and Lambda Shifter is a future predictor and Gamma Weaver is not a future    
+predictor                                                                                                            
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 58[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either planet Z is elliptically-orbiting, or planet Z is not elliptically-orbiting
+2.	either planet X is ringed and planet X is not rocky and planet X is orbited by satellites, or planet Z is elliptically-orbiting and planet Z is in retrograde orbit and planet Z is not visible to the naked eye
+3.	planet X is ringed and asteroid B is ringed and planet X is orbited by satellites
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~rocky(planetX())ellipticallyOrbiting(planetZ())}                                                                   
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+planet Z is elliptically-orbiting and planet X is not rocky                                                          
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 59[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either astral salt is consciousness-expanding, or void essence is immortality-granting, or The Philosopher's Stone is transmuting and astral salt is transmuting
+2.	either void essence is reality-altering and astral salt is reality-altering, or Time Crystal is reality-altering and void essence is immortality-granting and The Philosopher's Stone is reality-altering
+3.	either void essence is reality-altering, or astral salt is reality-altering
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{immortalityGranting(voidEssence())realityAltering(astralSalt()*)realityAltering(voidEssence())}                     
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+void essence is reality-altering and void essence is immortality-granting and astral salt is reality-altering        
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 60[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either chronium is sound-absorbing and chronium is shape-shifting, or gravitron is sound-absorbing
+2.	either chronium is sound-absorbing and chronium is shape-shifting and gravitron is gaseous under high pressure, or chronium is dark energy absorbing and chronium is time-dilating
+3.	either chronium is dark energy absorbing, or chronium is not dark energy absorbing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{soundAbsorbing(chronium())darkEnergyAbsorbing(chronium())shapeShifting(chronium())timeDilating(chronium())}         
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+chronium is dark energy absorbing and chronium is sound-absorbing and chronium is shape-shifting and chronium is     
+time-dilating                                                                                                        
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 61[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Lambda Shifter is a future predictor and Lambda Shifter is quantum computing, or Gamma Weaver is a virus hunter and Gamma Weaver is self-evolving, or Lambda Shifter is not self-evolving
+2.	either Lambda Shifter is a future predictor, or Lambda Shifter is not quantum computing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{quantumComputing(lambdaShifter())aFuturePredictor(lambdaShifter())}                                                 
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Lambda Shifter is a future predictor and Lambda Shifter is quantum computing                                         
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 62[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Lambda Shifter is not quantum computing and Lambda Shifter is quantum computing, or Lambda Shifter is self-evolving
+2.	either Gamma Weaver is not quantum computing, or Lambda Shifter is not a future predictor and Lambda Shifter is quantum computing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{quantumComputing(lambdaShifter())~aFuturePredictor(lambdaShifter())selfEvolving(lambdaShifter()*)}                  
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Lambda Shifter is self-evolving and Lambda Shifter is not a future predictor and Lambda Shifter is quantum computing 
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 63[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either void essence is immortality-granting, or astral salt is not immortality-granting
+2.	either void essence is not immortality-granting, or void essence is reality-altering and void essence is not reality-altering
+3.	either Prima Materia is not immortality-granting, or void essence is reality-altering and astral salt is reality-altering, or Time Crystal is reality-altering and The Philosopher's Stone is reality-altering
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{realityAltering(astralSalt())~immortalityGranting(voidEssence()[3m)realityAltering(voidEssence())~immortalityGranting(a[0m
+[3mstralSalt()[0m)}                                                                                                        
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+void essence is not immortality-granting and void essence is reality-altering and astral salt is not                 
+immortality-granting and astral salt is reality-altering                                                             
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 64[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Starlight Pendant is dimension-bridging and Starlight Pendant is magic-nullifying, or Dreamcatcher Ring is magic-nullifying and Starlight Pendant is starlight-channeling and Starlight Pendant is wisdom-enhancing
+2.	either Starlight Pendant is starlight-channeling and Starlight Pendant is wisdom-enhancing, or Dreamcatcher Ring is magic-nullifying and Starlight Pendant is not starlight-channeling and Dreamcatcher Ring is dimension-bridging
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{magicNullifying(dreamcatcherRing())starlightChanneling(starlightPendant())wisdomEnhancing(starlightPendant())}      
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Dreamcatcher Ring is magic-nullifying and Starlight Pendant is starlight-channeling and Starlight Pendant is         
+wisdom-enhancing                                                                                                     
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 65[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either chronium is sound-absorbing and chronium is shape-shifting, or chronium is not shape-shifting and gravitron is not shape-shifting
+2.	chronium is sound-absorbing and chronium is time-dilating
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{shapeShifting(chronium())}                                                                                          
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+chronium is shape-shifting                                                                                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 66[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Starlight Pendant is starlight-channeling, or Dreamcatcher Ring is not starlight-channeling
+2.	either Shadow Cloak is dimension-bridging and Void Mirror is magic-nullifying and Dreamcatcher Ring is dimension-bridging, or Starlight Pendant is starlight-channeling and Dreamcatcher Ring is wisdom-enhancing
+3.	either Starlight Pendant is not wisdom-enhancing, or Starlight Pendant is not starlight-channeling and Dreamcatcher Ring is wisdom-enhancing
+4.	Starlight Pendant is dimension-bridging and Starlight Pendant is magic-nullifying
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{starlightChanneling(starlightPendant())~wisdomEnhancing(starlightPendant())wisdomEnhancing(dreamcatcherRing())}     
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Starlight Pendant is not wisdom-enhancing and Starlight Pendant is starlight-channeling and Dreamcatcher Ring is     
+wisdom-enhancing                                                                                                     
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 67[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Moonstone Bracelet is wisdom-enhancing, or Crystal Orb is dimension-bridging and Starlight Pendant is wisdom-enhancing
+2.	either Starlight Pendant is not wisdom-enhancing, or Starlight Pendant is not starlight-channeling and Starlight Pendant is wisdom-enhancing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{dimensionBridging(crystalOrb()*)~starlightChanneling(starlightPendant())wisdomEnhancing(starlightPendant())}        
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Starlight Pendant is not starlight-channeling and Crystal Orb is dimension-bridging and Starlight Pendant is         
+wisdom-enhancing                                                                                                     
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 68[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either void essence is reality-altering and astral salt is immortality-granting, or Time Crystal is not immortality-granting, or The Philosopher's Stone is transmuting and Time Crystal is consciousness-expanding
+2.	either void essence is reality-altering and void essence is immortality-granting, or void essence is transmuting and void essence is consciousness-expanding and astral salt is not consciousness-expanding
+3.	either void essence is not immortality-granting, or void essence is immortality-granting
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{immortalityGranting(voidEssence())immortalityGranting(astralSalt())realityAltering(voidEssence())}                  
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+void essence is reality-altering and void essence is immortality-granting and astral salt is immortality-granting    
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 69[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Mirror World is not light-absorbing and Time Spiral is light-absorbing, or Mirror World is not light-absorbing, or Mirror World is infinity-containing
+2.	either Time Spiral is not matter-crystallizing, or Time Spiral is not possibility-branching and Time Spiral is infinity-containing
+3.	Void Nexus is not infinity-containing and Time Spiral is infinity-containing
+4.	either Mirror World is light-absorbing, or Time Spiral is infinity-containing
+5.	either Mirror World is light-absorbing, or Mirror World is light-absorbing and Mirror World is infinity-containing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{infinityContaining(mirrorWorld())lightAbsorbing(mirrorWorld()[3m)~possibilityBranching(timeSpiral()[0m)}                  
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Mirror World is light-absorbing and Mirror World is infinity-containing and Time Spiral is not possibility-branching 
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 70[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	Theta Healer is a future predictor and Theta Healer is quantum computing and Lambda Shifter is not self-evolving
+2.	either Lambda Shifter is self-evolving, or Gamma Weaver is a virus hunter, or Lambda Shifter is quantum computing
+3.	either Lambda Shifter is self-evolving and Lambda Shifter is a virus hunter, or Lambda Shifter is a future predictor and Lambda Shifter is quantum computing, or Gamma Weaver is quantum computing
+4.	either Lambda Shifter is a future predictor, or Lambda Shifter is not a future predictor
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{quantumComputing(lambdaShifter())aFuturePredictor(lambdaShifter())}                                                 
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Lambda Shifter is a future predictor and Lambda Shifter is quantum computing                                         
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 71[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Starlight Pendant is not wisdom-enhancing, or Starlight Pendant is wisdom-enhancing
+2.	either Starlight Pendant is not dimension-bridging and Starlight Pendant is wisdom-enhancing, or Starlight Pendant is not dimension-bridging
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{wisdomEnhancing(starlightPendant())~dimensionBridging(starlightPendant())}                                          
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Starlight Pendant is not dimension-bridging and Starlight Pendant is wisdom-enhancing                                
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 72[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	Lambda Shifter is not quantum computing and Lambda Shifter is a future predictor
+2.	Epsilon Architect is quantum computing and Lambda Shifter is a future predictor and Gamma Weaver is not a future predictor
+3.	either Epsilon Architect is quantum computing, or Beta Sentinel is not self-evolving and Gamma Weaver is quantum computing
+4.	Lambda Shifter is a future predictor and Gamma Weaver is not a future predictor and Gamma Weaver is quantum computing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{quantumComputing(epsilonArchitect())~selfEvolving(betaSentinel()*)quantumComputing(gammaWeaver())~aFuturePredictor(g
+ammaWeaver())}                                                                                                       
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Epsilon Architect is quantum computing and Beta Sentinel is not self-evolving and Gamma Weaver is quantum computing  
+and Gamma Weaver is not a future predictor                                                                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 73[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either planet Z is in retrograde orbit, or planet Z is not orbited by satellites
+2.	either planet Z is elliptically-orbiting, or planet Z is elliptically-orbiting and planet Z is in retrograde orbit
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{inRetrogradeOrbit(planetZ())ellipticallyOrbiting(planetZ()*)}                                                       
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+planet Z is elliptically-orbiting and planet Z is in retrograde orbit                                                
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 74[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	the two is square and the jack is square
+2.	either the two is square and the five is not round and the jack is marked, or the eight is yellow and the five is round
+3.	either the two is not square, or the jack is marked
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~round(theFive())marked(theJack()*)}                                                                                
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+the five is not round and the jack is marked                                                                         
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 75[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either daydream is reality-bridging, or daydream is reality-bridging and mindshaper is not memory-weaving
+2.	either daydream is dream-shaping and daydream is memory-weaving and mindshaper is not memory-weaving, or daydream is not dream-shaping
+3.	sleepwalker is reality-bridging and morpheus is reality-bridging
+4.	either daydream is reality-bridging and daydream is not dream-shaping, or mindshaper is memory-weaving
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{realityBridging(daydream()[3m)~dreamShaping(daydream()[0m)~memoryWeaving(mindshaper())}                                   
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+daydream is reality-bridging and daydream is not dream-shaping and mindshaper is not memory-weaving                  
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 76[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Lambda Shifter is a future predictor, or Gamma Weaver is quantum computing
+2.	either Lambda Shifter is a future predictor and Gamma Weaver is quantum computing, or Lambda Shifter is a code healer, or Epsilon Architect is self-evolving and Beta Sentinel is a virus hunter
+3.	Theta Healer is quantum computing and Lambda Shifter is self-evolving
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{quantumComputing(gammaWeaver())aFuturePredictor(lambdaShifter())}                                                   
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Lambda Shifter is a future predictor and Gamma Weaver is quantum computing                                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 77[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either gravitron is dark energy absorbing, or gravitron is time-dilating
+2.	either chronium is dark energy absorbing and chronium is time-dilating and gravitron is dark energy absorbing, or gravitron is shape-shifting and gravitron is sound-absorbing
+3.	either chronium is dark energy absorbing, or chronium is not dark energy absorbing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{darkEnergyAbsorbing(chronium())darkEnergyAbsorbing(gravitron())timeDilating(chronium())}                            
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+chronium is dark energy absorbing and chronium is time-dilating and gravitron is dark energy absorbing               
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 78[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either chronium is not time-dilating and gravitron is time-dilating, or chronium is time-dilating, or gravitron is time-dilating
+2.	either chronium is dark energy absorbing and chronium is time-dilating, or chronium is time-dilating
+3.	either chronium is not dark energy absorbing, or shadowium is not dark energy absorbing and gravitron is dark energy absorbing
+4.	either chronium is dark energy absorbing and gravitron is dark energy absorbing and mystarium is not time-dilating, or mystarium is dark energy absorbing and shadowium is dark energy absorbing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{darkEnergyAbsorbing(chronium())timeDilating(chronium())~timeDilating(mystarium())~darkEnergyAbsorbing(shadowium())da
+rkEnergyAbsorbing(gravitron())}                                                                                      
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+chronium is time-dilating and gravitron is dark energy absorbing and shadowium is not dark energy absorbing and      
+chronium is dark energy absorbing and mystarium is not time-dilating                                                 
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 79[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	there is some A such that either A is moonlight-glowing, or frostwyrm is not moonlight-glowing and moonwolf is not light-emitting
+2.	either moonwolf is shapeshifting and moonwolf is light-emitting, or frostwyrm is aura-healing and frostwyrm is not moonlight-glowing and frostwyrm is moonlight-glowing, or frostwyrm is not aura-healing, or moonwolf is aura-healing
+3.	either moonwolf is moonlight-glowing and moonwolf is aura-healing, or moonwolf is light-emitting
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{auraHealing(moonwolf())moonlightGlowing(moonwolf())~lightEmitting(moonwolf())~moonlightGlowing(frostwyrm())}        
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+frostwyrm is not moonlight-glowing and moonwolf is not light-emitting and moonwolf is moonlight-glowing and moonwolf 
+is aura-healing                                                                                                      
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 80[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	daydream is reality-bridging and mindshaper is reality-bridging
+2.	either daydream is reality-bridging, or mindshaper is memory-weaving
+3.	sleepwalker is reality-bridging and sleepwalker is memory-weaving and daydream is dream-shaping
+4.	either mindshaper is not dream-shaping, or daydream is not memory-weaving and daydream is memory-weaving and mindshaper is dream-shaping
+5.	either daydream is memory-weaving, or mindshaper is memory-weaving
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~dreamShaping(mindshaper())memoryWeaving(daydream())}                                                               
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+mindshaper is not dream-shaping and daydream is memory-weaving                                                       
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 81[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Shadow Cloak is wisdom-enhancing, or Starlight Pendant is starlight-channeling and Dreamcatcher Ring is starlight-channeling, or Void Mirror is starlight-channeling and Shadow Cloak is starlight-channeling
+2.	either Starlight Pendant is starlight-channeling, or Starlight Pendant is not wisdom-enhancing
+3.	either Starlight Pendant is dimension-bridging and Starlight Pendant is magic-nullifying, or Dreamcatcher Ring is not dimension-bridging
+4.	Starlight Pendant is starlight-channeling and Starlight Pendant is dimension-bridging and Starlight Pendant is wisdom-enhancing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{magicNullifying(starlightPendant())starlightChanneling(dreamcatcherRing())}                                         
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Starlight Pendant is magic-nullifying and Dreamcatcher Ring is starlight-channeling                                  
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 82[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either nanohive is not network forming and biomatrix is self-evolving and biomatrix is time-manipulating, or metacell is shapeshifting and metacell is network forming
+2.	biomech is self-evolving and biomech is time-manipulating and biomatrix is self-evolving
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~networkForming(nanohive())timeManipulating(biomatrix())}                                                           
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+nanohive is not network forming and biomatrix is time-manipulating                                                   
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 83[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either chronium is dark energy absorbing, or chronium is not dark energy absorbing
+2.	either chronium is not dark energy absorbing, or chronium is time-dilating
+3.	chronium is not sound-absorbing and chronium is time-dilating
+4.	either chronium is sound-absorbing and chronium is shape-shifting, or chronium is dark energy absorbing and chronium is time-dilating, or chronium is time-dilating
+5.	either shadowium is shape-shifting, or shadowium is sound-absorbing and mystarium is shape-shifting
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~darkEnergyAbsorbing(chronium())}                                                                                   
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+chronium is not dark energy absorbing                                                                                
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 84[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either daydream is not memory-weaving, or daydream is memory-weaving
+2.	either daydream is dream-shaping and daydream is thought-reading, or daydream is reality-bridging and daydream is memory-weaving and mindshaper is not dreamwalking
+3.	either sleepwalker is reality-bridging, or daydream is not memory-weaving
+4.	daydream is not reality-bridging
+5.	either daydream is not memory-weaving, or sleepwalker is reality-bridging and sleepwalker is memory-weaving
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{realityBridging(sleepwalker())memoryWeaving(sleepwalker())thoughtReading(daydream())dreamShaping(daydream())memoryWe
+aving(daydream())}                                                                                                   
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+sleepwalker is reality-bridging and daydream is dream-shaping and daydream is thought-reading and daydream is        
+memory-weaving and sleepwalker is memory-weaving                                                                     
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 85[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Dream Realm is matter-crystallizing and Dream Realm is infinity-containing, or Mirror World is infinity-containing
+2.	either Dream Realm is matter-crystallizing and Dream Realm is infinity-containing, or Mirror World is infinity-containing
+3.	either Mirror World is light-absorbing and Mirror World is not light-absorbing, or Time Spiral is light-absorbing
+4.	either Mirror World is light-absorbing, or Mirror World is light-absorbing and Mirror World is infinity-containing, or Time Spiral is possibility-branching and Time Spiral is matter-crystallizing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{matterCrystallizing(dreamRealm())infinityContaining(mirrorWorld())infinityContaining(dreamRealm())lightAbsorbing(mir
+rorWorld())lightAbsorbing(timeSpiral()*)}                                                                            
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Dream Realm is infinity-containing and Mirror World is infinity-containing and Time Spiral is light-absorbing and    
+Dream Realm is matter-crystallizing and Mirror World is light-absorbing                                              
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 86[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either comet 2 is orbited by satellites and comet 2 is in retrograde orbit, or comet 2 is not orbited by satellites
+2.	comet 2 is elliptically-orbiting and planet Z is not in retrograde orbit and comet 2 is in retrograde orbit
+3.	planet Z is not elliptically-orbiting and planet X is elliptically-orbiting
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{orbitedBySatellites(comet2()*)}                                                                                     
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+comet 2 is orbited by satellites                                                                                     
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 87[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	Starlight Pendant is starlight-channeling and Dreamcatcher Ring is wisdom-enhancing
+2.	either Dreamcatcher Ring is not dimension-bridging, or Shadow Cloak is dimension-bridging and Starlight Pendant is not wisdom-enhancing, or Starlight Pendant is not starlight-channeling
+3.	either Dreamcatcher Ring is not dimension-bridging, or Starlight Pendant is wisdom-enhancing
+4.	either Dreamcatcher Ring is not dimension-bridging, or Starlight Pendant is wisdom-enhancing and Dreamcatcher Ring is not wisdom-enhancing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{wisdomEnhancing(starlightPendant())~dimensionBridging(dreamcatcherRing()*)}                                         
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Dreamcatcher Ring is not dimension-bridging and Starlight Pendant is wisdom-enhancing                                
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 88[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either moonwolf is not shapeshifting, or dreamweaver is not shapeshifting and frostwyrm is not shapeshifting
+2.	either frostwyrm is not light-emitting and frostwyrm is not shapeshifting, or moonwolf is not shapeshifting
+3.	either moonwolf is shapeshifting, or moonwolf is not shapeshifting
+4.	moonwolf is light-emitting and frostwyrm is not light-emitting
+5.	either phoenixling is not light-emitting, or etherealsnake is shapeshifting and dreamweaver is shapeshifting
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~shapeshifting(frostwyrm())~shapeshifting(moonwolf())}                                                              
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+moonwolf is not shapeshifting and frostwyrm is not shapeshifting                                                     
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 89[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either infinitum is not gravity-defying, or psychon is not memory-storing, or infinitum is not consciousness-affecting
+2.	either infinitum is not consciousness-affecting and dimensium is not consciousness-affecting, or psychon is not consciousness-affecting and psychon is not memory-storing
+3.	either psychon is memory-storing, or psychon is not memory-storing
+4.	psychon is consciousness-affecting and infinitum is not consciousness-affecting
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~consciousnessAffecting(dimensium())~memoryStoring(psychon()*)}                                                     
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+psychon is not memory-storing and dimensium is not consciousness-affecting                                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 90[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Starlight Pendant is starlight-channeling and Starlight Pendant is wisdom-enhancing and Starlight Pendant is not starlight-channeling, or Starlight Pendant is starlight-channeling and Dreamcatcher Ring is not wisdom-enhancing
+2.	either Shadow Cloak is wisdom-enhancing and Starlight Pendant is starlight-channeling and Starlight Pendant is wisdom-enhancing, or Dreamcatcher Ring is magic-nullifying and Dreamcatcher Ring is dimension-bridging
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{wisdomEnhancing(starlightPendant())starlightChanneling(starlightPendant())~wisdomEnhancing(dreamcatcherRing())wisdom
+Enhancing(shadowCloak()*)}                                                                                           
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Shadow Cloak is wisdom-enhancing and Starlight Pendant is starlight-channeling and Starlight Pendant is              
+wisdom-enhancing and Dreamcatcher Ring is not wisdom-enhancing                                                       
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 91[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either telepathy is future-seeing, or psychometry is future-seeing and psychometry is mindreading and astral projection is matter-moving
+2.	either psychometry is future-seeing, or psychometry is not future-seeing
+3.	for all A, A is future-seeing
+4.	telepathy is mindreading and mind control is matter-moving
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{mindreading(psychometry())matterMoving(astralProjection())futureSeeing(psychometry())}                              
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+psychometry is future-seeing and psychometry is mindreading and astral projection is matter-moving                   
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 92[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either biomatrix is not time-manipulating, or biomatrix is time-manipulating
+2.	either biomatrix is not time-manipulating and biomatrix is not network forming, or biomatrix is not network forming
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~timeManipulating(biomatrix())~networkForming(biomatrix()*)}                                                        
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+biomatrix is not time-manipulating and biomatrix is not network forming                                              
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 93[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Lambda Shifter is quantum computing, or Lambda Shifter is not self-evolving
+2.	either Lambda Shifter is not quantum computing and Lambda Shifter is quantum computing, or Gamma Weaver is quantum computing
+3.	either Lambda Shifter is a future predictor, or Lambda Shifter is not a future predictor
+4.	either Lambda Shifter is self-evolving, or Theta Healer is quantum computing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{quantumComputing(lambdaShifter())quantumComputing(gammaWeaver()*)}                                                  
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Lambda Shifter is quantum computing and Gamma Weaver is quantum computing                                            
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 94[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Time Spiral is possibility-branching and Time Spiral is matter-crystallizing, or Void Nexus is reality-reflecting
+2.	either Mirror World is matter-crystallizing, or Void Nexus is infinity-containing and Mirror World is infinity-containing and Time Spiral is matter-crystallizing
+3.	Mirror World is not light-absorbing
+4.	Time Spiral is possibility-branching and Mirror World is matter-crystallizing and Mirror World is possibility-branching
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{matterCrystallizing(timeSpiral())}                                                                                  
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Time Spiral is matter-crystallizing                                                                                  
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 95[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	infinitum is not gravity-defying and psychon is consciousness-affecting
+2.	either psychon is gravity-defying and psychon is infinite-energy-producing, or psychon is not consciousness-affecting
+3.	either psychon is memory-storing and dimensium is not void-creating and infinitum is consciousness-affecting, or dimensium is gravity-defying and memeton is infinite-energy-producing
+4.	psychon is memory-storing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{infiniteEnergyProducing(psychon())gravityDefying(psychon())~voidCreating(dimensium())consciousnessAffecting(infinitu
+m())}                                                                                                                
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+psychon is gravity-defying and psychon is infinite-energy-producing and dimensium is not void-creating and infinitum 
+is consciousness-affecting                                                                                           
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 96[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Mirror World is not infinity-containing, or Dream Realm is infinity-containing
+2.	either Mirror World is not infinity-containing, or Mirror World is infinity-containing
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~infinityContaining(mirrorWorld())}                                                                                 
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Mirror World is not infinity-containing                                                                              
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 97[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either Lambda Shifter is a future predictor, or Lambda Shifter is not a future predictor
+2.	either Lambda Shifter is a future predictor and Gamma Weaver is not a future predictor, or Gamma Weaver is not a future predictor
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~aFuturePredictor(gammaWeaver())aFuturePredictor(lambdaShifter())}                                                  
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+Lambda Shifter is a future predictor and Gamma Weaver is not a future predictor                                      
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 98[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	either moonwolf is shapeshifting, or moonwolf is light-emitting
+2.	either moonwolf is light-emitting and frostwyrm is not light-emitting, or frostwyrm is not light-emitting
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{~lightEmitting(frostwyrm())lightEmitting(moonwolf()*)}                                                              
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+moonwolf is light-emitting and frostwyrm is not light-emitting                                                       
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                    [1mProblem 99[0m                                                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+                                  [1;4mscoring_guide/generation_details/premises_english[0m                                  
+1.	for all A, if A is in retrograde orbit, then A is elliptically-orbiting
+2.	either planet Z is elliptically-orbiting, or planet Z is not elliptically-orbiting
+
+                                             [1;4mscoring_guide/etr_predicted[0m                                             
+{ellipticallyOrbiting(planetZ()*)}                                                                                   
+
+                                         [1;4mscoring_guide/etr_predicted_english[0m                                         
+planet Z is elliptically-orbiting                                                                                    
