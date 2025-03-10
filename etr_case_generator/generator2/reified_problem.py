@@ -64,6 +64,13 @@ class ReifiedView:
             # Consider using view_to_natural_language, to go from ETR->ENG
             self.english_form = smt_to_english(self.logical_form_smt_fnode, ontology)
 
+        # Capitalize first letter in english form
+        if self.english_form is not None:
+            self.english_form = self.english_form[0].upper() + self.english_form[1:]
+        # If the english form doesn't end with a ".", add one
+        if self.english_form is not None and not self.english_form.endswith("."):
+            self.english_form += "."
+
         assert self.english_form is not None or ontology is None, "An ontology was provided, but the english_form was not filled out."
         assert self.logical_form_smt is not None and self.logical_form_etr is not None, "Error filling out ReifiedView. Make sure it has either an smt or etr form. It cannot be filled out from the english form." + str(self)
 
