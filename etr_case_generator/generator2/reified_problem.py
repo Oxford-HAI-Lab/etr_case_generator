@@ -64,6 +64,13 @@ class ReifiedView:
             # Consider using view_to_natural_language, to go from ETR->ENG
             self.english_form = smt_to_english(self.logical_form_smt_fnode, ontology)
 
+        # Capitalize first letter in english form
+        if self.english_form is not None:
+            self.english_form = self.english_form[0].upper() + self.english_form[1:]
+        # If the english form doesn't end with a ".", add one
+        if self.english_form is not None and not self.english_form.endswith("."):
+            self.english_form += "."
+
         assert self.english_form is not None or ontology is None, "An ontology was provided, but the english_form was not filled out."
         assert self.logical_form_smt is not None and self.logical_form_etr is not None, "Error filling out ReifiedView. Make sure it has either an smt or etr form. It cannot be filled out from the english form." + str(self)
 
@@ -313,6 +320,7 @@ class FullProblem:
             "question": self.to_prompt(format, chain_of_thought),
             "scoring_guide": {
                 "etr_predicted": self.etr_predicted_conclusion.view.logical_form_etr if self.etr_predicted_conclusion else None,
+                "etr_predicted_english": self.etr_predicted_conclusion.view.english_form if self.etr_predicted_conclusion else None,
                 "etr_predicted_is_classically_correct": self.etr_predicted_conclusion.is_classically_correct if self.etr_predicted_conclusion else None,
                 "etr_predicted_conclusion_is_categorical": self.etr_predicted_conclusion_is_categorical,
                 "generation_details": {
@@ -324,6 +332,8 @@ class FullProblem:
                     "num_predicates_per_problem": args.num_predicates_per_problem,
                     "num_objects_per_problem": args.num_objects_per_problem,
                     "premises_etr": [view.logical_form_etr for view in self.views],
+                    "premises_english": [view.english_form for view in self.views],
+                    # "premises_english_format_2": [view.logical_form_etr_view.to_english() for view in self.views],
                     "premises_fnodes": [format_smt(view.logical_form_smt_fnode) for view in self.views],
                     "is_chain_of_thought": chain_of_thought,
                 }
