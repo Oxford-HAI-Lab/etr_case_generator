@@ -93,8 +93,8 @@ def get_view_mutations(view: View, only_increase: bool = False, only_do_one: boo
     new_predicate = chr(ord(max_predicate) + 1)  # This would give S
 
     if len(arb_objs) == 0:
-        arb_objs = set(["a"])
-        new_arb_obj = "a"
+        arb_objs = set(["x"])  # Start with x -- this limits us to a depth of 3
+        new_arb_obj = "x"      # (x, y, z) but I think that's fine for now
     else:
         max_arb_obj = max(arb_objs)
         new_arb_obj = chr(ord(max_arb_obj) + 1)
