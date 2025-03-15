@@ -11,6 +11,7 @@ from etr_case_generator.generator2.logic_types import AtomCount
 from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
 from etr_case_generator.generator2.seed_problems import (
     ILLUSORY_INFERENCE_FROM_DISJUNCTION_REVERSE_PREMISES_TEST,
+    ILLUSORY_INFERENCES_WITH_QUANTIFIERS,
     create_starting_problems,
     ILLUSORY_INFERENCE_FROM_DISJUNCTION,
 )
@@ -208,6 +209,11 @@ class ETRGeneratorIndependent:
             elif self.seed_bank == "ILLUSORY_INFERENCE_FROM_DISJUNCTION_REVERSE_PREMISES_TEST":
                 seed_problem: PartialProblem = random.choice(
                     ILLUSORY_INFERENCE_FROM_DISJUNCTION_REVERSE_PREMISES_TEST
+                )
+                return deepcopy(seed_problem)
+            elif self.seed_bank == "ILLUSORY_INFERENCES_WITH_QUANTIFIERS":
+                seed_problem: PartialProblem = random.choice(
+                    ILLUSORY_INFERENCES_WITH_QUANTIFIERS
                 )
                 return deepcopy(seed_problem)
 

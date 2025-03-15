@@ -354,7 +354,7 @@ All questions are query questions ("Does it follow that {etr_what_follows}?").
 """
 ILLUSORY_INFERENCES_WITH_QUANTIFIERS: list[PartialProblem] = [
     PartialProblem(
-        seed_id="e47", # Indefinite illusory inference, p. 129
+        seed_id="indefinite_illusory_inference_target", # p. 129
         premises=[
             ReifiedView(logical_form_etr_view=View.from_str("∃x { B(x) A(x*) }")),
             ReifiedView(logical_form_etr_view=View.from_str("{ A(a()*) }")),
@@ -364,13 +364,33 @@ ILLUSORY_INFERENCES_WITH_QUANTIFIERS: list[PartialProblem] = [
         )
     ),
     PartialProblem(
-        seed_id="e47_reversed", # Indefinite illusory inference with reversed premise order
+        seed_id="indefinite_illusory_inference_target_reversed",
         premises=[
             ReifiedView(logical_form_etr_view=View.from_str("{ A(a()*) }")),
             ReifiedView(logical_form_etr_view=View.from_str("∃x { B(x) A(x*) }")),
         ],
         etr_what_follows=ReifiedView(
             logical_form_etr_view=View.from_str("{ B(a()) }")
+        )
+    ),
+    PartialProblem(
+        seed_id="indefinite_illusory_inference_control",
+        premises=[
+            ReifiedView(logical_form_etr_view=View.from_str("∃x { B(x) A(x*) }")),
+            ReifiedView(logical_form_etr_view=View.from_str("{ ~A(a()*) }")),
+        ],
+        etr_what_follows=ReifiedView(
+            logical_form_etr_view=View.from_str("{0}")
+        )
+    ),
+    PartialProblem(
+        seed_id="indefinite_illusory_inference_control_reversed",
+        premises=[
+            ReifiedView(logical_form_etr_view=View.from_str("{ ~A(a()*) }")),
+            ReifiedView(logical_form_etr_view=View.from_str("∃x { B(x) A(x*) }")),
+        ],
+        etr_what_follows=ReifiedView(
+            logical_form_etr_view=View.from_str("{0}")
         )
     ),
 ]
