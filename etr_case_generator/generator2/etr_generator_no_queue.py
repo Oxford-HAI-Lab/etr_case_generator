@@ -10,9 +10,11 @@ from pyparsing import ParseException
 from etr_case_generator.generator2.logic_types import AtomCount
 from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
 from etr_case_generator.generator2.seed_problems import (
+    create_starting_problems,
+)
+from etr_case_generator.generator2.study_replication_seed_problems import (
     ILLUSORY_INFERENCE_FROM_DISJUNCTION_REVERSE_PREMISES_TEST,
     ILLUSORY_INFERENCES_WITH_QUANTIFIERS,
-    create_starting_problems,
     ILLUSORY_INFERENCE_FROM_DISJUNCTION,
 )
 from etr_case_generator.mutations import get_view_mutations
@@ -192,21 +194,13 @@ class ETRGeneratorIndependent:
         max_attempts = 10
         for attempt in range(max_attempts):
             # Choose random seed problem
-            if self.seed_bank == "ILLUSORY_INFERENCE_FROM_DISJUNCTION":
-                # print("Loading from seed bank")
-                seed_problem: PartialProblem = random.choice(
-                    ILLUSORY_INFERENCE_FROM_DISJUNCTION
-                )
-                return deepcopy(seed_problem)
-            elif self.seed_bank == "ILLUSORY_INFERENCE_FROM_DISJUNCTION_REVERSE_PREMISES_TEST":
-                seed_problem: PartialProblem = random.choice(
-                    ILLUSORY_INFERENCE_FROM_DISJUNCTION_REVERSE_PREMISES_TEST
-                )
-                return deepcopy(seed_problem)
-            elif self.seed_bank == "ILLUSORY_INFERENCES_WITH_QUANTIFIERS":
-                seed_problem: PartialProblem = random.choice(
-                    ILLUSORY_INFERENCES_WITH_QUANTIFIERS
-                )
+            if self.seed_bank:
+                # Try to access the seed problems from the specified seed bank
+                try:
+                    seed_bank_problems = locals()[self.seed_bank]
+                except:
+                    raise ValueError(f"Invalid seed bank: {self.seed_bank}")
+                seed_problem: PartialProblem = random.choice(seed_bank_problems)
                 return deepcopy(seed_problem)
 
             seed_problem: PartialProblem = random.choice(create_starting_problems())
