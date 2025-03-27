@@ -2,14 +2,14 @@ from typing import Callable, Counter
 
 import pyetr
 
-from etr_case_generator.generator2.etr_generator import random_etr_problem, boost_low_num_atom_problems
-from etr_case_generator.generator2.etr_generator_no_queue import ETRGeneratorIndependent
-from etr_case_generator.generator2.logic_types import AtomCount
-from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType, PartialProblem, Conclusion, \
+from etr_case_generator.etr_generator import random_etr_problem, boost_low_num_atom_problems
+from etr_case_generator.etr_generator_no_queue import ETRGeneratorIndependent
+from etr_case_generator.logic_types import AtomCount
+from etr_case_generator.reified_problem import FullProblem, QuestionType, PartialProblem, Conclusion, \
     ReifiedView
-from etr_case_generator.generator2.full_problem_creator import full_problem_from_partial_problem
+from etr_case_generator.full_problem_creator import full_problem_from_partial_problem
 from etr_case_generator.ontology import ELEMENTS, Ontology, natural_name_to_logical_name
-from etr_case_generator.generator2.smt_generator import random_smt_problem, SMTProblem, generate_conclusions, \
+from etr_case_generator.smt_generator import random_smt_problem, SMTProblem, generate_conclusions, \
     add_conclusions
 from etr_case_generator.view_to_natural_language import view_to_natural_language
 from pyetr import View

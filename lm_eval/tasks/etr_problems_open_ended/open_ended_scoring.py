@@ -7,8 +7,8 @@ import openai
 
 from pyetr import View
 from pysmt.fnode import FNode
-from etr_case_generator.generator2.formatting_smt import load_fnode_from_string
-from etr_case_generator.generator2.logic_helper import does_it_follow
+from etr_case_generator.formatting_smt import load_fnode_from_string
+from etr_case_generator.logic_helper import does_it_follow
 from pyetr.inference import default_procedure_does_it_follow
 from pyetr.inference import default_inference_procedure
 from pyetr.issues import IssueStructure

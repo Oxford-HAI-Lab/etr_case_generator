@@ -4,9 +4,9 @@ import math
 
 from dataclasses import dataclass, field
 
-from etr_case_generator.generator2.logic_types import AtomCount
-from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
-from etr_case_generator.generator2.seed_problems import create_starting_problems
+from etr_case_generator.logic_types import AtomCount
+from etr_case_generator.reified_problem import PartialProblem, ReifiedView
+from etr_case_generator.seed_problems import create_starting_problems
 from etr_case_generator.mutations import get_view_mutations
 from etr_case_generator.ontology import Ontology
 from pyetr import View

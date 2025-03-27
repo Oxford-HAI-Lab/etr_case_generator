@@ -2,7 +2,7 @@ import random
 
 from etr_case_generator import Ontology
 from etr_case_generator.etr_logic import get_etr_conclusion
-from etr_case_generator.generator2.reified_problem import FullProblem, ReifiedView, PartialProblem, Conclusion
+from etr_case_generator.reified_problem import FullProblem, ReifiedView, PartialProblem, Conclusion
 from etr_case_generator.ontology import ELEMENTS
 
 

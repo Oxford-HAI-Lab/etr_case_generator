@@ -13,8 +13,8 @@ from rich.panel import Panel
 from rich.text import Text
 
 from etr_case_generator import Ontology
-from etr_case_generator.generator2.formatting_smt import format_smt, smt_to_etr, smt_to_english, load_fnode_from_string
-from etr_case_generator.generator2.logic_helper import does_it_follow
+from etr_case_generator.formatting_smt import format_smt, smt_to_etr, smt_to_english, load_fnode_from_string
+from etr_case_generator.logic_helper import does_it_follow
 from smt_interface.smt_encoder import view_to_smt
 
 # Different ways of asking a question

@@ -7,11 +7,11 @@ from typing import get_args
 from collections import Counter
 from tqdm import tqdm
 
-from etr_case_generator.generator2.etr_generator import set_queue_sizes
-from etr_case_generator.generator2.etr_generator_no_queue import ETRGeneratorIndependent
-from etr_case_generator.generator2.generate_problem_from_logical import generate_problem
-from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType, PartialProblem
-from etr_case_generator.generator2.logic_types import AtomCount
+from etr_case_generator.etr_generator import set_queue_sizes
+from etr_case_generator.etr_generator_no_queue import ETRGeneratorIndependent
+from etr_case_generator.generate_problem_from_logical import generate_problem
+from etr_case_generator.reified_problem import FullProblem, QuestionType, PartialProblem
+from etr_case_generator.logic_types import AtomCount
 
 from etr_case_generator.ontology import Ontology, get_all_ontologies, natural_name_to_logical_name
 
