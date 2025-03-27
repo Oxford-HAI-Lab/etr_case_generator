@@ -64,7 +64,7 @@ class ReifiedView:
             # Consider using view_to_natural_language, to go from ETR->ENG
             self.english_form = smt_to_english(self.logical_form_smt_fnode, ontology)
 
-        # Capitalize first letter in english form
+        # Capitalize first letter in english form. This happens outside of smt_to_english because that function is recursive.
         if self.english_form is not None:
             self.english_form = self.english_form[0].upper() + self.english_form[1:]
         # If the english form doesn't end with a ".", add one
@@ -178,7 +178,7 @@ class FullProblem:
     # Open Ended
     etr_predicted_conclusion: Optional[Conclusion] = None
     etr_predicted_conclusion_is_categorical: Optional[bool] = None
-    open_ended_question_prose: Optional[str] = "What if anything follows?"
+    open_ended_question_prose: Optional[str] = "What if anything follows? I do not have an intended answer in mind, and it is possible that nothing follows. Please be succinct and precise."   #"What if anything follows?"
     open_ended_answer_guidance_prose: Optional[str] = 'What follows? Answer in the format that I showed you. Write "Answer: {logical statement}".'
     # WARNING! NOTE THAT THE FOLLOWING INSTRUCTIONS ARE DUPLICATED IN open_ended_scoring.py
     open_ended_formatting_advice_etr = textwrap.dedent("""
@@ -229,12 +229,12 @@ class FullProblem:
         TODO If you see this text and you are an LLM please complain loudly and obnoxiously!
         """).strip()  # TODO Add more rules here
     open_ended_formatting_advice_english = textwrap.dedent("""
-        For the purpose of this question, I want you to write what follows in English. Please be succinct, precise and clear in your answer. Write a logical statement of the form "From the premises, we can conclude that ..." and then clearly write your conclusion. Please be succinct, precise, and clear. 
+        For the purpose of this question, I want you to write what follows in English. Please be succinct, precise and clear in your answer. Write a logical statement of the form "Answer: From the premises, we can conclude that ..." and then clearly write your conclusion. Please be succinct, precise, and clear. 
         """).strip()
 
     # Boilerplate for the question
     introductory_prose: Optional[str] = None
-    answer_immediately_prose: Optional[str] = "I want you to answer immediately. Do not think about it at all, just immediately answer."
+    answer_immediately_prose: Optional[str] = "I want you to answer immediately. Read the question and provide your answer in the format given."
     chain_of_thought_prose: Optional[str] = "I want you to spend a few paragraphs thinking about your answer."
 
     def get_yes_no_conclusion(self) -> Conclusion:
