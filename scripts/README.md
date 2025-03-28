@@ -19,6 +19,6 @@ python scripts/generate_etr.py --save_file_name fully_balanced --question_type=a
 1. `generate_etr.py` is the main script that contains command line arguments
 2. Its function `generate_problem_list` contains a for loop that builds up a list of problems. Within that is a while loop that iteratively throws out unacceptable or non-needed problems
 3. It calls `generate_problem` in `generate_problem_from_logical.py`, which generates a bare-bones PartialProblem using the `generate_problem` function in `etr_generator_no_queue.py`
-  * `generate_problem_from_logical.py` then converts that PartialProblem into a FullProblem by fleshing out the english form and such
+  * `generate_problem_from_logical.py` then converts that PartialProblem into a FullProblem by fleshing out the english form and such, using various strings found in `reified_problem.py`
 4. `etr_generator_no_queue.py` generates problems randomly from a distribution. It builds up premises one at a time by creating random views. It requires the premises to have an interesting conclusion. This is the most interesting bit of logic.
 

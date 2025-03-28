@@ -240,6 +240,7 @@ class ETRGeneratorIndependent:
                         elif categorical_only and problem_is_categorical:
                             print(f"Found a categorical problem yay!")
                         if (not categorical_only) or problem_is_categorical:
+                            # Return the problem!
                             self.already_generated.add(problem_key)
                             self.count_of_atom_counts_generated[current_count] += 1
 
