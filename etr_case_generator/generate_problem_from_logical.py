@@ -37,6 +37,7 @@ def generate_problem(args, ontology: Ontology = ELEMENTS, needed_counts: Counter
         smt_problem: SMTProblem = random_smt_problem(ontology=small_ontology, total_num_pieces=args.num_pieces)
         partial_problem = smt_problem.to_partial_problem()
     elif args.generate_function == "random_etr_problem":
+        # This is the main path!
         random_etr_problem_kwargs = {}
         if args.num_atoms_set:
             # partial_problem: PartialProblem = random_etr_problem()
@@ -44,10 +45,10 @@ def generate_problem(args, ontology: Ontology = ELEMENTS, needed_counts: Counter
         if needed_counts:
             random_etr_problem_kwargs["needed_counts"] = needed_counts
         random_etr_problem_kwargs["categorical_only"] = not args.non_categorical_okay
-        if generator is not None:
-            partial_problem = generator.generate_problem(needed_counts=needed_counts, categorical_only=not args.non_categorical_okay, multi_view=args.multi_view)
-        else:
-            partial_problem: PartialProblem = random_etr_problem(**random_etr_problem_kwargs)
+
+        assert generator is not None
+
+        partial_problem = generator.generate_problem(needed_counts=needed_counts, categorical_only=not args.non_categorical_okay, multi_view=args.multi_view)
 
         # Use this space to update the natural language object mapping for the ontology.
         assert partial_problem.premises is not None
