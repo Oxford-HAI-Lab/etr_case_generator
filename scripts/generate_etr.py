@@ -226,12 +226,12 @@ def main():
     parser.add_argument("--chain_of_thought_prompt", type=str, default="both", help="Whether to include a chain of thought prompt. Options are 'yes', 'no', and 'both'.")
     parser.add_argument("--question_type", type=str, default="all", help="Type of question to ask. Options are 'all', 'yes_no', 'multiple_choice', 'open_ended'.", choices=["all"] + list(get_args(QuestionType)))
     parser.add_argument("--save_file_name", type=str, default="problems", help="Name for saved jsonl files")
-    parser.add_argument("--generate_function", type=str, default="random_smt_problem", help="Which function to use in generation.", choices=["random_smt_problem", "random_etr_problem"])
+    parser.add_argument("--generate_function", type=str, default="random_etr_problem", help="Which function to use in generation.", choices=["random_smt_problem", "random_etr_problem"])
     parser.add_argument("--balance_quadrants", help="Balance the dataset through the 4 quadrants of erotetic and classical yes/no.", action="store_true")
     # TODO(andrew) Implement
     parser.add_argument("--balance_etr_agreement", help="Balance the dataset 50-50 for whether the ETR conclusion is classically correct or not.", action="store_true")
     # TODO(Ryan): Add parameters for problem generation here
-    parser.add_argument("--num_atoms_set", nargs="+", type=int, help="Set the number of atoms in the problem.")
+    parser.add_argument("--num_atoms_set", nargs="+", type=int, default=[TODO default to 4,5,6], help="Set the number of atoms in the problem.")
     parser.add_argument("--generator_max_queue_size", type=int, default=100, help="Maximum number of problems to generate at once, if using the generator with a queue.")
     parser.add_argument("--non_categorical_okay", action="store_true", help="If true, it's okay to generate non-categorical, aka problems whose ETR conclusion has disjunctions in it, or which is null.")
     parser.add_argument("--seed_bank", type=str, default=None, help="Name of the problem seed bank to default to.")
