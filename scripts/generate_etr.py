@@ -238,8 +238,8 @@ def main():
     multi_view_group = parser.add_mutually_exclusive_group(required=False)
     multi_view_group.add_argument("--multi_view", dest="multi_view", action="store_true", help="Generate problems with multiple views")
     multi_view_group.add_argument("--no_multi_view", dest="multi_view", action="store_false", help="Generate problems with a single view")
-    parser.add_argument("--etr_only_wrong", action="store_true", help="Only generate problems where the ETR conclusion is wrong.")
     parser.set_defaults(multi_view=True)  # Default to True
+    parser.add_argument("--etr_only_wrong", action="store_true", help="Only generate problems where the ETR conclusion is wrong.")
 
     args = parser.parse_args()
 
