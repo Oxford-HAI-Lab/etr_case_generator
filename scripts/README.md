@@ -1,6 +1,6 @@
 # How to Create Problems
 
-Use `generate_etr.py`. As of January 31, 2025, the other scripts in this directory are deprecated.
+Use `generate_etr.py`. This script generates problems and saves them to a file. It has a number of options to control the generation process.
 
 ## Usage
 
