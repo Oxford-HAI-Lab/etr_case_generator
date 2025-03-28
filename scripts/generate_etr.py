@@ -81,113 +81,121 @@ def generate_problem_list(n_problems: int, args, question_types: list[str]) -> l
 
     problems: list[FullProblem] = []
     pbar = tqdm(range(n_problems), desc="Generating problems")
-    for _ in pbar:
-        current_counter: int = 0
-        while True:  # Keep trying until we get an acceptable problem
-            ontology = random.choice(all_ontologies)
-            current_counter += 1
-            
-            try:
-                # Calculate remaining capacity needed for each atom count
-                needed_counts = Counter[AtomCount]()
-                if args.num_atoms_set:
-                    for size in args.num_atoms_set:
-                        remaining = count_per_size - num_atoms_counts[size]
-                        needed_counts[AtomCount(size)] = remaining
+    try:
+        for _ in pbar:
+            current_counter: int = 0
+            while True:  # Keep trying until we get an acceptable problem
+                ontology = random.choice(all_ontologies)
+                current_counter += 1
 
-                problem: FullProblem = generate_problem(args, ontology=ontology, needed_counts=needed_counts, generator=problem_generator)
+                try:
+                    # Calculate remaining capacity needed for each atom count
+                    needed_counts = Counter[AtomCount]()
+                    if args.num_atoms_set:
+                        for size in args.num_atoms_set:
+                            remaining = count_per_size - num_atoms_counts[size]
+                            needed_counts[AtomCount(size)] = remaining
 
-                # This is helpful for small numbers of atom counts, but it gets annoying for large numbers
-                # if args.num_atoms_set:
-                #     for na, c in num_atoms_counts.items():
-                #         pbar_postfix[f"NA{na}"] = c
+                    problem: FullProblem = generate_problem(args, ontology=ontology, needed_counts=needed_counts, generator=problem_generator)
 
-                # Get problem characteristics
-                conclusion = problem.etr_predicted_conclusion
-                problem_is_erotetic = conclusion.is_etr_predicted
-                assert problem_is_erotetic, "ETR predicted conclusion should be erotetic by definition"
-                problem_is_classical = conclusion.is_classically_correct
+                    # This is helpful for small numbers of atom counts, but it gets annoying for large numbers
+                    # if args.num_atoms_set:
+                    #     for na, c in num_atoms_counts.items():
+                    #         pbar_postfix[f"NA{na}"] = c
 
-                if args.etr_only_wrong and problem_is_classical:
-                    # print("Skipping problem because ETR conclusion is correct, running with `--etr_only_wrong`.")
-                    raise ValueError("ETR conclusion is correct, but `--etr_only_wrong` is set.")
+                    # Get problem characteristics
+                    conclusion = problem.etr_predicted_conclusion
+                    problem_is_erotetic = conclusion.is_etr_predicted
+                    assert problem_is_erotetic, "ETR predicted conclusion should be erotetic by definition"
+                    problem_is_classical = conclusion.is_classically_correct
 
-                # Handle balancing logic
-                if args.balance_quadrants:
-                    category = (problem_is_erotetic, problem_is_classical)
-                    pbar_postfix.update({
-                        'EC': balance_counts[(True, True)],    # Erotetic Classical
-                        'EN': balance_counts[(True, False)],   # Erotetic Non-classical
-                        'NC': balance_counts[(False, True)],   # Non-erotetic Classical
-                        'NN': balance_counts[(False, False)],  # Non-erotetic Non-classical
-                    })
-                elif args.balance_etr_agreement:
-                    category = (problem_is_erotetic == problem_is_classical)
-                    # print(f"Assessing a problem in category {category}, counts: {balance_counts}")
-                    pbar_postfix.update({
-                        'Agree': balance_counts[True],     # ETR agrees with classical
-                        'Disagree': balance_counts[False], # ETR disagrees with classical
-                    })
-                else:
-                    category = None
+                    if args.etr_only_wrong and problem_is_classical:
+                        # print("Skipping problem because ETR conclusion is correct, running with `--etr_only_wrong`.")
+                        raise ValueError("ETR conclusion is correct, but `--etr_only_wrong` is set.")
 
-                pbar_postfix['T'] = current_counter
-                pbar.set_postfix(pbar_postfix)
+                    # Handle balancing logic
+                    if args.balance_quadrants:
+                        category = (problem_is_erotetic, problem_is_classical)
+                        pbar_postfix.update({
+                            'EC': balance_counts[(True, True)],    # Erotetic Classical
+                            'EN': balance_counts[(True, False)],   # Erotetic Non-classical
+                            'NC': balance_counts[(False, True)],   # Non-erotetic Classical
+                            'NN': balance_counts[(False, False)],  # Non-erotetic Non-classical
+                        })
+                    elif args.balance_etr_agreement:
+                        category = (problem_is_erotetic == problem_is_classical)
+                        # print(f"Assessing a problem in category {category}, counts: {balance_counts}")
+                        pbar_postfix.update({
+                            'Agree': balance_counts[True],     # ETR agrees with classical
+                            'Disagree': balance_counts[False], # ETR disagrees with classical
+                        })
+                    else:
+                        category = None
 
-                # Check atom count constraints
-                num_atoms = sum(len(view.logical_form_etr_view.atoms) for view in problem.views)
-                if args.num_atoms_set:
-                    if num_atoms not in args.num_atoms_set:
-                        continue
-                    if category is not None:
-                        if counts_by_atom[num_atoms][category] >= num_needed_per_category_by_atom:
+                    pbar_postfix['T'] = current_counter
+                    pbar.set_postfix(pbar_postfix)
+
+                    # Check atom count constraints
+                    num_atoms = sum(len(view.logical_form_etr_view.atoms) for view in problem.views)
+                    if args.num_atoms_set:
+                        if num_atoms not in args.num_atoms_set:
                             continue
-                        counts_by_atom[num_atoms][category] += 1
-                    num_atoms_counts[num_atoms] += 1
+                        if category is not None:
+                            if counts_by_atom[num_atoms][category] >= num_needed_per_category_by_atom:
+                                continue
+                            counts_by_atom[num_atoms][category] += 1
+                        num_atoms_counts[num_atoms] += 1
 
-                # Check category constraints
-                if category is not None:
-                    if balance_counts[category] >= num_needed_per_category:
-                        continue
-                    balance_counts[category] += 1
+                    # Check category constraints
+                    if category is not None:
+                        if balance_counts[category] >= num_needed_per_category:
+                            continue
+                        balance_counts[category] += 1
 
-                # print(f"Found problem in category {category}")
+                    # print(f"Found problem in category {category}")
 
-                if args.seed_bank == "ILLUSORY_INFERENCE_FROM_DISJUNCTION":
-                    n_controls_in_problem_list = len([p for p in problems if str(p.seed_id).startswith("control")])
-                    n_targets_in_problem_list = len([p for p in problems if str(p.seed_id).startswith("target")])
-                    if str(problem.seed_id).startswith("control") and n_controls_in_problem_list >= n_problems // 2:
-                        continue
-                    if str(problem.seed_id).startswith("target") and n_targets_in_problem_list >= n_problems // 2:
-                        continue
+                    if args.seed_bank == "ILLUSORY_INFERENCE_FROM_DISJUNCTION":
+                        n_controls_in_problem_list = len([p for p in problems if str(p.seed_id).startswith("control")])
+                        n_targets_in_problem_list = len([p for p in problems if str(p.seed_id).startswith("target")])
+                        if str(problem.seed_id).startswith("control") and n_controls_in_problem_list >= n_problems // 2:
+                            continue
+                        if str(problem.seed_id).startswith("target") and n_targets_in_problem_list >= n_problems // 2:
+                            continue
 
-                # Print out the generated problem
-                print(f"Generated problem with {num_atoms} atoms. Premises:")
-                for v in problem.views:
-                    print(" ***", v.logical_form_etr)
-                print(f"Conclusion:")
-                print(" >>>", conclusion.view.logical_form_etr)
-                print(f"Characteristics: erotetic={problem_is_erotetic}, classical={problem_is_classical}")
+                    # Print out the generated problem
+                    print(f"Generated problem with {num_atoms} atoms. Premises:")
+                    for v in problem.views:
+                        print(" ***", v.logical_form_etr)
+                    print(f"Conclusion:")
+                    print(" >>>", conclusion.view.logical_form_etr)
+                    print(f"Characteristics: erotetic={problem_is_erotetic}, classical={problem_is_classical}")
 
-                problems.append(problem)
-                pbar.set_postfix(pbar_postfix)
-                break  # Successfully generated a problem, move to next iteration
-            except Exception as e:
-                print(f"Failed to generate problem: {e}")
-                # Get full module path of exception
-                exception_key = f"{type(e).__module__}.{type(e).__name__}"
-                # Get file and line number where exception occurred
-                tb = traceback.extract_tb(e.__traceback__)[-1]  # Get last frame
-                location = f"{tb.filename}:{tb.lineno}"
-                exception_key = f"{exception_key} at {location}"
-                exception_type_counter[exception_key] += 1
-                if exception_key not in exception_examples:
-                    exception_examples[exception_key] = str(e)[:100]  # Store first 100 chars
-                # print("Exception type counts:")
-                # for k, v in exception_type_counter.items():
-                #     print(f" * {k}: {v}")
-                # raise e  # Uncomment to see the exception
-                continue  # Try again
+                    problems.append(problem)
+                    pbar.set_postfix(pbar_postfix)
+                    break  # Successfully generated a problem, move to next iteration
+                except Exception as e:
+                    print(f"Failed to generate problem: {e}")
+                    # Get full module path of exception
+                    exception_key = f"{type(e).__module__}.{type(e).__name__}"
+                    # Get file and line number where exception occurred
+                    tb = traceback.extract_tb(e.__traceback__)[-1]  # Get last frame
+                    location = f"{tb.filename}:{tb.lineno}"
+                    exception_key = f"{exception_key} at {location}"
+                    exception_type_counter[exception_key] += 1
+                    if exception_key not in exception_examples:
+                        exception_examples[exception_key] = str(e)[:100]  # Store first 100 chars
+                    # print("Exception type counts:")
+                    # for k, v in exception_type_counter.items():
+                    #     print(f" * {k}: {v}")
+                    # raise e  # Uncomment to see the exception
+                    continue  # Try again
+    except KeyboardInterrupt:
+        print("!" * 64)
+        print("Interrupted by user.")
+        print(f"Generated {len(problems)} problems out of {n_problems} requested.")
+        print("!" * 64, "\n")
+    finally:
+        pbar.close()
 
     print()
     print("!" * 25, "Error Report", "!" * 25)
