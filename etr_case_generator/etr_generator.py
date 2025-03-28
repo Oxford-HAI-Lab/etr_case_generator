@@ -107,7 +107,7 @@ def boost_low_num_atom_problems(problem: PartialProblem, all_problems: List[Part
 class ETRGenerator:
     """Maintains the state of the ETR problem generator between calls."""
     problem_set: List[PartialProblem] = field(default_factory=list)
-    # Queue sizes are OVERRIDDEN in generate_etr_2.py
+    # Queue sizes are OVERRIDDEN in generate_etr.py
     min_queue_size: int = 50  # Minimum number of problems to maintain in queue
     max_queue_size: int = 100  # Maximum size of the queue. This should be large relative to max_mutations_per_base_problem to maintain diversity
     max_queue_size_init: int = None
