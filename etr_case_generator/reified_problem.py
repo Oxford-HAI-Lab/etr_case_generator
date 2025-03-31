@@ -453,28 +453,9 @@ class FullProblem:
         Returns:
             FullProblem: A new problem instance with reversed premises
         """
-        # Create a shallow copy of the problem
-        new_problem = FullProblem(
-            views=list(reversed(self.views)) if self.views else None,
-            possible_conclusions=self.possible_conclusions,
-            ontology=self.ontology,
-            seed_id=self.seed_id,
-            yes_or_no_conclusion_chosen_index=self.yes_or_no_conclusion_chosen_index,
-            yes_or_no_question_prose=self.yes_or_no_question_prose,
-            yes_or_no_answer_guidance_prose=self.yes_or_no_answer_guidance_prose,
-            multiple_choices=self.multiple_choices,
-            multiple_choice_question_prose=self.multiple_choice_question_prose,
-            multiple_choice_answer_guidance_prose=self.multiple_choice_answer_guidance_prose,
-            multiple_choice_options=self.multiple_choice_options,
-            etr_predicted_conclusion=self.etr_predicted_conclusion,
-            etr_predicted_conclusion_is_categorical=self.etr_predicted_conclusion_is_categorical,
-            open_ended_question_prose=self.open_ended_question_prose,
-            open_ended_answer_guidance_prose=self.open_ended_answer_guidance_prose,
-            introductory_prose=self.introductory_prose,
-            answer_immediately_prose=self.answer_immediately_prose,
-            chain_of_thought_prose=self.chain_of_thought_prose
-        )
-        return new_problem
+        from dataclasses import replace
+        reversed_views = list(reversed(self.views)) if self.views else None
+        return replace(self, views=reversed_views)
 
     def __str__(self) -> str:
         return self.full_string(show_empty=False)
