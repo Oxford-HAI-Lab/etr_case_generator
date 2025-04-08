@@ -132,6 +132,7 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
         # TODO: Check "logical equivalency" in strong prediction
         #  - Convert both to PySMT
         #  - Check if they are equivalent
+        #  - Use the .iff method from PySMT
 
         print(f"ETR predicted: {is_etr_predicted}")
         print(f"Classically correct: {is_classically_correct}")
