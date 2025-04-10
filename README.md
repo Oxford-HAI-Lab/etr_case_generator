@@ -75,13 +75,35 @@ pprint_problems datasets/dev_yes_no.jsonl -n 3 -r --parts question scoring_guide
 pprint_problems datasets/dev_yes_no.jsonl -p scoring_guide/etr_answer scoring_guide/logically_correct_answer --stats --full_combinatoric
 ```
 
-### Generating Individual Views
+### Generating Views and Mutations
 
-The `etr_case_generator.generator` module exposes a class called `ETRCaseGenerator`,
-which is designed for generating either individual `pyetr.View` objects or entire
-reasoning problems.
+The `etr_case_generator.etr_generator_no_queue` module exposes a class called
+`ETRGeneratorIndependent` that we use for generating reasoning problems.
 
-`ETRCaseGenerator.generate_view` returns a single random view with some configurable
-number of disjunctions, conjuncts, and a configurable rate of randomly negated atoms. In
-addition, you can specify whether to generate a supposition object and whether to use
-quantification.
+The `generate_etr.py` script from above was our entrypoint to the
+`ETRGeneratorIndependent` class. By default, `generate_etr.py` sets the `multi_view`
+argument to be true, meaning our problems are constructed using the
+`ETRGeneratorIndependent.generate_multi_view_problem` function. This function
+iteratively constructs problems using the `mutations.get_random_view` function, which,
+at its core, selects random views from `ALL_SEED_PROBLEMS` and mutates them according to
+the `mutations.get_view_mutations` function. These objects—the original views from the
+problems in `ALL_SEED_PROBLEMS`, and the mutation logic in
+`get_view_mutations`—characterise our search space for new reasoning problems.
+
+`ALL_SEED_PROBLEMS`, defined in `mutations.py`, begins an initial bank of possible
+`View`s to select by combining `create_starting_problems` and the
+`ILLUSORY_INFERENCE_FROM_DISJUNCTION` seed problems. `create_starting_problems` is a
+function defined in `etr_case_generator/seed_problems.py`, and contains some hardcoded
+problems corresponding to examples from the
+[*Reason and Inquiry*](https://academic.oup.com/book/45443) text.
+`ILLUSORY_INFERENCE_FROM_DISJUNCTION` contains templates for control and target
+problems for the original study on illusory inferences from disjunctions.
+
+The `mutations.get_view_mutations` function can change the structure of a given `View` object
+in a couple of basic ways:
+1. The given `View` can have a new predicate atom conjoined to an existing `State`, in either the stage or supposition.
+2. The given `View` can have a new predicate atom disjoined into the stage or supposition, creating a new `State` in that set of `State`s.
+3. 1. or 2. can occur with an existing predicate atom already in the `View`.
+4. An existing predicate atom can be replaced with an arbitrary object that is either universally or existentially quantified (currently, up to a maximum depth of 3).
+5. A random atom can be taken to be at issue, or not at issue.
+6. A random atom can be replaced with its corresponding verifier or falsifier (in simpler terms, negated).
