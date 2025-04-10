@@ -97,13 +97,15 @@ function defined in `etr_case_generator/seed_problems.py`, and contains some har
 problems corresponding to examples from the
 [*Reason and Inquiry*](https://academic.oup.com/book/45443) text.
 `ILLUSORY_INFERENCE_FROM_DISJUNCTION` contains templates for control and target
-problems for the original study on illusory inferences from disjunctions.
+problems for the original study on illusory inferences from disjunctions. Note that the composition of `ALL_SEED_PROBLEMS` can be easily extended by either appending manually to `create_starting_problems` or by adding other seed banks from the `study_replication_seed_problems.py` file.
 
 The `mutations.get_view_mutations` function can change the structure of a given `View` object
 in a couple of basic ways:
 1. The given `View` can have a new predicate atom conjoined to an existing `State`, in either the stage or supposition.
 2. The given `View` can have a new predicate atom disjoined into the stage or supposition, creating a new `State` in that set of `State`s.
-3. 1. or 2. can occur with an existing predicate atom already in the `View`.
+3. 1 or 2 can occur with an existing predicate atom already in the `View`.
 4. An existing predicate atom can be replaced with an arbitrary object that is either universally or existentially quantified (currently, up to a maximum depth of 3).
 5. A random atom can be taken to be at issue, or not at issue.
 6. A random atom can be replaced with its corresponding verifier or falsifier (in simpler terms, negated).
+
+N.B. here—our system restricts its representations to unary predicates in all cases. This means that currently, you can have "the dog is fluffy," but not "the dog is between home and the park."
