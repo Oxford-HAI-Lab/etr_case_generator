@@ -53,34 +53,24 @@ See the [lm_eval documentation](lm_eval/tasks/README.md) for more information on
 
 ### Inspecting the Dataset
 
-You can use the `pprint_problems` script to inspect the dataset. 
+You can use the `pprint_problems` script to inspect the dataset:
 
-```bash
-pip install pprint_problems
-```
-
-Then, here are some ways you can inspect it.
-
-Show the details of 1 random problems:
-
+- To show the details of 1 random problem:
 ```bash
 pprint_problems datasets/dev_yes_no.jsonl -n 1 -r
 ```
 
-Show the structure of the dataset:
-
+- To show the structure of the dataset:
 ```bash
 pprint_problems datasets/dev_yes_no.jsonl --structure
 ```
 
-Look at just the question, premises, and conclusion for 3 random problems:
-
+- To look at just the question, premises, and conclusion for 3 random problems:
 ```bash
 pprint_problems datasets/dev_yes_no.jsonl -n 3 -r --parts question scoring_guide/premises scoring_guide/question_conclusion
 ```
 
-Show stats about the dataset:
-
+- To show stats about the dataset:
 ```bash
 pprint_problems datasets/dev_yes_no.jsonl -p scoring_guide/etr_answer scoring_guide/logically_correct_answer --stats --full_combinatoric
 ```
