@@ -29,20 +29,6 @@ For local development, this package should be installed in editable mode:
 pip install -e .
 ```
 
-2. **LM-Eval Environment for Running Evaluations**
-   The generated cases can be evaluated using lm-eval, which is installed separately using pipx.
-   Install dependencies in the lm-eval environment:
-   ```bash
-   # Install PyETR in lm-eval's environment
-   ~/.local/pipx/venvs/lm-eval/bin/python -m pip install -e ~/Dev/PyETR_fork/
-   
-   # Install other required dependencies
-   ~/.local/pipx/venvs/lm-eval/bin/python -m pip install pysmt rich openai dataclasses_json
-   
-   # Install this package
-   ~/.local/pipx/venvs/lm-eval/bin/python -m pip install -e ~/Dev/etr_case_generator/
-   ```
-
 ## Generation
 
 ## Generating Individual Views
