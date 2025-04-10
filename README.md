@@ -9,8 +9,8 @@ This system utilises ETR's predicate calculus with the [`PyETR`](https://github.
 `etr_case_generator` works with Python 3.12.5 and may work with other versions. Here, mileage may vary, but one might do this with:
 
 ```bash
-python3.12 -m venv .env
-source .env/bin/activate
+python3.12 -m venv .venv
+source .venv/bin/activate
 ```
 
 Then, install requirements:
