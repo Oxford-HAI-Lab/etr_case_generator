@@ -1,6 +1,6 @@
 
 from pyetr import View
-from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
+from etr_case_generator.reified_problem import PartialProblem, ReifiedView
 
 
 ILLUSORY_INFERENCE_FROM_DISJUNCTION: list[PartialProblem] = [

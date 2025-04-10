@@ -7,8 +7,9 @@ import openai
 
 from pyetr import View
 from pysmt.fnode import FNode
-from etr_case_generator.generator2.formatting_smt import load_fnode_from_string
-from etr_case_generator.generator2.logic_helper import does_it_follow
+from pysmt.shortcuts import is_valid
+from etr_case_generator.formatting_smt import load_fnode_from_string
+from etr_case_generator.logic_helper import does_it_follow
 from pyetr.inference import default_procedure_does_it_follow
 from pyetr.inference import default_inference_procedure
 from pyetr.issues import IssueStructure
@@ -83,6 +84,7 @@ def score_answer(question, model_answer):
         "parse_error": 1,  # This is the important part here. The rest are just filled in to prevent errors
         "is_etr_predicted": 0.0,
         "is_etr_predicted_exact": 0.0,
+        "is_logically_equivalent": 0.0,
         "model_answer": answer_text,
         "full_model_response": original_model_answer,
 
@@ -129,9 +131,19 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
         # 2. should be compared after stripping all issue structure out
         is_etr_strong_predicted: bool = etr_strong_predicted.is_equivalent_under_arb_sub(model_view_etr)
 
-        # TODO: Check "logical equivalency" in strong prediction
-        #  - Convert both to PySMT
-        #  - Check if they are equivalent
+        # Check logical equivalence between the strong prediction and model's answer
+        # Convert both to PySMT fnodes (already done above)
+        # We want to test if etr_strong_predicted and model_view_etr are equivalent
+        strong_predicted_smt = view_to_smt(etr_strong_predicted)
+        model_view_smt = view_to_smt(model_view_etr)
+        # Create the equivalence formula: (P ⟺ Q) using the Iff operator
+        equivalence_formula = strong_predicted_smt.Iff(model_view_smt)
+        # Check if this equivalence is valid (i.e., is a tautology)
+        is_logical_equivalent = is_valid(equivalence_formula)
+        print(f"Logical equivalence: {is_logical_equivalent}")
+        
+        # This can be additionally considered in the scoring if needed
+        # For now we'll just track it but not change the result
 
         print(f"ETR predicted: {is_etr_predicted}")
         print(f"Classically correct: {is_classically_correct}")
@@ -140,6 +152,7 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
             "correct": float(is_classically_correct),
             "is_etr_predicted": float(is_etr_predicted),
             "is_etr_predicted_exact": float(is_etr_strong_predicted),
+            "is_logically_equivalent": float(is_logical_equivalent),
             "len_response": len(original_model_answer),
             "parse_error": 0,
             "model_answer": model_answer,

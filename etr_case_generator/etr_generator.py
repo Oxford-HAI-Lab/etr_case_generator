@@ -4,9 +4,9 @@ import math
 
 from dataclasses import dataclass, field
 
-from etr_case_generator.generator2.logic_types import AtomCount
-from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
-from etr_case_generator.generator2.seed_problems import create_starting_problems
+from etr_case_generator.logic_types import AtomCount
+from etr_case_generator.reified_problem import PartialProblem, ReifiedView
+from etr_case_generator.seed_problems import create_starting_problems
 from etr_case_generator.mutations import get_view_mutations
 from etr_case_generator.ontology import Ontology
 from pyetr import View
@@ -107,7 +107,7 @@ def boost_low_num_atom_problems(problem: PartialProblem, all_problems: List[Part
 class ETRGenerator:
     """Maintains the state of the ETR problem generator between calls."""
     problem_set: List[PartialProblem] = field(default_factory=list)
-    # Queue sizes are OVERRIDDEN in generate_etr_2.py
+    # Queue sizes are OVERRIDDEN in generate_etr.py
     min_queue_size: int = 50  # Minimum number of problems to maintain in queue
     max_queue_size: int = 100  # Maximum size of the queue. This should be large relative to max_mutations_per_base_problem to maintain diversity
     max_queue_size_init: int = None

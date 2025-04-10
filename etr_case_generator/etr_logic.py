@@ -1,7 +1,7 @@
 from pyetr import View
 from pyetr.inference import default_inference_procedure
 
-from etr_case_generator.generator2.reified_problem import FullProblem, ReifiedView
+from etr_case_generator.reified_problem import FullProblem, ReifiedView
 
 
 def get_etr_conclusion(views: list[ReifiedView]) -> ReifiedView:

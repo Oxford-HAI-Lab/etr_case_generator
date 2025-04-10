@@ -2,7 +2,8 @@ import random
 from typing import cast
 from pyetr import ArbitraryObject, FunctionalTerm, PredicateAtom, View
 
-from etr_case_generator.generator2.seed_problems import create_starting_problems, ILLUSORY_INFERENCE_FROM_DISJUNCTION
+from etr_case_generator.seed_problems import create_starting_problems
+from etr_case_generator.study_replication_seed_problems import ILLUSORY_INFERENCE_FROM_DISJUNCTION
 
 ALL_SEED_PROBLEMS = create_starting_problems() + ILLUSORY_INFERENCE_FROM_DISJUNCTION
 

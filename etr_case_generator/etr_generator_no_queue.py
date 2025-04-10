@@ -7,12 +7,12 @@ from dataclasses import dataclass, field
 
 from pyparsing import ParseException
 
-from etr_case_generator.generator2.logic_types import AtomCount
-from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
-from etr_case_generator.generator2.seed_problems import (
+from etr_case_generator.logic_types import AtomCount
+from etr_case_generator.reified_problem import PartialProblem, ReifiedView
+from etr_case_generator.seed_problems import (
     create_starting_problems,
 )
-from etr_case_generator.generator2.study_replication_seed_problems import (
+from etr_case_generator.study_replication_seed_problems import (
     ILLUSORY_INFERENCE_FROM_DISJUNCTION_REVERSE_PREMISES_TEST,
     ILLUSORY_INFERENCES_WITH_QUANTIFIERS,
     ILLUSORY_INFERENCE_FROM_DISJUNCTION,
@@ -240,6 +240,7 @@ class ETRGeneratorIndependent:
                         elif categorical_only and problem_is_categorical:
                             print(f"Found a categorical problem yay!")
                         if (not categorical_only) or problem_is_categorical:
+                            # Return the problem!
                             self.already_generated.add(problem_key)
                             self.count_of_atom_counts_generated[current_count] += 1
 

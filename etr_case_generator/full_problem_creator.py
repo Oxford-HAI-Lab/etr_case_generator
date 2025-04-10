@@ -1,11 +1,9 @@
 import random
 
 from etr_case_generator import Ontology
-from etr_case_generator.generator2.etr_logic import get_etr_conclusion
-from etr_case_generator.generator2.formatting_smt import format_smt, smt_to_etr, smt_to_english
-from etr_case_generator.generator2.reified_problem import FullProblem, ReifiedView, PartialProblem, Conclusion
+from etr_case_generator.etr_logic import get_etr_conclusion
+from etr_case_generator.reified_problem import FullProblem, ReifiedView, PartialProblem, Conclusion
 from etr_case_generator.ontology import ELEMENTS
-from etr_case_generator.generator2.smt_generator import SMTProblem
 
 
 def full_problem_from_partial_problem(partial_problem: PartialProblem, ontology: Ontology=ELEMENTS) -> FullProblem:

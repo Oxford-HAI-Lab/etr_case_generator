@@ -1,6 +1,6 @@
 import random
 
-from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView
+from etr_case_generator.reified_problem import PartialProblem, ReifiedView
 from pyetr import View
 
 

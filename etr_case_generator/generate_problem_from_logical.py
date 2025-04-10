@@ -2,14 +2,14 @@ from typing import Callable, Counter
 
 import pyetr
 
-from etr_case_generator.generator2.etr_generator import random_etr_problem, boost_low_num_atom_problems
-from etr_case_generator.generator2.etr_generator_no_queue import ETRGeneratorIndependent
-from etr_case_generator.generator2.logic_types import AtomCount
-from etr_case_generator.generator2.reified_problem import FullProblem, QuestionType, PartialProblem, Conclusion, \
+from etr_case_generator.etr_generator import random_etr_problem, boost_low_num_atom_problems
+from etr_case_generator.etr_generator_no_queue import ETRGeneratorIndependent
+from etr_case_generator.logic_types import AtomCount
+from etr_case_generator.reified_problem import FullProblem, QuestionType, PartialProblem, Conclusion, \
     ReifiedView
-from etr_case_generator.generator2.full_problem_creator import full_problem_from_partial_problem
+from etr_case_generator.full_problem_creator import full_problem_from_partial_problem
 from etr_case_generator.ontology import ELEMENTS, Ontology, natural_name_to_logical_name
-from etr_case_generator.generator2.smt_generator import random_smt_problem, SMTProblem, generate_conclusions, \
+from etr_case_generator.smt_generator import random_smt_problem, SMTProblem, generate_conclusions, \
     add_conclusions
 from etr_case_generator.view_to_natural_language import view_to_natural_language
 from pyetr import View
@@ -37,6 +37,7 @@ def generate_problem(args, ontology: Ontology = ELEMENTS, needed_counts: Counter
         smt_problem: SMTProblem = random_smt_problem(ontology=small_ontology, total_num_pieces=args.num_pieces)
         partial_problem = smt_problem.to_partial_problem()
     elif args.generate_function == "random_etr_problem":
+        # This is the main path!
         random_etr_problem_kwargs = {}
         if args.num_atoms_set:
             # partial_problem: PartialProblem = random_etr_problem()
@@ -44,10 +45,10 @@ def generate_problem(args, ontology: Ontology = ELEMENTS, needed_counts: Counter
         if needed_counts:
             random_etr_problem_kwargs["needed_counts"] = needed_counts
         random_etr_problem_kwargs["categorical_only"] = not args.non_categorical_okay
-        if generator is not None:
-            partial_problem = generator.generate_problem(needed_counts=needed_counts, categorical_only=not args.non_categorical_okay, multi_view=args.multi_view)
-        else:
-            partial_problem: PartialProblem = random_etr_problem(**random_etr_problem_kwargs)
+
+        assert generator is not None
+
+        partial_problem = generator.generate_problem(needed_counts=needed_counts, categorical_only=not args.non_categorical_okay, multi_view=args.multi_view)
 
         # Use this space to update the natural language object mapping for the ontology.
         assert partial_problem.premises is not None

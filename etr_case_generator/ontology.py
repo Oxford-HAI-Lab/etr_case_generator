@@ -101,7 +101,7 @@ class Ontology:
 
 CARDS = Ontology(
     name="Cards",
-    introduction="I'm playing a card game against the computer. It's an unusual game with an unusual deck of cards. I have some clues about what's going on, and I need to figure some more things out through logical reasoning. Here's what I know so far:",
+    introduction="I'm playing a card game against the computer. It's an unusual game with an unusual deck of cards. Each card might be multiple colors or multiple shapes, for example. I have some clues about what's going on, and I need to figure some more things out through logical reasoning. Here's what I know so far:",
     objects=[
         "the ace",
         "the one",

@@ -9,7 +9,7 @@ from pysmt.fnode import FNode
 from pysmt.typing import BOOL, REAL, PySMTType
 
 from etr_case_generator import Ontology
-from etr_case_generator.generator2.reified_problem import PartialProblem, ReifiedView, Conclusion
+from etr_case_generator.reified_problem import PartialProblem, ReifiedView, Conclusion
 from etr_case_generator.ontology import ELEMENTS, natural_name_to_logical_name, NameShorteningScheme
 
 
