@@ -31,26 +31,23 @@ pip install -e .
 
 ## Generation
 
-## Generating Individual Views
+### Generating Whole Reasoning Problems
 
-The `etr_case_generator.generator` module exposes a class called `ETRCaseGenerator`,
-which is designed for generating either individual `pyetr.View` objects or entire
-reasoning problems.
-
-`ETRCaseGenerator.generate_view` returns a single random view with some configurable
-number of disjunctions, conjuncts, and a configurable rate of randomly negated atoms. In
-addition, you can specify whether to generate a supposition object and whether to use
-quantification.
-
-## Generating Whole Reasoning Problems
-
-Run this command:
+To get started with the generator, try this call to the `generate_etr.py` script:
 
 ```bash
 python -m scripts.generate_etr --save_file_name dev --question_type=all --generate_function=random_etr_problem -n 10
 ```
 
-This will generate 10 problems and save them to 3 files called `datasets/dev_yes_no.jsonl` and similar.  
+This will generate 10 problems and save them to files like `datasets/dev_*.jsonl`:
+```
+Saved file datasets/dev_yes_no.jsonl
+Saved file datasets/dev_yes_no_with_cot.jsonl
+Saved file datasets/dev_multiple_choice.jsonl
+Saved file datasets/dev_multiple_choice_with_cot.jsonl
+Saved file datasets/dev_open_ended.jsonl
+Saved file datasets/dev_open_ended_with_cot.jsonl
+```
 
 See the [lm_eval documentation](lm_eval/tasks/README.md) for more information on how to use this dataset with lm_eval.
 
@@ -87,3 +84,14 @@ Show stats about the dataset:
 ```bash
 pprint_problems datasets/dev_yes_no.jsonl -p scoring_guide/etr_answer scoring_guide/logically_correct_answer --stats --full_combinatoric
 ```
+
+### Generating Individual Views
+
+The `etr_case_generator.generator` module exposes a class called `ETRCaseGenerator`,
+which is designed for generating either individual `pyetr.View` objects or entire
+reasoning problems.
+
+`ETRCaseGenerator.generate_view` returns a single random view with some configurable
+number of disjunctions, conjuncts, and a configurable rate of randomly negated atoms. In
+addition, you can specify whether to generate a supposition object and whether to use
+quantification.
