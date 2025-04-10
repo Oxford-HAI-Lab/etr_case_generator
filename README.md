@@ -6,7 +6,14 @@ This system utilises ETR's predicate calculus with the [`PyETR`](https://github.
 
 ## Setup
 
-`etr_case_generator` works with Python 3.12.5 and may work with other versions. First, install requirements:
+`etr_case_generator` works with Python 3.12.5 and may work with other versions. Here, mileage may vary, but one might do this with:
+
+```bash
+python3.12 -m venv .env
+source .env/bin/activate
+```
+
+Then, install requirements:
 
 ```bash
 pip install -r requirements.txt
@@ -17,34 +24,10 @@ Next, install the PySMT z3 solver:
 pysmt-install --z3
 ```
 
-Finally: possibly necessary for some scripting:
+For local development, this package should be installed in editable mode:
 ```bash
-# Replace with your path
-export PYTHONPATH=/path/to/your/etr_case_generator/etr_case_generator:$PYTHONPATH
+pip install -e .
 ```
-
-### Additional Setup for Development and Evaluation
-
-This project has two main components that require different setup:
-
-1. **ETR Case Generator Development Environment**
-   First, create and activate a virtual environment for development:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate
-   ```
-   
-   Then install dependencies:
-   ```bash
-   # Install PyETR from local fork
-   pip install -e ~/Dev/PyETR_fork/
-   
-   # Install other dependencies
-   pip install pysmt rich dataclasses_json
-   
-   # Install this package in editable mode
-   pip install -e .
-   ```
 
 2. **LM-Eval Environment for Running Evaluations**
    The generated cases can be evaluated using lm-eval, which is installed separately using pipx.
