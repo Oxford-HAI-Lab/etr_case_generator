@@ -47,7 +47,7 @@ quantification.
 Run this command:
 
 ```bash
-python scripts/generate_etr_2.py --save_file_name dev --question_type=all --generate_function=random_etr_problem -n 10
+python -m scripts.generate_etr --save_file_name dev --question_type=all --generate_function=random_etr_problem -n 10
 ```
 
 This will generate 10 problems and save them to 3 files called `datasets/dev_yes_no.jsonl` and similar.  
