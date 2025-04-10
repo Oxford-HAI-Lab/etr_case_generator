@@ -1,8 +1,12 @@
 # etr_case_generator
 
-This is a tool for generating problems to evaluate the erotetic theory of reasoning. 
+Welcome! `etr_case_generator` is a generation tool for producing datasets of reasoning problems. These problems are constructed to test the [Erotetic Theory of Reasoning](https://academic.oup.com/book/45443), though they can be used to assess general soundness in predicate reasoning, and are largely tailored for prompting LLMs.
+
+This system utilises ETR's predicate calculus with the [`PyETR`](https://github.com/Oxford-HAI-Lab/PyETR) package. For now, we do not use the extensions for probabilistic reasoning and decision-making.
 
 ## Setup
+
+`etr_case_generator` works with Python 3.12.5 and may work with other versions. First, install requirements:
 
 ```bash
 pip install -r requirements.txt
