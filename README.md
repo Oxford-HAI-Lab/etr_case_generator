@@ -29,7 +29,7 @@ For local development, this package should be installed in editable mode:
 pip install -e .
 ```
 
-## Generation
+## Usage
 
 ### Generating Whole Reasoning Problems
 
@@ -75,6 +75,21 @@ pprint_problems datasets/dev_yes_no.jsonl -n 3 -r --parts question scoring_guide
 pprint_problems datasets/dev_yes_no.jsonl -p scoring_guide/etr_answer scoring_guide/logically_correct_answer --stats --full_combinatoric
 ```
 
+## Details of Problem Generation
+
+### High-level Summary
+
+The problem generation process is based on a randomized depth-first search for a list of `View` objects which will form the premises of a problem.
+The search incrementally chooses a random `View` object to append to the list, by means of randomly applying mutations to a random 'seed problem' and filtering for Views which keep the ETR-derived conclusion of the problem non-trivial.
+New `View` objects are incrementally added until the sum of the atom counts across the list is equal to one of a specified set of counts, representing a desired degree of complexity.
+If the greatest permitted atom count is exceeded, the last few `View` objects are backtracked.
+After too many failed attempts, the entire list is discarded and we start from scratch.
+
+There are some other filtering steps which may be tuned.
+When using `generate_etr.py`, by default the problem is required to have a 'categorical' conclusion under ETR, (meaning the `View` amounts to a conjunction of atoms without any disjunctions).
+This check intervenes during the depth-first search, causing the search to continue if the condition is not met.
+The script `generate_etr.py` applies further logic to filter the generated problems, by default this is used to restrict to problems that have logically fallacious ETR-predicated conclusions.
+
 ### Generating Views and Mutations
 
 The `etr_case_generator.etr_generator_no_queue` module exposes a class called
@@ -104,8 +119,18 @@ in a couple of basic ways:
 1. The given `View` can have a new predicate atom conjoined to an existing `State`, in either the stage or supposition.
 2. The given `View` can have a new predicate atom disjoined into the stage or supposition, creating a new `State` in that set of `State`s.
 3. 1 or 2 can occur with an existing predicate atom already in the `View`.
-4. An existing predicate atom can be replaced with an arbitrary object that is either universally or existentially quantified (currently, up to a maximum depth of 3).
+4. An existing constant can be replaced with an arbitrary object that is either universally or existentially quantified (currently, up to a maximum depth of 3).
 5. A random atom can be taken to be at issue, or not at issue.
-6. A random atom can be replaced with its corresponding verifier or falsifier (in simpler terms, negated).
+6. A random atom can be negated.
 
 N.B. here—our system restricts its representations to unary predicates in all cases. This means that currently, you can have "the dog is fluffy," but not "the dog is between home and the park."
+
+### Filtering
+
+There are several conditions by which problems can be filtered which can be set using arguments passed to `generate_etr.py`.
+As mentioned above, the default behaviour is to filter for problems with a categorical ETR-predicted solution.
+This is disabled by passing the commandline argument `--non_categorical_okay` to `generate_etr.py`.
+Unlike other filters, the logic for this task is embedded in the function `ETRGeneratorIndependent.generate_multi_view_problem`, i.e. the main search loop, where it is controlled by the Boolean `categorical_only` argument.
+
+The function `generate_problem_list` in `generate_etr.py` directly handles the logic for filtering problems after they have been generated in order to balance between those with correct and those with fallacious ETR-predicted conclusions.
+As mentioned, the default behaviour is to pass through only those with fallacious ETR-predicted conclusions.
