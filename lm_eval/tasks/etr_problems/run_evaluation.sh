@@ -25,7 +25,7 @@ show_help() {
 }
 
 # Default values
-MODEL="gpt-4-turbo"
+MODEL="gpt-4.1-mini"
 EVAL_PATH="${EVAL_PATH:-/home/keenan/Dev/lm-evaluation-harness/}"
 INCLUDE_PATH="${INCLUDE_PATH:-/home/keenan/Dev/etr_case_generator/}"
 DATASET=""
