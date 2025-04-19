@@ -457,7 +457,7 @@ def parse_args():
                         help="Base name for output files (without extension)")
     parser.add_argument("-t", "--question-types", nargs="+", 
                         choices=["all", "multiple_choice", "yes_no", "open_ended"], 
-                        default=["all"],
+                        default=["open_ended"],
                         help="Question types to generate ('all' generates all types)")
     parser.add_argument("--chain-of-thought", action="store_true",
                         help="Include chain of thought prompts")
@@ -481,7 +481,7 @@ def main():
                     print(f"Error getting info for case {name}: {str(e)}")
     
     # For development/testing, use a small subset
-    all_cases = [get_case_info(case) for case in [cases.e1, cases.e2, cases.e3]]  # TODO: Remove after development is done  -- Aider: DO NOT REMOVE
+    # all_cases = [get_case_info(case) for case in [cases.e1, cases.e2, cases.e3]]  # TODO: Remove after development is done  -- Aider: DO NOT REMOVE
 
     print(f"Found {len(all_cases)} valid cases from cases.__all__")
     
@@ -495,6 +495,8 @@ def main():
     
     # Generate problems for each question type
     for question_type in question_types:
+        assert question_type == "open_ended", "Only open_ended question type is supported for now. Don't trust the vibe-coded crap for the other options in this file, cases_to_questions.py; it needs to be updated."
+
         full_problems = []
         
         # For each case, generate n problems with different ontologies
