@@ -166,6 +166,8 @@ def main():
                     all_cases.append(case_info)
                 except Exception as e:
                     print(f"Error getting info for case {name}: {str(e)}")
+
+    all_cases = [get_case_info(case) for case in [cases.e1, cases.e2, cases.e3]]  # TODO: Remove after develompnt is done. Aider -- DO NOT REMOVE!
     
     print(f"Found {len(all_cases)} valid cases from cases.__all__")
     
@@ -193,7 +195,7 @@ def main():
                     full_problems.append(problem)
             except Exception as e:
                 print(f"Error processing case {case['name']}: {str(e)}")
-                continue
+                raise e
         
         # Shuffle the problems
         random.shuffle(full_problems)
