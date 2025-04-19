@@ -215,7 +215,7 @@ def prepare_partial_problem(case: Dict[str, Any], ontology: Ontology, skip_updat
         A tuple of (partial_problem, correct_conclusion)
     """
     # Prepare the ontology with the preferred naming scheme
-    ontology.preferred_name_shortening_scheme = "short"
+    ontology.preferred_name_shortening_scheme = "none"
     ontology.fill_mapping()
     
     # Create the premises (views)

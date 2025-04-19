@@ -43,7 +43,7 @@ class Ontology:
     This is for mapping in the other direction.
     """
 
-    preferred_name_shortening_scheme: NameShorteningScheme = "short"
+    preferred_name_shortening_scheme: NameShorteningScheme = "none"
 
     def fill_mapping(self):
         self.short_name_to_full_name = {}
