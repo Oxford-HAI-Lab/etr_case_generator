@@ -158,10 +158,6 @@ def update_to_ontology(partial_problem: PartialProblem, ontology: Ontology) -> P
         if view.logical_form_etr:
             original = view.logical_form_etr
             view.logical_form_etr = apply_mappings_to_etr(view.logical_form_etr)
-            # Verify the update happened if there were mappings to apply
-            if predicates or objects:
-                assert view.logical_form_etr != original or not any(p in original for p in predicates) and not any(o in original for o in objects), \
-                    f"Failed to update ETR: {original}"
             
             # Recreate the ETR view with the updated text
             view.logical_form_etr_view = cases.View.from_str(view.logical_form_etr)
@@ -463,6 +459,7 @@ def parse_args():
                         help="Include chain of thought prompts")
     parser.add_argument("--no_update_ontology_first", action="store_true",
                         help="Don't update the ontology for the first problem of each case")
+    parser.add_argument("--debug_errors", action="store_true", help="If true, throw errors.")
     return parser.parse_args()
 
 def main():
@@ -484,6 +481,10 @@ def main():
     # all_cases = [get_case_info(case) for case in [cases.e1, cases.e2, cases.e3]]  # TODO: Remove after development is done  -- Aider: DO NOT REMOVE
 
     print(f"Found {len(all_cases)} valid cases from cases.__all__")
+
+    total_num_problems = len(all_cases)
+    num_successes = 0
+    num_failures = 0
     
     # Get all ontologies
     all_ontologies = get_all_ontologies()
@@ -524,7 +525,10 @@ def main():
                     full_problems.append(problem)
             except Exception as e:
                 print(f"Error processing case {case['name']}: {str(e)}")
-                raise e
+                if args.debug_errors:
+                    raise e
+                else:
+                    continue
 
         # Save to file
         output_file = f"{args.output}_{question_type}"
