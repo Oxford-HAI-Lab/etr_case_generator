@@ -7,6 +7,7 @@ from pyetr import cases
 
 from etr_case_generator.reified_problem import FullProblem, QuestionType, PartialProblem, ReifiedView, Conclusion
 from etr_case_generator.ontology import Ontology, get_all_ontologies, natural_name_to_logical_name
+from etr_case_generator.full_problem_creator import full_problem_from_partial_problem
 
 
 def get_case_info(case_class):
@@ -52,6 +53,16 @@ def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]],
     # Create the correct conclusion
     correct_conclusion = create_reified_view_from_pyetr_view(case['c'])
     
+    # Create a PartialProblem first
+    partial_problem = PartialProblem(
+        premises=premises,
+        seed_id=case['name']
+    )
+    
+    # Fill out the premises with the ontology
+    for premise in partial_problem.premises:
+        premise.fill_out(ontology)
+    
     # Get 3 random wrong conclusions for multiple choice
     wrong_conclusions = []
     possible_conclusions = []
@@ -65,6 +76,7 @@ def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]],
             if random_case != case and random_case['c'] not in [w.logical_form_etr for w in wrong_conclusions]:
                 try:
                     wrong_view = create_reified_view_from_pyetr_view(random_case['c'])
+                    wrong_view.fill_out(ontology)
                     wrong_conclusions.append(wrong_view)
                     
                     # Create a Conclusion object for each wrong conclusion
@@ -76,6 +88,7 @@ def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]],
                     continue
     
     # Create a Conclusion object for the correct conclusion
+    correct_conclusion.fill_out(ontology)
     etr_conclusion = Conclusion(view=correct_conclusion)
     etr_conclusion.is_etr_predicted = True
     etr_conclusion.is_classically_correct = True  # Assuming ETR and classical logic agree for these examples
@@ -96,32 +109,29 @@ def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]],
             possible_conclusions.append(wrong_conclusion)
         random.shuffle(possible_conclusions)
     
-    # Create the FullProblem with all required fields
-    problem = FullProblem(
-        introductory_prose=ontology.introduction,
-        views=premises,
-        # Yes/No section
-        possible_conclusions=possible_conclusions if possible_conclusions else None,
-        # Multiple choice section
-        multiple_choices=multiple_choices if multiple_choices else None,
-        # Open ended question
-        etr_predicted_conclusion=etr_conclusion,
-        seed_id=case['name'],
-    )
+    # Set up the ETR predicted conclusion in the partial problem
+    partial_problem.etr_what_follows = correct_conclusion
+    partial_problem.possible_conclusions_from_logical = [etr_conclusion]
+    partial_problem.possible_conclusions_from_etr = [etr_conclusion]
     
-    # Set the ontology
-    problem.ontology = ontology
+    # Create the FullProblem with all required fields
+    from etr_case_generator.full_problem_creator import full_problem_from_partial_problem
+    problem = full_problem_from_partial_problem(partial_problem, ontology)
+    
+    # Override some fields that might have been set differently
+    if question_type == "multiple_choice":
+        problem.multiple_choices = multiple_choices
+    if question_type == "yes_no":
+        problem.possible_conclusions = possible_conclusions
+        if possible_conclusions:
+            # Set the yes_or_no_conclusion_chosen_index to the index of the correct conclusion
+            for i, conclusion in enumerate(possible_conclusions):
+                if conclusion.is_classically_correct:
+                    problem.yes_or_no_conclusion_chosen_index = i
+                    break
     
     # Add metadata
     problem.description = case.get('docstring', '')
-    problem.classically_correct_conclusion = etr_conclusion
-    
-    # For multiple choice, add the wrong conclusions
-    if question_type == "multiple_choice":
-        problem.wrong_conclusions = wrong_conclusions
-    
-    # Fill out the problem with the ontology
-    problem.fill_out(ontology=ontology)
     
     return problem
 
@@ -143,18 +153,6 @@ def parse_args():
 def main():
     args = parse_args()
     
-    # Get only the cases listed in __all__
-    all_cases = []
-    for name in cases.__all__:
-        if hasattr(cases, name):
-            obj = getattr(cases, name)
-            if inspect.isclass(obj) and issubclass(obj, cases.BaseExample) and obj != cases.BaseExample:
-                try:
-                    case_info = get_case_info(obj)
-                    all_cases.append(case_info)
-                except Exception as e:
-                    print(f"Error getting info for case {name}: {str(e)}")
-
     # Get all cases from cases.__all__
     all_cases = []
     for name in cases.__all__:
@@ -166,8 +164,9 @@ def main():
                     all_cases.append(case_info)
                 except Exception as e:
                     print(f"Error getting info for case {name}: {str(e)}")
-
-    all_cases = [get_case_info(case) for case in [cases.e1, cases.e2, cases.e3]]  # TODO: Remove after develompnt is done. Aider -- DO NOT REMOVE!
+    
+    # For development/testing, use a small subset
+    # all_cases = [get_case_info(case) for case in [cases.e1, cases.e2, cases.e3]]  # TODO: Remove after development is done
     
     print(f"Found {len(all_cases)} valid cases from cases.__all__")
     
