@@ -2,6 +2,7 @@ import json
 import inspect
 import random
 import argparse
+import re
 from typing import List, Dict, Any
 from pyetr import cases
 
@@ -43,8 +44,6 @@ def update_to_ontology(partial_problem: PartialProblem, ontology: Ontology) -> N
     Replace predicates and objects in the partial problem with random ones from the ontology.
     Ensures consistent mapping across all premises and conclusions.
     """
-    import re
-    
     # Extract all predicates and objects from the problem
     all_etr_text = ""
     for premise in partial_problem.premises:
