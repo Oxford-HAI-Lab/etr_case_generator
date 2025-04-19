@@ -54,6 +54,9 @@ def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]],
     
     # Get 3 random wrong conclusions for multiple choice
     wrong_conclusions = []
+    possible_conclusions = []
+    multiple_choices = []
+    
     if question_type == "multiple_choice":
         attempts = 0
         while len(wrong_conclusions) < 3 and attempts < 20:
@@ -61,36 +64,64 @@ def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]],
             random_case = random.choice(all_cases)
             if random_case != case and random_case['c'] not in [w.logical_form_etr for w in wrong_conclusions]:
                 try:
-                    wrong_conclusions.append(create_reified_view_from_pyetr_view(random_case['c']))
+                    wrong_view = create_reified_view_from_pyetr_view(random_case['c'])
+                    wrong_conclusions.append(wrong_view)
+                    
+                    # Create a Conclusion object for each wrong conclusion
+                    wrong_conclusion = Conclusion(view=wrong_view)
+                    wrong_conclusion.is_etr_predicted = False
+                    wrong_conclusion.is_classically_correct = False
+                    multiple_choices.append(wrong_conclusion)
                 except Exception:
                     continue
     
-    # Create the FullProblem
-    problem = FullProblem()
-    problem.views = premises
-    
-    # Create a Conclusion object
+    # Create a Conclusion object for the correct conclusion
     etr_conclusion = Conclusion(view=correct_conclusion)
     etr_conclusion.is_etr_predicted = True
     etr_conclusion.is_classically_correct = True  # Assuming ETR and classical logic agree for these examples
     
-    problem.etr_predicted_conclusion = etr_conclusion
+    # Add the correct conclusion to multiple_choices
+    if question_type == "multiple_choice":
+        multiple_choices.append(etr_conclusion)
+        random.shuffle(multiple_choices)
+    
+    # For yes/no questions, create possible conclusions
+    if question_type == "yes_no":
+        possible_conclusions = [etr_conclusion]
+        # Add some wrong conclusions as distractors
+        for wrong_view in wrong_conclusions[:2]:  # Add up to 2 wrong conclusions
+            wrong_conclusion = Conclusion(view=wrong_view)
+            wrong_conclusion.is_etr_predicted = False
+            wrong_conclusion.is_classically_correct = False
+            possible_conclusions.append(wrong_conclusion)
+        random.shuffle(possible_conclusions)
+    
+    # Create the FullProblem with all required fields
+    problem = FullProblem(
+        introductory_prose=ontology.introduction,
+        views=premises,
+        # Yes/No section
+        possible_conclusions=possible_conclusions if possible_conclusions else None,
+        # Multiple choice section
+        multiple_choices=multiple_choices if multiple_choices else None,
+        # Open ended question
+        etr_predicted_conclusion=etr_conclusion,
+        seed_id=case['name'],
+    )
+    
+    # Set the ontology
+    problem.ontology = ontology
+    
+    # Add metadata
+    problem.description = case.get('docstring', '')
     problem.classically_correct_conclusion = etr_conclusion
     
     # For multiple choice, add the wrong conclusions
     if question_type == "multiple_choice":
         problem.wrong_conclusions = wrong_conclusions
     
-    # Add metadata before filling out
-    problem.seed_id = case['name']
-    problem.description = case.get('docstring', '')
-    
     # Fill out the problem with the ontology
-    for view in problem.views:
-        view.fill_out(ontology)
-    
-    # Fill out the conclusion
-    problem.etr_predicted_conclusion.view.fill_out(ontology)
+    problem.fill_out(ontology=ontology)
     
     return problem
 
@@ -124,7 +155,17 @@ def main():
                 except Exception as e:
                     print(f"Error getting info for case {name}: {str(e)}")
 
-    all_cases = [get_case_info(c) for c in [cases.e1, cases.e2, cases.e3]]  # TODO DO NOT SUBMIT THIS!
+    # Get all cases from cases.__all__
+    all_cases = []
+    for name in cases.__all__:
+        if hasattr(cases, name):
+            obj = getattr(cases, name)
+            if inspect.isclass(obj) and issubclass(obj, cases.BaseExample) and obj != cases.BaseExample:
+                try:
+                    case_info = get_case_info(obj)
+                    all_cases.append(case_info)
+                except Exception as e:
+                    print(f"Error getting info for case {name}: {str(e)}")
     
     print(f"Found {len(all_cases)} valid cases from cases.__all__")
     
