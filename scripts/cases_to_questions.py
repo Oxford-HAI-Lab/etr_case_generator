@@ -482,7 +482,10 @@ def main():
 
     print(f"Found {len(all_cases)} valid cases from cases.__all__")
 
-    total_num_problems = len(all_cases)
+    total_num_problems = len(all_cases) * args.num_problems * len(args.question_types)
+    if "all" in args.question_types:
+        total_num_problems = len(all_cases) * args.num_problems * 3  # 3 question types
+    
     num_successes = 0
     num_failures = 0
     
@@ -502,8 +505,8 @@ def main():
         
         # For each case, generate n problems with different ontologies
         for case in all_cases:
-            try:
-                for i in range(args.num_problems):
+            for i in range(args.num_problems):
+                try:
                     # Choose a random ontology
                     ontology = random.choice(all_ontologies)
                     
@@ -523,12 +526,12 @@ def main():
                         problem.description = f"[ORIGINAL CASE WITHOUT ONTOLOGY UPDATE] {problem.description}"
                     
                     full_problems.append(problem)
-            except Exception as e:
-                print(f"Error processing case {case['name']}: {str(e)}")
-                if args.debug_errors:
-                    raise e
-                else:
-                    continue
+                    num_successes += 1
+                except Exception as e:
+                    print(f"Error processing case {case['name']}: {str(e)}")
+                    num_failures += 1
+                    if args.debug_errors:
+                        raise e
 
         # Save to file
         output_file = f"{args.output}_{question_type}"
@@ -542,6 +545,12 @@ def main():
                                                             chain_of_thought=args.chain_of_thought)) + '\n')
         
         print(f"Generated {len(full_problems)} problems in {output_file}")
+    
+    # Print statistics
+    print(f"\nGeneration Statistics:")
+    print(f"Total attempted: {total_num_problems}")
+    print(f"Successful: {num_successes} ({num_successes/total_num_problems*100:.1f}%)")
+    print(f"Failed: {num_failures} ({num_failures/total_num_problems*100:.1f}%)")
 
 
 if __name__ == "__main__":
