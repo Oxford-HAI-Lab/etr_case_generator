@@ -44,17 +44,49 @@ def update_to_ontology(partial_problem: PartialProblem, ontology: Ontology) -> P
     Replace predicates and objects in the partial problem with random ones from the ontology.
     Ensures consistent mapping across all premises and conclusions.
     
+    This function thoroughly updates all parts of the problem, including:
+    - All premises
+    - ETR what follows conclusion
+    - Possible conclusions from logical
+    - Possible conclusions from ETR
+    
+    Args:
+        partial_problem: The original problem to update
+        ontology: The ontology to use for replacements
+        
     Returns:
-        A new PartialProblem with updated predicates and objects.
+        A new PartialProblem with updated predicates and objects
+        
+    Raises:
+        AssertionError: If any part of the problem wasn't properly updated
     """
     # Create a copy of the partial problem
     from copy import deepcopy
     new_problem = deepcopy(partial_problem)
     
+    # Verify we have premises to work with
+    assert new_problem.premises is not None and len(new_problem.premises) > 0, "No premises found in partial problem"
+    
     # Extract all predicates and objects from the problem
     all_etr_text = ""
     for premise in new_problem.premises:
+        assert premise.logical_form_etr is not None, "Premise missing logical_form_etr"
         all_etr_text += premise.logical_form_etr + " "
+    
+    # If there's an ETR what follows, include it in the text to analyze
+    if new_problem.etr_what_follows and new_problem.etr_what_follows.logical_form_etr:
+        all_etr_text += new_problem.etr_what_follows.logical_form_etr + " "
+    
+    # Include possible conclusions in the text to analyze
+    if new_problem.possible_conclusions_from_logical:
+        for conclusion in new_problem.possible_conclusions_from_logical:
+            if conclusion.view and conclusion.view.logical_form_etr:
+                all_etr_text += conclusion.view.logical_form_etr + " "
+    
+    if new_problem.possible_conclusions_from_etr:
+        for conclusion in new_problem.possible_conclusions_from_etr:
+            if conclusion.view and conclusion.view.logical_form_etr:
+                all_etr_text += conclusion.view.logical_form_etr + " "
     
     # Find all predicate names (words followed by open parenthesis)
     predicate_pattern = r'([A-Za-z][A-Za-z0-9_]*)\('
@@ -65,8 +97,13 @@ def update_to_ontology(partial_problem: PartialProblem, ontology: Ontology) -> P
     objects = set(re.findall(object_pattern, all_etr_text))
     
     # Remove special keywords that shouldn't be replaced
-    special_keywords = {'forall', 'exists', 'and', 'or', 'not', 'implies', 'iff'}
+    special_keywords = {'forall', 'exists', 'and', 'or', 'not', 'implies', 'iff', 
+                       'A', 'E', 'x', 'y', 'z', 'w', 'v', 'u', 't', 's'}
     predicates = {p for p in predicates if p.lower() not in special_keywords}
+    
+    # Ensure we have enough predicates and objects in the ontology
+    assert len(ontology.predicates) > 0, "Ontology has no predicates"
+    assert len(ontology.objects) > 0, "Ontology has no objects"
     
     # Create random mappings
     predicate_mapping = {}
@@ -91,41 +128,72 @@ def update_to_ontology(partial_problem: PartialProblem, ontology: Ontology) -> P
             # If we run out of ontology objects, reuse them
             object_mapping[obj] = available_objects[i % len(available_objects)]
     
-    # Apply mappings to all premises
-    for premise in new_problem.premises:
+    # Helper function to apply mappings to a single ETR string
+    def apply_mappings_to_etr(etr_str):
+        if not etr_str:
+            return etr_str
+            
+        result = etr_str
         # Replace predicates
         for old_pred, new_pred in predicate_mapping.items():
             # Use word boundaries to ensure we only replace whole words
-            premise.logical_form_etr = re.sub(r'\b' + old_pred + r'\(', 
-                                             natural_name_to_logical_name(new_pred, "none") + '(', 
-                                             premise.logical_form_etr)
+            result = re.sub(r'\b' + old_pred + r'\(', 
+                           natural_name_to_logical_name(new_pred, "none") + '(', 
+                           result)
         
         # Replace objects
         for old_obj, new_obj in object_mapping.items():
             # Use word boundaries to ensure we only replace whole words
-            premise.logical_form_etr = re.sub(r'\b' + old_obj + r'\(\)', 
-                                             natural_name_to_logical_name(new_obj, "none") + '()', 
-                                             premise.logical_form_etr)
+            result = re.sub(r'\b' + old_obj + r'\(\)', 
+                           natural_name_to_logical_name(new_obj, "none") + '()', 
+                           result)
         
-        # Recreate the ETR view with the updated text
-        premise.logical_form_etr_view = cases.View.from_str(premise.logical_form_etr)
+        return result
+    
+    # Helper function to update a ReifiedView
+    def update_reified_view(view):
+        if not view:
+            return
+            
+        if view.logical_form_etr:
+            original = view.logical_form_etr
+            view.logical_form_etr = apply_mappings_to_etr(view.logical_form_etr)
+            # Verify the update happened if there were mappings to apply
+            if predicates or objects:
+                assert view.logical_form_etr != original or not any(p in original for p in predicates) and not any(o in original for o in objects), \
+                    f"Failed to update ETR: {original}"
+            
+            # Recreate the ETR view with the updated text
+            view.logical_form_etr_view = cases.View.from_str(view.logical_form_etr)
+    
+    # Apply mappings to all premises
+    for premise in new_problem.premises:
+        update_reified_view(premise)
     
     # If there's an ETR what follows, update it too
     if new_problem.etr_what_follows:
-        for old_pred, new_pred in predicate_mapping.items():
-            new_problem.etr_what_follows.logical_form_etr = re.sub(
-                r'\b' + old_pred + r'\(', 
-                natural_name_to_logical_name(new_pred, "none") + '(', 
-                new_problem.etr_what_follows.logical_form_etr)
-        
-        for old_obj, new_obj in object_mapping.items():
-            new_problem.etr_what_follows.logical_form_etr = re.sub(
-                r'\b' + old_obj + r'\(\)', 
-                natural_name_to_logical_name(new_obj, "none") + '()', 
-                new_problem.etr_what_follows.logical_form_etr)
-        
-        new_problem.etr_what_follows.logical_form_etr_view = cases.View.from_str(
-            new_problem.etr_what_follows.logical_form_etr)
+        update_reified_view(new_problem.etr_what_follows)
+    
+    # Update possible conclusions from logical
+    if new_problem.possible_conclusions_from_logical:
+        for conclusion in new_problem.possible_conclusions_from_logical:
+            if conclusion.view:
+                update_reified_view(conclusion.view)
+    
+    # Update possible conclusions from ETR
+    if new_problem.possible_conclusions_from_etr:
+        for conclusion in new_problem.possible_conclusions_from_etr:
+            if conclusion.view:
+                update_reified_view(conclusion.view)
+    
+    # Verify that all premises were updated
+    for i, premise in enumerate(new_problem.premises):
+        assert premise.logical_form_etr_view is not None, f"Premise {i} missing logical_form_etr_view after update"
+    
+    # Verify that ETR what follows was updated if it exists
+    if new_problem.etr_what_follows:
+        assert new_problem.etr_what_follows.logical_form_etr_view is not None, \
+            "etr_what_follows missing logical_form_etr_view after update"
     
     return new_problem
 
@@ -161,18 +229,39 @@ def prepare_partial_problem(case: Dict[str, Any], ontology: Ontology) -> tuple[P
     # Create a PartialProblem first
     partial_problem = PartialProblem(
         premises=premises,
-        seed_id=case['name']
+        seed_id=case['name'],
+        etr_what_follows=correct_conclusion  # Set the correct conclusion as etr_what_follows
     )
     
+    # Create a Conclusion object for the correct conclusion
+    etr_conclusion = Conclusion(view=correct_conclusion)
+    etr_conclusion.is_etr_predicted = True
+    etr_conclusion.is_classically_correct = True
+    
+    # Set up possible conclusions
+    partial_problem.possible_conclusions_from_logical = [etr_conclusion]
+    partial_problem.possible_conclusions_from_etr = [etr_conclusion]
+    
     # Replace generic predicates and objects with domain-specific ones
+    # This will update all parts of the problem including the conclusion
     partial_problem = update_to_ontology(partial_problem, ontology)
     
     # Fill out the premises with the ontology
     for premise in partial_problem.premises:
         premise.fill_out(ontology)
     
+    # Get the updated conclusion from the partial problem
+    correct_conclusion = partial_problem.etr_what_follows
+    assert correct_conclusion is not None, "Correct conclusion is missing after update_to_ontology"
+    
     # Fill out the conclusion with the ontology
     correct_conclusion.fill_out(ontology)
+    
+    # Verify that all parts were properly filled out
+    assert all(premise.english_form is not None for premise in partial_problem.premises), \
+        "Some premises are missing english_form after fill_out"
+    assert correct_conclusion.english_form is not None, \
+        "Correct conclusion is missing english_form after fill_out"
     
     return partial_problem, correct_conclusion
 
@@ -292,10 +381,11 @@ def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]],
         
         possible_conclusions = create_yes_no_options(correct_conclusion, wrong_conclusions)
     
-    # Set up the ETR predicted conclusion in the partial problem
-    partial_problem.etr_what_follows = correct_conclusion
-    partial_problem.possible_conclusions_from_logical = [etr_conclusion]
-    partial_problem.possible_conclusions_from_etr = [etr_conclusion]
+    # The ETR predicted conclusion is already set up in prepare_partial_problem
+    # Just verify that it's still properly set
+    assert partial_problem.etr_what_follows is not None, "ETR predicted conclusion is missing"
+    assert partial_problem.possible_conclusions_from_logical is not None, "Possible conclusions from logical is missing"
+    assert partial_problem.possible_conclusions_from_etr is not None, "Possible conclusions from ETR is missing"
     
     # Create the FullProblem with all required fields
     problem = full_problem_from_partial_problem(partial_problem, ontology)
