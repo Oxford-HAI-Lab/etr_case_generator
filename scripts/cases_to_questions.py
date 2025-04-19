@@ -42,11 +42,17 @@ def create_reified_view_from_pyetr_view(view_str: str) -> ReifiedView:
     """Convert a pyETR View string to a ReifiedView object."""
     reified_view = ReifiedView()
     reified_view.logical_form_etr = view_str
+    # Create the ETR view object to enable atom counting and other operations
+    reified_view.logical_form_etr_view = cases.View.from_str(view_str)
     return reified_view
 
 def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]], 
                         ontology: Ontology, question_type: QuestionType = "multiple_choice") -> FullProblem:
     """Create a FullProblem from a case."""
+    # Prepare the ontology with the preferred naming scheme
+    ontology.preferred_name_shortening_scheme = "short"
+    ontology.fill_mapping()
+    
     # Create the premises (views)
     premises = [create_reified_view_from_pyetr_view(v) for v in case['v']]
     
@@ -168,6 +174,9 @@ def main():
     # For development/testing, use a small subset
     all_cases = [get_case_info(case) for case in [cases.e1, cases.e2, cases.e3]]  # TODO: Remove after development is done  -- Aider: DO NOT REMOVE
     
+    # Uncomment to use all cases
+    # all_cases = all_cases
+    
     print(f"Found {len(all_cases)} valid cases from cases.__all__")
     
     # Get all ontologies
@@ -189,8 +198,13 @@ def main():
                     # Choose a random ontology
                     ontology = random.choice(all_ontologies)
                     
+                    # Randomly select a subset of predicates and objects for variety
+                    num_predicates = min(random.randint(3, 6), len(ontology.predicates))
+                    num_objects = min(random.randint(3, 6), len(ontology.objects))
+                    smaller_ontology = ontology.create_smaller_ontology(num_predicates, num_objects)
+                    
                     # Create a full problem
-                    problem = create_full_problem(case, all_cases, ontology, question_type)
+                    problem = create_full_problem(case, all_cases, smaller_ontology, question_type)
                     full_problems.append(problem)
             except Exception as e:
                 print(f"Error processing case {case['name']}: {str(e)}")
