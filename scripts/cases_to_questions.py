@@ -137,9 +137,17 @@ def create_reified_view_from_pyetr_view(view_str: str) -> ReifiedView:
     reified_view.logical_form_etr_view = cases.View.from_str(view_str)
     return reified_view
 
-def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]], 
-                        ontology: Ontology, question_type: QuestionType = "multiple_choice") -> FullProblem:
-    """Create a FullProblem from a case."""
+def prepare_partial_problem(case: Dict[str, Any], ontology: Ontology) -> tuple[PartialProblem, ReifiedView]:
+    """
+    Create and prepare a PartialProblem from a case with the given ontology.
+    
+    Args:
+        case: The case dictionary containing premises and conclusion
+        ontology: The ontology to use for the problem
+        
+    Returns:
+        A tuple of (partial_problem, correct_conclusion)
+    """
     # Prepare the ontology with the preferred naming scheme
     ontology.preferred_name_shortening_scheme = "short"
     ontology.fill_mapping()
@@ -163,51 +171,126 @@ def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]],
     for premise in partial_problem.premises:
         premise.fill_out(ontology)
     
-    # Get 3 random wrong conclusions for multiple choice
+    # Fill out the conclusion with the ontology
+    correct_conclusion.fill_out(ontology)
+    
+    return partial_problem, correct_conclusion
+
+def create_multiple_choice_options(case: Dict[str, Any], all_cases: List[Dict[str, Any]], 
+                                  ontology: Ontology, correct_conclusion: ReifiedView) -> list[Conclusion]:
+    """
+    Create multiple choice options including the correct conclusion and 3 wrong ones.
+    
+    Args:
+        case: The current case
+        all_cases: All available cases to choose wrong conclusions from
+        ontology: The ontology to use
+        correct_conclusion: The correct conclusion for this problem
+        
+    Returns:
+        A list of Conclusion objects for multiple choice
+    """
     wrong_conclusions = []
-    possible_conclusions = []
     multiple_choices = []
     
-    if question_type == "multiple_choice":
-        attempts = 0
-        while len(wrong_conclusions) < 3 and attempts < 20:
-            attempts += 1
-            random_case = random.choice(all_cases)
-            if random_case != case and random_case['c'] not in [w.logical_form_etr for w in wrong_conclusions]:
-                try:
-                    wrong_view = create_reified_view_from_pyetr_view(random_case['c'])
-                    wrong_view.fill_out(ontology)
-                    wrong_conclusions.append(wrong_view)
-                    
-                    # Create a Conclusion object for each wrong conclusion
-                    wrong_conclusion = Conclusion(view=wrong_view)
-                    wrong_conclusion.is_etr_predicted = False
-                    wrong_conclusion.is_classically_correct = False
-                    multiple_choices.append(wrong_conclusion)
-                except Exception:
-                    continue
+    # Get 3 random wrong conclusions
+    attempts = 0
+    while len(wrong_conclusions) < 3 and attempts < 20:
+        attempts += 1
+        random_case = random.choice(all_cases)
+        if random_case != case and random_case['c'] not in [w.logical_form_etr for w in wrong_conclusions]:
+            try:
+                wrong_view = create_reified_view_from_pyetr_view(random_case['c'])
+                wrong_view.fill_out(ontology)
+                wrong_conclusions.append(wrong_view)
+                
+                # Create a Conclusion object for each wrong conclusion
+                wrong_conclusion = Conclusion(view=wrong_view)
+                wrong_conclusion.is_etr_predicted = False
+                wrong_conclusion.is_classically_correct = False
+                multiple_choices.append(wrong_conclusion)
+            except Exception:
+                continue
     
     # Create a Conclusion object for the correct conclusion
-    correct_conclusion.fill_out(ontology)
     etr_conclusion = Conclusion(view=correct_conclusion)
     etr_conclusion.is_etr_predicted = True
     etr_conclusion.is_classically_correct = True  # Assuming ETR and classical logic agree for these examples
     
     # Add the correct conclusion to multiple_choices
-    if question_type == "multiple_choice":
-        multiple_choices.append(etr_conclusion)
-        random.shuffle(multiple_choices)
+    multiple_choices.append(etr_conclusion)
+    random.shuffle(multiple_choices)
     
-    # For yes/no questions, create possible conclusions
+    return multiple_choices
+
+def create_yes_no_options(correct_conclusion: ReifiedView, wrong_views: list[ReifiedView]) -> list[Conclusion]:
+    """
+    Create yes/no question options including the correct conclusion and some wrong ones.
+    
+    Args:
+        correct_conclusion: The correct conclusion
+        wrong_views: List of wrong views to choose from
+        
+    Returns:
+        A list of Conclusion objects for yes/no questions
+    """
+    possible_conclusions = []
+    
+    # Create a Conclusion object for the correct conclusion
+    etr_conclusion = Conclusion(view=correct_conclusion)
+    etr_conclusion.is_etr_predicted = True
+    etr_conclusion.is_classically_correct = True
+    
+    possible_conclusions = [etr_conclusion]
+    
+    # Add some wrong conclusions as distractors
+    for wrong_view in wrong_views[:2]:  # Add up to 2 wrong conclusions
+        wrong_conclusion = Conclusion(view=wrong_view)
+        wrong_conclusion.is_etr_predicted = False
+        wrong_conclusion.is_classically_correct = False
+        possible_conclusions.append(wrong_conclusion)
+    
+    random.shuffle(possible_conclusions)
+    return possible_conclusions
+
+def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]], 
+                        ontology: Ontology, question_type: QuestionType = "multiple_choice") -> FullProblem:
+    """Create a FullProblem from a case."""
+    # Prepare the partial problem and correct conclusion
+    partial_problem, correct_conclusion = prepare_partial_problem(case, ontology)
+    
+    # Get wrong conclusions for multiple choice or yes/no questions
+    wrong_conclusions = []
+    multiple_choices = []
+    possible_conclusions = []
+    
+    # Create a Conclusion object for the correct conclusion
+    etr_conclusion = Conclusion(view=correct_conclusion)
+    etr_conclusion.is_etr_predicted = True
+    etr_conclusion.is_classically_correct = True
+    
+    # Generate options based on question type
+    if question_type == "multiple_choice":
+        multiple_choices = create_multiple_choice_options(case, all_cases, ontology, correct_conclusion)
+        # Extract wrong views for potential use in yes/no questions
+        wrong_conclusions = [conclusion.view for conclusion in multiple_choices 
+                            if not conclusion.is_classically_correct]
+    
     if question_type == "yes_no":
-        possible_conclusions = [etr_conclusion]
-        # Add some wrong conclusions as distractors
-        for wrong_view in wrong_conclusions[:2]:  # Add up to 2 wrong conclusions
-            wrong_conclusion = Conclusion(view=wrong_view)
-            wrong_conclusion.is_etr_predicted = False
-            wrong_conclusion.is_classically_correct = False
-            possible_conclusions.append(wrong_conclusion)
-        random.shuffle(possible_conclusions)
+        # If we already have wrong conclusions from multiple choice, use them
+        if not wrong_conclusions:
+            # Otherwise, generate some wrong conclusions
+            for _ in range(2):
+                random_case = random.choice(all_cases)
+                if random_case != case:
+                    try:
+                        wrong_view = create_reified_view_from_pyetr_view(random_case['c'])
+                        wrong_view.fill_out(ontology)
+                        wrong_conclusions.append(wrong_view)
+                    except Exception:
+                        continue
+        
+        possible_conclusions = create_yes_no_options(correct_conclusion, wrong_conclusions)
     
     # Set up the ETR predicted conclusion in the partial problem
     partial_problem.etr_what_follows = correct_conclusion
@@ -215,12 +298,12 @@ def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]],
     partial_problem.possible_conclusions_from_etr = [etr_conclusion]
     
     # Create the FullProblem with all required fields
-    from etr_case_generator.full_problem_creator import full_problem_from_partial_problem
     problem = full_problem_from_partial_problem(partial_problem, ontology)
     
     # Override some fields that might have been set differently
     if question_type == "multiple_choice":
         problem.multiple_choices = multiple_choices
+    
     if question_type == "yes_no":
         problem.possible_conclusions = possible_conclusions
         if possible_conclusions:
