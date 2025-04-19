@@ -325,30 +325,15 @@ def generate_problem_description(problem: FullProblem, case: Dict[str, Any], ont
         A string description of the problem
     """
     # Start with the case docstring if available
-    if case.get('docstring'):
-        # Clean up the docstring - remove extra whitespace and quotes
-        description = case['docstring'].strip().strip('"\'')
-        
-        # If the description is from a specific example, mention that
-        if case['name'].startswith('e') and case['name'][1:].split('_')[0].isdigit():
-            example_num = case['name'][1:].split('_')[0]
-            description = f"Based on Example {example_num} from Erotetic Reasoning Theory: {description}"
-        else:
-            description = f"Based on {case['name']} from Erotetic Reasoning Theory: {description}"
+    # Clean up the docstring - remove extra whitespace and quotes
+    description = case['docstring'].strip().strip('"\'')
+
+    # If the description is from a specific example, mention that
+    if case['name'].startswith('e') and case['name'][1:].split('_')[0].isdigit():
+        example_num = case['name'][1:].split('_')[0]
+        description = f"Based on Example {example_num} from Erotetic Reasoning Theory: {description}"
     else:
-        # Create a generic description based on the ontology and problem structure
-        domain = ontology.name
-        num_premises = len(problem.views) if problem.views else 0
-        
-        description = f"A logical reasoning problem in the domain of {domain} with {num_premises} premises."
-        
-        # Add information about the type of reasoning required
-        if "forall" in str(problem.etr_predicted_conclusion.view.logical_form_etr).lower() or "exists" in str(problem.etr_predicted_conclusion.view.logical_form_etr).lower():
-            description += " This problem involves quantified reasoning."
-        elif "," in str(problem.etr_predicted_conclusion.view.logical_form_etr):
-            description += " This problem involves disjunctive reasoning."
-        else:
-            description += " This problem involves basic propositional reasoning."
+        description = f"Based on {case['name']} from Erotetic Reasoning Theory: {description}"
     
     return description
 
