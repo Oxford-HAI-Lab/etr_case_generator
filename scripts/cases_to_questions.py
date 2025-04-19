@@ -10,7 +10,7 @@ from etr_case_generator.ontology import Ontology, get_all_ontologies, natural_na
 from etr_case_generator.full_problem_creator import full_problem_from_partial_problem
 
 
-def get_case_info(case_class):
+def get_case_info(case_class) -> Dict[str, Any]:
     info = {
         "name": case_class.__name__,
         "docstring": inspect.getdoc(case_class),
@@ -160,7 +160,7 @@ def main():
     args = parse_args()
     
     # Get all cases from cases.__all__
-    all_cases = []
+    all_cases: list[dict[str, Any]] = []
     for name in cases.__all__:
         if hasattr(cases, name):
             obj = getattr(cases, name)
@@ -173,10 +173,7 @@ def main():
     
     # For development/testing, use a small subset
     all_cases = [get_case_info(case) for case in [cases.e1, cases.e2, cases.e3]]  # TODO: Remove after development is done  -- Aider: DO NOT REMOVE
-    
-    # Uncomment to use all cases
-    # all_cases = all_cases
-    
+
     print(f"Found {len(all_cases)} valid cases from cases.__all__")
     
     # Get all ontologies
