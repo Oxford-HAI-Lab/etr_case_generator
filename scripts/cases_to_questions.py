@@ -166,7 +166,7 @@ def main():
                     print(f"Error getting info for case {name}: {str(e)}")
     
     # For development/testing, use a small subset
-    # all_cases = [get_case_info(case) for case in [cases.e1, cases.e2, cases.e3]]  # TODO: Remove after development is done
+    all_cases = [get_case_info(case) for case in [cases.e1, cases.e2, cases.e3]]  # TODO: Remove after development is done  -- Aider: DO NOT REMOVE
     
     print(f"Found {len(all_cases)} valid cases from cases.__all__")
     
@@ -195,10 +195,7 @@ def main():
             except Exception as e:
                 print(f"Error processing case {case['name']}: {str(e)}")
                 raise e
-        
-        # Shuffle the problems
-        random.shuffle(full_problems)
-        
+
         # Save to file
         output_file = f"{args.output}_{question_type}"
         if args.chain_of_thought:

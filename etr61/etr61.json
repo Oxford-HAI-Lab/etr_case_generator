@@ -1,0 +1,1672 @@
+[
+  {
+    "name": "AnswerPotential",
+    "docstring": "The base class for all examples. It contains a series of views (v)\nfor operations and a conclusion (c).",
+    "v": [
+      "{1.0=* 2.0=+ A()B(),0.4=* B()C(),A()C()}",
+      "{A()}",
+      "{B()}",
+      "{C()}",
+      "{D()C()}",
+      "{~B()C()}"
+    ],
+    "c": "{}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "QueryTest",
+    "docstring": "From page 173",
+    "v": [
+      "\u2200x {T(x,m())S(j()*)S(m()*),T(x,j())S(j()*)S(m()*)}",
+      "\u2200x \u2203a {S(a*)T(x,a)}"
+    ],
+    "c": "\u2200x \u2203a {S(a*)T(x,a)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "QueryTest2",
+    "docstring": "From page 173",
+    "v": [
+      "\u2200x {T(x,m())S(j()*)S(m()*),T(x,j())S(j()*)S(m()*)}",
+      "\u2203a \u2200x {S(a*)T(x,a)}"
+    ],
+    "c": "\u2200x \u2203a {S(a*)T(x,a)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "UniProduct",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2200x \u2203a {P(x)E(x,a),~P(x*)}",
+      "{P(j()*)}"
+    ],
+    "c": "\u2203a {~P(j()*),P(j())E(j(),a)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e1",
+    "docstring": "Example 1, p61:\n\nP1 Either Jane is kneeling by the fire and she is looking at the TV or else\nMark is standing at the window and he is peering into the garden.\nP2 Jane is kneeling by the fire.\nC Jane is looking at the TV.",
+    "v": [
+      "{LookingAtTV(Jane())KneelingByTheFire(Jane()),PeeringIntoTheGarden(Mark())StandingAtTheWindow(Mark())}",
+      "{KneelingByTheFire(Jane())}"
+    ],
+    "c": "{LookingAtTV(Jane())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e10",
+    "docstring": "Example 10, p76\n\nP1 There is a king.\nP2 There is at least an ace and a queen, or else at least a king and a ten.\nC There is a king (reversed premises blocking illusory inference).",
+    "v": [
+      "{K()}",
+      "{K()T(),Q()A()}"
+    ],
+    "c": "{K()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e11",
+    "docstring": "Example 11, p77\n\nP1 Either John smokes or Mary smokes.\nP2 Supposing John smokes, John drinks.\nP3 Supposing Mary smokes, Mary eats.\nC Either John smokes and drinks or Mary smokes and drinks.",
+    "v": [
+      "{Smokes(j()),Smokes(m())}",
+      "{Drinks(j())}^{Smokes(j())}",
+      "{Eats(m())}^{Smokes(m())}"
+    ],
+    "c": "{Drinks(j())Smokes(j()),Eats(m())Smokes(m())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e12i",
+    "docstring": "Example 12i, p78\n\nItisnotthecasethatPorQorR",
+    "v": [
+      "{P(),Q(),R()}"
+    ],
+    "c": "{~Q()~R()~P()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e12ii",
+    "docstring": "Example 12ii, p78\n\nItisnotthecasethatPandQandR",
+    "v": [
+      "{P()R()Q()}"
+    ],
+    "c": "{~R(),~P(),~Q()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e12iii",
+    "docstring": "Example 12iii, p79\n\nIt is not the case that, supposing S, ((P and Q) or R)",
+    "v": [
+      "{P()Q(),R()}^{S()}"
+    ],
+    "c": "{~P()~R()S(),~Q()~R()S()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e13",
+    "docstring": "Example 13, p80\n\nP1 There is an ace and a king or a queen and a jack.\nP2 There isn't an ace.\nC There is a queen and a jack.",
+    "v": [
+      "{IsJack()IsQueen(),IsAce()IsKing()}",
+      "{~IsAce()}"
+    ],
+    "c": "{IsJack()IsQueen()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e14_1",
+    "docstring": "Example 14-1, p81\n\nFactor examples",
+    "v": [
+      "{P()R(),P()Q()}",
+      "{P()}"
+    ],
+    "c": "{Q(),R()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e14_2",
+    "docstring": "Example 14-2, p81\n\nFactor examples",
+    "v": [
+      "{P()R(),P()R()S(),P()Q()S()}",
+      "{P()}^{S()}"
+    ],
+    "c": "{Q()S(),P()R(),R()S()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e14_3",
+    "docstring": "Example 14-3, p81\n\nFactor examples",
+    "v": [
+      "{P()S(),Q()S(),P()R(),Q()R()}",
+      "{P(),Q()}"
+    ],
+    "c": "{S(),R()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e14_6",
+    "docstring": "Example 14-6, p81\n\nFactor examples",
+    "v": [
+      "{Q()S(),P()R()}",
+      "{T(),P(),Q()}"
+    ],
+    "c": "{Q()S(),P()R()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e14_7",
+    "docstring": "Example 14-7, p81\n\nFactor examples",
+    "v": [
+      "{Q()S(),P()R(),P()}",
+      "{P(),Q()}"
+    ],
+    "c": "{0,S(),R()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e15",
+    "docstring": "Example 15, p82\n\nP1 There is an ace and a jack and a queen, or else there is an eight and a ten and a four, or else there is an ace.\nP2 There is an ace and a jack, and there is an eight and a ten.\nP3 There is not a queen.\nC There is a four",
+    "v": [
+      "{Ace(),Queen()Jack()Ace(),Eight()Ten()Four()}",
+      "{Jack()Ace()Ten()Eight()}",
+      "{~Queen()}"
+    ],
+    "c": "{Four()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e16",
+    "docstring": "Example 16, p83\n\nP1 There is a ten and an eight and a four, or else there is a jack and a king and a queen, or else there is an ace.\nP2 There isn't a four.\nP3 There isn't an ace.",
+    "v": [
+      "{King()Jack()Queen(),Ace(),Eight()Ten()Four()}",
+      "{~Four()}",
+      "{~Ace()}"
+    ],
+    "c": "{King()Jack()Queen()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e17",
+    "docstring": "Example 17, p83\n\nP1 There is a king in the hand and there is not an ace in the hand, or else there is an ace in the hand and there is not a king in the hand.\nP2 There is a king in the hand.\nC There isn't an ace in the hand.",
+    "v": [
+      "{~King()Ace(),King()~Ace()}",
+      "{King()}"
+    ],
+    "c": "{~Ace()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e19",
+    "docstring": "Example 19, p84\n\nSuppose test",
+    "v": [
+      "{0}",
+      "{~N()}"
+    ],
+    "c": "{~N()}^{~N()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e2",
+    "docstring": "Example 2, p62:\n\nP1 There is at least an ace and a queen, or else at least a king and a ten.\nP2 There is a king.\nC There is a ten.",
+    "v": [
+      "{K()T(),Q()A()}",
+      "{K()}"
+    ],
+    "c": "{T()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e20",
+    "docstring": "Example 20, p85\n\nP1 Either there is a king in the hand or a queen in the hand.\nP2 On the supposition that there is a king, Mary wins.\nP3 On the supposition that there is a queen, Bill wins.\nC Either Mary wins or Bill wins.",
+    "v": [
+      "{Queen(),King()}",
+      "{Win(mary())}^{King()}",
+      "{Win(bill())}^{Queen()}"
+    ],
+    "c": "{Win(bill()),Win(mary())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e21",
+    "docstring": "Example 21, p86\n\nAny view \u0394^{0} = [\u0394^{0}]\u1db0 can be derived from the absurd view",
+    "v": [
+      "{r1()s1()}"
+    ],
+    "c": "{~r1(),~s1()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e22",
+    "docstring": "Example 22, p87\n\nIt is not the case that A and B and C",
+    "v": [
+      "{b()a()c()}",
+      "{a()}",
+      "{b()}",
+      "{c()}"
+    ],
+    "c": [
+      "{~c(),~b(),~a()}",
+      "{~c()a()~b(),~c()~b()~a(),~c()~a()b(),~c()a()b(),a()c()~b(),b()c()~a(),c()~b()~a()}"
+    ],
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e23_with_inquire",
+    "docstring": "Example 23, p88, with inquire step\n\nP1 Either Jane is kneeling by the fire and she is looking at the TV or else Mark is\nstanding at the window and he is peering into the garden.\nP2 Jane is kneeling by the fire\n\nC Jane is looking at the TV",
+    "v": [
+      "{L()K(),P()S()}",
+      "{K()}"
+    ],
+    "c": [
+      "{P()S()~K(),L()K(),P()K()S()}",
+      "{L()K(),P()K()S()}"
+    ],
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e23_without_inquire",
+    "docstring": "Example 23, p88, without inquire step\n\nP1 Either Jane is kneeling by the fire and she is looking at the TV or else Mark is\nstanding at the window and he is peering into the garden.\nP2 Jane is kneeling by the fire\n\nC Jane is looking at the TV",
+    "v": [
+      "{L()K(),P()S()}",
+      "{K()}"
+    ],
+    "c": [
+      "{L()K(),P()S()}",
+      "{L()K()}"
+    ],
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e24",
+    "docstring": "Example 24, p89\n\nP1 There is an ace\nC There is an ace or a queen",
+    "v": [
+      "{a()}",
+      "{q()}",
+      "{~q()}",
+      "{a(),q()}"
+    ],
+    "c": [
+      "{a()~q(),q()a()}",
+      "{a(),q()}"
+    ],
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e25i",
+    "docstring": "Example 25i, p89",
+    "v": [
+      "{r()p(),q()p()}",
+      "{p()}"
+    ],
+    "c": "{p()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e25ii",
+    "docstring": "Example 25ii, p89",
+    "v": [
+      "{r()p(),q()p()}",
+      "{q()}"
+    ],
+    "c": "{0,q()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e25iii",
+    "docstring": "Example 25iii, p89",
+    "v": [
+      "{t(),r()p(),q()p(),s()}",
+      "{p(),s()}"
+    ],
+    "c": "{0,p(),s()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e25iv",
+    "docstring": "Example 25iv, p89",
+    "v": [
+      "{t(),r()p(),q()p(),s()}",
+      "{t(),p(),s()}"
+    ],
+    "c": "{t(),p(),s()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e25v",
+    "docstring": "Example 25v, p89",
+    "v": [
+      "{q()p()s(),r()s()p()}",
+      "{p()}^{s()}"
+    ],
+    "c": "{p()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e25vi",
+    "docstring": "Example 25vi, p89",
+    "v": [
+      "{q()p()s(),r()s()p()}",
+      "{p()}^{t()}"
+    ],
+    "c": "{0}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e26",
+    "docstring": "Example 26, p90\n\nP1 Either John plays and wins, or Mary plays, or Bill plays\nC Supposing John plays, John wins",
+    "v": [
+      "{Win(J())Play(J()),Play(B()),Play(M())}",
+      "{Play(J())}",
+      "{Win(J())}^{Play(J())}"
+    ],
+    "c": [
+      "{Win(J())Play(J())}^{Play(J())}",
+      "{Win(J())}^{Play(J())}"
+    ],
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e26_does_it_follow",
+    "docstring": "Example 26, p90\n\nP1 Either John plays and wins, or Mary plays, or Bill plays\nC Supposing John plays, John wins",
+    "v": [
+      "{Win(J())Play(J()),Play(B()),Play(M())}",
+      "{Play(J())}",
+      "{Win(J())}^{Play(J())}"
+    ],
+    "c": [
+      "{Win(J())Play(J())}^{Play(J())}",
+      "{Win(J())}^{Play(J())}"
+    ],
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e28",
+    "docstring": "Example 28, p96\n\nP1 Is there a tiger?\nP2 Supposing there is a tiger, there is orange fur.\nP3 There is orange fur.\nC There is a tiger.",
+    "v": [
+      "{~Tiger(),Tiger()}",
+      "{Tiger()Orange()}^{Tiger()}",
+      "{Orange()}"
+    ],
+    "c": "{Tiger()Orange()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e3",
+    "docstring": "Example 3, p63:\n\nP1 There is at least an ace and a king or else there is at least a queen and\na jack.\nP2 There isn't an ace.\nC There is a queen and a jack.",
+    "v": [
+      "{King()Ace(),Queen()Jack()}",
+      "{~Ace()}"
+    ],
+    "c": "{Queen()Jack()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e32_1",
+    "docstring": "Example 32-1, p107\n\nP1 If P then Q.\nP2 P\nC Q",
+    "v": [
+      "{P()Q()}^{P()}",
+      "{P()}"
+    ],
+    "c": "{Q()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e32_2",
+    "docstring": "Example 32-2, p107\n\nP1 P\nP2 If P then Q.\nC Q",
+    "v": [
+      "{P()}",
+      "{P()Q()}^{P()}"
+    ],
+    "c": "{Q()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e33",
+    "docstring": "Example 33, p108\n\nP1 If the card is red then the number is even.\nP2 The number is even.\nC The card is red",
+    "v": [
+      "{E()R()}^{R()}",
+      "{E()}"
+    ],
+    "c": "{R()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e40i",
+    "docstring": "Example 40, p119\n\n(P0 Shapes at the bottom of the card are mutually exclusive)\nP1 If there is a circle at the top of the card, then there is a\nsquare on the bottom.\nP2 There is a triangle on the bottom\nC Falsum",
+    "v": [
+      "{SquareB()~TriangleB()~CircleB(),~TriangleB()~SquareB()CircleB(),~SquareB()~CircleB()TriangleB()}",
+      "{SquareB()CircleT()}^{CircleT()}",
+      "{TriangleB()}"
+    ],
+    "c": "{}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e40ii",
+    "docstring": "Example 40, p119-p120\n\n(P0 Shapes at the bottom of the card are mutually exclusive)\nP1 If there is a circle at the top of the card, then there is a\nsquare on the bottom.\nP2 There is a triangle on the bottom\nC Falsum\n\nThe reader diverges from the default procedure,\nand deposes the conditional premise, and switches the premise\norder.",
+    "v": [
+      "{SquareB()~TriangleB()~CircleB(),~TriangleB()~SquareB()CircleB(),~SquareB()~CircleB()TriangleB()}",
+      "{TriangleB()}",
+      "{SquareB()CircleT()}^{CircleT()}"
+    ],
+    "c": "{~CircleT()~SquareB()~CircleB()TriangleB()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e41",
+    "docstring": "Example 41, p121\n\nP1 P only if Q.\nP2 Not Q.\nC Not P.",
+    "v": [
+      "{~Q()~P()}^{~Q()}",
+      "{~Q()}"
+    ],
+    "c": "{~P()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e42",
+    "docstring": "Example 42, p122\n\nP1 There is a circle at the top of the card only if there is a square\nat the bottom.\nP2 There is not a square at the bottom\nC There is not a circle at the top",
+    "v": [
+      "{~CircleT()~SquareB()}^{~SquareB()}",
+      "{~SquareB()}"
+    ],
+    "c": "{~CircleT()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e44_1",
+    "docstring": "Example 44-1, p123\n\nP1 The chair is saleable if and only if it is inelegant.\nP2 The chair is elegant if and only if it is stable.\nP3 The chair is saleable or it is stable, or both.\nC The chair is saleable elegant and stable.",
+    "v": [
+      "{Saleable(c())Elegant(c()),~Elegant(c())~Saleable(c())}",
+      "{~Elegant(c())~Stable(c()),Elegant(c())Stable(c())}",
+      "{Saleable(c())Elegant(c()),Stable(c()),Saleable(c())}"
+    ],
+    "c": "{Saleable(c())Stable(c())Elegant(c())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e45",
+    "docstring": "Example 45, p125\n\nIt is possible that Steven is in Madrid and it is possible that Emma is in\nBerlin.\nTherefore it is possible that Steven is in Madrid and that Emma is in Berlin.",
+    "v": [
+      "{0,M()}",
+      "{0,B()}",
+      "{0,B()M()}"
+    ],
+    "c": [
+      "{0,M(),B(),B()M()}",
+      "{0,B()M()}"
+    ],
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e46i",
+    "docstring": "Example 46, p126\n\nP1 Pat is here then Viv is here\nP2 Mo is here or else Pat is here, but not both\n\nC No",
+    "v": [
+      "{P()V()}^{P()}",
+      "{~P()M(),P()~M()}",
+      "{0,V()M()}"
+    ],
+    "c": [
+      "{~P()M(),P()~M()V()}",
+      "{0}"
+    ],
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e46ii",
+    "docstring": "Example 46, part ii, p126\n\nIf we had a view{VMR,VMS, T} and applied [{vm, 0}]Q we would get [{vm, 0}]",
+    "v": [
+      "{V()S()M(),R()V()M(),T()}",
+      "{0,V()M()}"
+    ],
+    "c": "{0,V()M()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e47",
+    "docstring": "Example 47, p129\n\nP1: Some thermotogum stains gram-negative\nP2: Maritima is a thermotogum\n\nC: Maritima stains gram negative",
+    "v": [
+      "\u2203x {Thermotogum(x*)StainsGramNegative(x)}",
+      "{Thermotogum(Maritima()*)}"
+    ],
+    "c": "{StainsGramNegative(Maritima())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e48",
+    "docstring": "Example 48, p130\n\nP1 Some dictyoglomus is thermophobic.\nP2 Turgidum is not a dictyoglomus.\nC Truth",
+    "v": [
+      "\u2203x {T(x)D(x*)}",
+      "{~D(Turgidum()*)}"
+    ],
+    "c": "{0}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e49",
+    "docstring": "Example 49, p130\n\nP1 Either there is an ace in Mary's hand and some other player has a king,\nor else there is a queen in John's hand and some other player has a jack.\nP2 Sally has a king\nC Truth",
+    "v": [
+      "\u2203y \u2203x {King(x)Ace(Mary()),Jack(y)Queen(John())}",
+      "{King(Sally())}"
+    ],
+    "c": "{0}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e50_part1",
+    "docstring": "Example 50, part1, p131\n\nJack is looking at Sally, but Sally is looking at George. Jack is married, but George is\nnot. Is the married person looking at an unmarried person?\n\n(A) Yes\n(B) No\n(C) Cannot be determined",
+    "v": [
+      "{L(s(),g())L(j(),s())}",
+      "{~M(g()*)M(j()*)}",
+      "{}",
+      "\u2203b \u2203a {~M(b*)L(a,b)M(a*)}"
+    ],
+    "c": [
+      "{L(s(),g())~M(g()*)L(j(),s())M(j()*)}",
+      "{0}"
+    ],
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e50_part2",
+    "docstring": "Example 50, part2, p131\n\nJack is looking at Sally, but Sally is looking at George. Jack is married, but George is\nnot. Is the married person looking at an unmarried person?\n\n(A) Yes\n(B) No\n(C) Cannot be determined",
+    "v": [
+      "{L(s(),g())L(j(),s())}",
+      "{~M(g())M(j())}",
+      "{M(s())}",
+      "\u2203b \u2203a {~M(b*)L(a,b)M(a*)}"
+    ],
+    "c": "\u2203b \u2203a {~M(b*)L(a,b)M(a*)}",
+    "g1": "{M(j())L(j(),s())~M(g())M(s())L(s(),g()),~M(s())M(j())L(j(),s())~M(g())L(s(),g())}",
+    "g2": "{M(j()*)L(j(),s())~M(g()*)M(s())L(s(),g()),~M(s()*)M(j()*)L(j(),s())~M(g()*)L(s(),g())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e50_part2_arbs",
+    "docstring": "Duplicate of e50, uses arb objects, some changes",
+    "v": [
+      "\u2203s \u2203g \u2203j {~M(g)L(j,s)M(j)L(s,g)}",
+      "\u2203s {M(s)}",
+      "\u2203b \u2203a {~M(b*)L(a,b)M(a*)}"
+    ],
+    "c": "\u2203b \u2203a {~M(b*)L(a,b)M(a*)}",
+    "g1": "\u2203s \u2203g \u2203j {~M(g)L(j,s)L(s,g)M(s)M(j),~M(g)~M(s)L(j,s)L(s,g)M(j)}",
+    "g2": "\u2203s \u2203g \u2203j {~M(g*)L(j,s)L(s,g)M(s)M(j*),~M(g*)~M(s*)L(j,s)L(s,g)M(j*)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e51",
+    "docstring": "Example 51, p131\n\nP1: Every archaeon has a nucleus\nP2: Halobacterium is an archaeon\n\nC: Halobacterium is an archaeon and has a nucleus",
+    "v": [
+      "\u2200x {IsArchaeon(x*)HasNucleus(x)}^{IsArchaeon(x*)}",
+      "{IsArchaeon(Halobacterium()*)}"
+    ],
+    "c": "{IsArchaeon(Halobacterium()*)HasNucleus(Halobacterium())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e52",
+    "docstring": "Example 52, p132\n\nP1 All Fs G.\nP2 John Gs.\nC John Fs and Gs.",
+    "v": [
+      "\u2200x {F(x)G(x*)}^{F(x)}",
+      "{G(John()*)}"
+    ],
+    "c": "{F(John())G(John()*)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e53",
+    "docstring": "Example 53, p132 & p175\n\nP All A are B.\nC All B are A.",
+    "v": [
+      "\u2200x {B(x)A(x)}^{A(x)}",
+      "\u2200x {B(x)}",
+      "\u2200x {B(x)A(x)}^{B(x)}"
+    ],
+    "c": "\u2200x {B(x)A(x)}^{B(x)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e53_does_it_follow",
+    "docstring": "Example 53, p132 & p175\n\nP All A are B.\nC All B are A.",
+    "v": [
+      "\u2200x {B(x)A(x)}^{A(x)}",
+      "\u2200x {B(x)}",
+      "\u2200x {B(x)A(x)}^{B(x)}"
+    ],
+    "c": "\u2200x {B(x)A(x)}^{B(x)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e54",
+    "docstring": "Example 54, p133\n\nP1 Sharks attack bathers.\nP2 Whitey is a shark.\nC Whitey attacks bathers.",
+    "v": [
+      "\u2200x {0,Shark(x*)Attack(x)}^{Shark(x*)}",
+      "{Shark(Whitey()*)}"
+    ],
+    "c": "{Attack(Whitey())Shark(Whitey()*)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e56_basic_step",
+    "docstring": "Example 56, p134\n\nP1: Every professor teaches some student\nP2: Every student reads some book\n\nC: Every professor teaches some student who reads some book",
+    "v": [
+      "\u2200x \u2203y {Teaches(x,y)Professor(x)Student(y*)}^{Professor(x)}",
+      "\u2200z \u2203w {Reads(z,w)Book(w)Student(z*)}^{Student(z*)}"
+    ],
+    "c": "\u2200a \u2203c \u2203b {Professor(a)Student(b*)Teaches(a,b)Reads(b,c)Book(c),~Professor(a)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e56_default_inference",
+    "docstring": "Example 56, p134\n\nP1: Every professor teaches some student\nP2: Every student reads some book\n\nC: Every professor teaches some student who reads some book",
+    "v": [
+      "\u2200x \u2203y {Teaches(x,y)Professor(x)Student(y*)}^{Professor(x)}",
+      "\u2200z \u2203w {Reads(z,w)Book(w)Student(z*)}^{Student(z*)}"
+    ],
+    "c": "\u2203y \u2203b {0,Reads(y,b)Book(b)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e57",
+    "docstring": "Example 57, p134\n\nP1 All B are A.\nP2 Some C are B.\nC Some C are A.",
+    "v": [
+      "\u2200x {B(x*)A(x)}^{B(x*)}",
+      "\u2203x {C(x)B(x*)}"
+    ],
+    "c": "\u2203y {B(y*)A(y)C(y)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e58_reversed",
+    "docstring": "Example 58 reversed, based on p135\n\nP1 All C are B.\nP2 Some B are A.\nC Some C are A.",
+    "v": [
+      "\u2200y {B(y*)C(y)}^{C(y)}",
+      "\u2203x {B(x*)A(x)}"
+    ],
+    "c": "\u2203y {B(y*)A(y)C(y)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e5ii",
+    "docstring": "Example 5, p72, part ii",
+    "v": [
+      "{r1()s1(),p1()q1()}",
+      "{p2()q2(),r2()s2()}"
+    ],
+    "c": "{p2()r1()s1()q2(),s1()r2()r1()s2(),p1()q1()s2()r2(),p1()p2()q1()q2()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e5iii",
+    "docstring": "Example 5, p72, part iii",
+    "v": [
+      "{p1()q1(),r1()s1()}",
+      "{}"
+    ],
+    "c": "{}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e5iv",
+    "docstring": "Example 5, p72, part iv",
+    "v": [
+      "{p1()q1(),r1()s1()}",
+      "{0}"
+    ],
+    "c": "{p1()q1(),r1()s1()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e5v",
+    "docstring": "Example 5, p72, part v",
+    "v": [
+      "{0}",
+      "{p1()q1(),r1()s1()}"
+    ],
+    "c": "{p1()q1(),r1()s1()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e6",
+    "docstring": "Example 6, p72\n\nThere is an Ace and a King = (There is an Ace) x (There is a king)",
+    "v": [
+      "{a()}",
+      "{k()}"
+    ],
+    "c": "{a()k()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e61",
+    "docstring": "Example 61, p166\nP1 All dogs bite some man\nP2 John is a man\n\nC All dogs bite John",
+    "v": [
+      "\u2200x \u2203a {~D(x),D(x)M(a*)B(x,a)}",
+      "{M(j()*)}"
+    ],
+    "c": "\u2200x \u2203a {D(x)B(x,a)M(a*)M(j()*),~D(x)M(j()*)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e62",
+    "docstring": "Example 62, p176",
+    "v": [
+      "{L(n(),m())S(m()*),D(m())T(n())S(j()*),D(b())~S(n()*)}",
+      "\u2203a {S(a*)}"
+    ],
+    "c": "{0,S(j()*),S(m()*)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e63",
+    "docstring": "Example 63, p176",
+    "v": [
+      "{D(n()*)S(j()*),T(j())D(n()*)~D(j()*)}",
+      "\u2203a {D(a*)}"
+    ],
+    "c": "{D(n()*)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e63_modified",
+    "docstring": "Example 63, p176",
+    "v": [
+      "\u2200x \u2203y {D(n()*)S(j()*),T(j())D(f(y,x)*)~D(j()*)}",
+      "\u2203a {D(a*)}"
+    ],
+    "c": "\u2200x \u2203y {D(n()*),D(f(y,x)*)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e64i",
+    "docstring": "Example 64, p189, p223\n\nA device has been invented for screening a population for a disease known as psylicrapitis.\nThe device is a very good one, but not perfect. If someone is a sufferer, there is a 90% chance\nthat he will recorded positively. If he is not a sufferer, there is still a 1% chance that he will\nbe recorded positively.\n\nRoughly 1% of the population has the disease. Mr Smith has been tested, and the result is positive.\n\nWhat is the chance that he is in fact a sufferer?",
+    "v": [
+      "\u2200x {90.0=* T(x*)S(x*),~T(x)S(x*)}^{S(x*)}",
+      "\u2200x {1.0=* T(x)~S(x*),~T(x)~S(x*)}^{~S(x*)}",
+      "{T(Smith()*)}",
+      "{S(Smith())}"
+    ],
+    "c": "{90.0=* S(Smith()*),0}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e64ii",
+    "docstring": "Example 64, p189, p223\n\nA device has been invented for screening a population for a disease known as psylicrapitis.\nThe device is a very good one, but not perfect. If someone is a sufferer, there is a 90% chance\nthat he will recorded positively. If he is not a sufferer, there is still a 1% chance that he will\nbe recorded positively.\n\nRoughly 1% of the population has the disease. Mr Smith has been tested, and the result is positive.\n\nWhat is the chance that he is in fact a sufferer?",
+    "v": [
+      "\u2200x {90.0=* T(x*)P(x)S(x*),P(x)~T(x)S(x*)}^{P(x)S(x*)}",
+      "\u2200x {1.0=* T(x)P(x)~S(x*),P(x)~S(x*)~T(x)}^{P(x)~S(x*)}",
+      "\u2200x {1.0=* P(x)S(x*),P(x)~S(x)}^{P(x)}",
+      "{T(Smith()*)P(Smith())}",
+      "{S(Smith())}"
+    ],
+    "c": "{90.0=* S(Smith()*)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e65",
+    "docstring": "Example 65, p190, p224\n\n(Base-rate neglect with doctors and realistic disease) Imagine you conduct\na screening using the Hemoccult test in a certain region. For symptom-free\npeople over 50 years old who participate in screening using the Hemoccult test,\nthe following information is available for this region.\n\nThe probability that one of these people has colorectal cancer is 0.3%. If a\nperson has colorectal cancer, the probability is 50 that he will have a positive\nHemoccult test. If a person does not have a colorectal cancer, the probability is\n3% that he will still have a positive Hemoccult test in your screening. What is\nthe probability that this person actually has colorectal cancer?",
+    "v": [
+      "\u2200x {0.3=* C(x)P(x*),~C(x)P(x*)}^{P(x*)}",
+      "\u2200x {50.0=* C(x)P(x*)T(x),C(x)P(x*)~T(x)}^{C(x)P(x*)}",
+      "\u2200x {3.0=* ~C(x)P(x*)T(x),~C(x)P(x*)~T(x)}^{~C(x)P(x*)}",
+      "\u2203a {T(a)P(a*)}",
+      "\u2203a {C(a)}"
+    ],
+    "c": "\u2203a {15.0=* C(a),0}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e66i",
+    "docstring": "Example 66, p191, p225\n\nThink of 100 people.\n\n1. One of the disease psylicrapitis, and he is likely to be positive.\n2. Of those who do not have the disease, 1 will also test positive.\n\nHow many of those who test positive do have the disease? Out of ?",
+    "v": [
+      "{1.0=* D()T(),1.0=* ~D()T(),98.0=* ~D()}",
+      "{D()T()}"
+    ],
+    "c": "{}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e66ii",
+    "docstring": "Example 66, p191, p225\n\nThink of 100 people.\n\n1. One of the disease psylicrapitis, and he is likely to be positive.\n2. Of those who do not have the disease, 1 will also test positive.\n\nHow many of those who test positive do have the disease? Out of ?",
+    "v": [
+      "{1.0=* D()T(),1.0=* ~D()T(),98.0=* ~D()}",
+      "{T()}"
+    ],
+    "c": "{}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e67",
+    "docstring": "Example 67, p191, p220\n\nResults of a recent survey of seventy-four chief executive officers indicate there\nmay be a link between childhood pet ownership and future career success. Fully 94%\nof the CEOs, all of them employed within Fortune 500 companies, had possessed a dog,\na cat, or both, as youngsters.",
+    "v": [
+      "{94.0=* IsCEO()HadPet(),~IsCEO()}",
+      "{HadPet()}",
+      "{IsCEO()}"
+    ],
+    "c": "{94.0=* IsCEO(),0}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e69_part1",
+    "docstring": "Example 69, p192, p218\n\nThe suspect's DNA matches the crime sample.\n\nIf the suspect is not guilty, then the probability of such a DNA match is 1 in\na million\n\nIs the suspect likely to be guilty?",
+    "v": [
+      "{Match(Suspect())}",
+      "{0.000001=* ~Guilty(Suspect())Match(Suspect()),~Guilty(Suspect())~Match(Suspect())}^{~Guilty(Suspect())}"
+    ],
+    "c": "{0.000001=* ~Guilty(Suspect())Match(Suspect()),Guilty(Suspect())Match(Suspect())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e69_part2",
+    "docstring": "The base class for all examples. It contains a series of views (v)\nfor operations and a conclusion (c).",
+    "v": [
+      "{0.000001=* ~Guilty(Suspect())Match(Suspect()),Guilty(Suspect())Match(Suspect())}",
+      "{999999.999999=* 0}^{Guilty(Suspect())Match(Suspect())}",
+      "{Guilty(Suspect())}"
+    ],
+    "c": [
+      "{0.000001=* ~Guilty(Suspect())Match(Suspect()),999999.999999=* Guilty(Suspect())Match(Suspect())}",
+      "{999999.999999=* Guilty(Suspect()),0}"
+    ],
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e7",
+    "docstring": "Example 7, p73\n\nThere is an Ace or there is a king = (There is an Ace) + (There is a king)",
+    "v": [
+      "{a()}",
+      "{k()}"
+    ],
+    "c": "{a(),k()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e70",
+    "docstring": "Example 70, p194, p221\n\nP1 Pat has either the disease or a benign condition\nP2 If she has the disease, then she will have a certain symptom.\nP3 In fact, she has the symptom",
+    "v": [
+      "{Disease(),Benign()}",
+      "{Symptom()Disease()}^{Disease()}",
+      "{Symptom()}"
+    ],
+    "c": "{Symptom()Disease()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e71",
+    "docstring": "Examples 71 & 78, p209, p212\n\nThere is a box in which there is a yellow card or a brown card, but not both.\n\nGiven the preceding assertion, according to you, what is the probability of the following situation?\n\nIn the box there is a yellow card and there is not a brown card",
+    "v": [
+      "{~B(brown())B(yellow()),~B(yellow())B(brown())}",
+      "{50.0=* 0}^{~B(brown())B(yellow())}",
+      "{50.0=* 0}^{~B(yellow())B(brown())}",
+      "{~B(brown())B(yellow())}"
+    ],
+    "c": [
+      "{50.0=* ~B(brown())B(yellow()),50.0=* ~B(yellow())B(brown())}",
+      "{50.0=* ~B(brown())B(yellow()),0}"
+    ],
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e72",
+    "docstring": "Example 72 & 80, p196, p213\n\nThere is a box in which there is at least a red marble or else there is a green\nmarble and there is a blue marble, but not all three marbles.\n\nWhat is the probability of the following situation:\n\nThere is a red marble and a blue marble in the box?",
+    "v": [
+      "{B(g())~B(r())B(b()),B(r())~B(g()),~B(b())B(r())}",
+      "{33.333333=* 0}^{B(g())~B(r())B(b())}",
+      "{33.333333=* 0}^{B(r())~B(g())}",
+      "{33.333333=* 0}^{~B(b())B(r())}",
+      "{B(r())B(b())}"
+    ],
+    "c": [
+      "{33.333333=* B(g())~B(r())B(b()),33.333333=* B(r())~B(g()),33.333333=* ~B(b())B(r())}",
+      "{33.333333=* B(r())B(b()),0}"
+    ],
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e74",
+    "docstring": "Example 74, p197, p231\n\n(includes two background commitments)",
+    "v": [
+      "{D(j())H(j()),H(j()),P(j())}",
+      "{E(j()*)}",
+      "\u2200x {0.85=* E(x*)D(x),0.15=* E(x*)~D(x)}^{E(x*)}",
+      "\u2200x {0.1=* E(x*)H(x),0.9=* E(x*)~H(x)}^{E(x*)}"
+    ],
+    "c": [
+      "{0.085=* E(j()*)D(j())H(j()),0.765=* E(j()*)D(j())~H(j()),0.015=* E(j()*)H(j())~D(j()),0.135=* E(j()*)~D(j())~H(j())}",
+      "{D(j())H(j())}"
+    ],
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e76",
+    "docstring": "Example 76 (guns and guitars), p199, p226,  p229\n\n(P1) The gun fired and the guitar was out of tune, or else someone was in the attic\n(P1.5, see p228) Guns who triggers are pulled fire\n(P2) The trigger (of the gun) was pulled. Does it follow that the guitar was out of\ntune?",
+    "v": [
+      "{Fired(i()*)Outoftune(j())Gun(i())Guitar(j()),Attic(a())}",
+      "\u2200x {Trigger(x)Fired(x*)Gun(x),0}^{Fired(x*)Gun(x)}",
+      "{Trigger(i())}"
+    ],
+    "c": "{Fired(i()*)Gun(i())Guitar(j())Outoftune(j())Trigger(i())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e8",
+    "docstring": "Example 8, p74\n\nP1 There is an ace and a queen, or else there is a king and a ten\nP2 There is a king\n\nC There is a ten (and a king)",
+    "v": [
+      "{t()k(),q()a()}",
+      "{k()}"
+    ],
+    "c": "{t()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e81i",
+    "docstring": "Example 81, p213\n\nThere is a box in which there is a yellow card, or a brown card, but not both\n\nGiven the preceding assertion, according to you, what is the probability of the following situation?\n\nIn the box there is a yellow card",
+    "v": [
+      "{~Box(Brown())Box(Yellow()),~Box(Yellow())Box(Brown())}"
+    ],
+    "c": "{50.0=* Box(Yellow()),0}",
+    "prob": "{Box(Yellow())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e81ii",
+    "docstring": "Example 81, p213\n\nThere is a box in which there is a yellow card, or a brown card, but not both\n\nGiven the preceding assertion, according to you, what is the probability of the following situation?\n\nIn the box there is a yellow card and a brown card",
+    "v": [
+      "{~Box(Brown())Box(Yellow()),~Box(Yellow())Box(Brown())}"
+    ],
+    "c": "{0}",
+    "prob": "{Box(Brown())Box(Yellow())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e81iii",
+    "docstring": "Example 81, p213\n\nThere is a box in which there is a yellow card, or a brown card, but not both\n\nGiven the preceding assertion, according to you, what is the probability of the following situation?\n\nIn the box there is neither a yellow card nor a brown card",
+    "v": [
+      "{~Box(Brown())Box(Yellow()),~Box(Yellow())Box(Brown())}"
+    ],
+    "c": "{0}",
+    "prob": "{~Box(Yellow())~Box(Brown())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e82i",
+    "docstring": "Example 82, p213\n\nThere is a box in which if there is a yellow card then there is a brown card.\n\nGiven the preceding assertion, according to you, what is the probability of the\nfollowing situation?\n\nIn the box there is a yellow card.",
+    "v": [
+      "{Box(Brown())Box(Yellow())}^{Box(Yellow())}"
+    ],
+    "c": "{50.0=* Box(Yellow()),0}",
+    "prob": "{Box(Yellow())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e82ii",
+    "docstring": "Example 82, p213\n\nThere is a box in which if there is a yellow card then there is a brown card.\n\nGiven the preceding assertion, according to you, what is the probability of the\nfollowing situation?\n\nIn the box there is a yellow card and a brown card.",
+    "v": [
+      "{Box(Brown())Box(Yellow())}^{Box(Yellow())}"
+    ],
+    "c": "{50.0=* Box(Brown())Box(Yellow()),0}",
+    "prob": "{Box(Brown())Box(Yellow())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e82iii",
+    "docstring": "Example 82, p213\n\nThere is a box in which if there is a yellow card then there is a brown card.\n\nGiven the preceding assertion, according to you, what is the probability of the\nfollowing situation?\n\nIn the box there is a yellow card and there is not a brown card.",
+    "v": [
+      "{Box(Brown())Box(Yellow())}^{Box(Yellow())}"
+    ],
+    "c": "{0}",
+    "prob": "{~Box(Brown())Box(Yellow())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e82iv",
+    "docstring": "Example 82, p213\n\nThere is a box in which if there is a yellow card then there is a brown card.\n\nGiven the preceding assertion, according to you, what is the probability of the\nfollowing situation?\n\nIn the box there is neither a yellow card nor a brown card.",
+    "v": [
+      "{Box(Brown())Box(Yellow())}^{Box(Yellow())}"
+    ],
+    "c": "{0}",
+    "prob": "{~Box(Yellow())~Box(Brown())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e83i",
+    "docstring": "Example 83, p214\n\nThere is a box in which there is a red marble, or else there is a green\nmarble and there is a blue marble, but not all three marbles.\n\nGiven the preceding assertion, according to you, what is the probability of the\nfollowing situation?\n\nThere is a red marble and blue in marble in the box.",
+    "v": [
+      "{33.333333333333336=* Box(Red()),33.333333333333336=* Box(Green())Box(Blue()),33.333333333333336=* ~Box(Green())~Box(Blue())~Box(Red())}"
+    ],
+    "c": "{0}",
+    "prob": "{Box(Red())Box(Blue())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e83ii",
+    "docstring": "Example 83, p214\n\nThere is a box in which there is a red marble, or else there is a green\nmarble and there is a blue marble, but not all three marbles.\n\nGiven the preceding assertion, according to you, what is the probability of the\nfollowing situation?\n\nThere is a green marble and there is a blue marble.",
+    "v": [
+      "{33.333333333333336=* Box(Red()),33.333333333333336=* Box(Green())Box(Blue()),33.333333333333336=* ~Box(Green())~Box(Blue())~Box(Red())}"
+    ],
+    "c": "{33.333333333333336=* Box(Green())Box(Blue()),0}",
+    "prob": "{Box(Green())Box(Blue())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e84i",
+    "docstring": "Example 84, p215\n\nThere is a box in which there is a grey marble and either a white marble or\nelse a mauve marble but not all three marbles are in the box.\n\nGiven the preceding assertion, what is the probability of the following\nsituation?\n\nIn the box there is a grey marble and there is a mauve marble.",
+    "v": [
+      "{~Box(Mauve())Box(White())Box(Grey()),Box(Mauve())~Box(White())Box(Grey())}"
+    ],
+    "c": "{50.0=* Box(Mauve())Box(Grey()),0}",
+    "prob": "{Box(Mauve())Box(Grey())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e84ii",
+    "docstring": "Example 84, p215\n\nThere is a box in which there is a grey marble, or else a white marble, or else a mauve marble,\nbut no more than one marble.\n\nGiven the preceding assertion, what is the probability of the following\nsituation?\n\nIn the box there is a grey marble and there is a mauve marble.",
+    "v": [
+      "{~Box(Mauve())~Box(White())Box(Grey()),~Box(Grey())~Box(Mauve())Box(White()),Box(Mauve())~Box(Grey())~Box(White())}"
+    ],
+    "c": "{0}",
+    "prob": "{Box(Mauve())Box(Grey())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e85",
+    "docstring": "Example 85, p216\n\nEasy partial probability inference\n\nThere is a box in which there is one and only one of these marbles: a\ngreen marble, a blue marble, or a red marble. The probability that a green\nmarble is in the box is 0.6, and the probability that a blue marble is in\nthe box is 0.2.\n\nWhat is the probability that a red marble is in the box?",
+    "v": [
+      "{Box(Green()),Box(Blue()),Box(Red())}",
+      "{60.0=* Box(Green())}^{Box(Green())}",
+      "{20.0=* Box(Blue())}^{Box(Blue())}"
+    ],
+    "c": "{20.0=* Box(Red()),0}",
+    "prob": "{Box(Red())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e86",
+    "docstring": "Example 86, p217\n\nYou have a hand of several cards with only limited information about it.\n\nThere is an ace and a queen or a king and a jack or a ten.\nThe probability that there is an ace and a queen is 0.6\nThe probability that there is a king and a jack is 0.2\n\nWhat is the probability that there is a ten?",
+    "v": [
+      "{Q()A(),K()J(),X()}",
+      "{60.0=* Q()A()}^{Q()A()}",
+      "{20.0=* K()J()}^{K()J()}"
+    ],
+    "c": "{20.0=* X(),0}",
+    "prob": "{X()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e88",
+    "docstring": "Example 88, p233\n\nP1: There is a 90% chance Superman can fly\nP2: Clark is superman\n\nC: There is a 90% chance Clark can fly",
+    "v": [
+      "{90.0=* CanFly(Superman())}",
+      "{==(Clark(),Superman())}",
+      "{==(Clark(),Superman()*)}",
+      "{==(Clark(),Clark())}"
+    ],
+    "c": "{90.0=* CanFly(Clark())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e90_condA",
+    "docstring": "Example 90, p249, p273\n\nImagine that you have been saving some extra money on the side to make some purchases,\nand on your most recent visit to the video store you come across a special sale of a new\nvideo. This video is one with your favourite actor or actress, and your favourite type of\nmovie (such as a comedy, drama, thriller etc.). This particular video that you are considering\nis one you have been thinking about buying a long time. It is a available at a special sale price\nof $14.99. What would you do in this situation?",
+    "v": [
+      "{do(Buy(Video()*)),~do(Buy(Video()*))}"
+    ],
+    "c": "{do(Buy(Video()*))}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e90_condB",
+    "docstring": "Example 90, p249, p273\n\nImagine that you have been saving some extra money on the side to make some purchases,\nand on your most recent visit to the video store you come across a special sale of a new\nvideo. This video is one with your favourite actor or actress, and your favourite type of\nmovie (such as a comedy, drama, thriller etc.). This particular video that you are considering\nis one you have been thinking about buying a long time. It is a available at a special sale price\nof $14.99. What would you do in this situation?",
+    "v": [
+      "\u2203a {do(Buy(Video()*)),do(Buy(a*))}"
+    ],
+    "c": "\u2203a {do(Buy(Video()*)),do(Buy(a*))}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e92_award",
+    "docstring": "Example 92, p253, p274\nImagine that you serve on the jury of an only-child sole-custody case following a relatively\nmessy divorce. The facts of the case are complicated by ambiguous economic, social, and\nemotional considerations, and you decide to base your decision entirely on the following\nfew observations.\n\nParentA: average income, average health, average working hours, reasonable rapport with the\nchild, relatively social life.\n\nParentB: above-average income, very close relationship with the child, extremely active\nsocial life, lots of work-related travel, minor health problems.\n\nTo which parent would you award sole custody of the child?",
+    "v": [
+      "{do(Award(ParentA()*)),do(Award(ParentB()*))}"
+    ],
+    "c": "{do(Award(ParentB()*))}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e92_deny",
+    "docstring": "Example 92, p253, p274\nImagine that you serve on the jury of an only-child sole-custody case following a relatively\nmessy divorce. The facts of the case are complicated by ambiguous economic, social, and\nemotional considerations, and you decide to base your decision entirely on the following\nfew observations.\n\nParentA: average income, average health, average working hours, reasonable rapport with the\nchild, relatively social life.\n\nParentB: above-average income, very close relationship with the child, extremely active\nsocial life, lots of work-related travel, minor health problems.\n\nTo which parent would you deny sole custody of the child?",
+    "v": [
+      "{do(Deny(ParentA()*)),do(Deny(ParentB()*))}"
+    ],
+    "c": "{do(Deny(ParentB()*))}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "e93_grp1",
+    "docstring": "Example 93, p255, p276\n\nThe US is preparing for the outbreak of an unusual Asian disease, which\nis expected to kill 600 people. There are two possible treatments (A) and (B)\nwith the following results:\n\n(Group 1) (A) 400 people die. (B) Nobody dies with 1/3 chance, 600 people die with 2/3 chance.\nWhich treatment would you choose?",
+    "v": [
+      "{do(A()),do(B())}"
+    ],
+    "c": "{do(B())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "else_inquire",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203a \u2200x {Q(x*)P(a)}",
+      "\u2200x \u2203b {Q(x*)R(b)}^{Q(x*)}"
+    ],
+    "c": "\u2203a \u2200x {Q(x*)P(a)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "else_merge",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203a \u2200x {Q(x*)P(a)}",
+      "\u2200x \u2203b {Q(x*)R(b)}^{Q(x*)}"
+    ],
+    "c": "\u2203a \u2200x {Q(x*)P(a)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "else_query",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203a \u2200x {Q(x*)P(a)}",
+      "\u2200y \u2203a {R(a)Q(y*)}^{Q(y*)}"
+    ],
+    "c": "\u2203a \u2200x {Q(x*)P(a)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "else_suppose",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203a \u2200x {Q(x*)P(a)}",
+      "\u2200x \u2203b {Q(x*)R(b)}^{Q(x*)}"
+    ],
+    "c": "\u2203a \u2200x {Q(x*)P(a)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "else_uni_prod",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203a \u2200x {Q(x*)P(a)}",
+      "\u2200x \u2203b {Q(x*)R(b)}^{Q(x*)}"
+    ],
+    "c": "\u2203a \u2200x {Q(x*)P(a)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "else_which",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203a \u2200x {Q(x*)P(a)}",
+      "\u2200y \u2203a {R(a)Q(y*)}^{Q(y*)}"
+    ],
+    "c": "\u2203a \u2200x {Q(x*)P(a)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e1",
+    "docstring": "The base class for all examples. It contains a series of views (v)\nfor operations and a conclusion (c).",
+    "v": [
+      "\u2200x \u2203a \u2200y {P(x,a)Q(a,y)}",
+      "\u2203b \u2200z {P(b,z)}"
+    ],
+    "c": "\u2203b \u2200z \u2200x \u2203a \u2200y {P(x,a)Q(a,y)P(b,z)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e10",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2200x {f(x)=* A(x*)}",
+      "\u2203e {f(e)=* A(e*)}"
+    ],
+    "c": "\u2203e {f(e)=* A(e*)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e11",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "{f(12.0)=* A(12.0*)}",
+      "\u2203e {f(e)=* A(e*)}"
+    ],
+    "c": "\u2203e {f(e)=* A(e*)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e12",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "{A()}",
+      "{}"
+    ],
+    "c": "{A()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e13",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "{f(12.0)=* A(12.0*),B()}"
+    ],
+    "c": "{}",
+    "prob": "\u2203e {A(e*)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e14",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2200x \u2203y {A(f(x*))B(g(x*,y))}",
+      "{A(f(j()*))}"
+    ],
+    "c": "\u2203y {A(f(j()*))B(g(j()*,y))}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e15",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203k {Defeats(k,Superman())==(Clark(),Superman())}",
+      "{==(Clark()*,Superman())}"
+    ],
+    "c": "\u2203k {Defeats(k,Clark())==(Clark(),Clark())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e16",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203x \u2203k {Defeats(k,x)==(Clark(),x)}",
+      "\u2203x {==(Clark()*,x)}"
+    ],
+    "c": "\u2203k {Defeats(k,Clark())==(Clark(),Clark())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e17",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203x \u2203k {do(Defeats(k,x))==(Clark(),x)}",
+      "\u2203x {==(Clark()*,x)}"
+    ],
+    "c": "\u2203k {do(Defeats(k,Clark()))==(Clark(),Clark())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e18",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "{m()=* A()}",
+      "{n()=* B()}"
+    ],
+    "c": "{m()**n()=* A()B()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e19_first_atom_do_atom",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203k {Defeats(k,Superman())==(Clark(),Superman())}",
+      "{do(A())}"
+    ],
+    "c": "\u2203k {Defeats(k,Superman())==(Clark(),Superman())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e2",
+    "docstring": "The base class for all examples. It contains a series of views (v)\nfor operations and a conclusion (c).",
+    "v": [
+      "\u2203a \u2200x {Q(x*)P(a)}",
+      "\u2200x \u2203b {Q(x*)R(b)}^{Q(x*)}"
+    ],
+    "c": "\u2203a \u2200x \u2203b {Q(x*)R(b)P(a)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e20_nested_issue_in_pred",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203k {Defeats(k,Superman())==(Clark(),Superman())}",
+      "{==(Clark(),f(Superman()*))}"
+    ],
+    "c": "\u2203k {Defeats(k,Superman())==(Clark(),Superman())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e21_supp_is_something",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203k {Defeats(k,Superman())==(Clark(),Superman())}",
+      "{==(Clark()*,Superman())}^{}"
+    ],
+    "c": "\u2203k {Defeats(k,Superman())==(Clark(),Superman())}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e22_restrict_dep_rel_is_not_other",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203x \u2203k {do(Defeats(k,x))==(Clark(),x)}",
+      "\u2203y {==(Clark()*,y)}"
+    ],
+    "c": "\u2203x \u2203k {do(Defeats(k,x))==(Clark(),x)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e5",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2200x \u2200y \u2203a \u2203b \u2200z \u2203c {P(b)P(a*)Q(x*)P(c)P(y)P(z)}",
+      "\u2203e \u2203d \u2203f {Q(f*)P(d*)Q(e*)}"
+    ],
+    "c": "\u2203e \u2203d \u2203f {Q(f*)P(d*)Q(e*)}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e6_leibniz",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203b \u2203a {==(a,b)~P(f(b),a)P(f(a),a)}",
+      "{}"
+    ],
+    "c": "{}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e7_aristotle",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2203a {~==(a,a)}",
+      "{}"
+    ],
+    "c": "{}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e8",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "{t()=+ A()}",
+      "{u()=* A()}"
+    ],
+    "c": "{u()=* t()=+ A()}",
+    "custom_functions": [
+      "test"
+    ]
+  },
+  {
+    "name": "new_e9",
+    "docstring": "The base class for all test types. Test types are mixins the define a test\ntype, but not the associated views.",
+    "v": [
+      "\u2200x {P(x*)}",
+      "{P(j()*)}"
+    ],
+    "c": "{0}",
+    "custom_functions": [
+      "test"
+    ]
+  }
+]
