@@ -1,10 +1,11 @@
 import json
 import inspect
 import random
+import argparse
+from typing import List, Dict, Any
 from pyetr import cases
 
-from etr_case_generator.reified_problem import FullProblem, QuestionType, PartialProblem
-
+from etr_case_generator.reified_problem import FullProblem, QuestionType, PartialProblem, ReifiedView
 from etr_case_generator.ontology import Ontology, get_all_ontologies, natural_name_to_logical_name
 
 
@@ -36,45 +37,104 @@ def get_case_info(case_class):
     return info
 
 
-def create_question(case, all_cases):
-    question = " ".join([str(v) for v in case['v']])
-    correct_answer = case['c']
+def create_reified_view_from_pyetr_view(view_str: str) -> ReifiedView:
+    """Convert a pyETR View string to a ReifiedView object."""
+    reified_view = ReifiedView()
+    reified_view.logical_form_etr = view_str
+    return reified_view
 
-    # Get 3 random wrong answers
-    wrong_answers = []
-    while len(wrong_answers) < 3:
-        random_case = random.choice(all_cases)
-        if random_case != case and random_case['c'] not in wrong_answers:
-            wrong_answers.append(random_case['c'])
+def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]], 
+                        ontology: Ontology, question_type: QuestionType = "multiple_choice") -> FullProblem:
+    """Create a FullProblem from a case."""
+    # Create the premises (views)
+    premises = [create_reified_view_from_pyetr_view(v) for v in case['v']]
+    
+    # Create the correct conclusion
+    correct_conclusion = create_reified_view_from_pyetr_view(case['c'])
+    
+    # Get 3 random wrong conclusions for multiple choice
+    wrong_conclusions = []
+    if question_type == "multiple_choice":
+        while len(wrong_conclusions) < 3:
+            random_case = random.choice(all_cases)
+            if random_case != case and random_case['c'] not in [w.logical_form_etr for w in wrong_conclusions]:
+                wrong_conclusions.append(create_reified_view_from_pyetr_view(random_case['c']))
+    
+    # Create the FullProblem
+    problem = FullProblem()
+    problem.views = premises
+    problem.etr_predicted_conclusion = correct_conclusion
+    problem.classically_correct_conclusion = correct_conclusion  # Assuming ETR and classical logic agree for these examples
+    
+    # For multiple choice, add the wrong conclusions
+    if question_type == "multiple_choice":
+        problem.wrong_conclusions = wrong_conclusions
+    
+    # Fill out the problem with the ontology
+    problem.fill_out(ontology=ontology)
+    
+    # Add metadata
+    problem.seed_id = case['name']
+    problem.description = case.get('docstring', '')
+    
+    return problem
 
-    choices = wrong_answers + [correct_answer]
-    random.shuffle(choices)
 
-    # Ensure all choices are strings
-    choices = [str(choice) for choice in choices]
-
-    return {
-        "question": question,
-        "choices": choices,
-        "answer": choices.index(str(correct_answer))
-    }
-
+def parse_args():
+    parser = argparse.ArgumentParser(description="Generate ETR questions from pyETR cases")
+    parser.add_argument("-n", "--num-problems", type=int, default=3, 
+                        help="Number of problems to generate per case")
+    parser.add_argument("-o", "--output", type=str, default="datasets/etr_cases",
+                        help="Base name for output files (without extension)")
+    parser.add_argument("-t", "--question-types", nargs="+", 
+                        choices=["multiple_choice", "yes_no", "open_ended"], 
+                        default=["multiple_choice"],
+                        help="Question types to generate")
+    parser.add_argument("--chain-of-thought", action="store_true",
+                        help="Include chain of thought prompts")
+    return parser.parse_args()
 
 def main():
+    args = parse_args()
+    
+    # Get all cases
     all_cases = []
     for name, obj in inspect.getmembers(cases):
         if inspect.isclass(obj) and issubclass(obj, cases.BaseExample) and obj != cases.BaseExample:
             all_cases.append(get_case_info(obj))
-
-    questions = [create_question(case, all_cases) for case in all_cases]
-
-    # TODO: These need to be FullProblems
-    # TODO: Use a random ontology for each FullProblem
-    # TODO: Generate n FullProblems for each question
-
-    with open('lm_eval/tasks/formal_questions/questions.jsonl', 'w') as f:
-        for question in questions:
-            f.write(json.dumps(question) + '\n')
+    
+    # Get all ontologies
+    all_ontologies = get_all_ontologies()
+    
+    # Generate problems for each question type
+    for question_type in args.question_types:
+        full_problems = []
+        
+        # For each case, generate n problems with different ontologies
+        for case in all_cases:
+            for _ in range(args.num_problems):
+                # Choose a random ontology
+                ontology = random.choice(all_ontologies)
+                
+                # Create a full problem
+                problem = create_full_problem(case, all_cases, ontology, question_type)
+                full_problems.append(problem)
+        
+        # Shuffle the problems
+        random.shuffle(full_problems)
+        
+        # Save to file
+        output_file = f"{args.output}_{question_type}"
+        if args.chain_of_thought:
+            output_file += "_with_cot"
+        output_file += ".jsonl"
+        
+        with open(output_file, 'w') as f:
+            for problem in full_problems:
+                f.write(json.dumps(problem.to_dict_for_jsonl(args, format=question_type, 
+                                                            chain_of_thought=args.chain_of_thought)) + '\n')
+        
+        print(f"Generated {len(full_problems)} problems in {output_file}")
 
 
 if __name__ == "__main__":
