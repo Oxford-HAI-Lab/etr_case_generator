@@ -217,3 +217,26 @@ ILLUSORY_INFERENCES_WITH_QUANTIFIERS: list[PartialProblem] = [
         )
     ),
 ]
+
+MODUS_PONENS_MODUS_TOLLENS: list[PartialProblem] = [
+    PartialProblem(
+        seed_id="control",
+        premises=[
+            ReifiedView(logical_form_etr_view=View.from_str("{ P(a()) Q(a()) }^{ P(a()) } ")),
+            ReifiedView(logical_form_etr_view=View.from_str("{ P(a()) }")),
+        ],
+        etr_what_follows=ReifiedView(
+            logical_form_etr_view=View.from_str("{ Q(a()) }")
+        )
+    ),
+    PartialProblem(
+        seed_id="target",
+        premises=[
+            ReifiedView(logical_form_etr_view=View.from_str("{ P(a()) Q(a()) }^{ P(a()) } ")),
+            ReifiedView(logical_form_etr_view=View.from_str("{ ~Q(a()) }")),
+        ],
+        etr_what_follows=ReifiedView(
+            logical_form_etr_view=View.from_str("{ ~P(a()) }")
+        )
+    ),
+]
