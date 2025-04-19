@@ -205,13 +205,14 @@ def create_reified_view_from_pyetr_view(view_str: str) -> ReifiedView:
     reified_view.logical_form_etr_view = cases.View.from_str(view_str)
     return reified_view
 
-def prepare_partial_problem(case: Dict[str, Any], ontology: Ontology) -> tuple[PartialProblem, ReifiedView]:
+def prepare_partial_problem(case: Dict[str, Any], ontology: Ontology, skip_update: bool = False) -> tuple[PartialProblem, ReifiedView]:
     """
     Create and prepare a PartialProblem from a case with the given ontology.
     
     Args:
         case: The case dictionary containing premises and conclusion
         ontology: The ontology to use for the problem
+        skip_update: If True, skip the update_to_ontology step
         
     Returns:
         A tuple of (partial_problem, correct_conclusion)
@@ -244,7 +245,8 @@ def prepare_partial_problem(case: Dict[str, Any], ontology: Ontology) -> tuple[P
     
     # Replace generic predicates and objects with domain-specific ones
     # This will update all parts of the problem including the conclusion
-    partial_problem = update_to_ontology(partial_problem, ontology)
+    if not skip_update:
+        partial_problem = update_to_ontology(partial_problem, ontology)
     
     # Fill out the premises with the ontology
     for premise in partial_problem.premises:
@@ -368,10 +370,23 @@ def create_yes_no_options(correct_conclusion: ReifiedView, wrong_views: list[Rei
     return possible_conclusions
 
 def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]], 
-                        ontology: Ontology, question_type: QuestionType = "multiple_choice") -> FullProblem:
-    """Create a FullProblem from a case."""
+                        ontology: Ontology, question_type: QuestionType = "multiple_choice",
+                        skip_update: bool = False) -> FullProblem:
+    """
+    Create a FullProblem from a case.
+    
+    Args:
+        case: The case dictionary containing premises and conclusion
+        all_cases: All available cases to choose wrong conclusions from
+        ontology: The ontology to use for the problem
+        question_type: Type of question to generate
+        skip_update: If True, skip the update_to_ontology step
+        
+    Returns:
+        A FullProblem instance
+    """
     # Prepare the partial problem and correct conclusion
-    partial_problem, correct_conclusion = prepare_partial_problem(case, ontology)
+    partial_problem, correct_conclusion = prepare_partial_problem(case, ontology, skip_update)
     
     # Get wrong conclusions for multiple choice or yes/no questions
     wrong_conclusions = []
@@ -446,6 +461,8 @@ def parse_args():
                         help="Question types to generate ('all' generates all types)")
     parser.add_argument("--chain-of-thought", action="store_true",
                         help="Include chain of thought prompts")
+    parser.add_argument("--no_update_ontology_first", action="store_true",
+                        help="Don't update the ontology for the first problem of each case")
     return parser.parse_args()
 
 def main():
@@ -483,7 +500,7 @@ def main():
         # For each case, generate n problems with different ontologies
         for case in all_cases:
             try:
-                for _ in range(args.num_problems):
+                for i in range(args.num_problems):
                     # Choose a random ontology
                     ontology = random.choice(all_ontologies)
                     
@@ -492,8 +509,16 @@ def main():
                     num_objects = min(random.randint(3, 6), len(ontology.objects))
                     smaller_ontology = ontology.create_smaller_ontology(num_predicates, num_objects)
                     
+                    # For the first problem of each case, optionally skip ontology update
+                    skip_update = args.no_update_ontology_first and i == 0
+                    
                     # Create a full problem
-                    problem = create_full_problem(case, all_cases, smaller_ontology, question_type)
+                    problem = create_full_problem(case, all_cases, smaller_ontology, question_type, skip_update)
+                    
+                    # If we skipped the update, add a note to the description
+                    if skip_update:
+                        problem.description = f"[ORIGINAL CASE WITHOUT ONTOLOGY UPDATE] {problem.description}"
+                    
                     full_problems.append(problem)
             except Exception as e:
                 print(f"Error processing case {case['name']}: {str(e)}")
