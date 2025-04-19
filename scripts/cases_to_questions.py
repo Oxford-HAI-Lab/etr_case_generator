@@ -87,9 +87,9 @@ def parse_args():
     parser.add_argument("-o", "--output", type=str, default="datasets/etr_cases",
                         help="Base name for output files (without extension)")
     parser.add_argument("-t", "--question-types", nargs="+", 
-                        choices=["multiple_choice", "yes_no", "open_ended"], 
+                        choices=["all", "multiple_choice", "yes_no", "open_ended"], 
                         default=["multiple_choice"],
-                        help="Question types to generate")
+                        help="Question types to generate ('all' generates all types)")
     parser.add_argument("--chain-of-thought", action="store_true",
                         help="Include chain of thought prompts")
     return parser.parse_args()
@@ -106,8 +106,13 @@ def main():
     # Get all ontologies
     all_ontologies = get_all_ontologies()
     
+    # Determine which question types to generate
+    question_types = args.question_types
+    if "all" in question_types:
+        question_types = ["multiple_choice", "yes_no", "open_ended"]
+    
     # Generate problems for each question type
-    for question_type in args.question_types:
+    for question_type in question_types:
         full_problems = []
         
         # For each case, generate n problems with different ontologies
