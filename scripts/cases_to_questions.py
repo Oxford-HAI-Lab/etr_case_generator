@@ -84,7 +84,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Generate ETR questions from pyETR cases")
     parser.add_argument("-n", "--num-problems", type=int, default=3, 
                         help="Number of problems to generate per case")
-    parser.add_argument("-o", "--output", type=str, default="datasets/etr_cases",
+    parser.add_argument("-o", "--output", type=str, default="datasets/etr_61_cases",
                         help="Base name for output files (without extension)")
     parser.add_argument("-t", "--question-types", nargs="+", 
                         choices=["all", "multiple_choice", "yes_no", "open_ended"], 
