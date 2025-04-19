@@ -19,6 +19,7 @@ def get_case_info(case_class) -> Dict[str, Any]:
     if hasattr(case_class, 'v'):
         info['v'] = [str(view) for view in case_class.v]
     if hasattr(case_class, 'c'):
+        # TODO: It is unclear to me what a list of views indicates
         info['c'] = str(case_class.c) if isinstance(case_class.c, cases.View) else ' '.join(str(view) for view in case_class.c)
 
     # Add prob variable if it exists
@@ -528,7 +529,7 @@ def main():
                     full_problems.append(problem)
                     num_successes += 1
                 except Exception as e:
-                    print(f"Error processing case {case['name']}: {str(e)}")
+                    print(f"Error processing case {case['name']}: {type(e).__name__}: {str(e)}")
                     num_failures += 1
                     if args.debug_errors:
                         raise e
