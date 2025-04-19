@@ -103,7 +103,7 @@ def parse_args():
                         help="Base name for output files (without extension)")
     parser.add_argument("-t", "--question-types", nargs="+", 
                         choices=["all", "multiple_choice", "yes_no", "open_ended"], 
-                        default=["multiple_choice"],
+                        default=["all"],
                         help="Question types to generate ('all' generates all types)")
     parser.add_argument("--chain-of-thought", action="store_true",
                         help="Include chain of thought prompts")
@@ -123,6 +123,8 @@ def main():
                     all_cases.append(case_info)
                 except Exception as e:
                     print(f"Error getting info for case {name}: {str(e)}")
+
+    all_cases = [get_case_info(c) for c in [cases.e1, cases.e2, cases.e3]]  # TODO DO NOT SUBMIT THIS!
     
     print(f"Found {len(all_cases)} valid cases from cases.__all__")
     
