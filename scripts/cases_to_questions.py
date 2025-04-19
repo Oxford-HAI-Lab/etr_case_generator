@@ -404,7 +404,7 @@ def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]],
                     break
     
     # Add metadata
-    problem.description = case.get('docstring', '')
+    problem.description = ...  # TODO Find a way to generate this from the ontology and the problem
     
     return problem
 
