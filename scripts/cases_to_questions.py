@@ -39,14 +39,21 @@ def get_case_info(case_class) -> Dict[str, Any]:
     return info
 
 
-def update_to_ontology(partial_problem: PartialProblem, ontology: Ontology) -> None:
+def update_to_ontology(partial_problem: PartialProblem, ontology: Ontology) -> PartialProblem:
     """
     Replace predicates and objects in the partial problem with random ones from the ontology.
     Ensures consistent mapping across all premises and conclusions.
+    
+    Returns:
+        A new PartialProblem with updated predicates and objects.
     """
+    # Create a copy of the partial problem
+    from copy import deepcopy
+    new_problem = deepcopy(partial_problem)
+    
     # Extract all predicates and objects from the problem
     all_etr_text = ""
-    for premise in partial_problem.premises:
+    for premise in new_problem.premises:
         all_etr_text += premise.logical_form_etr + " "
     
     # Find all predicate names (words followed by open parenthesis)
@@ -85,7 +92,7 @@ def update_to_ontology(partial_problem: PartialProblem, ontology: Ontology) -> N
             object_mapping[obj] = available_objects[i % len(available_objects)]
     
     # Apply mappings to all premises
-    for premise in partial_problem.premises:
+    for premise in new_problem.premises:
         # Replace predicates
         for old_pred, new_pred in predicate_mapping.items():
             # Use word boundaries to ensure we only replace whole words
@@ -104,21 +111,23 @@ def update_to_ontology(partial_problem: PartialProblem, ontology: Ontology) -> N
         premise.logical_form_etr_view = cases.View.from_str(premise.logical_form_etr)
     
     # If there's an ETR what follows, update it too
-    if partial_problem.etr_what_follows:
+    if new_problem.etr_what_follows:
         for old_pred, new_pred in predicate_mapping.items():
-            partial_problem.etr_what_follows.logical_form_etr = re.sub(
+            new_problem.etr_what_follows.logical_form_etr = re.sub(
                 r'\b' + old_pred + r'\(', 
                 natural_name_to_logical_name(new_pred, "none") + '(', 
-                partial_problem.etr_what_follows.logical_form_etr)
+                new_problem.etr_what_follows.logical_form_etr)
         
         for old_obj, new_obj in object_mapping.items():
-            partial_problem.etr_what_follows.logical_form_etr = re.sub(
+            new_problem.etr_what_follows.logical_form_etr = re.sub(
                 r'\b' + old_obj + r'\(\)', 
                 natural_name_to_logical_name(new_obj, "none") + '()', 
-                partial_problem.etr_what_follows.logical_form_etr)
+                new_problem.etr_what_follows.logical_form_etr)
         
-        partial_problem.etr_what_follows.logical_form_etr_view = cases.View.from_str(
-            partial_problem.etr_what_follows.logical_form_etr)
+        new_problem.etr_what_follows.logical_form_etr_view = cases.View.from_str(
+            new_problem.etr_what_follows.logical_form_etr)
+    
+    return new_problem
 
 def create_reified_view_from_pyetr_view(view_str: str) -> ReifiedView:
     """Convert a pyETR View string to a ReifiedView object."""
@@ -148,7 +157,7 @@ def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]],
     )
     
     # Replace generic predicates and objects with domain-specific ones
-    update_to_ontology(partial_problem, ontology)
+    partial_problem = update_to_ontology(partial_problem, ontology)
     
     # Fill out the premises with the ontology
     for premise in partial_problem.premises:
