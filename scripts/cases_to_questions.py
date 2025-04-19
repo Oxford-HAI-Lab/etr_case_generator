@@ -117,13 +117,17 @@ def main():
         
         # For each case, generate n problems with different ontologies
         for case in all_cases:
-            for _ in range(args.num_problems):
-                # Choose a random ontology
-                ontology = random.choice(all_ontologies)
-                
-                # Create a full problem
-                problem = create_full_problem(case, all_cases, ontology, question_type)
-                full_problems.append(problem)
+            try:
+                for _ in range(args.num_problems):
+                    # Choose a random ontology
+                    ontology = random.choice(all_ontologies)
+                    
+                    # Create a full problem
+                    problem = create_full_problem(case, all_cases, ontology, question_type)
+                    full_problems.append(problem)
+            except Exception as e:
+                print(f"Error processing case {case['name']}: {str(e)}")
+                continue
         
         # Shuffle the problems
         random.shuffle(full_problems)
