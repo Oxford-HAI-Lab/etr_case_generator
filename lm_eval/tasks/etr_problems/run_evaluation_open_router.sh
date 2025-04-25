@@ -6,11 +6,10 @@ source "$(dirname "$0")/source_keys.sh"
 # Help text function
 show_help() {
     echo "Usage: $0 [OPTIONS]"
-    echo "Run ETR problems evaluation with specified parameters."
+    echo "Run ETR problems evaluation with OpenRouter using specified parameters."
     echo
     echo "Options:"
-    echo "  -m, --model MODEL      Model to use (default: gpt-4-turbo)"
-    echo "  -c, --class CLASS      Model class (default: openai-chat-completions)"
+    echo "  -m, --model MODEL      OpenRouter model to use (e.g., google/gemini-2-5-pro)"
     echo "  -p, --path PATH        Path to lm-evaluation-harness directory"
     echo "  -i, --include PATH     Path to include for task definitions"
     echo "  -d, --dataset PATH     Path to dataset JSONL file to evaluate"
@@ -19,11 +18,11 @@ show_help() {
     echo "  -h, --help            Show this help message"
     echo
     echo "Example:"
-    echo "  $0 -m gpt-4-turbo -p /path/to/lm-evaluation-harness"
+    echo "  $0 -m google/gemini-2-5-pro -d /path/to/dataset.jsonl"
 }
 
 # Default values
-MODEL="gpt-4.1-mini"
+MODEL="openai/chatgpt-4o-latest"
 EVAL_PATH="${EVAL_PATH:-/home/keenan/Dev/lm-evaluation-harness/}"
 INCLUDE_PATH="${INCLUDE_PATH:-/home/keenan/Dev/etr_case_generator/}"
 DATASET=""
@@ -31,33 +30,18 @@ TASK="etr_problems"
 VERBOSITY="WARNING"
 GOOD_RESULTS=false
 
-# Check for required environment variables based on model
+# Check for required OpenRouter API key
 check_api_key() {
-    if [[ "$MODEL" == "deepseek-r1" ]]; then
-        if [ -z "$OPENROUTER_API_KEY" ]; then
-            echo "Error: OPENROUTER_API_KEY is not set"
-            echo "Please ensure it is correctly set in keys.env"
-            exit 1
-        fi
-    else
-        if [ -z "$OPENAI_API_KEY" ]; then
-            echo "Error: OPENAI_API_KEY is not set"
-            echo "Please ensure it is correctly set in keys.env"
-            exit 1
-        fi
+    if [ -z "$OPENROUTER_API_KEY" ]; then
+        echo "Error: OPENROUTER_API_KEY is not set"
+        echo "Please ensure it is correctly set in keys.env"
+        exit 1
     fi
 }
-
-# Default model class
-MODEL_CLASS="openai-chat-completions"  # Supported model names: local-completions, local-chat-completions, openai-completions, openai-chat-completions, anthropic-completions, anthropic-chat, anthropic-chat-completions, dummy, gguf, ggml, hf-auto, hf, huggingface, hf-multimodal, watsonx_llm, mamba_ssm, nemo_lm, sparseml, deepsparse, neuronx, openvino, textsynth, vllm, vllm-vlm
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
-        -c|--class)
-            MODEL_CLASS="$2"
-            shift 2
-            ;;
         -m|--model)
             MODEL="$2"
             shift 2
@@ -133,8 +117,7 @@ if [ -n "$EVAL_PATH" ]; then
 fi
 
 echo "Configuration:"
-echo "  Model Class: $MODEL_CLASS"
-echo "  Model: $MODEL"
+echo "  OpenRouter Model: $MODEL"
 echo "  Evaluation harness path: $EVAL_PATH"
 echo "  Include path: $INCLUDE_PATH"
 echo "  Task: $TASK"
@@ -143,41 +126,26 @@ echo ""
 # Check API key requirements
 check_api_key
 
-# Run evaluation
-if [[ "$MODEL" == "deepseek-r1" ]]; then
-    # Store original OPENAI_API_KEY if it exists and set up restoration trap
-    if [ -n "$OPENAI_API_KEY" ]; then
-        export ORIGINAL_OPENAI_KEY=$OPENAI_API_KEY
-        # This will run on any exit (normal, interrupt, error)
-        trap 'export OPENAI_API_KEY=$ORIGINAL_OPENAI_KEY; echo "Restored original OpenAI API key"' EXIT SIGINT SIGTERM
-    fi
-    
-    # Set OPENAI_API_KEY to OPENROUTER_API_KEY. We need to do this because the evaluation harness looks directly at OPENAI_API_KEY
-    export OPENAI_API_KEY=$OPENROUTER_API_KEY
-
-    lm_eval --model openai-chat-completions \
-        --model_args "base_url=https://openrouter.ai/api/v1/chat/completions,model=deepseek/deepseek-r1,max_tokens=3000,num_concurrent=1" \
-        --include_path "$INCLUDE_PATH" \
-        --tasks $TASK \
-        --num_fewshot 0 \
-        --batch_size 1 \
-        --output_path "lm_eval/tasks/etr_problems/$([ "$GOOD_RESULTS" = true ] && echo "good_results" || echo "results")" \
-        --apply_chat_template \
-        --log_samples \
-        --write_out \
-        ${VERBOSITY:+--verbosity "$VERBOSITY"}
-
-    # The trap will handle key restoration on exit
-else
-    lm_eval --model $MODEL_CLASS \
-        --model_args model=$MODEL \
-        --include_path "$INCLUDE_PATH" \
-        --tasks $TASK \
-        --num_fewshot 0 \
-        --batch_size 1 \
-        --output_path "lm_eval/tasks/etr_problems/$([ "$GOOD_RESULTS" = true ] && echo "good_results" || echo "results")" \
-        --apply_chat_template \
-        --log_samples \
-        --write_out \
-        ${VERBOSITY:+--verbosity "$VERBOSITY"}
+# Store original OPENAI_API_KEY if it exists and set up restoration trap
+if [ -n "$OPENAI_API_KEY" ]; then
+    export ORIGINAL_OPENAI_KEY=$OPENAI_API_KEY
+    # This will run on any exit (normal, interrupt, error)
+    trap 'export OPENAI_API_KEY=$ORIGINAL_OPENAI_KEY; echo "Restored original OpenAI API key"' EXIT SIGINT SIGTERM
 fi
+
+# Set OPENAI_API_KEY to OPENROUTER_API_KEY
+# We need to do this because the evaluation harness looks directly at OPENAI_API_KEY
+export OPENAI_API_KEY=$OPENROUTER_API_KEY
+
+# Run evaluation with OpenRouter
+lm_eval --model openai-chat-completions \
+    --model_args "base_url=https://openrouter.ai/api/v1/chat/completions,model=${MODEL},max_tokens=3000,num_concurrent=1" \
+    --include_path "$INCLUDE_PATH" \
+    --tasks $TASK \
+    --num_fewshot 0 \
+    --batch_size 1 \
+    --output_path "lm_eval/tasks/etr_problems/$([ "$GOOD_RESULTS" = true ] && echo "good_results" || echo "results")" \
+    --apply_chat_template \
+    --log_samples \
+    --write_out \
+    ${VERBOSITY:+--verbosity "$VERBOSITY"}

@@ -2,6 +2,16 @@
 #!/bin/bash
 set -o pipefail
 
+# Source project-specific API keys
+source "$(dirname "$0")/source_keys.sh"
+
+# Verify required API key is available
+if [ -z "$OPENAI_API_KEY" ]; then
+    echo "Error: OPENAI_API_KEY is missing"
+    echo "Please ensure OPENAI_API_KEY is set in keys.env"
+    exit 1
+fi
+
 # Define model configurations
 # Note that "deepseek" has some special handling in run_evaluation.sh
 declare -A MODEL_CONFIGS=(

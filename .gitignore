@@ -7,6 +7,9 @@
 
 .idea/
 
+# API Keys
+keys.env
+
 # Results directories - block by default but allow specific ones
 lm_eval/tasks/etr_problems/results/*
 
