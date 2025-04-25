@@ -313,7 +313,7 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
     # print("Premises:", ", ".join(full_premises))
     # print("Name Substitutions:", short_name_to_full_name)
     response = openai.chat.completions.create(
-        model="gpt-4-turbo-preview",
+        model="gpt-4.1-mini",  # 20 times cheaper than gpt-4!
         messages=[
             {"role": "user", "content": prompt}
         ],
