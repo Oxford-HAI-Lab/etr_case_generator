@@ -1,0 +1,323 @@
+Copied /home/keenan/Dev/etr_case_generator/datasets/balance_atoms_yes_no.jsonl to datasets/etr_for_lm_eval.jsonl
+Configuration:
+  Model Class: openai-chat-completions
+  Model: gpt-3.5-turbo-0125
+  Evaluation harness path: /home/keenan/Dev/lm-evaluation-harness/
+  Include path: /home/keenan/Dev/etr_case_generator/
+  Task: etr_problems
+
+2025-01-22:23:39:52,210 WARNING  [openai_completions.py:108] chat-completions endpoint requires the `--apply_chat_template` flag.
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 300 examples [00:00, 74034.55 examples/s]
+2025-01-22:23:39:52,541 WARNING  [evaluator.py:270] Overwriting default num_fewshot of etr_problems from None to 0
+2025-01-22:23:39:52,542 WARNING  [evaluator.py:406] Chat template formatting change affects loglikelihood and multiple-choice tasks. See docs/chat-template-readme.md for details.
+  0%|          | 0/300 [00:00<?, ?it/s]100%|██████████| 300/300 [00:00<00:00, 4356.95it/s]
+Requesting API:   0%|          | 0/300 [00:00<?, ?it/s]2025-01-22:23:39:52,634 WARNING  [api_models.py:287] Cannot determine EOS string to pass to stop sequence. Manually set by passing `eos_string` to model_args.
+Requesting API:   0%|          | 1/300 [00:00<01:55,  2.58it/s]Requesting API:   1%|          | 2/300 [00:00<01:48,  2.76it/s]Requesting API:   1%|          | 3/300 [00:01<03:25,  1.44it/s]Requesting API:   1%|▏         | 4/300 [00:02<03:03,  1.61it/s]Requesting API:   2%|▏         | 5/300 [00:02<02:40,  1.83it/s]Requesting API:   2%|▏         | 6/300 [00:03<02:46,  1.76it/s]Requesting API:   2%|▏         | 7/300 [00:03<02:38,  1.85it/s]Requesting API:   3%|▎         | 8/300 [00:04<02:24,  2.01it/s]Requesting API:   3%|▎         | 9/300 [00:04<02:33,  1.90it/s]Requesting API:   3%|▎         | 10/300 [00:05<02:27,  1.96it/s]Requesting API:   4%|▎         | 11/300 [00:05<02:20,  2.05it/s]Requesting API:   4%|▍         | 12/300 [00:06<02:28,  1.93it/s]Requesting API:   4%|▍         | 13/300 [00:06<02:28,  1.94it/s]Requesting API:   5%|▍         | 14/300 [00:07<02:12,  2.16it/s]Requesting API:   5%|▌         | 15/300 [00:07<02:11,  2.17it/s]Requesting API:   5%|▌         | 16/300 [00:08<02:08,  2.21it/s]Requesting API:   6%|▌         | 17/300 [00:08<01:55,  2.44it/s]Requesting API:   6%|▌         | 18/300 [00:08<02:03,  2.28it/s]Requesting API:   6%|▋         | 19/300 [00:09<02:00,  2.32it/s]Requesting API:   7%|▋         | 20/300 [00:09<01:58,  2.36it/s]Requesting API:   7%|▋         | 21/300 [00:10<01:56,  2.40it/s]Requesting API:   7%|▋         | 22/300 [00:10<02:30,  1.85it/s]Requesting API:   8%|▊         | 23/300 [00:11<02:13,  2.07it/s]Requesting API:   8%|▊         | 24/300 [00:11<02:00,  2.28it/s]Requesting API:   8%|▊         | 25/300 [00:12<02:02,  2.25it/s]Requesting API:   9%|▊         | 26/300 [00:12<01:54,  2.40it/s]Requesting API:   9%|▉         | 27/300 [00:12<01:48,  2.52it/s]Requesting API:   9%|▉         | 28/300 [00:13<01:44,  2.60it/s]Requesting API:  10%|▉         | 29/300 [00:13<01:53,  2.39it/s]Requesting API:  10%|█         | 30/300 [00:14<01:49,  2.47it/s]Requesting API:  10%|█         | 31/300 [00:14<02:07,  2.11it/s]Requesting API:  11%|█         | 32/300 [00:15<02:02,  2.19it/s]Requesting API:  11%|█         | 33/300 [00:15<02:04,  2.15it/s]Requesting API:  11%|█▏        | 34/300 [00:16<02:33,  1.74it/s]Requesting API:  12%|█▏        | 35/300 [00:16<02:20,  1.88it/s]Requesting API:  12%|█▏        | 36/300 [00:17<02:13,  1.98it/s]Requesting API:  12%|█▏        | 37/300 [00:17<02:05,  2.10it/s]Requesting API:  13%|█▎        | 38/300 [00:18<02:02,  2.14it/s]Requesting API:  13%|█▎        | 39/300 [00:18<01:57,  2.22it/s]Requesting API:  13%|█▎        | 40/300 [00:18<01:53,  2.28it/s]Requesting API:  14%|█▎        | 41/300 [00:19<01:55,  2.23it/s]Requesting API:  14%|█▍        | 42/300 [00:19<01:56,  2.22it/s]Requesting API:  14%|█▍        | 43/300 [00:20<02:00,  2.14it/s]Requesting API:  15%|█▍        | 44/300 [00:20<01:45,  2.42it/s]Requesting API:  15%|█▌        | 45/300 [00:20<01:39,  2.56it/s]Requesting API:  15%|█▌        | 46/300 [00:21<01:47,  2.36it/s]Requesting API:  16%|█▌        | 47/300 [00:21<01:38,  2.57it/s]Requesting API:  16%|█▌        | 48/300 [00:22<01:40,  2.51it/s]Requesting API:  16%|█▋        | 49/300 [00:22<01:40,  2.51it/s]Requesting API:  17%|█▋        | 50/300 [00:22<01:34,  2.64it/s]Requesting API:  17%|█▋        | 51/300 [00:23<01:32,  2.69it/s]Requesting API:  17%|█▋        | 52/300 [00:23<01:52,  2.20it/s]Requesting API:  18%|█▊        | 53/300 [00:24<01:48,  2.27it/s]Requesting API:  18%|█▊        | 54/300 [00:24<01:45,  2.34it/s]Requesting API:  18%|█▊        | 55/300 [00:25<01:36,  2.53it/s]Requesting API:  19%|█▊        | 56/300 [00:25<01:36,  2.54it/s]Requesting API:  19%|█▉        | 57/300 [00:25<01:38,  2.47it/s]Requesting API:  19%|█▉        | 58/300 [00:26<01:45,  2.29it/s]Requesting API:  20%|█▉        | 59/300 [00:26<01:43,  2.34it/s]Requesting API:  20%|██        | 60/300 [00:27<01:36,  2.49it/s]Requesting API:  20%|██        | 61/300 [00:27<01:31,  2.61it/s]Requesting API:  21%|██        | 62/300 [00:27<01:39,  2.39it/s]Requesting API:  21%|██        | 63/300 [00:28<01:35,  2.47it/s]Requesting API:  21%|██▏       | 64/300 [00:28<01:31,  2.57it/s]Requesting API:  22%|██▏       | 65/300 [00:29<01:32,  2.53it/s]Requesting API:  22%|██▏       | 66/300 [00:30<02:19,  1.68it/s]Requesting API:  22%|██▏       | 67/300 [00:30<02:05,  1.85it/s]Requesting API:  23%|██▎       | 68/300 [00:31<02:03,  1.88it/s]Requesting API:  23%|██▎       | 69/300 [00:31<01:56,  1.98it/s]Requesting API:  23%|██▎       | 70/300 [00:31<01:40,  2.29it/s]Requesting API:  24%|██▎       | 71/300 [00:32<01:31,  2.51it/s]Requesting API:  24%|██▍       | 72/300 [00:32<01:31,  2.49it/s]Requesting API:  24%|██▍       | 73/300 [00:32<01:27,  2.59it/s]Requesting API:  25%|██▍       | 74/300 [00:33<01:39,  2.27it/s]Requesting API:  25%|██▌       | 75/300 [00:33<01:44,  2.16it/s]Requesting API:  25%|██▌       | 76/300 [00:34<01:40,  2.24it/s]Requesting API:  26%|██▌       | 77/300 [00:34<01:41,  2.21it/s]Requesting API:  26%|██▌       | 78/300 [00:35<01:39,  2.23it/s]Requesting API:  26%|██▋       | 79/300 [00:35<01:27,  2.53it/s]Requesting API:  27%|██▋       | 80/300 [00:35<01:18,  2.80it/s]Requesting API:  27%|██▋       | 81/300 [00:36<01:25,  2.55it/s]Requesting API:  27%|██▋       | 82/300 [00:36<01:33,  2.34it/s]Requesting API:  28%|██▊       | 83/300 [00:37<01:26,  2.50it/s]Requesting API:  28%|██▊       | 84/300 [00:37<01:27,  2.46it/s]Requesting API:  28%|██▊       | 85/300 [00:37<01:26,  2.48it/s]Requesting API:  29%|██▊       | 86/300 [00:38<01:26,  2.47it/s]Requesting API:  29%|██▉       | 87/300 [00:38<01:18,  2.72it/s]Requesting API:  29%|██▉       | 88/300 [00:39<01:21,  2.62it/s]Requesting API:  30%|██▉       | 89/300 [00:39<01:19,  2.67it/s]Requesting API:  30%|███       | 90/300 [00:39<01:25,  2.46it/s]Requesting API:  30%|███       | 91/300 [00:40<01:24,  2.46it/s]Requesting API:  31%|███       | 92/300 [00:40<01:18,  2.65it/s]Requesting API:  31%|███       | 93/300 [00:41<01:26,  2.39it/s]Requesting API:  31%|███▏      | 94/300 [00:41<01:38,  2.10it/s]Requesting API:  32%|███▏      | 95/300 [00:42<01:26,  2.36it/s]Requesting API:  32%|███▏      | 96/300 [00:42<01:21,  2.51it/s]Requesting API:  32%|███▏      | 97/300 [00:42<01:20,  2.53it/s]Requesting API:  33%|███▎      | 98/300 [00:43<01:18,  2.57it/s]Requesting API:  33%|███▎      | 99/300 [00:43<01:23,  2.42it/s]Requesting API:  33%|███▎      | 100/300 [00:44<01:20,  2.48it/s]Requesting API:  34%|███▎      | 101/300 [00:44<01:32,  2.14it/s]Requesting API:  34%|███▍      | 102/300 [00:45<01:29,  2.22it/s]Requesting API:  34%|███▍      | 103/300 [00:45<01:27,  2.26it/s]Requesting API:  35%|███▍      | 104/300 [00:45<01:24,  2.32it/s]Requesting API:  35%|███▌      | 105/300 [00:46<01:24,  2.31it/s]Requesting API:  35%|███▌      | 106/300 [00:46<01:27,  2.22it/s]Requesting API:  36%|███▌      | 107/300 [00:47<01:23,  2.31it/s]Requesting API:  36%|███▌      | 108/300 [00:47<01:21,  2.35it/s]Requesting API:  36%|███▋      | 109/300 [00:47<01:16,  2.51it/s]Requesting API:  37%|███▋      | 110/300 [00:48<01:10,  2.69it/s]Requesting API:  37%|███▋      | 111/300 [00:48<01:22,  2.30it/s]Requesting API:  37%|███▋      | 112/300 [00:49<01:28,  2.12it/s]Requesting API:  38%|███▊      | 113/300 [00:54<05:52,  1.88s/it]Requesting API:  38%|███▊      | 114/300 [00:55<04:33,  1.47s/it]Requesting API:  38%|███▊      | 115/300 [00:55<03:33,  1.15s/it]Requesting API:  39%|███▊      | 116/300 [00:56<03:20,  1.09s/it]Requesting API:  39%|███▉      | 117/300 [00:56<02:40,  1.14it/s]Requesting API:  39%|███▉      | 118/300 [00:57<02:08,  1.42it/s]Requesting API:  40%|███▉      | 119/300 [00:57<01:53,  1.60it/s]Requesting API:  40%|████      | 120/300 [00:57<01:39,  1.80it/s]Requesting API:  40%|████      | 121/300 [00:58<01:39,  1.80it/s]Requesting API:  41%|████      | 122/300 [00:58<01:32,  1.92it/s]Requesting API:  41%|████      | 123/300 [00:59<01:33,  1.90it/s]Requesting API:  41%|████▏     | 124/300 [00:59<01:26,  2.04it/s]Requesting API:  42%|████▏     | 125/300 [01:00<01:21,  2.14it/s]Requesting API:  42%|████▏     | 126/300 [01:00<01:16,  2.28it/s]Requesting API:  42%|████▏     | 127/300 [01:01<01:16,  2.25it/s]Requesting API:  43%|████▎     | 128/300 [01:01<01:14,  2.32it/s]Requesting API:  43%|████▎     | 129/300 [01:01<01:05,  2.61it/s]Requesting API:  43%|████▎     | 130/300 [01:02<01:03,  2.69it/s]Requesting API:  44%|████▎     | 131/300 [01:02<01:25,  1.98it/s]Requesting API:  44%|████▍     | 132/300 [01:03<01:20,  2.09it/s]Requesting API:  44%|████▍     | 133/300 [01:03<01:21,  2.06it/s]Requesting API:  45%|████▍     | 134/300 [01:04<01:17,  2.13it/s]Requesting API:  45%|████▌     | 135/300 [01:04<01:18,  2.10it/s]Requesting API:  45%|████▌     | 136/300 [01:05<01:11,  2.29it/s]Requesting API:  46%|████▌     | 137/300 [01:05<01:08,  2.39it/s]Requesting API:  46%|████▌     | 138/300 [01:05<01:07,  2.41it/s]Requesting API:  46%|████▋     | 139/300 [01:06<01:09,  2.33it/s]Requesting API:  47%|████▋     | 140/300 [01:06<01:08,  2.35it/s]Requesting API:  47%|████▋     | 141/300 [01:07<01:07,  2.35it/s]Requesting API:  47%|████▋     | 142/300 [01:07<01:06,  2.37it/s]Requesting API:  48%|████▊     | 143/300 [01:08<01:05,  2.41it/s]Requesting API:  48%|████▊     | 144/300 [01:08<01:02,  2.48it/s]Requesting API:  48%|████▊     | 145/300 [01:08<01:06,  2.35it/s]Requesting API:  49%|████▊     | 146/300 [01:09<00:58,  2.63it/s]Requesting API:  49%|████▉     | 147/300 [01:09<01:05,  2.35it/s]Requesting API:  49%|████▉     | 148/300 [01:10<01:07,  2.26it/s]Requesting API:  50%|████▉     | 149/300 [01:10<00:59,  2.54it/s]Requesting API:  50%|█████     | 150/300 [01:10<00:55,  2.68it/s]Requesting API:  50%|█████     | 151/300 [01:11<00:59,  2.50it/s]Requesting API:  51%|█████     | 152/300 [01:11<00:55,  2.66it/s]Requesting API:  51%|█████     | 153/300 [01:12<00:59,  2.45it/s]Requesting API:  51%|█████▏    | 154/300 [01:12<00:56,  2.57it/s]Requesting API:  52%|█████▏    | 155/300 [01:12<01:00,  2.38it/s]Requesting API:  52%|█████▏    | 156/300 [01:13<01:04,  2.24it/s]Requesting API:  52%|█████▏    | 157/300 [01:13<01:00,  2.36it/s]Requesting API:  53%|█████▎    | 158/300 [01:14<01:01,  2.32it/s]Requesting API:  53%|█████▎    | 159/300 [01:14<00:59,  2.35it/s]Requesting API:  53%|█████▎    | 160/300 [01:15<00:58,  2.38it/s]Requesting API:  54%|█████▎    | 161/300 [01:15<00:59,  2.34it/s]Requesting API:  54%|█████▍    | 162/300 [01:15<00:55,  2.48it/s]Requesting API:  54%|█████▍    | 163/300 [01:16<00:51,  2.65it/s]Requesting API:  55%|█████▍    | 164/300 [01:16<00:53,  2.56it/s]Requesting API:  55%|█████▌    | 165/300 [01:17<00:56,  2.38it/s]Requesting API:  55%|█████▌    | 166/300 [01:17<00:52,  2.53it/s]Requesting API:  56%|█████▌    | 167/300 [01:17<00:57,  2.33it/s]Requesting API:  56%|█████▌    | 168/300 [01:18<00:54,  2.43it/s]Requesting API:  56%|█████▋    | 169/300 [01:18<00:52,  2.48it/s]Requesting API:  57%|█████▋    | 170/300 [01:19<00:52,  2.50it/s]Requesting API:  57%|█████▋    | 171/300 [01:19<00:52,  2.45it/s]Requesting API:  57%|█████▋    | 172/300 [01:19<00:52,  2.45it/s]Requesting API:  58%|█████▊    | 173/300 [01:20<00:52,  2.40it/s]Requesting API:  58%|█████▊    | 174/300 [01:20<00:53,  2.34it/s]Requesting API:  58%|█████▊    | 175/300 [01:21<00:52,  2.36it/s]Requesting API:  59%|█████▊    | 176/300 [01:21<00:51,  2.39it/s]Requesting API:  59%|█████▉    | 177/300 [01:22<00:54,  2.24it/s]Requesting API:  59%|█████▉    | 178/300 [01:22<00:56,  2.14it/s]Requesting API:  60%|█████▉    | 179/300 [01:23<00:54,  2.23it/s]Requesting API:  60%|██████    | 180/300 [01:23<00:50,  2.36it/s]Requesting API:  60%|██████    | 181/300 [01:23<00:47,  2.53it/s]Requesting API:  61%|██████    | 182/300 [01:24<00:44,  2.64it/s]Requesting API:  61%|██████    | 183/300 [01:24<00:44,  2.63it/s]Requesting API:  61%|██████▏   | 184/300 [01:24<00:49,  2.35it/s]Requesting API:  62%|██████▏   | 185/300 [01:25<00:46,  2.47it/s]Requesting API:  62%|██████▏   | 186/300 [01:25<00:48,  2.37it/s]Requesting API:  62%|██████▏   | 187/300 [01:26<00:50,  2.23it/s]Requesting API:  63%|██████▎   | 188/300 [01:26<00:46,  2.40it/s]Requesting API:  63%|██████▎   | 189/300 [01:26<00:43,  2.56it/s]Requesting API:  63%|██████▎   | 190/300 [01:27<00:46,  2.36it/s]Requesting API:  64%|██████▎   | 191/300 [01:27<00:47,  2.29it/s]Requesting API:  64%|██████▍   | 192/300 [01:28<00:46,  2.34it/s]Requesting API:  64%|██████▍   | 193/300 [01:28<00:46,  2.30it/s]Requesting API:  65%|██████▍   | 194/300 [01:29<00:42,  2.50it/s]Requesting API:  65%|██████▌   | 195/300 [01:29<00:43,  2.39it/s]Requesting API:  65%|██████▌   | 196/300 [01:29<00:43,  2.41it/s]Requesting API:  66%|██████▌   | 197/300 [01:30<00:42,  2.41it/s]Requesting API:  66%|██████▌   | 198/300 [01:30<00:42,  2.42it/s]Requesting API:  66%|██████▋   | 199/300 [01:31<00:40,  2.51it/s]Requesting API:  67%|██████▋   | 200/300 [01:31<00:38,  2.60it/s]Requesting API:  67%|██████▋   | 201/300 [01:31<00:35,  2.77it/s]Requesting API:  67%|██████▋   | 202/300 [01:32<00:33,  2.93it/s]Requesting API:  68%|██████▊   | 203/300 [01:32<00:35,  2.74it/s]Requesting API:  68%|██████▊   | 204/300 [01:32<00:36,  2.64it/s]Requesting API:  68%|██████▊   | 205/300 [01:33<00:39,  2.39it/s]Requesting API:  69%|██████▊   | 206/300 [01:33<00:38,  2.47it/s]Requesting API:  69%|██████▉   | 207/300 [01:34<00:38,  2.43it/s]Requesting API:  69%|██████▉   | 208/300 [01:34<00:36,  2.49it/s]Requesting API:  70%|██████▉   | 209/300 [01:35<00:36,  2.47it/s]Requesting API:  70%|███████   | 210/300 [01:35<00:33,  2.68it/s]Requesting API:  70%|███████   | 211/300 [01:35<00:35,  2.50it/s]Requesting API:  71%|███████   | 212/300 [01:36<00:35,  2.46it/s]Requesting API:  71%|███████   | 213/300 [01:36<00:36,  2.40it/s]Requesting API:  71%|███████▏  | 214/300 [01:37<00:36,  2.33it/s]Requesting API:  72%|███████▏  | 215/300 [01:37<00:33,  2.58it/s]Requesting API:  72%|███████▏  | 216/300 [01:37<00:32,  2.56it/s]Requesting API:  72%|███████▏  | 217/300 [01:38<00:30,  2.74it/s]Requesting API:  73%|███████▎  | 218/300 [01:38<00:32,  2.55it/s]Requesting API:  73%|███████▎  | 219/300 [01:39<00:34,  2.34it/s]Requesting API:  73%|███████▎  | 220/300 [01:39<00:38,  2.07it/s]Requesting API:  74%|███████▎  | 221/300 [01:40<00:36,  2.17it/s]Requesting API:  74%|███████▍  | 222/300 [01:40<00:39,  1.97it/s]Requesting API:  74%|███████▍  | 223/300 [01:41<00:36,  2.09it/s]Requesting API:  75%|███████▍  | 224/300 [01:41<00:34,  2.19it/s]Requesting API:  75%|███████▌  | 225/300 [01:41<00:33,  2.24it/s]Requesting API:  75%|███████▌  | 226/300 [01:42<00:36,  2.03it/s]Requesting API:  76%|███████▌  | 227/300 [01:43<00:36,  2.01it/s]Requesting API:  76%|███████▌  | 228/300 [01:43<00:35,  2.05it/s]Requesting API:  76%|███████▋  | 229/300 [01:43<00:31,  2.23it/s]Requesting API:  77%|███████▋  | 230/300 [01:44<00:29,  2.39it/s]Requesting API:  77%|███████▋  | 231/300 [01:44<00:27,  2.55it/s]Requesting API:  77%|███████▋  | 232/300 [01:44<00:25,  2.64it/s]Requesting API:  78%|███████▊  | 233/300 [01:45<00:26,  2.57it/s]Requesting API:  78%|███████▊  | 234/300 [01:45<00:26,  2.49it/s]Requesting API:  78%|███████▊  | 235/300 [01:46<00:25,  2.52it/s]Requesting API:  79%|███████▊  | 236/300 [01:46<00:25,  2.50it/s]Requesting API:  79%|███████▉  | 237/300 [01:46<00:25,  2.48it/s]Requesting API:  79%|███████▉  | 238/300 [01:47<00:27,  2.29it/s]Requesting API:  80%|███████▉  | 239/300 [01:47<00:26,  2.29it/s]Requesting API:  80%|████████  | 240/300 [01:48<00:27,  2.22it/s]Requesting API:  80%|████████  | 241/300 [01:48<00:25,  2.28it/s]Requesting API:  81%|████████  | 242/300 [01:49<00:26,  2.17it/s]Requesting API:  81%|████████  | 243/300 [01:49<00:27,  2.10it/s]Requesting API:  81%|████████▏ | 244/300 [01:50<00:25,  2.19it/s]Requesting API:  82%|████████▏ | 245/300 [01:50<00:25,  2.12it/s]Requesting API:  82%|████████▏ | 246/300 [01:51<00:32,  1.65it/s]Requesting API:  82%|████████▏ | 247/300 [01:52<00:27,  1.91it/s]Requesting API:  83%|████████▎ | 248/300 [01:52<00:24,  2.08it/s]Requesting API:  83%|████████▎ | 249/300 [01:52<00:22,  2.32it/s]Requesting API:  83%|████████▎ | 250/300 [01:53<00:22,  2.27it/s]Requesting API:  84%|████████▎ | 251/300 [01:53<00:23,  2.10it/s]Requesting API:  84%|████████▍ | 252/300 [01:54<00:23,  2.01it/s]Requesting API:  84%|████████▍ | 253/300 [01:54<00:21,  2.21it/s]Requesting API:  85%|████████▍ | 254/300 [01:54<00:19,  2.39it/s]Requesting API:  85%|████████▌ | 255/300 [01:55<00:18,  2.45it/s]Requesting API:  85%|████████▌ | 256/300 [01:55<00:19,  2.29it/s]Requesting API:  86%|████████▌ | 257/300 [01:56<00:18,  2.28it/s]Requesting API:  86%|████████▌ | 258/300 [01:56<00:16,  2.59it/s]Requesting API:  86%|████████▋ | 259/300 [01:56<00:15,  2.66it/s]Requesting API:  87%|████████▋ | 260/300 [01:57<00:15,  2.61it/s]Requesting API:  87%|████████▋ | 261/300 [01:57<00:15,  2.46it/s]Requesting API:  87%|████████▋ | 262/300 [01:58<00:14,  2.71it/s]Requesting API:  88%|████████▊ | 263/300 [01:58<00:14,  2.60it/s]Requesting API:  88%|████████▊ | 264/300 [01:58<00:13,  2.61it/s]Requesting API:  88%|████████▊ | 265/300 [01:59<00:13,  2.58it/s]Requesting API:  89%|████████▊ | 266/300 [01:59<00:12,  2.68it/s]Requesting API:  89%|████████▉ | 267/300 [02:00<00:14,  2.27it/s]Requesting API:  89%|████████▉ | 268/300 [02:00<00:12,  2.50it/s]Requesting API:  90%|████████▉ | 269/300 [02:00<00:12,  2.43it/s]Requesting API:  90%|█████████ | 270/300 [02:01<00:12,  2.31it/s]Requesting API:  90%|█████████ | 271/300 [02:01<00:11,  2.53it/s]Requesting API:  91%|█████████ | 272/300 [02:02<00:11,  2.50it/s]Requesting API:  91%|█████████ | 273/300 [02:02<00:09,  2.74it/s]Requesting API:  91%|█████████▏| 274/300 [02:02<00:10,  2.60it/s]Requesting API:  92%|█████████▏| 275/300 [02:03<00:09,  2.54it/s]Requesting API:  92%|█████████▏| 276/300 [02:03<00:10,  2.32it/s]Requesting API:  92%|█████████▏| 277/300 [02:04<00:10,  2.22it/s]Requesting API:  93%|█████████▎| 278/300 [02:04<00:09,  2.27it/s]Requesting API:  93%|█████████▎| 279/300 [02:05<00:08,  2.34it/s]Requesting API:  93%|█████████▎| 280/300 [02:05<00:09,  2.19it/s]Requesting API:  94%|█████████▎| 281/300 [02:05<00:08,  2.34it/s]Requesting API:  94%|█████████▍| 282/300 [02:06<00:07,  2.43it/s]Requesting API:  94%|█████████▍| 283/300 [02:06<00:07,  2.29it/s]Requesting API:  95%|█████████▍| 284/300 [02:07<00:07,  2.18it/s]Requesting API:  95%|█████████▌| 285/300 [02:07<00:06,  2.34it/s]Requesting API:  95%|█████████▌| 286/300 [02:08<00:06,  2.28it/s]Requesting API:  96%|█████████▌| 287/300 [02:08<00:05,  2.43it/s]Requesting API:  96%|█████████▌| 288/300 [02:08<00:04,  2.51it/s]Requesting API:  96%|█████████▋| 289/300 [02:09<00:04,  2.48it/s]Requesting API:  97%|█████████▋| 290/300 [02:09<00:04,  2.30it/s]Requesting API:  97%|█████████▋| 291/300 [02:10<00:03,  2.31it/s]Requesting API:  97%|█████████▋| 292/300 [02:10<00:03,  2.38it/s]Requesting API:  98%|█████████▊| 293/300 [02:11<00:02,  2.40it/s]Requesting API:  98%|█████████▊| 294/300 [02:11<00:02,  2.41it/s]Requesting API:  98%|█████████▊| 295/300 [02:11<00:02,  2.38it/s]Requesting API:  99%|█████████▊| 296/300 [02:12<00:01,  2.34it/s]Requesting API:  99%|█████████▉| 297/300 [02:12<00:01,  2.25it/s]Requesting API:  99%|█████████▉| 298/300 [02:13<00:00,  2.33it/s]Requesting API: 100%|█████████▉| 299/300 [02:13<00:00,  2.39it/s]Requesting API: 100%|██████████| 300/300 [02:14<00:00,  2.43it/s]Requesting API: 100%|██████████| 300/300 [02:14<00:00,  2.24it/s]
+Got model answer: yes	Correct answer: no	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: no	Correct answer: no	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: no	Correct answer: yes	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: no	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: no	Correct answer: no	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: yes
+Got model answer: no	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: yes
+Got model answer: no	Correct answer: yes	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: yes
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: no	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: yes	ETR answer: yes
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: no	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+Got model answer: yes	Correct answer: no	ETR answer: no
+openai-chat-completions (model=gpt-3.5-turbo-0125), gen_kwargs: (None), limit: None, num_fewshot: 0, batch_size: 1
+|   Tasks    |Version|Filter|n-shot|   Metric    |   | Value |   |Stderr|
+|------------|------:|------|-----:|-------------|---|------:|---|-----:|
+|etr_problems|      1|none  |     0|correct      |↑  | 0.3933|±  |0.0283|
+|            |       |none  |     0|etr_agreement|↑  | 0.3533|±  |0.0276|
+|            |       |none  |     0|len_response |↓  |10.8233|±  |0.0221|
+|            |       |none  |     0|parse_error  |↓  | 0.0000|±  |0.0000|
+

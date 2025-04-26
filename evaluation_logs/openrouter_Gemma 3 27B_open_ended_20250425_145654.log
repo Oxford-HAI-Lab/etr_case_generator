@@ -1,0 +1,7 @@
+Copied /home/keenan/Dev/etr_case_generator/datasets/250302/multiview_open_ended.jsonl to datasets/etr_for_lm_eval.jsonl
+Configuration:
+  OpenRouter Model: google/gemma-3-27b-it
+  Evaluation harness path: /home/keenan/Dev/lm-evaluation-harness/
+  Include path: /home/keenan/Dev/etr_case_generator/
+  Task: etr_problems_open_ended
+

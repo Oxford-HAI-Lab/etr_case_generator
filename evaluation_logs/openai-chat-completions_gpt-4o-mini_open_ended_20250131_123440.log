@@ -1,0 +1,15 @@
+Copied /home/keenan/Dev/etr_case_generator/datasets/fully_balanced_open_ended.jsonl to datasets/etr_for_lm_eval.jsonl
+Configuration:
+  Model Class: openai-chat-completions
+  Model: gpt-4o-mini
+  Evaluation harness path: /home/keenan/Dev/lm-evaluation-harness/
+  Include path: /home/keenan/Dev/etr_case_generator/
+  Task: etr_problems_open_ended
+
+2025-01-31:12:34:48,391 WARNING  [openai_completions.py:108] chat-completions endpoint requires the `--apply_chat_template` flag.
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 360 examples [00:00, 10794.61 examples/s]
+2025-01-31:12:34:49,302 WARNING  [evaluator.py:270] Overwriting default num_fewshot of etr_problems_open_ended from None to 0
+2025-01-31:12:34:49,302 WARNING  [evaluator.py:406] Chat template formatting change affects loglikelihood and multiple-choice tasks. See docs/chat-template-readme.md for details.
+  0%|          | 0/360 [00:00<?, ?it/s]100%|██████████| 360/360 [00:00<00:00, 4260.71it/s]
+Requesting API:   0%|          | 0/360 [00:00<?, ?it/s]2025-01-31:12:34:49,561 WARNING  [api_models.py:287] Cannot determine EOS string to pass to stop sequence. Manually set by passing `eos_string` to model_args.
+Requesting API:   0%|          | 1/360 [00:02<15:25,  2.58s/it]Requesting API:   1%|          | 2/360 [00:03<10:02,  1.68s/it]

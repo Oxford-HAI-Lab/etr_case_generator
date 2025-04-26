@@ -25,3 +25,4 @@ datasets/etr_for_lm_eval.jsonl
 # Package
 etr_case_generator.egg-info/
 
+.envrc

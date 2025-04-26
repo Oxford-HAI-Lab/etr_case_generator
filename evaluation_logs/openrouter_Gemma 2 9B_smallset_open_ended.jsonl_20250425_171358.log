@@ -1,0 +1,541 @@
+Copied /home/keenan/Dev/etr_case_generator/datasets/smallset_open_ended.jsonl to datasets/etr_for_lm_eval.jsonl
+Configuration:
+  OpenRouter Model: google/gemma-2-9b-it
+  Evaluation harness path: /home/keenan/Dev/lm-evaluation-harness/
+  Include path: /home/keenan/Dev/etr_case_generator/
+  Task: etr_problems_open_ended
+
+2025-04-25:17:14:05,545 WARNING  [openai_completions.py:108] chat-completions endpoint requires the `--apply_chat_template` flag.
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 32 examples [00:00, 3324.44 examples/s]
+2025-04-25:17:14:06,183 WARNING  [evaluator.py:270] Overwriting default num_fewshot of etr_problems_open_ended from None to 0
+2025-04-25:17:14:06,184 WARNING  [evaluator.py:406] Chat template formatting change affects loglikelihood and multiple-choice tasks. See docs/chat-template-readme.md for details.
+  0%|          | 0/32 [00:00<?, ?it/s]100%|██████████| 32/32 [00:00<00:00, 4698.84it/s]
+Requesting API:   0%|          | 0/32 [00:00<?, ?it/s]2025-04-25:17:14:06,204 WARNING  [api_models.py:287] Cannot determine EOS string to pass to stop sequence. Manually set by passing `eos_string` to model_args.
+Requesting API:   3%|▎         | 1/32 [00:00<00:23,  1.32it/s]Requesting API:   6%|▋         | 2/32 [00:01<00:20,  1.45it/s]Requesting API:   9%|▉         | 3/32 [00:02<00:20,  1.39it/s]Requesting API:  12%|█▎        | 4/32 [00:02<00:21,  1.32it/s]Requesting API:  16%|█▌        | 5/32 [00:03<00:21,  1.28it/s]Requesting API:  19%|█▉        | 6/32 [00:04<00:19,  1.33it/s]Requesting API:  22%|██▏       | 7/32 [00:20<02:20,  5.63s/it]Requesting API:  25%|██▌       | 8/32 [00:20<01:37,  4.04s/it]Requesting API:  28%|██▊       | 9/32 [00:21<01:08,  2.97s/it]Requesting API:  31%|███▏      | 10/32 [00:22<00:49,  2.24s/it]Requesting API:  34%|███▍      | 11/32 [00:23<00:41,  2.00s/it]Requesting API:  38%|███▊      | 12/32 [00:28<00:57,  2.88s/it]Requesting API:  41%|████      | 13/32 [00:28<00:41,  2.20s/it]Requesting API:  44%|████▍     | 14/32 [00:29<00:30,  1.69s/it]Requesting API:  47%|████▋     | 15/32 [00:30<00:23,  1.38s/it]Requesting API:  50%|█████     | 16/32 [00:30<00:18,  1.14s/it]Requesting API:  53%|█████▎    | 17/32 [00:32<00:19,  1.31s/it]Requesting API:  56%|█████▋    | 18/32 [00:33<00:15,  1.14s/it]Requesting API:  59%|█████▉    | 19/32 [00:33<00:13,  1.00s/it]Requesting API:  62%|██████▎   | 20/32 [00:34<00:11,  1.09it/s]Requesting API:  66%|██████▌   | 21/32 [00:35<00:09,  1.18it/s]Requesting API:  69%|██████▉   | 22/32 [00:35<00:07,  1.31it/s]Requesting API:  72%|███████▏  | 23/32 [00:36<00:07,  1.24it/s]Requesting API:  75%|███████▌  | 24/32 [00:37<00:06,  1.24it/s]Requesting API:  78%|███████▊  | 25/32 [00:38<00:05,  1.31it/s]Requesting API:  81%|████████▏ | 26/32 [00:39<00:04,  1.30it/s]Requesting API:  84%|████████▍ | 27/32 [00:40<00:04,  1.03it/s]Requesting API:  88%|████████▊ | 28/32 [00:41<00:03,  1.10it/s]Requesting API:  91%|█████████ | 29/32 [00:41<00:02,  1.20it/s]Requesting API:  94%|█████████▍| 30/32 [00:42<00:01,  1.20it/s]Requesting API:  97%|█████████▋| 31/32 [00:43<00:00,  1.31it/s]Requesting API: 100%|██████████| 32/32 [00:44<00:00,  1.25it/s]Requesting API: 100%|██████████| 32/32 [00:44<00:00,  1.38s/it]
+sh: 1: source: not found
+2025-04-25:17:14:51,166 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:14:51,562 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:14:52,185 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:14:52,805 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:14:53,209 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:14:53,616 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:14:56,077 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-04-25:17:14:57,612 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that precognition is object-reading. 
+`
+Rewritten by model: Answer: {precognition()objectReading(precognition())}
+Matched and parsed: {precognition()objectReading(precognition())}
+Final ETR text: {precognition()objectReading(precognition())}
+Compare to predicted: {spaceBending(precognition())objectReading(precognition())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: False
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we cannot conclude anything definitively. 
+`
+Rewritten by model: Answer: {0}
+Matched and parsed: {0}
+Final ETR text: {0}
+Compare to predicted: {~spiritAffecting(thePhilosophersStone()*)spiritAffecting(cosmicDust())lifegiving(cosmicDust())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that Shadow Cloak is dimension-bridging. 
+`
+Rewritten by model: Answer: {dimensionBridging(shadowCloak())}
+Matched and parsed: {dimensionBridging(shadowCloak())}
+Final ETR text: {dimensionBridging(shadowCloak())}
+Compare to predicted: {dimensionBridging(shadowCloak())dreamwalking(dreamcatcherRing())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: False
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `,`
+Rewritten by model: Answer: {0}
+Matched and parsed: {0}
+Final ETR text: {0}
+Compare to predicted: {~soulTraveling(precognition())spaceBending(clairvoyance())objectReading(clairvoyance())~imposing(precognition()*)}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we cannot conclude anything definitively. 
+`
+Rewritten by model: Answer: {0}
+Matched and parsed: {0}
+Final ETR text: {0}
+Compare to predicted: {soulTraveling(precognition())~objectReading(precognition())~imposing(precognition())~imposing(clairvoyance())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `.
+
+`
+Rewritten by model: Answer: {0}
+Matched and parsed: {0}
+Final ETR text: {0}
+Compare to predicted: {~dreamwalking(morpheus())memoryWeaving(dreamweaver())realityBending(dreamweaver())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `  Let's break this down. It seems like you're trying to create a system for generating responses based on a set of rules or premises. 
+
+You're starting with a concept or question, and then you want to apply a series of transformations to arrive at an answer.  
+
+Here's how we can understand your approach and make it more effective:
+
+**1. Define Your Premises:**
+
+* What are the fundamental truths or assumptions your system is based on? 
+* For example, are you working with a specific domain of knowledge (like science, history, or fantasy)?
+* Do you have any ethical guidelines or constraints?
+
+**2. Structure Your Transformations:**
+
+* How do you propose to change the input (the question or concept) into the output (the answer)?
+* Will you use:
+    * **Logical rules:**  If A then B, if B then C, therefore A implies C.
+    * **Pattern matching:**  Finding keywords or structures in the input that correspond to specific answers.
+    * **Probabilistic methods:**  Assigning weights to different possible answers based on the input.
+    * **Machine learning:** Training a model on a dataset of questions and answers to learn the transformation patterns.
+
+**3. Example:**
+
+Let's say your domain is simple math. A premise could be: "Addition is combining quantities."
+
+A transformation rule could be: "If the input is 'What is 2 plus 3?', then the output is '5'."
+
+**4. Iterate and Refine:**
+
+* Start with a small set of premises and transformations.
+* Test your system with various inputs.
+* Analyze the results and make adjustments to your premises, rules, or training data.
+
+**Remember:** Building a robust system for generating answers from premises is a complex task. It often involves a combination of logic, pattern recognition, and machine learning techniques.
+
+
+Let me know if you want to explore a specific example or aspect of this process in more detail.`
+Rewritten by model: Answer: {telepathy(system())precognition(rules())psychokinesis(transformations())clairvoyance(concepts())empathy(questions())astralProjection(answers())mindControl(premises())psychometry(domain())teleportation(knowledge())realityWarping(ethics())mindreading(constraints())futureSeeing(logicalRules())matterMoving(patternMatching())prescient(probabilisticMethods())emotionallySensitive(machineLearning())soulTraveling(premises())imposing(transformations())objectReading(input())spaceBending(output())realityChanging(addition())timeCrystal(combiningQuantities())transmuting(inputOutput())corrosiveToAllMaterials(testing())lifegiving(iteration())formChanging(refinement())spiritAffecting(adjustments())consciousnessExpanding(complexTask())realityAltering(logic())timeBending(patternRecognition())voidCreating(machineLearning())}
+Matched and parsed: {telepathy(system())precognition(rules())psychokinesis(transformations())clairvoyance(concepts())empathy(questions())astralProjection(answers())mindControl(premises())psychometry(domain())teleportation(knowledge())realityWarping(ethics())mindreading(constraints())futureSeeing(logicalRules())matterMoving(patternMatching())prescient(probabilisticMethods())emotionallySensitive(machineLearning())soulTraveling(premises())imposing(transformations())objectReading(input())spaceBending(output())realityChanging(addition())timeCrystal(combiningQuantities())transmuting(inputOutput())corrosiveToAllMaterials(testing())lifegiving(iteration())formChanging(refinement())spiritAffecting(adjustments())consciousnessExpanding(complexTask())realityAltering(logic())timeBending(patternRecognition())voidCreating(machineLearning())}
+Warning: Predicate telepathy not found in valid names {'spiritAffecting', 'cosmicDust', 'primaMateria', 'consciousnessExpanding', 'immortalityGranting', 'formChanging', 'vitalMercury', 'voidEssence', 'thePhilosophersStone', 'realityAltering', 'timeBending', 'timeCrystal', 'celestialWater', 'universalSolvent', 'astralSalt', 'etherealOil', 'voidCreating', 'lifegiving', 'transmuting', 'corrosiveToAllMaterials'}
+Error: Predicate telepathy not found in valid names {'spiritAffecting', 'cosmicDust', 'primaMateria', 'cons
+!!!! Failure 1/3: Predicate telepathy not found in valid names {'spiritAffecting', 'cosmicDust', 'primaMateria', 'cons...
+Rewritten by model: Answer: {telepathy(system())precognition(rules())psychokinesis(transformations())clairvoyance(input())empathy(output())astralProjection(domainKnowledge())mindControl(ethicalGuidelines())psychometry(logicalRules())teleportation(patternMatching())realityWarping(probabilisticMethods())mindreading(machineLearning())futureSeeing(premises())matterMoving(transformationRules())prescient(iteration())emotionallySensitive(testing())soulTraveling(adjustments())consciousnessExpanding(logic())realityAltering(patternRecognition())timeBending(machineLearningTechniques())}
+2025-04-25:17:14:59,966 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:00,856 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:01,331 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:02,015 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:02,552 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:02,936 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:03,265 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:03,603 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:04,677 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:05,290 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Matched and parsed: {telepathy(system())precognition(rules())psychokinesis(transformations())clairvoyance(input())empathy(output())astralProjection(domainKnowledge())mindControl(ethicalGuidelines())psychometry(logicalRules())teleportation(patternMatching())realityWarping(probabilisticMethods())mindreading(machineLearning())futureSeeing(premises())matterMoving(transformationRules())prescient(iteration())emotionallySensitive(testing())soulTraveling(adjustments())consciousnessExpanding(logic())realityAltering(patternRecognition())timeBending(machineLearningTechniques())}
+Warning: Predicate telepathy not found in valid names {'spiritAffecting', 'cosmicDust', 'primaMateria', 'consciousnessExpanding', 'immortalityGranting', 'formChanging', 'vitalMercury', 'voidEssence', 'thePhilosophersStone', 'realityAltering', 'timeBending', 'timeCrystal', 'celestialWater', 'universalSolvent', 'astralSalt', 'etherealOil', 'voidCreating', 'lifegiving', 'transmuting', 'corrosiveToAllMaterials'}
+Error: Predicate telepathy not found in valid names {'spiritAffecting', 'cosmicDust', 'primaMateria', 'cons
+!!!! Failure 2/3: Predicate telepathy not found in valid names {'spiritAffecting', 'cosmicDust', 'primaMateria', 'cons...
+Rewritten by model: Answer: {~telepathy()~psychokinesis()~clairvoyance()~empathy()~astralProjection()~mindControl()~psychometry()~teleportation()~realityWarping()∧~mindreading()∧~futureSeeing()∧~matterMoving()∧~prescient()∧~emotionallySensitive()∧~soulTraveling()∧~imposing()∧~objectReading()∧~spaceBending()∧~realityChanging()∧~thePhilosophersStone()∧~universalSolvent()∧~vitalMercury()∧~primaMateria()∧~celestialWater()∧~astralSalt()∧~etherealOil()∧~cosmicDust()∧~voidEssence()∧~timeCrystal()∧~transmuting()∧~corrosiveToAllMaterials()
+Matched and parsed: {~telepathy()~psychokinesis()~clairvoyance()~empathy()~astralProjection()~mindControl()~psychometry()~teleportation()~realityWarping()∧~mindreading()∧~futureSeeing()∧~matterMoving()∧~prescient()∧~emotionallySensitive()∧~soulTraveling()∧~imposing()∧~objectReading()∧~spaceBending()∧~realityChanging()∧~thePhilosophersStone()∧~universalSolvent()∧~vitalMercury()∧~primaMateria()∧~celestialWater()∧~astralSalt()∧~etherealOil()∧~cosmicDust()∧~voidEssence()∧~timeCrystal()∧~transmuting()∧~corrosiveToAllMaterials()}
+Warning: Predicate telepathy not found in valid names {'spiritAffecting', 'cosmicDust', 'primaMateria', 'consciousnessExpanding', 'immortalityGranting', 'formChanging', 'vitalMercury', 'voidEssence', 'thePhilosophersStone', 'realityAltering', 'timeBending', 'timeCrystal', 'celestialWater', 'universalSolvent', 'astralSalt', 'etherealOil', 'voidCreating', 'lifegiving', 'transmuting', 'corrosiveToAllMaterials'}
+Error: Predicate telepathy not found in valid names {'spiritAffecting', 'cosmicDust', 'primaMateria', 'cons
+!!!! Failure 3/3: Predicate telepathy not found in valid names {'spiritAffecting', 'cosmicDust', 'primaMateria', 'cons...
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that the six is red and the one is castable and the king is round.  
+`
+Rewritten by model: Answer: {red(theSix())castable(theOne())round(theKing())}
+Matched and parsed: {red(theSix())castable(theOne())round(theKing())}
+Final ETR text: {red(theSix())castable(theOne())round(theKing())}
+Compare to predicted: {round(theNine())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: False
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that gravion is omnipresent. 
+`
+Rewritten by model: Answer: {omnipresent(gravion())}
+Matched and parsed: {omnipresent(gravion())}
+Final ETR text: {omnipresent(gravion())}
+Compare to predicted: {~omnipresent(voidon())omnipresent(chronoton())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: False
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that Dreamweaver is reality-bending. 
+`
+Rewritten by model: Answer: {realityBending(dreamweaver())}
+Matched and parsed: {realityBending(dreamweaver())}
+Final ETR text: {realityBending(dreamweaver())}
+Compare to predicted: {memoryWeaving(nightmare())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `: Answer: From the premises, we can conclude that dreamweaver is not both reality-bending and memory-weaving. 
+`
+Rewritten by model: Answer: {~realityBending(dreamweaver()) ∨ ~memoryWeaving(dreamweaver())}
+Matched and parsed: {~realityBending(dreamweaver()) ∨ ~memoryWeaving(dreamweaver())}
+Final ETR text: {~realityBending(dreamweaver()),~memoryWeaving(dreamweaver())}
+Compare to predicted: {memoryWeaving(dreamweaver())realityBending(dreamweaver())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: False
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Please provide me with the full context and the premises you're working with. I need to understand the complete situation to determine the logical conclusion. 
+
+For example, tell me:
+
+* **What are the items?** (Dreamcatcher Ring, Shadow Cloak, Moonstone Bracelet)
+* **What are their properties?** (Dreamwalking, dimension-bridging, etc.)
+* **What is the question you're trying to answer?**
+
+
+Once I have this information, I can help you analyze the premises and arrive at a logical conclusion. 
+`
+Rewritten by model: Answer: {0}
+Matched and parsed: {0}
+Final ETR text: {0}
+Compare to predicted: {~dimensionBridging(shadowCloak())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `.`
+Rewritten by model: Answer: {0}
+Matched and parsed: {0}
+Final ETR text: {0}
+Compare to predicted: {~dreamAffecting(shadowdrake()*)~firebreathing(stormgriffin())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we cannot definitively conclude anything. 
+`
+Rewritten by model: Answer: {0}
+Matched and parsed: {0}
+Final ETR text: {0}
+Compare to predicted: {~realityBending(dreamweaver()*)}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that Delta Guardian is self-evolving and Delta Guardian is a code healer. 
+`
+Rewritten by model: Answer: {selfEvolving(deltaGuardian())aCodeHealer(deltaGuardian())}
+Matched and parsed: {selfEvolving(deltaGuardian())aCodeHealer(deltaGuardian())}
+Final ETR text: {selfEvolving(deltaGuardian())aCodeHealer(deltaGuardian())}
+Compare to predicted: {quantumComputing(deltaGuardian())selfEvolving(alphaMind()*)}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that cosmic dust is spirit-affecting. 
+`
+Rewritten by model: Answer: {spiritAffecting(cosmicDust())}
+Matched and parsed: {spiritAffecting(cosmicDust())}
+Final ETR text: {spiritAffecting(cosmicDust())}
+Compare to predicted: {spiritAffecting(cosmicDust())}
+sh: 1: source: not found
+2025-04-25:17:15:06,982 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:07,442 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+sh: 1: source: not found
+sh: 1: source: not found
+2025-04-25:17:15:09,489 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:10,263 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:10,720 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:11,233 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+sh: 1: source: not found
+sh: 1: source: not found
+2025-04-25:17:15:11,943 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:12,663 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:13,500 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:14,080 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:17:15:14,756 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Logical equivalence: True
+ETR predicted: True
+Classically correct: False
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that moon 1 is rocky. 
+
+
+Let me explain:
+
+* **Premise 1:** Either moon 1 is tidally locked AND moon 1 is rocky AND moon 1 is within a habitable zone, OR comet 1 is visible to the naked eye AND comet 1 is in retrograde orbit. 
+* **Premise 2:** Comet 1 is visible to the naked eye AND moon 2 is not visible to the naked eye.
+
+Since Premise 2 confirms that Comet 1 is visible to the naked eye, the first premise tells us that either moon 1 is tidally locked, rocky, and in the habitable zone, or comet 1 is in retrograde orbit. Since Comet 1's visibility is already established, the only remaining possibility is that moon 1 is rocky. 
+`
+Rewritten by model: Answer: {tidallyLocked(moon1())rocky(moon1())withinAHabitableZone(moon1()),visibleToTheNakedEye(comet1())inRetrogradeOrbit(comet1())}
+{visibleToTheNakedEye(comet1())~visibleToTheNakedEye(moon2())}
+{rocky(moon1())}
+Matched and parsed: {tidallyLocked(moon1())rocky(moon1())withinAHabitableZone(moon1()),visibleToTheNakedEye(comet1())inRetrogradeOrbit(comet1())}
+Final ETR text: {tidallyLocked(moon1())rocky(moon1())withinAHabitableZone(moon1()),visibleToTheNakedEye(comet1())inRetrogradeOrbit(comet1())}
+Compare to predicted: {inRetrogradeOrbit(comet1())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we cannot definitively conclude anything further. 
+`
+Rewritten by model: Answer: {0}
+Matched and parsed: {0}
+Final ETR text: {0}
+Compare to predicted: {energyConverting(biomech())networkForming(chronoplast())swarmForming(chronoplast())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+
+
+`
+Empty answer text, debug printing, returning early
+['\n\n\n\n']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+
+
+`
+Empty answer text, debug printing, returning early
+['\n\n\n\n']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that biomech is not energy-converting. 
+`
+Rewritten by model: Answer: {~energyConverting(biomech())}
+Matched and parsed: {~energyConverting(biomech())}
+Final ETR text: {~energyConverting(biomech())}
+Compare to predicted: {networkForming(biomech())swarmForming(biomech())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: False
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that Shadow Cloak is starlight-channeling and time-altering. 
+`
+Rewritten by model: Answer: {starlightChanneling(shadowCloak())timeAltering(shadowCloak())}
+Matched and parsed: {starlightChanneling(shadowCloak())timeAltering(shadowCloak())}
+Final ETR text: {starlightChanneling(shadowCloak())timeAltering(shadowCloak())}
+Compare to predicted: {timeAltering(dreamcatcherRing())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that nothing definite follows. 
+`
+Rewritten by model: Answer: {0}
+Matched and parsed: {0}
+Final ETR text: {0}
+Compare to predicted: {dimensionBridging(shadowCloak())dreamwalking(shadowCloak()*)}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that  either gravion is not omnipresent, or voidon is omnipresent. 
+
+
+These premises are logically equivalent. 
+`
+Rewritten by model: Answer: {~omnipresent(gravion()),omnipresent(voidon())}
+Matched and parsed: {~omnipresent(gravion()),omnipresent(voidon())}
+Final ETR text: {~omnipresent(gravion()),omnipresent(voidon())}
+Compare to predicted: {omnipresent(voidon())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+
+`
+Empty answer text, debug printing, returning early
+['\n\n\n']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+
+`
+Empty answer text, debug printing, returning early
+['\n\n\n']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that the nine is not red and not round. 
+`
+Rewritten by model: Answer: {~red(theNine())~round(theNine())}
+Matched and parsed: {~red(theNine())~round(theNine())}
+Final ETR text: {~red(theNine())~round(theNine())}
+Compare to predicted: {~red(theNine())round(theThree())yellow(theThree())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: False
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that gravion is void-creating, gravion is paradox-inducing, and omnion is paradox-inducing. 
+`
+Rewritten by model: Answer: {voidCreating(gravion())paradoxInducing(gravion())paradoxInducing(omnion())}
+Matched and parsed: {voidCreating(gravion())paradoxInducing(gravion())paradoxInducing(omnion())}
+Final ETR text: {voidCreating(gravion())paradox()Inducing(gravion())paradox()Inducing(omnion())}
+Compare to predicted: {~paradoxInducing(voidon()*)}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: False
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that radionite is either time-dilating or magnetic. 
+`
+Rewritten by model: Answer: {timeDilating(radionite()),magnetic(radionite())}
+Matched and parsed: {timeDilating(radionite()),magnetic(radionite())}
+Final ETR text: {timeDilating(radionite()),magnetic(radionite())}
+Compare to predicted: {~magnetic(radionite())timeDilating(radionite())timeDilating(zycron())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: False
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that the three is red, round. 
+`
+Rewritten by model: Answer: {red(theThree())round(theThree())}
+Matched and parsed: {red(theThree())round(theThree())}
+Final ETR text: {red(theThree())round(theThree())}
+Compare to predicted: {castable(theThree())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that astral projection is object-reading. 
+`
+Rewritten by model: Answer: {objectReading(astralProjection())}
+Matched and parsed: {objectReading(astralProjection())}
+Final ETR text: {objectReading(astralProjection())}
+Compare to predicted: sh: 1: source: not found
+2025-04-25:17:15:15,431 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+{objectReading(astralProjection()*)imposing(astralProjection())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `
+
+Answer: From the premises, we can conclude that voidon is omnipresent. 
+`
+Rewritten by model: Answer: {omnipresent(voidon())}
+Matched and parsed: {omnipresent(voidon())}
+Final ETR text: {omnipresent(voidon())}
+Compare to predicted: {omnipresent(voidon())}
+Logical equivalence: True
+ETR predicted: True
+Classically correct: False
+openai-chat-completions (base_url=https://openrouter.ai/api/v1/chat/completions,model=google/gemma-2-9b-it,max_tokens=3000,num_concurrent=1), gen_kwargs: (None), limit: None, num_fewshot: 0, batch_size: 1
+|         Tasks         |Version|Filter|n-shot|        Metric         |   | Value  |   |Stderr |
+|-----------------------|------:|------|-----:|-----------------------|---|-------:|---|-------|
+|etr_problems_open_ended|      1|none  |     0|correct                |↑  |  0.5000|±  | 0.0898|
+|                       |       |none  |     0|correct_and_etr        |↓  |  0.4062|±  | 0.0882|
+|                       |       |none  |     0|correct_and_not_etr    |↓  |  0.0938|±  | 0.0524|
+|                       |       |none  |     0|full_model_response    |↓  |999.0000|±  |   N/A |
+|                       |       |none  |     0|is_etr_predicted       |↑  |  0.5000|±  | 0.0898|
+|                       |       |none  |     0|is_etr_predicted_exact |↑  |  0.0625|±  | 0.0435|
+|                       |       |none  |     0|is_logically_equivalent|↑  |  0.0625|±  | 0.0435|
+|                       |       |none  |     0|len_response           |↓  |159.2812|±  |60.0896|
+|                       |       |none  |     0|model_answer           |↓  |999.0000|±  |   N/A |
+|                       |       |none  |     0|not_correct_and_etr    |↓  |  0.0938|±  | 0.0524|
+|                       |       |none  |     0|not_correct_and_not_etr|↓  |  0.2500|±  | 0.0778|
+|                       |       |none  |     0|parse_error            |↓  |  0.1562|±  | 0.0652|
+
+Restored original OpenAI API key

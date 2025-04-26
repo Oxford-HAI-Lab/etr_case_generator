@@ -1,0 +1,102 @@
+Copied /home/keenan/Dev/etr_case_generator/datasets/balance_atoms_open_ended.jsonl to datasets/etr_for_lm_eval.jsonl
+Configuration:
+  Model Class: openai-chat-completions
+  Model: gpt-3.5-turbo-0125
+  Evaluation harness path: /home/keenan/Dev/lm-evaluation-harness/
+  Include path: /home/keenan/Dev/etr_case_generator/
+  Task: etr_problems_open_ended
+
+2025-01-22:23:26:27,761 WARNING  [openai_completions.py:108] chat-completions endpoint requires the `--apply_chat_template` flag.
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 300 examples [00:00, 17557.47 examples/s]
+2025-01-22:23:26:28,834 WARNING  [evaluator.py:270] Overwriting default num_fewshot of etr_problems_open_ended from None to 0
+2025-01-22:23:26:28,834 WARNING  [evaluator.py:406] Chat template formatting change affects loglikelihood and multiple-choice tasks. See docs/chat-template-readme.md for details.
+  0%|          | 0/300 [00:00<?, ?it/s]100%|██████████| 300/300 [00:00<00:00, 4199.48it/s]
+Requesting API:   0%|          | 0/300 [00:00<?, ?it/s]2025-01-22:23:26:29,101 WARNING  [api_models.py:287] Cannot determine EOS string to pass to stop sequence. Manually set by passing `eos_string` to model_args.
+Requesting API:   0%|          | 1/300 [00:01<06:55,  1.39s/it]Requesting API:   1%|          | 2/300 [00:01<04:18,  1.15it/s]Requesting API:   1%|          | 3/300 [00:02<03:23,  1.46it/s]Requesting API:   1%|▏         | 4/300 [00:03<03:18,  1.49it/s]Requesting API:   2%|▏         | 5/300 [00:03<03:05,  1.59it/s]Requesting API:   2%|▏         | 6/300 [00:04<02:51,  1.71it/s]Requesting API:   2%|▏         | 7/300 [00:04<02:40,  1.83it/s]Requesting API:   3%|▎         | 8/300 [00:05<03:03,  1.59it/s]Requesting API:   3%|▎         | 9/300 [00:05<02:56,  1.65it/s]Requesting API:   3%|▎         | 10/300 [00:06<02:47,  1.73it/s]Requesting API:   4%|▎         | 11/300 [00:07<02:49,  1.70it/s]Requesting API:   4%|▍         | 12/300 [00:07<02:43,  1.76it/s]Requesting API:   4%|▍         | 13/300 [00:08<02:37,  1.82it/s]Requesting API:   5%|▍         | 14/300 [00:08<02:23,  1.99it/s]Requesting API:   5%|▌         | 15/300 [00:09<02:34,  1.85it/s]Requesting API:   5%|▌         | 16/300 [00:09<02:31,  1.87it/s]Requesting API:   6%|▌         | 17/300 [00:10<02:42,  1.74it/s]Requesting API:   6%|▌         | 18/300 [00:11<03:23,  1.38it/s]Requesting API:   6%|▋         | 19/300 [00:11<03:05,  1.51it/s]Requesting API:   7%|▋         | 20/300 [00:12<03:01,  1.54it/s]Requesting API:   7%|▋         | 21/300 [00:13<02:57,  1.58it/s]Requesting API:   7%|▋         | 22/300 [00:13<02:43,  1.70it/s]Requesting API:   8%|▊         | 23/300 [00:14<02:39,  1.73it/s]Requesting API:   8%|▊         | 24/300 [00:14<02:41,  1.70it/s]Requesting API:   8%|▊         | 25/300 [00:15<02:33,  1.80it/s]Requesting API:   9%|▊         | 26/300 [00:15<02:39,  1.72it/s]Requesting API:   9%|▉         | 27/300 [00:16<03:11,  1.42it/s]Requesting API:   9%|▉         | 28/300 [00:20<06:59,  1.54s/it]Requesting API:  10%|▉         | 29/300 [00:21<06:21,  1.41s/it]Requesting API:  10%|█         | 30/300 [00:21<05:11,  1.15s/it]Requesting API:  10%|█         | 31/300 [00:22<04:22,  1.03it/s]Requesting API:  11%|█         | 32/300 [00:23<04:05,  1.09it/s]Requesting API:  11%|█         | 33/300 [00:23<03:31,  1.26it/s]Requesting API:  11%|█▏        | 34/300 [00:24<03:08,  1.41it/s]Requesting API:  12%|█▏        | 35/300 [00:24<02:52,  1.54it/s]Requesting API:  12%|█▏        | 36/300 [00:25<02:40,  1.65it/s]Requesting API:  12%|█▏        | 37/300 [00:29<06:53,  1.57s/it]Requesting API:  13%|█▎        | 38/300 [00:29<05:43,  1.31s/it]Requesting API:  13%|█▎        | 39/300 [00:30<04:47,  1.10s/it]Requesting API:  13%|█▎        | 40/300 [00:30<03:53,  1.11it/s]Requesting API:  14%|█▎        | 41/300 [00:31<04:01,  1.07it/s]Requesting API:  14%|█▍        | 42/300 [00:32<03:34,  1.20it/s]Requesting API:  14%|█▍        | 43/300 [00:33<03:08,  1.37it/s]Requesting API:  15%|█▍        | 44/300 [00:34<03:46,  1.13it/s]Requesting API:  15%|█▌        | 45/300 [00:34<03:29,  1.22it/s]Requesting API:  15%|█▌        | 46/300 [00:35<03:00,  1.41it/s]Requesting API:  16%|█▌        | 47/300 [00:35<02:44,  1.53it/s]Requesting API:  16%|█▌        | 48/300 [00:36<02:25,  1.73it/s]Requesting API:  16%|█▋        | 49/300 [00:36<02:14,  1.86it/s]Requesting API:  17%|█▋        | 50/300 [00:37<02:10,  1.92it/s]Requesting API:  17%|█▋        | 51/300 [00:37<02:12,  1.87it/s]Requesting API:  17%|█▋        | 52/300 [00:38<02:01,  2.04it/s]Requesting API:  18%|█▊        | 53/300 [00:38<02:08,  1.93it/s]Requesting API:  18%|█▊        | 54/300 [00:39<02:10,  1.88it/s]Requesting API:  18%|█▊        | 55/300 [00:39<02:12,  1.85it/s]Requesting API:  19%|█▊        | 56/300 [00:40<02:09,  1.88it/s]Requesting API:  19%|█▉        | 57/300 [00:41<02:19,  1.74it/s]Requesting API:  19%|█▉        | 58/300 [00:41<02:15,  1.79it/s]Requesting API:  20%|█▉        | 59/300 [00:42<02:28,  1.62it/s]Requesting API:  20%|██        | 60/300 [00:42<02:20,  1.71it/s]Requesting API:  20%|██        | 61/300 [00:43<02:18,  1.73it/s]Requesting API:  21%|██        | 62/300 [00:43<02:16,  1.74it/s]Requesting API:  21%|██        | 63/300 [00:44<02:14,  1.76it/s]Requesting API:  21%|██▏       | 64/300 [00:45<02:14,  1.76it/s]Requesting API:  22%|██▏       | 65/300 [00:45<02:02,  1.92it/s]Requesting API:  22%|██▏       | 66/300 [00:46<02:01,  1.93it/s]Requesting API:  22%|██▏       | 67/300 [00:46<01:59,  1.95it/s]Requesting API:  23%|██▎       | 68/300 [00:47<02:14,  1.73it/s]Requesting API:  23%|██▎       | 69/300 [00:47<02:15,  1.70it/s]Requesting API:  23%|██▎       | 70/300 [00:48<02:17,  1.67it/s]Requesting API:  24%|██▎       | 71/300 [00:49<02:18,  1.66it/s]Requesting API:  24%|██▍       | 72/300 [00:49<02:18,  1.65it/s]Requesting API:  24%|██▍       | 73/300 [00:50<02:11,  1.73it/s]Requesting API:  25%|██▍       | 74/300 [00:51<02:37,  1.44it/s]Requesting API:  25%|██▌       | 75/300 [00:51<02:28,  1.52it/s]Requesting API:  25%|██▌       | 76/300 [00:52<02:15,  1.65it/s]Requesting API:  26%|██▌       | 77/300 [00:53<02:23,  1.55it/s]Requesting API:  26%|██▌       | 78/300 [00:53<02:12,  1.67it/s]Requesting API:  26%|██▋       | 79/300 [00:54<02:14,  1.64it/s]Requesting API:  27%|██▋       | 80/300 [00:54<02:03,  1.79it/s]Requesting API:  27%|██▋       | 81/300 [00:55<01:57,  1.86it/s]Requesting API:  27%|██▋       | 82/300 [00:55<01:49,  2.00it/s]Requesting API:  28%|██▊       | 83/300 [00:55<01:49,  1.99it/s]Requesting API:  28%|██▊       | 84/300 [00:56<01:48,  2.00it/s]Requesting API:  28%|██▊       | 85/300 [00:57<01:53,  1.90it/s]Requesting API:  29%|██▊       | 86/300 [00:57<02:07,  1.68it/s]Requesting API:  29%|██▉       | 87/300 [00:58<02:07,  1.67it/s]Requesting API:  29%|██▉       | 88/300 [00:58<02:02,  1.73it/s]Requesting API:  30%|██▉       | 89/300 [00:59<02:03,  1.71it/s]Requesting API:  30%|███       | 90/300 [01:00<01:56,  1.81it/s]Requesting API:  30%|███       | 91/300 [01:00<01:54,  1.82it/s]Requesting API:  31%|███       | 92/300 [01:01<02:04,  1.66it/s]Requesting API:  31%|███       | 93/300 [01:01<01:56,  1.77it/s]Requesting API:  31%|███▏      | 94/300 [01:02<02:01,  1.70it/s]Requesting API:  32%|███▏      | 95/300 [01:02<01:59,  1.72it/s]Requesting API:  32%|███▏      | 96/300 [01:06<05:10,  1.52s/it]Requesting API:  32%|███▏      | 97/300 [01:07<04:07,  1.22s/it]Traceback (most recent call last):
+  File "/home/keenan/.local/bin/lm_eval", line 8, in <module>
+    sys.exit(cli_evaluate())
+             ^^^^^^^^^^^^^^
+  File "/home/keenan/Dev/lm-evaluation-harness/lm_eval/__main__.py", line 382, in cli_evaluate
+    results = evaluator.simple_evaluate(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/keenan/Dev/lm-evaluation-harness/lm_eval/utils.py", line 397, in _wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/keenan/Dev/lm-evaluation-harness/lm_eval/evaluator.py", line 303, in simple_evaluate
+    results = evaluate(
+              ^^^^^^^^^
+  File "/home/keenan/Dev/lm-evaluation-harness/lm_eval/utils.py", line 397, in _wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/keenan/Dev/lm-evaluation-harness/lm_eval/evaluator.py", line 507, in evaluate
+    resps = getattr(lm, reqtype)(cloned_reqs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/keenan/Dev/lm-evaluation-harness/lm_eval/models/api_models.py", line 598, in generate_until
+    outputs = retry(
+              ^^^^^^
+  File "/home/keenan/.local/pipx/venvs/lm-eval/lib/python3.12/site-packages/tenacity/__init__.py", line 336, in wrapped_f
+    return copy(f, *args, **kw)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/keenan/.local/pipx/venvs/lm-eval/lib/python3.12/site-packages/tenacity/__init__.py", line 475, in __call__
+    do = self.iter(retry_state=retry_state)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/keenan/.local/pipx/venvs/lm-eval/lib/python3.12/site-packages/tenacity/__init__.py", line 376, in iter
+    result = action(retry_state)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/keenan/.local/pipx/venvs/lm-eval/lib/python3.12/site-packages/tenacity/__init__.py", line 398, in <lambda>
+    self._add_action_func(lambda rs: rs.outcome.result())
+                                     ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 449, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/home/keenan/.local/pipx/venvs/lm-eval/lib/python3.12/site-packages/tenacity/__init__.py", line 478, in __call__
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/keenan/Dev/lm-evaluation-harness/lm_eval/models/api_models.py", line 360, in model_call
+    response = requests.post(
+               ^^^^^^^^^^^^^^
+  File "/home/keenan/.local/pipx/venvs/lm-eval/lib/python3.12/site-packages/requests/api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/keenan/.local/pipx/venvs/lm-eval/lib/python3.12/site-packages/requests/api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/keenan/.local/pipx/venvs/lm-eval/lib/python3.12/site-packages/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/keenan/.local/pipx/venvs/lm-eval/lib/python3.12/site-packages/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/keenan/.local/pipx/venvs/lm-eval/lib/python3.12/site-packages/requests/adapters.py", line 667, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/home/keenan/.local/pipx/venvs/lm-eval/lib/python3.12/site-packages/urllib3/connectionpool.py", line 789, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/home/keenan/.local/pipx/venvs/lm-eval/lib/python3.12/site-packages/urllib3/connectionpool.py", line 536, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/home/keenan/.local/pipx/venvs/lm-eval/lib/python3.12/site-packages/urllib3/connection.py", line 507, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1428, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 331, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 292, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/ssl.py", line 1252, in recv_into
+    return self.read(nbytes, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/ssl.py", line 1104, in read
+    return self._sslobj.read(len, buffer)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+Requesting API:  32%|███▏      | 97/300 [01:07<02:22,  1.43it/s]

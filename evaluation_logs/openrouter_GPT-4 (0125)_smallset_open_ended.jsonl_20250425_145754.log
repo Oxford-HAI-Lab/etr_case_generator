@@ -1,0 +1,8 @@
+Copied /home/keenan/Dev/etr_case_generator/datasets/smallset_open_ended.jsonl to datasets/etr_for_lm_eval.jsonl
+Configuration:
+  OpenRouter Model: openai/gpt-4-0125-preview
+  Evaluation harness path: /home/keenan/Dev/lm-evaluation-harness/
+  Include path: /home/keenan/Dev/etr_case_generator/
+  Task: etr_problems_open_ended
+
+2025-04-25:14:58:02,433 WARNING  [openai_completions.py:108] chat-completions endpoint requires the `--apply_chat_template` flag.

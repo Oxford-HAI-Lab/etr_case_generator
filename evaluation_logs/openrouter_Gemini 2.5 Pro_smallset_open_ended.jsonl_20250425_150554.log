@@ -1,0 +1,343 @@
+Copied /home/keenan/Dev/etr_case_generator/datasets/smallset_open_ended.jsonl to datasets/etr_for_lm_eval.jsonl
+Configuration:
+  OpenRouter Model: google/gemini-2.5-pro-preview-03-25
+  Evaluation harness path: /home/keenan/Dev/lm-evaluation-harness/
+  Include path: /home/keenan/Dev/etr_case_generator/
+  Task: etr_problems_open_ended
+
+2025-04-25:15:06:03,780 WARNING  [openai_completions.py:108] chat-completions endpoint requires the `--apply_chat_template` flag.
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 32 examples [00:00, 1241.14 examples/s]
+2025-04-25:15:06:04,574 WARNING  [evaluator.py:270] Overwriting default num_fewshot of etr_problems_open_ended from None to 0
+2025-04-25:15:06:04,574 WARNING  [evaluator.py:406] Chat template formatting change affects loglikelihood and multiple-choice tasks. See docs/chat-template-readme.md for details.
+  0%|          | 0/32 [00:00<?, ?it/s]100%|██████████| 32/32 [00:00<00:00, 3095.50it/s]
+Requesting API:   0%|          | 0/32 [00:00<?, ?it/s]2025-04-25:15:06:04,603 WARNING  [api_models.py:287] Cannot determine EOS string to pass to stop sequence. Manually set by passing `eos_string` to model_args.
+Requesting API:   3%|▎         | 1/32 [00:11<06:03, 11.72s/it]Requesting API:   6%|▋         | 2/32 [00:18<04:22,  8.75s/it]Requesting API:   9%|▉         | 3/32 [00:27<04:14,  8.79s/it]Requesting API:  12%|█▎        | 4/32 [00:43<05:31, 11.84s/it]Requesting API:  16%|█▌        | 5/32 [01:00<06:07, 13.61s/it]Requesting API:  19%|█▉        | 6/32 [01:17<06:21, 14.67s/it]Requesting API:  22%|██▏       | 7/32 [01:32<06:12, 14.89s/it]Requesting API:  25%|██▌       | 8/32 [01:42<05:17, 13.23s/it]Requesting API:  28%|██▊       | 9/32 [01:55<05:02, 13.17s/it]Requesting API:  31%|███▏      | 10/32 [02:05<04:32, 12.39s/it]Requesting API:  34%|███▍      | 11/32 [02:12<03:43, 10.64s/it]Requesting API:  38%|███▊      | 12/32 [02:30<04:17, 12.86s/it]Requesting API:  41%|████      | 13/32 [02:43<04:04, 12.85s/it]Requesting API:  44%|████▍     | 14/32 [03:00<04:13, 14.06s/it]Requesting API:  47%|████▋     | 15/32 [03:13<03:53, 13.72s/it]Requesting API:  50%|█████     | 16/32 [03:23<03:22, 12.67s/it]Requesting API:  53%|█████▎    | 17/32 [03:37<03:16, 13.08s/it]Requesting API:  56%|█████▋    | 18/32 [03:46<02:48, 12.01s/it]Requesting API:  59%|█████▉    | 19/32 [04:00<02:40, 12.35s/it]Requesting API:  62%|██████▎   | 20/32 [04:17<02:45, 13.83s/it]Requesting API:  66%|██████▌   | 21/32 [04:35<02:46, 15.18s/it]Requesting API:  69%|██████▉   | 22/32 [04:46<02:19, 13.92s/it]Requesting API:  72%|███████▏  | 23/32 [05:04<02:14, 14.98s/it]Requesting API:  75%|███████▌  | 24/32 [05:09<01:36, 12.10s/it]Requesting API:  78%|███████▊  | 25/32 [05:26<01:34, 13.50s/it]Requesting API:  81%|████████▏ | 26/32 [05:42<01:26, 14.43s/it]Requesting API:  84%|████████▍ | 27/32 [05:59<01:15, 15.08s/it]Requesting API:  88%|████████▊ | 28/32 [06:14<01:00, 15.13s/it]Requesting API:  91%|█████████ | 29/32 [06:24<00:40, 13.43s/it]Requesting API:  94%|█████████▍| 30/32 [06:43<00:30, 15.07s/it]Requesting API:  97%|█████████▋| 31/32 [06:52<00:13, 13.29s/it]Requesting API: 100%|██████████| 32/32 [07:02<00:00, 12.37s/it]Requesting API: 100%|██████████| 32/32 [07:02<00:00, 13.20s/it]
+sh: 1: source: not found
+2025-04-25:15:13:08,242 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:15:13:08,833 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:15:13:09,769 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+sh: 1: source: not found
+sh: 1: source: not found
+sh: 1: source: not found
+2025-04-25:15:13:10,575 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:15:13:11,907 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:15:13:12,623 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:15:13:13,133 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:15:13:13,749 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+sh: 1: source: not found
+2025-04-25:15:13:14,363 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+sh: 1: source: not found
+2025-04-25:15:13:14,984 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that precognition is object-reading if and only if precognition is space-bending.`
+Rewritten by model: Answer: {objectReading(precognition())spaceBending(precognition()),~objectReading(precognition())~spaceBending(precognition())}
+Matched and parsed: {objectReading(precognition())spaceBending(precognition()),~objectReading(precognition())~spaceBending(precognition())}
+Final ETR text: {objectReading(precognition())spaceBending(precognition()),~objectReading(precognition())~spaceBending(precognition())}
+Compare to predicted: {spaceBending(precognition())objectReading(precognition())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that The Philosopher's Stone is not spirit-affecting.`
+Rewritten by model: Answer: {~spiritAffecting(thePhilosophersStone())}
+Matched and parsed: {~spiritAffecting(thePhilosophersStone())}
+Final ETR text: {~spiritAffecting(thePhilosophersStone())}
+Compare to predicted: {~spiritAffecting(thePhilosophersStone()*)spiritAffecting(cosmicDust())lifegiving(cosmicDust())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that either Dreamcatcher Ring is not dreamwalking and Dragon Scale Shield is time-altering and Starlight Pendant is starlight-channeling, or Shadow Cloak is dimension-bridging and Dreamcatcher Ring is dreamwalking.`
+Rewritten by model: Answer: {~dreamwalking(dreamcatcherRing())timeAltering(dragonScaleShield())starlightChanneling(starlightPendant()),dimensionBridging(shadowCloak())dreamwalking(dreamcatcherRing())}
+Matched and parsed: {~dreamwalking(dreamcatcherRing())timeAltering(dragonScaleShield())starlightChanneling(starlightPendant()),dimensionBridging(shadowCloak())dreamwalking(dreamcatcherRing())}
+Final ETR text: {~dreamwalking(dreamcatcherRing())timeAltering(dragonScaleShield())starlightChanneling(starlightPendant()),dimensionBridging(shadowCloak())dreamwalking(dreamcatcherRing())}
+Compare to predicted: {dimensionBridging(shadowCloak())dreamwalking(dreamcatcherRing())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: ``
+Empty answer text, debug printing, returning early
+['']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: ``
+Empty answer text, debug printing, returning early
+['']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: ``
+Empty answer text, debug printing, returning early
+['']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that Prima Materia is spirit-affecting and Universal Solvent is spirit-affecting.`
+Rewritten by model: Answer: {spiritAffecting(primaMateria())spiritAffecting(universalSolvent())}
+Matched and parsed: {spiritAffecting(primaMateria())spiritAffecting(universalSolvent())}
+Final ETR text: {spiritAffecting(primaMateria())spiritAffecting(universalSolvent())}
+Compare to predicted: {spiritAffecting(universalSolvent())spiritAffecting(cosmicDust())lifegiving(cosmicDust())spiritAffecting(primaMateria())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that either the nine is round, or the six is red and the one is castable and the king is round.`
+Rewritten by model: Answer: {round(theNine()),red(theSix())castable(theOne())round(theKing())}
+Matched and parsed: {round(theNine()),red(theSix())castable(theOne())round(theKing())}
+Final ETR text: {round(theNine()),red(theSix())castable(theOne())round(theKing())}
+Compare to predicted: {round(theNine())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that voidon is not omnipresent, and either gravion is omnipresent or chronoton is omnipresent.`
+Rewritten by model: Answer: {~omnipresent(voidon())omnipresent(gravion()),omnipresent(chronoton())}
+Matched and parsed: {~omnipresent(voidon())omnipresent(gravion()),omnipresent(chronoton())}
+Final ETR text: {~omnipresent(voidon())omnipresent(gravion()),omnipresent(chronoton())}
+Compare to predicted: {~omnipresent(voidon())omnipresent(chronoton())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that Nightmare is reality-bending.`
+Rewritten by model: Answer: {realityBending(nightmare())}
+Matched and parsed: {realityBending(nightmare())}
+Final ETR text: {realityBending(nightmare())}
+Compare to predicted: {memoryWeaving(nightmare())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that dreamweaver is not reality-bending or dreamweaver is memory-weaving.`
+Rewritten by model: Answer: {~realityBending(dreamweaver())memoryWeaving(dreamweaver())}
+Matched and parsed: {~realityBending(dreamweaver())memoryWeaving(dreamweaver())}
+Final ETR text: {~realityBending(dreamweaver())memoryWeaving(dreamweaver())}
+Compare to predicted: {memoryWeaving(dreamweaver())realityBending(dreamweaver())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: False
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: ``
+Empty answer text, debug printing, returning early
+['']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that either crystalspider is firebreathing, or shadowdrake is not dream-affecting.`
+Rewritten by model: Answer: {firebreathing(crystalspider()),~dreamAffecting(shadowdrake())}
+Matched and parsed: {firebreathing(crystalspider()),~dreamAffecting(shadowdrake())}
+Final ETR text: {firebreathing(crystalspider()),~dreamAffecting(shadowdrake())}
+Compare to predicted: {~dreamAffecting(shadowdrake()*)~firebreathing(stormgriffin())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: ``
+Empty answer text, debug printing, returning early
+['']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that Delta Guardian is a code healer, Delta Guardian is self-evolving, and either Delta Guardian is not quantum computing or Alpha Mind is self-evolving.`
+sh: 1: source: not found
+2025-04-25:15:13:15,796 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+sh: 1: source: not found
+2025-04-25:15:13:16,411 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:15:13:17,436 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:15:13:17,808 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+sh: 1: source: not found
+2025-04-25:15:13:18,836 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+sh: 1: source: not found
+2025-04-25:15:13:19,785 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+sh: 1: source: not found
+sh: 1: source: not found
+sh: 1: source: not found
+2025-04-25:15:13:20,813 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:15:13:21,654 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+sh: 1: source: not found
+Rewritten by model: Answer: {aCodeHealer(deltaGuardian())selfEvolving(deltaGuardian()),~quantumComputing(deltaGuardian())alphaMind()selfEvolving(alphaMind())}
+Matched and parsed: {aCodeHealer(deltaGuardian())selfEvolving(deltaGuardian()),~quantumComputing(deltaGuardian())alphaMind()selfEvolving(alphaMind())}
+Final ETR text: {aCodeHealer(deltaGuardian())selfEvolving(deltaGuardian()),~quantumComputing(deltaGuardian())alphaMind()selfEvolving(alphaMind())}
+Compare to predicted: {quantumComputing(deltaGuardian())selfEvolving(alphaMind()*)}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that either The Philosopher's Stone is spirit-affecting, or cosmic dust is spirit-affecting.`
+Rewritten by model: Answer: {spiritAffecting(thePhilosophersStone()),spiritAffecting(cosmicDust())}
+Matched and parsed: {spiritAffecting(thePhilosophersStone()),spiritAffecting(cosmicDust())}
+Final ETR text: {spiritAffecting(thePhilosophersStone()),spiritAffecting(cosmicDust())}
+Compare to predicted: {spiritAffecting(cosmicDust())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: ``
+Empty answer text, debug printing, returning early
+['']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that chronoplast is swarm-forming and chronoplast is network forming.`
+Rewritten by model: Answer: {swarmForming(chronoplast())networkForming(chronoplast())}
+Matched and parsed: {swarmForming(chronoplast())networkForming(chronoplast())}
+Final ETR text: {swarmForming(chronoplast())networkForming(chronoplast())}
+Compare to predicted: {energyConverting(biomech())networkForming(chronoplast())swarmForming(chronoplast())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that either moon 1 is visible to the naked eye and asteroid B is not within a habitable zone and comet 1 is in retrograde orbit, or planet Y is tidally locked and planet X is rocky, or comet 1 is not visible to the naked eye.`
+Rewritten by model: Answer: {visibleToTheNakedEye(moon1())~withinAHabitableZone(asteroidB())inRetrogradeOrbit(comet1()),tidallyLocked(planetY())rocky(planetX()),~visibleToTheNakedEye(comet1())}
+Matched and parsed: {visibleToTheNakedEye(moon1())~withinAHabitableZone(asteroidB())inRetrogradeOrbit(comet1()),tidallyLocked(planetY())rocky(planetX()),~visibleToTheNakedEye(comet1())}
+Final ETR text: {visibleToTheNakedEye(moon1())~withinAHabitableZone(asteroidB())inRetrogradeOrbit(comet1()),tidallyLocked(planetY())rocky(planetX()),~visibleToTheNakedEye(comet1())}
+Compare to predicted: {~visibleToTheNakedEye(comet1()*)}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that either`
+Rewritten by model: Answer: {0}
+Matched and parsed: {0}
+Final ETR text: {0}
+Compare to predicted: {infiniteEnergyProducing(voidon())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: ``
+Empty answer text, debug printing, returning early
+['']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that Dreamcatcher Ring is starlight-channeling, Shadow Cloak is time-altering, and Shadow Cloak is starlight-channeling.`
+Rewritten by model: Answer: {dreamcatcherRing()starlightChanneling()shadowCloak()timeAltering()shadowCloak()starlightChanneling()}
+Matched and parsed: {dreamcatcherRing()starlightChanneling()shadowCloak()timeAltering()shadowCloak()starlightChanneling()}
+Final ETR text: {dreamcatcherRing()starlightChanneling()shadowCloak()timeAltering()shadowCloak()starlightChanneling()}
+Compare to predicted: {timeAltering(dreamcatcherRing())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: False
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: ``
+Empty answer text, debug printing, returning early
+['']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that either gravion is not omnipresent, or voidon is omnipresent.`
+Rewritten by model: Answer: {~omnipresent(gravion()),omnipresent(voidon())}
+Matched and parsed: {~omnipresent(gravion()),omnipresent(voidon())}
+Final ETR text: {~omnipresent(gravion()),omnipresent(voidon())}
+Compare to predicted: {omnipresent(voidon())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: ``
+Empty answer text, debug printing, returning early
+['']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: ``
+Empty answer text, debug printing, returning early
+['']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: ``
+Empty answer text, debug printing, returning early
+['']
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that voidon is infinite-energy-producing, voidon is not void-creating, gravion is void-creating, omnion is paradox-inducing, and gravion is paradox-inducing.`
+Rewritten by model: Answer: {infiniteEnergyProducing(voidon())~voidCreating(voidon())voidCreating(gravion())paradoxInducing(omnion())paradoxInducing(gravion())}
+Matched and parsed: {infiniteEnergyProducing(voidon())~voidCreating(voidon())voidCreating(gravion())paradoxInducing(omnion())paradoxInducing(gravion())}
+Final ETR text: {infiniteEnergyProducing(voidon())~voidCreating(voidon())voidCreating(gravion())paradox()Inducing(omnion())paradox()Inducing(gravion())}
+Compare to predicted: {~paradoxInducing(voidon()*)}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: False
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that zycron is time-dilating and radionite is not magnetic.`
+Rewritten by model: Answer: {timeDilating(zycron())~magnetic(radionite())}
+Matched and parsed: {timeDilating(zycron())~magnetic(radionite())}
+Final ETR text: {timeDilating(zycron())~magnetic(radionite())}
+Compare to predicted: {~magnetic(radionite())timeDilating(radionite())timeDilating(zycron())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: ``
+Empty answer text, debug printing, returning early
+['']
+Ran file to find API key
+--------------------------------------------------------------------------------
+2025-04-25:15:13:22,226 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+sh: 1: source: not found
+2025-04-25:15:13:22,785 INFO     [_client.py:1025] HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that astral projection is object-reading.`
+Rewritten by model: Answer: {objectReading(astralProjection())}
+Matched and parsed: {objectReading(astralProjection())}
+Final ETR text: {objectReading(astralProjection())}
+Compare to predicted: {objectReading(astralProjection()*)imposing(astralProjection())}
+Logical equivalence: False
+ETR predicted: False
+Classically correct: True
+Ran file to find API key
+--------------------------------------------------------------------------------
+Starting Open Ended Scoring. Got this answer text: `Answer: From the premises, we can conclude that either voidon is omnipresent, or voidon is not infinite-energy-producing.`
+Rewritten by model: Answer: {omnipresent(voidon()),~infiniteEnergyProducing(voidon())}
+Matched and parsed: {omnipresent(voidon()),~infiniteEnergyProducing(voidon())}
+Final ETR text: {omnipresent(voidon()),~infiniteEnergyProducing(voidon())}
+Compare to predicted: {omnipresent(voidon())}
+Logical equivalence: False
+ETR predicted: True
+Classically correct: True
+openai-chat-completions (base_url=https://openrouter.ai/api/v1/chat/completions,model=google/gemini-2.5-pro-preview-03-25,max_tokens=3000,num_concurrent=1), gen_kwargs: (None), limit: None, num_fewshot: 0, batch_size: 1
+|         Tasks         |Version|Filter|n-shot|        Metric         |   | Value  |   |Stderr |
+|-----------------------|------:|------|-----:|-----------------------|---|-------:|---|-------|
+|etr_problems_open_ended|      1|none  |     0|correct                |↑  |  0.5312|±  | 0.0896|
+|                       |       |none  |     0|correct_and_etr        |↓  |  0.2500|±  | 0.0778|
+|                       |       |none  |     0|correct_and_not_etr    |↓  |  0.2812|±  | 0.0808|
+|                       |       |none  |     0|full_model_response    |↓  |999.0000|±  |   N/A |
+|                       |       |none  |     0|is_etr_predicted       |↑  |  0.2500|±  | 0.0778|
+|                       |       |none  |     0|is_etr_predicted_exact |↑  |  0.0000|±  |      0|
+|                       |       |none  |     0|is_logically_equivalent|↑  |  0.0000|±  |      0|
+|                       |       |none  |     0|len_response           |↓  | 85.5312|±  |14.1635|
+|                       |       |none  |     0|model_answer           |↓  |999.0000|±  |   N/A |
+|                       |       |none  |     0|not_correct_and_etr    |↓  |  0.0000|±  |      0|
+|                       |       |none  |     0|not_correct_and_not_etr|↓  |  0.0938|±  | 0.0524|
+|                       |       |none  |     0|parse_error            |↓  |  0.3750|±  | 0.0870|
+
+Restored original OpenAI API key
