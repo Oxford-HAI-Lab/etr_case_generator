@@ -15,9 +15,9 @@ fi
 declare -A MODELS=(
 #    ["google/gemini-2.5-pro-preview-03-25"]="Gemini 2.5 Pro" #
     ["openai/chatgpt-4o-latest"]="ChatGPT-4o-latest"      # !!!!!!!
-    ["google/gemini-2-5-flash-preview"]="Gemini 2.5 Flash"   # !!!!!!
+    ["google/gemini-2.5-flash-preview"]="Gemini 2.5 Flash"   # !!!!!!
 #    ["google/gemma-3-27b-it"]="Gemma 3 27B"
-    ["anthropic/claude-3-5-sonnet"]="Claude 3.5 Sonnet"  # !!!!!!
+    ["anthropic/claude-3.5-sonnet"]="Claude 3.5 Sonnet"  # !!!!!!  # Not valid :(
 #    ["anthropic/claude-3-opus"]="Claude 3 Opus" #
 #    ["google/gemma-2-9b-it"]="Gemma 2 9B" #
 #    ["openai/gpt-3.5-turbo-1106"]="GPT-3.5-Turbo-1106" #

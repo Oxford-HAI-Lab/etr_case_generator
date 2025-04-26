@@ -1,0 +1,14 @@
+Copied /home/keenan/Dev/etr_case_generator/datasets/largeset_open_ended.jsonl to datasets/etr_for_lm_eval.jsonl
+Configuration:
+  OpenRouter Model: openai/chatgpt-4o-latest
+  Evaluation harness path: /home/keenan/Dev/lm-evaluation-harness/
+  Include path: /home/keenan/Dev/etr_case_generator/
+  Task: etr_problems_open_ended
+
+2025-04-26:11:59:16,532 WARNING  [openai_completions.py:108] chat-completions endpoint requires the `--apply_chat_template` flag.
+Generating train split: 0 examples [00:00, ? examples/s]Generating train split: 400 examples [00:00, 19975.02 examples/s]
+2025-04-26:11:59:17,375 WARNING  [evaluator.py:270] Overwriting default num_fewshot of etr_problems_open_ended from None to 0
+2025-04-26:11:59:17,375 WARNING  [evaluator.py:406] Chat template formatting change affects loglikelihood and multiple-choice tasks. See docs/chat-template-readme.md for details.
+  0%|          | 0/400 [00:00<?, ?it/s] 95%|█████████▌| 380/400 [00:00<00:00, 3789.64it/s]100%|██████████| 400/400 [00:00<00:00, 3769.16it/s]
+Requesting API:   0%|          | 0/400 [00:00<?, ?it/s]2025-04-26:11:59:17,671 WARNING  [api_models.py:287] Cannot determine EOS string to pass to stop sequence. Manually set by passing `eos_string` to model_args.
+Requesting API:   0%|          | 1/400 [00:00<06:09,  1.08it/s]Requesting API:   0%|          | 2/400 [00:01<05:54,  1.12it/s]Requesting API:   1%|          | 3/400 [00:03<06:54,  1.04s/it]Requesting API:   1%|          | 4/400 [00:04<07:09,  1.09s/it]Requesting API:   1%|▏         | 5/400 [00:05<06:57,  1.06s/it]Requesting API:   2%|▏         | 6/400 [00:05<06:17,  1.04it/s]Requesting API:   2%|▏         | 7/400 [00:06<05:59,  1.09it/s]
