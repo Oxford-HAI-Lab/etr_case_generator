@@ -148,6 +148,7 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
         print(f"ETR predicted: {is_etr_predicted}")
         print(f"Classically correct: {is_classically_correct}")
 
+        # TODO: If you add a key here, also add it to samples_jsonl_to_csv.py!
         return {
             "correct": float(is_classically_correct),
             "is_etr_predicted": float(is_etr_predicted),
