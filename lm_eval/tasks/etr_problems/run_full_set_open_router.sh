@@ -13,21 +13,27 @@ fi
 
 # Define OpenRouter model configurations
 declare -A MODELS=(
-    ["google/gemini-2.5-pro-preview-03-25"]="Gemini 2.5 Pro" #
-    ["openai/chatgpt-4o-latest"]="ChatGPT-4o-latest"      #
-    ["google/gemini-2.5-flash-preview"]="Gemini 2.5 Flash"   #
-    ["google/gemma-3-27b-it"]="Gemma 3 27B"
-    ["anthropic/claude-3.5-sonnet"]="Claude 3.5 Sonnet"  #
-    ["anthropic/claude-3-opus"]="Claude 3 Opus" #
-    ["google/gemma-2-9b-it"]="Gemma 2 9B" #
-    ["openai/gpt-3.5-turbo-1106"]="GPT-3.5-Turbo-1106" #
-    ["meta-llama/llama-3.2-1b-instruct"]="Llama-3.2 1B" #
-    ["meta-llama/llama-2-13b-chat"]="Llama-13B" #
+#    # Batch 2
+     ["openai/gpt-4.5-preview"]="GPT-4.5 Preview"
+     ["anthropic/claude-3.7-sonnet"]="Claude 3.7 Sonnet"
+     ["meta-llama/llama-3.2-1b-instruct"]="Llama-3.2 1B Instruct"
+
+#    # Batch 1
+#    ["openai/chatgpt-4o-latest"]="ChatGPT-4o-latest"      #
+#    ["google/gemini-2.5-flash-preview"]="Gemini 2.5 Flash"   #
+#    ["google/gemma-3-27b-it"]="Gemma 3 27B"
+#    ["anthropic/claude-3.5-sonnet"]="Claude 3.5 Sonnet"  #
+#    ["anthropic/claude-3-opus"]="Claude 3 Opus" #
+#    ["google/gemma-2-9b-it"]="Gemma 2 9B" #
+#    ["openai/gpt-3.5-turbo-1106"]="GPT-3.5-Turbo-1106" #
+#    ["meta-llama/llama-3.2-1b-instruct"]="Llama-3.2 1B" #
+#    ["meta-llama/llama-2-13b-chat"]="Llama-13B" #
 
     # Problems with these, they seem to not exist
-#    ["openai/gpt-4-0125-preview"]="GPT-4 (0125)"
-#    ["openai/gpt-4-0613"]="GPT-4-0613"
-#    ["thudm/chatglm-6b"]="ChatGLM 6B"
+#    ["google/gemini-2.5-pro-preview-03-25"]="Gemini 2.5 Pro" # Many of its responses are empty string
+#    ["openai/gpt-4-0125-preview"]="GPT-4 (0125)" # DNE
+#    ["openai/gpt-4-0613"]="GPT-4-0613" # DNE
+#    ["thudm/chatglm-6b"]="ChatGLM 6B" # DNE
 )
 
 # Dataset paths
