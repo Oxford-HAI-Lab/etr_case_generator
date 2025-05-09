@@ -12,12 +12,16 @@ keys.env
 
 # Results directories - block by default but allow specific ones
 lm_eval/tasks/etr_problems/results/*
+lm_eval/tasks/etr_problems/good_results/*
 
 # These are the good results that we want to keep
 !lm_eval/tasks/etr_problems/results/gpt-4-turbo/samples_etr_problems_open_ended_2025-01-10T09-48-13.235570.jsonl
 
 # Development jsonl files
 datasets/dev_*.jsonl
+
+# Logs
+evaluation_logs/*
 
 # This file gets copied over when you run run_evaluation.sh, so it shouldn't get checked in!
 datasets/etr_for_lm_eval.jsonl
