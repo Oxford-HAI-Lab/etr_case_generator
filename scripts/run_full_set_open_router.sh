@@ -82,7 +82,7 @@ run_evaluation() {
     echo "Logging to: ${log_file}"
     
     # Run the evaluation command and tee output to both terminal and log file
-    ./lm_eval/tasks/etr_problems/run_evaluation_open_router.sh \
+    ./scripts/run_evaluation_open_router.sh \
         --dataset "$dataset" \
         -m "$model" \
         --good 2>&1 | tee "$log_file"
