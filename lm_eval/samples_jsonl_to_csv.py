@@ -59,7 +59,7 @@ def parse_args():
     parser.add_argument(
         "--output",
         type=str,
-        default="lm_eval/tasks/etr_problems/good_results/all_results.csv",
+        # default="lm_eval/tasks/etr_problems/good_results/all_results.csv",
         help="Output CSV file location (default: good_results/all_results.csv)",
     )
     parser.add_argument(

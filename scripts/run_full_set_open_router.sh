@@ -40,15 +40,16 @@ declare -A MODELS=(
 #     ["anthropic/claude-3.7-sonnet"]="Claude 3.7 Sonnet"
 
     # Batch 1
-    ["openai/chatgpt-4o-latest"]="ChatGPT-4o-latest"      #
-    ["google/gemini-2.5-flash-preview"]="Gemini 2.5 Flash"   #
-    ["google/gemma-3-27b-it"]="Gemma 3 27B"
-    ["anthropic/claude-3.5-sonnet"]="Claude 3.5 Sonnet"  #
+#    ["openai/chatgpt-4o-latest"]="ChatGPT-4o-latest"      #
+#    ["google/gemini-2.5-flash-preview"]="Gemini 2.5 Flash"   #
+#    ["google/gemma-3-27b-it"]="Gemma 3 27B"
+#    ["anthropic/claude-3.5-sonnet"]="Claude 3.5 Sonnet"  #
     ["anthropic/claude-3-opus"]="Claude 3 Opus" #
-    ["google/gemma-2-9b-it"]="Gemma 2 9B" #
-    ["openai/gpt-3.5-turbo-1106"]="GPT-3.5-Turbo-1106" #
-    ["meta-llama/llama-3.2-1b-instruct"]="Llama-3.2 1B" #
+#    ["google/gemma-2-9b-it"]="Gemma 2 9B" #
+#    ["openai/gpt-3.5-turbo-1106"]="GPT-3.5-Turbo-1106" #
+#    ["meta-llama/llama-3.2-1b-instruct"]="Llama-3.2 1B" #
     ["meta-llama/llama-2-13b-chat"]="Llama-13B" #
+     ["anthropic/claude-3.7-sonnet"]="Claude 3.7 Sonnet"
 
     # Problems with these, they seem to not exist
 #    ["google/gemini-2.5-pro-preview-03-25"]="Gemini 2.5 Pro" # Many of its responses are empty string
