@@ -13,43 +13,42 @@ fi
 
 # Define OpenRouter model configurations
 declare -A MODELS=(
-#    # Batch 3
-#    ["deepseek/deepseek-chat-v3-0324"]="DeepSeek V3 0324"
-#    ["deepseek/deepseek-r1"]="DeepSeek R1"
-#    ["qwen/qwq-32b"]="QwQ 32B"
-#    ["openai/o1-mini"]="o1 Mini"
-#    ["nvidia/llama-3.3-nemotron-super-49b-v1"]="Llama 3.3 Nemotron Super 49B"
-#    ["x-ai/grok-2-1212"]="Grok 2 1212"
-#    ["nvidia/llama-3.1-nemotron-70b-instruct"]="Llama 3.1 Nemotron 70B"
-#    ["deepseek/deepseek-chat"]="DeepSeek V3"
-#    ["mistralai/mistral-large-2407"]="Mistral Large 2407"
-#    ["meta-llama/llama-3.1-70b-instruct"]="Llama 3.1 70B Instruct"
-#    ["mistralai/mistral-small-24b-instruct-2501"]="Mistral Small 24B Instruct"
-#    ["microsoft/phi-4"]="Phi 4"
-#    ["anthropic/claude-3-haiku"]="Claude 3 Haiku"
-#    ["01-ai/yi-34b-chat"]="Yi 34B Chat"
-#    ["meta-llama/llama-3-8b-instruct"]="Llama 3 8B Instruct"
-#    ["mistralai/mixtral-8x22b-instruct"]="Mixtral 8x22B Instruct"
-#    ["mistralai/mistral-medium"]="Mistral Medium"
-#    ["qwen/qwen-72b-chat"]="Qwen 72B Chat"
-#    ["mistralai/mistral-7b-instruct-v0.2"]="Mistral 7B Instruct v0.2"
-#    ["qwen/qwen-4b-chat"]="Qwen 4B Chat"
+    # Batch 3
+    ["deepseek/deepseek-chat-v3-0324"]="DeepSeek V3 0324"
+    ["deepseek/deepseek-r1"]="DeepSeek R1"
+    ["qwen/qwq-32b"]="QwQ 32B"
+    ["openai/o1-mini"]="o1 Mini"
+    ["nvidia/llama-3.3-nemotron-super-49b-v1"]="Llama 3.3 Nemotron Super 49B"
+    ["x-ai/grok-2-1212"]="Grok 2 1212"
+    ["nvidia/llama-3.1-nemotron-70b-instruct"]="Llama 3.1 Nemotron 70B"
+    ["deepseek/deepseek-chat"]="DeepSeek V3"
+    ["mistralai/mistral-large-2407"]="Mistral Large 2407"
+    ["meta-llama/llama-3.1-70b-instruct"]="Llama 3.1 70B Instruct"
+    ["mistralai/mistral-small-24b-instruct-2501"]="Mistral Small 24B Instruct"
+    ["microsoft/phi-4"]="Phi 4"
+    ["anthropic/claude-3-haiku"]="Claude 3 Haiku"
+    ["01-ai/yi-34b-chat"]="Yi 34B Chat"
+    ["meta-llama/llama-3-8b-instruct"]="Llama 3 8B Instruct"
+    ["mistralai/mixtral-8x22b-instruct"]="Mixtral 8x22B Instruct"
+    ["mistralai/mistral-medium"]="Mistral Medium"
+    ["qwen/qwen-72b-chat"]="Qwen 72B Chat"
+    ["mistralai/mistral-7b-instruct-v0.2"]="Mistral 7B Instruct v0.2"
+    ["qwen/qwen-4b-chat"]="Qwen 4B Chat"
 
-##    # Batch 2
-#     ["openai/gpt-4.5-preview"]="GPT-4.5 Preview"
-#     ["anthropic/claude-3.7-sonnet"]="Claude 3.7 Sonnet"
+#    # Batch 2
+     ["openai/gpt-4.5-preview"]="GPT-4.5 Preview"
 
     # Batch 1
 #    ["openai/chatgpt-4o-latest"]="ChatGPT-4o-latest"      #
 #    ["google/gemini-2.5-flash-preview"]="Gemini 2.5 Flash"   #
 #    ["google/gemma-3-27b-it"]="Gemma 3 27B"
 #    ["anthropic/claude-3.5-sonnet"]="Claude 3.5 Sonnet"  #
-    ["anthropic/claude-3-opus"]="Claude 3 Opus" #
+#    ["anthropic/claude-3-opus"]="Claude 3 Opus" #
 #    ["google/gemma-2-9b-it"]="Gemma 2 9B" #
 #    ["openai/gpt-3.5-turbo-1106"]="GPT-3.5-Turbo-1106" #
 #    ["meta-llama/llama-3.2-1b-instruct"]="Llama-3.2 1B" #
-    ["meta-llama/llama-2-13b-chat"]="Llama-13B" #
-     ["anthropic/claude-3.7-sonnet"]="Claude 3.7 Sonnet"
+#    ["meta-llama/llama-2-13b-chat"]="Llama-13B" #
+#     ["anthropic/claude-3.7-sonnet"]="Claude 3.7 Sonnet"
 
     # Problems with these, they seem to not exist
 #    ["google/gemini-2.5-pro-preview-03-25"]="Gemini 2.5 Pro" # Many of its responses are empty string

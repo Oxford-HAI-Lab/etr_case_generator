@@ -137,6 +137,9 @@ fi
 # We need to do this because the evaluation harness looks directly at OPENAI_API_KEY
 export OPENAI_API_KEY=$OPENROUTER_API_KEY
 
+# NOTE! You can use reasoning.exclued=true, like this:
+#    --model_args "base_url=https://openrouter.ai/api/v1/chat/completions,model=${MODEL},max_tokens=3000,num_concurrent=1,reasoning.exclude=true" \
+
 # Run evaluation with OpenRouter
 lm_eval --model openai-chat-completions \
     --model_args "base_url=https://openrouter.ai/api/v1/chat/completions,model=${MODEL},max_tokens=3000,num_concurrent=1" \
