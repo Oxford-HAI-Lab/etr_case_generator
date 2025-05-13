@@ -1,6 +1,38 @@
 #!/bin/bash
 set -o pipefail
 
+# Display usage information
+function show_usage {
+    echo "Usage: $0 [OPTIONS]"
+    echo "Options:"
+    echo "  --dataset DATASET_PATH    Path to the dataset file (.jsonl)"
+    echo "  -h, --help                Show this help message"
+    echo ""
+    echo "Example:"
+    echo "  $0 --dataset /path/to/dataset.jsonl"
+}
+
+# Parse command line arguments
+DATASET=""
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --dataset)
+            DATASET="$2"
+            shift 2
+            ;;
+        -h|--help)
+            show_usage
+            exit 0
+            ;;
+        *)
+            echo "Error: Unknown option $1"
+            show_usage
+            exit 1
+            ;;
+    esac
+done
+
 # Source project-specific API keys
 source "$(dirname "$0")/source_keys.sh"
 
@@ -8,6 +40,19 @@ source "$(dirname "$0")/source_keys.sh"
 if [ -z "$OPENROUTER_API_KEY" ] || [ -z "$OPENAI_API_KEY" ]; then
     echo "Error: Required API keys are missing"
     echo "Please ensure both OPENROUTER_API_KEY and OPENAI_API_KEY are set in keys.env"
+    exit 1
+fi
+
+# Check if dataset was provided
+if [ -z "$DATASET" ]; then
+    echo "Error: No dataset specified"
+    show_usage
+    exit 1
+fi
+
+# Verify dataset file exists
+if [ ! -f "$DATASET" ]; then
+    echo "Error: Dataset file does not exist: $DATASET"
     exit 1
 fi
 
@@ -19,16 +64,6 @@ fi
 #)
 MODELS=(
     # Batch 3
-    "deepseek/deepseek-chat-v3-0324|DeepSeek V3 0324"
-    #    "deepseek/deepseek-r1|DeepSeek R1" # Slow
-    "qwen/qwq-32b|QwQ 32B"
-    "openai/o1-mini|o1 Mini"
-#    "nvidia/llama-3.3-nemotron-super-49b-v1|Llama 3.3 Nemotron Super 49B" # Slow
-#    "x-ai/grok-2-1212|Grok 2 1212" # Slow
-#    "nvidia/llama-3.1-nemotron-70b-instruct|Llama 3.1 Nemotron 70B" # Slow
-    "deepseek/deepseek-chat|DeepSeek V3"
-    "mistralai/mistral-large-2407|Mistral Large 2407"
-#    "meta-llama/llama-3.1-70b-instruct|Llama 3.1 70B Instruct" # Slow
     "mistralai/mistral-small-24b-instruct-2501|Mistral Small 24B Instruct"
     "microsoft/phi-4|Phi 4"
     "anthropic/claude-3-haiku|Claude 3 Haiku"
@@ -50,6 +85,16 @@ MODELS=(
     "meta-llama/llama-3.2-1b-instruct|Llama-3.2 1B"
     "meta-llama/llama-2-13b-chat|Llama-13B"
     "anthropic/claude-3.7-sonnet|Claude 3.7 Sonnet"
+    "deepseek/deepseek-chat-v3-0324|DeepSeek V3 0324"
+    #    "deepseek/deepseek-r1|DeepSeek R1" # Slow
+    "qwen/qwq-32b|QwQ 32B"
+    "openai/o1-mini|o1 Mini"
+#    "nvidia/llama-3.3-nemotron-super-49b-v1|Llama 3.3 Nemotron Super 49B" # Slow
+#    "x-ai/grok-2-1212|Grok 2 1212" # Slow
+#    "nvidia/llama-3.1-nemotron-70b-instruct|Llama 3.1 Nemotron 70B" # Slow
+    "deepseek/deepseek-chat|DeepSeek V3"
+    "mistralai/mistral-large-2407|Mistral Large 2407"
+#    "meta-llama/llama-3.1-70b-instruct|Llama 3.1 70B Instruct" # Slow
 
     # Models with issues (commented out) (Do not use!)
     # "google/gemini-2.5-pro-preview-03-25|Gemini 2.5 Pro" # Many responses are empty string
@@ -57,14 +102,12 @@ MODELS=(
     # "openai/gpt-4-0613|GPT-4-0613" # DNE
     # "thudm/chatglm-6b|ChatGLM 6B" # DNE
 )
-
-# Dataset paths
-DATASETS=(
-#    "/home/keenan/Dev/etr_case_generator/datasets/smallset_open_ended.jsonl"
-    "/home/keenan/Dev/etr_case_generator/datasets/reverse_largeset_open_ended.jsonl"
-#    "/home/keenan/Dev/etr_case_generator/datasets/250302/multiview_open_ended.jsonl"
-#    "/home/keenan/Dev/etr_case_generator/datasets/fully_balanced_yes_no.jsonl"
+MODELS=(
+  "anthropic/claude-3-haiku|Claude 3 Haiku"
 )
+
+# Dataset is now provided as a command line argument
+# Try /home/keenan/Dev/etr_case_generator/datasets/reverse_largeset_open_ended.jsonl
 
 # Create a log directory
 LOG_DIR="evaluation_logs"
@@ -110,9 +153,8 @@ for model_entry in "${MODELS[@]}"; do
     model=$(echo "$model_entry" | cut -d'|' -f1)
     model_name=$(echo "$model_entry" | cut -d'|' -f2)
 
-    for dataset in "${DATASETS[@]}"; do
-        run_evaluation "$model" "$model_name" "$dataset"
-    done
+    # Use the single dataset from command line argument
+    run_evaluation "$model" "$model_name" "$DATASET"
 done
 
 echo "All evaluations completed. Logs are available in ${LOG_DIR}/"

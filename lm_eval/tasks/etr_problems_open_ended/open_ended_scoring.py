@@ -32,8 +32,8 @@ def set_openai_key():
         os.system("source /home/keenan/Dev/private_keys.sh")
         found_api_key = os.getenv("OPENAI_API_KEY")
         # print("Ran file to find API key")
-    # else:
-    #     print("No file to run to find API key")
+    else:
+        print("No file to run to find API key")
 
     # # Print for debugging
     # print(f"Original OpenAI Key: {original_openai_key}")
@@ -63,18 +63,18 @@ def score_answer(question, model_answer):
         answer_text = str(model_answer)
     original_model_answer: str = answer_text
     # print("-" * 80)
-    # print(f"Starting Open Ended Scoring. Got this answer text: `{answer_text}`")
+    print(f"Starting Open Ended Scoring. Got this answer text: `{answer_text}`")
 
     num_attempts = 3
     for i in range(num_attempts):
         if len(answer_text.strip()) == 0:
-            # print("Empty answer text, debug printing, returning early")
-            # print(model_answer)
+            print("Empty answer text, debug printing, returning early")
+            print(model_answer)
             break
         try:
             return attempt_score_answer(question, answer_text, original_model_answer, attempt_num=i)
         except Exception as e:
-            # print(f"!!!! Failure {i+1}/{num_attempts}: {str(e)[:100]}...")
+            print(f"!!!! Failure {i+1}/{num_attempts}: {str(e)[:100]}...")
             if i == num_attempts - 1:
                 break
             continue
@@ -202,10 +202,10 @@ def get_etr_substr(answer_text):
         model_answer = match.group(1) if match else None
     if not model_answer:
         # TODO This fails too often!
-        # print(f"Could not find a match in this answer: {answer_text}")
+        print(f"Could not find a match in this answer: {answer_text}")
         raise Exception("Could not find a match in the answer text")
     else:
-        # print(f"Matched this answer: {model_answer}")
+        print(f"Matched this answer: {model_answer}")
         pass
 
     # Let's try to clean up the answer
