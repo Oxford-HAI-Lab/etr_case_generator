@@ -14,11 +14,11 @@ show_help() {
     echo "  -i, --include PATH     Path to include for task definitions"
     echo "  -d, --dataset PATH     Path to dataset JSONL file to evaluate"
     echo "  -v, --verbosity LEVEL  Verbosity level (default: WARNING)"
-    echo "  -g, --good            Use 'good_results' directory instead of 'results'"
+    echo "  -o, --output NAME      Output directory name (default: results)"
     echo "  -h, --help            Show this help message"
     echo
     echo "Example:"
-    echo "  $0 -m google/gemini-2-5-pro -d /path/to/dataset.jsonl"
+    echo "  $0 -m google/gemini-2-5-pro -d /path/to/dataset.jsonl -o custom_results"
 }
 
 # Default values
@@ -28,7 +28,7 @@ INCLUDE_PATH="${INCLUDE_PATH:-/home/keenan/Dev/etr_case_generator/}"
 DATASET=""
 TASK="etr_problems"
 VERBOSITY="WARNING"
-GOOD_RESULTS=false
+OUTPUT_DIR="results"
 
 # Check for required OpenRouter API key
 check_api_key() {
@@ -62,9 +62,9 @@ while [[ $# -gt 0 ]]; do
             VERBOSITY="$2"
             shift 2
             ;;
-        -g|--good)
-            GOOD_RESULTS=true
-            shift
+        -o|--output)
+            OUTPUT_DIR="$2"
+            shift 2
             ;;
         -h|--help)
             show_help
@@ -121,6 +121,7 @@ echo "  OpenRouter Model: $MODEL"
 echo "  Evaluation harness path: $EVAL_PATH"
 echo "  Include path: $INCLUDE_PATH"
 echo "  Task: $TASK"
+echo "  Output directory: lm_eval/tasks/etr_problems/$OUTPUT_DIR"
 echo ""
 
 # Check API key requirements
@@ -142,12 +143,12 @@ export OPENAI_API_KEY=$OPENROUTER_API_KEY
 
 # Run evaluation with OpenRouter
 lm_eval --model openai-chat-completions \
-    --model_args "base_url=https://openrouter.ai/api/v1/chat/completions,model=${MODEL},max_tokens=3000,num_concurrent=1" \
+    --model_args "base_url=https://openrouter.ai/api/v1/chat/completions,model=${MODEL},max_tokens=3000,num_concurrent=5" \
     --include_path "$INCLUDE_PATH" \
     --tasks $TASK \
     --num_fewshot 0 \
     --batch_size 1 \
-    --output_path "lm_eval/tasks/etr_problems/$([ "$GOOD_RESULTS" = true ] && echo "good_results" || echo "results")" \
+    --output_path "lm_eval/tasks/etr_problems/${OUTPUT_DIR}" \
     --apply_chat_template \
     --log_samples \
     --write_out \

@@ -6,19 +6,25 @@ function show_usage {
     echo "Usage: $0 [OPTIONS]"
     echo "Options:"
     echo "  --dataset DATASET_PATH    Path to the dataset file (.jsonl)"
+    echo "  --output OUTPUT_DIR       Output directory name (default: results)"
     echo "  -h, --help                Show this help message"
     echo ""
     echo "Example:"
-    echo "  $0 --dataset /path/to/dataset.jsonl"
+    echo "  $0 --dataset /path/to/dataset.jsonl --output custom_results"
 }
 
 # Parse command line arguments
 DATASET=""
+OUTPUT_DIR="results"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --dataset)
             DATASET="$2"
+            shift 2
+            ;;
+        --output)
+            OUTPUT_DIR="$2"
             shift 2
             ;;
         -h|--help)
@@ -63,7 +69,6 @@ fi
 #    "anthropic/claude-3.5-sonnet|Claude 3.5 Sonnet"
 #)
 MODELS=(
-    # Batch 3
     "mistralai/mistral-small-24b-instruct-2501|Mistral Small 24B Instruct"
     "microsoft/phi-4|Phi 4"
     "anthropic/claude-3-haiku|Claude 3 Haiku"
@@ -71,7 +76,6 @@ MODELS=(
     "meta-llama/llama-3-8b-instruct|Llama 3 8B Instruct"
     "mistralai/mixtral-8x22b-instruct|Mixtral 8x22B Instruct"
     "mistralai/mistral-medium|Mistral Medium"
-#    "qwen/qwen-72b-chat|Qwen 72B Chat" # Slow
     "mistralai/mistral-7b-instruct-v0.2|Mistral 7B Instruct v0.2"
     "qwen/qwen-4b-chat|Qwen 4B Chat"
     "openai/gpt-4.5-preview|GPT-4.5 Preview"
@@ -86,24 +90,24 @@ MODELS=(
     "meta-llama/llama-2-13b-chat|Llama-13B"
     "anthropic/claude-3.7-sonnet|Claude 3.7 Sonnet"
     "deepseek/deepseek-chat-v3-0324|DeepSeek V3 0324"
-    #    "deepseek/deepseek-r1|DeepSeek R1" # Slow
     "qwen/qwq-32b|QwQ 32B"
     "openai/o1-mini|o1 Mini"
-#    "nvidia/llama-3.3-nemotron-super-49b-v1|Llama 3.3 Nemotron Super 49B" # Slow
-#    "x-ai/grok-2-1212|Grok 2 1212" # Slow
-#    "nvidia/llama-3.1-nemotron-70b-instruct|Llama 3.1 Nemotron 70B" # Slow
     "deepseek/deepseek-chat|DeepSeek V3"
     "mistralai/mistral-large-2407|Mistral Large 2407"
-#    "meta-llama/llama-3.1-70b-instruct|Llama 3.1 70B Instruct" # Slow
+
+    # Slow, put them last
+    "qwen/qwen-72b-chat|Qwen 72B Chat" # Slow
+    "deepseek/deepseek-r1|DeepSeek R1" # Slow
+    "nvidia/llama-3.3-nemotron-super-49b-v1|Llama 3.3 Nemotron Super 49B" # Slow
+    "x-ai/grok-2-1212|Grok 2 1212" # Slow
+    "nvidia/llama-3.1-nemotron-70b-instruct|Llama 3.1 Nemotron 70B" # Slow
+    "meta-llama/llama-3.1-70b-instruct|Llama 3.1 70B Instruct" # Slow
 
     # Models with issues (commented out) (Do not use!)
     # "google/gemini-2.5-pro-preview-03-25|Gemini 2.5 Pro" # Many responses are empty string
     # "openai/gpt-4-0125-preview|GPT-4 (0125)" # DNE
     # "openai/gpt-4-0613|GPT-4-0613" # DNE
     # "thudm/chatglm-6b|ChatGLM 6B" # DNE
-)
-MODELS=(
-  "anthropic/claude-3-haiku|Claude 3 Haiku"
 )
 
 # Dataset is now provided as a command line argument
@@ -125,18 +129,11 @@ run_evaluation() {
     echo "Running evaluation for OpenRouter model: ${model_name} (${model}) on ${dataset_type}"
     echo "Logging to: ${log_file}"
 
-    # Print a big warning with the dataset name
-    echo ""
-    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    echo "!!! DATASET: ${dataset} !!!"
-    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    echo ""
-
     # Run the evaluation command and tee output to both terminal and log file
     ./scripts/run_evaluation_open_router.sh \
         --dataset "$dataset" \
         -m "$model" \
-        --good 2>&1 | tee "$log_file"
+        --output "$OUTPUT_DIR" 2>&1 | tee "$log_file"
     
     # Need to check the exit status of the evaluation command, not tee
     # This uses bash's pipefail option to get the first command's status
