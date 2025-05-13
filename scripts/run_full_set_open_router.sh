@@ -60,7 +60,7 @@ declare -A MODELS=(
 # Dataset paths
 DATASETS=(
 #    "/home/keenan/Dev/etr_case_generator/datasets/smallset_open_ended.jsonl"
-    "/home/keenan/Dev/etr_case_generator/datasets/largeset_open_ended.jsonl"
+    "/home/keenan/Dev/etr_case_generator/datasets/reverse_largeset_open_ended.jsonl"
 #    "/home/keenan/Dev/etr_case_generator/datasets/250302/multiview_open_ended.jsonl"
 #    "/home/keenan/Dev/etr_case_generator/datasets/fully_balanced_yes_no.jsonl"
 )
@@ -80,7 +80,14 @@ run_evaluation() {
     
     echo "Running evaluation for OpenRouter model: ${model_name} (${model}) on ${dataset_type}"
     echo "Logging to: ${log_file}"
-    
+
+    # Print a big warning with the dataset name
+    echo ""
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    echo "!!! WARNING: RUNNING EVALUATION ON DATASET: ${dataset} !!!"
+    echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    echo ""
+
     # Run the evaluation command and tee output to both terminal and log file
     ./scripts/run_evaluation_open_router.sh \
         --dataset "$dataset" \

@@ -31,7 +31,7 @@ def set_openai_key():
     if os.path.exists("/home/keenan/Dev/private_keys.sh"):
         os.system("source /home/keenan/Dev/private_keys.sh")
         found_api_key = os.getenv("OPENAI_API_KEY")
-        print("Ran file to find API key")
+        # print("Ran file to find API key")
     # else:
     #     print("No file to run to find API key")
 
@@ -62,19 +62,19 @@ def score_answer(question, model_answer):
     else:
         answer_text = str(model_answer)
     original_model_answer: str = answer_text
-    print("-" * 80)
-    print(f"Starting Open Ended Scoring. Got this answer text: `{answer_text}`")
+    # print("-" * 80)
+    # print(f"Starting Open Ended Scoring. Got this answer text: `{answer_text}`")
 
     num_attempts = 3
     for i in range(num_attempts):
         if len(answer_text.strip()) == 0:
-            print("Empty answer text, debug printing, returning early")
-            print(model_answer)
+            # print("Empty answer text, debug printing, returning early")
+            # print(model_answer)
             break
         try:
             return attempt_score_answer(question, answer_text, original_model_answer, attempt_num=i)
         except Exception as e:
-            print(f"!!!! Failure {i+1}/{num_attempts}: {str(e)[:100]}...")
+            # print(f"!!!! Failure {i+1}/{num_attempts}: {str(e)[:100]}...")
             if i == num_attempts - 1:
                 break
             continue
@@ -101,7 +101,7 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
         short_name_to_full_name: dict[str, str] = question["scoring_guide"]["open_ended"]["short_name_to_full_name"]
         model_answer = use_model_get_etr_text(answer_text, short_name_to_full_name, question["scoring_guide"]["generation_details"]["premises_etr"], temperature=0.2 + 0.2 * attempt_num)
 
-        print(f"Compare to predicted:", question["scoring_guide"]["etr_predicted"])
+        # print(f"Compare to predicted:", question["scoring_guide"]["etr_predicted"])
 
         # Try to see if it follows!
         model_view_etr: View = View.from_str(model_answer)  # Assuming that this doesn't inclue any issue structure by default...
@@ -140,13 +140,13 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
         equivalence_formula = strong_predicted_smt.Iff(model_view_smt)
         # Check if this equivalence is valid (i.e., is a tautology)
         is_logical_equivalent = is_valid(equivalence_formula)
-        print(f"Logical equivalence: {is_logical_equivalent}")
+        # print(f"Logical equivalence: {is_logical_equivalent}")
         
         # This can be additionally considered in the scoring if needed
         # For now we'll just track it but not change the result
 
-        print(f"ETR predicted: {is_etr_predicted}")
-        print(f"Classically correct: {is_classically_correct}")
+        # print(f"ETR predicted: {is_etr_predicted}")
+        # print(f"Classically correct: {is_classically_correct}")
 
         # TODO: If you add a key here, also add it to samples_jsonl_to_csv.py!
         return {
@@ -167,7 +167,7 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
         }
     except Exception as e:
         # print("!" * 80)
-        print(f"Error: {str(e)[:100]}")
+        # print(f"Error: {str(e)[:100]}")
         # print(json.dumps(question, indent=4))
         # print(model_answer)
         raise e
@@ -202,7 +202,7 @@ def get_etr_substr(answer_text):
         model_answer = match.group(1) if match else None
     if not model_answer:
         # TODO This fails too often!
-        print(f"Could not find a match in this answer: {answer_text}")
+        # print(f"Could not find a match in this answer: {answer_text}")
         raise Exception("Could not find a match in the answer text")
     else:
         # print(f"Matched this answer: {model_answer}")
@@ -227,7 +227,7 @@ def get_etr_substr(answer_text):
     if "}" not in model_answer:
         model_answer = model_answer + "}"
 
-    print(f"Matched and parsed: {model_answer}")
+    # print(f"Matched and parsed: {model_answer}")
     return model_answer
 
 def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str, str], premises: list[str], temperature: float = 0):
@@ -247,7 +247,7 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
         short_names = [sn for sn in short_name_to_full_name.keys() if sn]
         name_options = ', '.join(short_names)
     except Exception as e:
-        print("Contents of short_name_to_full_name:", short_name_to_full_name)
+        # print("Contents of short_name_to_full_name:", short_name_to_full_name)
         raise e
 
     prompt = textwrap.dedent(f"""
@@ -322,7 +322,7 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
         max_tokens=200
     )
     rewritten_by_model = response.choices[0].message.content
-    print(f"Rewritten by model: {rewritten_by_model}")
+    # print(f"Rewritten by model: {rewritten_by_model}")
     etr_text = get_etr_substr(rewritten_by_model)
 
     # Why did this ever seem like a good idea?
@@ -354,7 +354,7 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
                 # Replace with correct case version
                 etr_text = re.sub(fr'\b{pred}\b', matches[0], etr_text)
             else:
-                print(f"Warning: Predicate {pred} not found in valid names {valid_names}")
+                # print(f"Warning: Predicate {pred} not found in valid names {valid_names}")
                 raise ValueError(f"Predicate {pred} not found in valid names {valid_names}")
 
     # Add '()' as needed, so like {B(a)} becomes {B(a())}, so any short name that isn't followed by a '(' should have '()' inserted right after. But only do this if the '(' is not already there.
@@ -369,6 +369,6 @@ def use_model_get_etr_text(model_answer: str, short_name_to_full_name: dict[str,
     etr_text = etr_text.replace(" ", "")
     etr_text = etr_text.replace("{", " {").strip()
 
-    print(f"Final ETR text: {etr_text}")
+    # print(f"Final ETR text: {etr_text}")
 
     return etr_text

@@ -44,56 +44,7 @@ def view_to_smt(view: View) -> FNode:
     Returns:
         pysmt.FNode: The SMT formula representing the view
     """
-    # Create SMT symbols for each predicate atom in the view
-    symbols: Dict[str, FNode] = {}
-    for atom in view.atoms:
-        name = atom_to_symbol_name(atom)
-        if name not in symbols:
-            symbols[name] = Symbol(name, BOOL)
-
-    def state_to_smt(state: State) -> FNode:
-        """Convert a State to conjunction of literals
-        
-        Args:
-            state (State): The state to convert
-            
-        Returns:
-            pysmt.FNode: The SMT formula representing the state
-        """
-        terms = []
-        for atom in state:
-            sym = symbols[atom_to_symbol_name(atom)]
-            # Handle negation
-            if not atom.predicate.verifier:
-                sym = Not(sym)
-            terms.append(sym)
-        return And(terms) if terms else TRUE()
-
-    # Convert stage to disjunction of states
-    stage_formula = Or([state_to_smt(state) for state in view.stage])
-    
-    # Handle weights if present
-    weight_constraints = []
-    for state, weight in view.weights.items():
-        if not weight.is_null:
-            state_sym = state_to_smt(state)
-            # Create real-valued weight symbol
-            weight_sym = Real(float(str(weight)))
-            weight_constraints.append(
-                state_sym.Iff(Times(weight_sym, Symbol("1", REAL)))
-            )
-    
-    # Combine stage formula with weight constraints
-    formula = stage_formula
-    if weight_constraints:
-        formula = And(formula, And(weight_constraints))
-        
-    # Handle supposition if not verum
-    if not view.supposition.is_verum:
-        supp_formula = Or([state_to_smt(state) for state in view.supposition])
-        formula = supp_formula.Implies(formula)
-        
-    return formula
+    return view.to_smt()
 
 
 def check_validity(premises: list[View], conclusions: list[View]) -> bool:
