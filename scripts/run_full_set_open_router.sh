@@ -13,11 +13,11 @@ fi
 
 # Define OpenRouter model configurations as an ordered list
 # Each entry is a string with format "model_id|model_name"
+#MODELS=(
+#    # Just one, for debugging
+#    "anthropic/claude-3.5-sonnet|Claude 3.5 Sonnet"
+#)
 MODELS=(
-    # Just one, for debugging
-    "anthropic/claude-3.5-sonnet|Claude 3.5 Sonnet"
-)
-MODELS_FULL=(
     # Batch 3
     "deepseek/deepseek-chat-v3-0324|DeepSeek V3 0324"
     #    "deepseek/deepseek-r1|DeepSeek R1" # Slow
