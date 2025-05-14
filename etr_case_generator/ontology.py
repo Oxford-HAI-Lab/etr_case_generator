@@ -262,7 +262,7 @@ QUANTUM_PARTICLES = Ontology(
         Predicate(name=p, arity=1) for p in [
             "time-reversing", "memory-storing", "gravity-defying", "consciousness-affecting",
             "dimension-folding", "quantum-entangling", "void-creating", "omnipresent",
-            "paradox-inducing", "infinite-energy-producing"
+            "paradox-inducing", "energy-producing"
         ]
     ]
 )
@@ -288,7 +288,7 @@ DREAM_ENTITIES = Ontology(
     name="Dream Entities",
     introduction="I'm a dream researcher studying beings that appear in shared dreams. I need to understand their nature through logical analysis. Here's what we've observed:",
     objects=[
-        "morpheus", "sandman", "nightmare", "daydream", "lucidus",
+        "morpheus", "sandman", "daydream", "lucidus",
         "dreamweaver", "sleepwalker", "visionkeeper", "mindshaper", "dreamborn"
     ],
     predicates=[
