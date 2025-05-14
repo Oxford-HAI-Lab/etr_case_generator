@@ -113,6 +113,7 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
         premises_etr = question["scoring_guide"]["generation_details"]["premises_etr"]
         premises_view = [View.from_str(p) for p in premises_etr]
         premises_fnodes = [view_to_smt(v) for v in premises_view]
+        # etr_predicted = View.from_str(question["scoring_guide"]["etr_predicted"])
 
         # Classical logic
         is_classically_correct: bool = does_it_follow(premises_fnodes, model_view_smt_fnode)
