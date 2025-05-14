@@ -110,6 +110,42 @@ MODELS=(
     # "thudm/chatglm-6b|ChatGLM 6B" # DNE
 )
 
+# Not used in the original run
+MODELS_NEW=(
+  "openai/gpt-4o-mini-2024-07-18|GPT-4o-mini-2024-07-18"
+  "anthropic/claude-3-sonnet|Claude 3 Sonnet"
+  "openai/gpt-4-0314|GPT-4-0314"
+  "anthropic/claude-1|Claude-1"
+  "cohere/command-r-plus-04-2024|Command R (04-2024)"
+  "anthropic/claude-2.0|Claude-2.0"
+  "qwen/qwen-32b-chat|Qwen1.5-32B-Chat"
+  "microsoft/phi-3-medium-4k-instruct|Phi-3-Medium-4k-Instruct"
+  "anthropic/claude-2.1|Claude-2.1"
+  "qwen/qwen-14b-chat|Qwen1.5-14B-Chat"
+  "anthropic/claude-instant-1|Claude-Instant-1"
+  "openai/gpt-3.5-turbo-0613|GPT-3.5-Turbo-0613"
+  "meta-llama/llama-3.2-3b-instruct|Meta-Llama-3.2-3B-Instruct"
+  "snowflake/snowflake-arctic-instruct|Snowflake Arctic Instruct"
+  "nousresearch/nous-hermes-2-mixtral-8x7b-dpo|Nous-Hermes-2-Mixtral-8x7B-DPO"
+  "teknium/openhermes-2.5-mistral-7b|OpenHermes-2.5-Mistral-7B"
+  "qwen/qwen-7b-chat|Qwen1.5-7B-Chat"
+  "meta-llama/codellama-34b-instruct|CodeLlama-34B-instruct"
+  "meta-llama/codellama-70b-instruct|CodeLlama-70B-instruct"
+  "microsoft/phi-3-mini-128k-instruct|Phi-3-Mini-128k-Instruct"
+  "google/gemma-7b-it|Gemma-7B-it"
+  "togethercomputer/stripedhyena-nous-7b|StripedHyena-Nous-7B"
+  "allenai/olmo-7b-instruct|OLMo-7B-instruct"
+  "mistralai/mistral-7b-instruct-v0.1|Mistral-7B-Instruct-v0.1"
+  "google/gemini-flash-1.5|Gemini-1.5-Flash-002"
+  "openai/gpt-4|GPT-4-0613"
+  "mistralai/mixtral-8x7b-instruct|Mixtral-8x7B-Instruct-v0.1"
+  "openai/gpt-3.5-turbo-0125|GPT-3.5-Turbo-0125"
+  "databricks/dbrx-instruct|DBRX-Instruct-Preview"
+  "huggingfaceh4/zephyr-7b-beta|Zephyr-7B-beta"
+  "google/palm-2-chat-bison|PaLM-Chat-Bison-001"
+  "rwkv/rwkv-5-world-3b|RWKV-4-Raven-14B"
+)
+
 # Dataset is now provided as a command line argument
 # Try /home/keenan/Dev/etr_case_generator/datasets/reverse_largeset_open_ended.jsonl
 
@@ -145,7 +181,7 @@ run_evaluation() {
 }
 
 # Iterate through models in order
-for model_entry in "${MODELS[@]}"; do
+for model_entry in "${MODELS_NEW[@]}"; do
     # Extract model ID and name from the delimited string
     model=$(echo "$model_entry" | cut -d'|' -f1)
     model_name=$(echo "$model_entry" | cut -d'|' -f2)
