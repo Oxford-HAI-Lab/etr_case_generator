@@ -113,7 +113,7 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
         premises_etr = question["scoring_guide"]["generation_details"]["premises_etr"]
         premises_view = [View.from_str(p) for p in premises_etr]
         premises_fnodes = [view_to_smt(v) for v in premises_view]
-        # etr_predicted = View.from_str(question["scoring_guide"]["etr_predicted"])
+        etr_predicted = View.from_str(question["scoring_guide"]["etr_predicted"])
 
         # Classical logic
         is_classically_correct: bool = does_it_follow(premises_fnodes, model_view_smt_fnode)
@@ -122,7 +122,12 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
         is_etr_predicted: bool = default_procedure_does_it_follow(premises_view, model_view_etr)
 
         # Exact ETR
-        etr_strong_predicted: View = default_inference_procedure(premises_view)
+        etr_strong_predicted_recalculated: View = default_inference_procedure(premises_view)
+        etr_strong_predicted: View = etr_predicted  # Use the cached ETR predicted conclusion
+
+        # Check if the ETR predicted conclusion is equivalent to the strong prediction
+        recalculated_is_same: bool = etr_strong_predicted_recalculated.is_equivalent_under_arb_sub(etr_strong_predicted)
+        print(f"Recalculated ETR predicted: {recalculated_is_same}")
 
         # Replace with an empty issue structure
         etr_strong_predicted = View(
