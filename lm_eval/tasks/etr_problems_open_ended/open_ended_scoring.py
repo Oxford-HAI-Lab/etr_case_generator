@@ -4,6 +4,10 @@ import os
 import sys
 import textwrap
 import openai
+import logging
+
+# Disable OpenAI HTTP request logs
+logging.getLogger("openai._base_client").setLevel(logging.WARNING)
 
 from pyetr import View
 from pysmt.fnode import FNode
