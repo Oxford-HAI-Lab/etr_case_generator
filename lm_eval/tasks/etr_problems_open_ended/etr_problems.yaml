@@ -36,6 +36,9 @@ metric_list:
   - metric: full_model_response
     aggregation: bypass
     higher_is_better: false
+  - metric: recalculated_is_same
+    aggregation: mean
+    higher_is_better: false
   - metric: correct_and_etr
     aggregation: mean
     higher_is_better: false

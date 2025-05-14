@@ -7,6 +7,7 @@ function show_usage {
     echo "Options:"
     echo "  --dataset DATASET_PATH    Path to the dataset file (.jsonl)"
     echo "  --output OUTPUT_DIR       Output directory name (default: results)"
+    echo "  --just_debugging         Run only the debugging models"
     echo "  -h, --help                Show this help message"
     echo ""
     echo "Example:"
@@ -16,6 +17,7 @@ function show_usage {
 # Parse command line arguments
 DATASET=""
 OUTPUT_DIR="results"
+JUST_DEBUGGING=false
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -26,6 +28,10 @@ while [[ $# -gt 0 ]]; do
         --output)
             OUTPUT_DIR="$2"
             shift 2
+            ;;
+        --just_debugging)
+            JUST_DEBUGGING=true
+            shift 1
             ;;
         -h|--help)
             show_usage
@@ -64,15 +70,11 @@ fi
 
 # Define OpenRouter model configurations as an ordered list
 # Each entry is a string with format "model_id|model_name"
-#MODELS=(
-#    # Just one, for debugging
-#    "anthropic/claude-3.5-sonnet|Claude 3.5 Sonnet"
-#)
 MODELS=(
 #  "mistralai/mistral-small-24b-instruct-2501|Mistral Small 24B Instruct" # Not thinking - Mistral models don't expose separate thinking tokens by default
   "microsoft/phi-4|Phi 4" # Not thinking
   "anthropic/claude-3-haiku|Claude 3 Haiku" # Not thinking
-#  "01-ai/yi-34b-chat|Yi 34B Chat" # Unsure thinking
+#  "01-ai/yi-34b-chat|Yi 34B Chat" # Not thinking - Yi models don't expose thinking tokens by default
   "meta-llama/llama-3-8b-instruct|Llama 3 8B Instruct" # Not thinking
 #  "mistralai/mixtral-8x22b-instruct|Mixtral 8x22B Instruct" # Not thinking - Mixtral models don't expose separate thinking tokens by default
 #  "mistralai/mistral-medium|Mistral Medium" # Not thinking - Mistral models don't expose separate thinking tokens by default
@@ -81,13 +83,13 @@ MODELS=(
 #  "openai/gpt-4.5-preview|GPT-4.5 Preview" # Not thinking
 #  "openai/chatgpt-4o-latest|ChatGPT-4o-latest" # Not thinking
 #  "google/gemini-2.5-flash-preview|Gemini 2.5 Flash" # Not thinking
-#  "google/gemma-3-27b-it|Gemma 3 27B" # Unsure thinking
+#  "google/gemma-3-27b-it|Gemma 3 27B" # Not thinking - supports <think></think> tags but only when explicitly prompted
 #  "anthropic/claude-3.5-sonnet|Claude 3.5 Sonnet" # Not thinking
 #  "anthropic/claude-3-opus|Claude 3 Opus" # Not thinking
-#  "google/gemma-2-9b-it|Gemma 2 9B" # Unsure thinking
+#  "google/gemma-2-9b-it|Gemma 2 9B" # Not thinking - supports <think></think> tags but only when explicitly prompted
 #  "openai/gpt-3.5-turbo-1106|GPT-3.5-Turbo-1106" # Not thinking
-#  "meta-llama/llama-3.2-1b-instruct|Llama-3.2 1B" # Unsure thinking
-#  "meta-llama/llama-2-13b-chat|Llama-13B" # Unsure thinking
+#  "meta-llama/llama-3.2-1b-instruct|Llama-3.2 1B" # Not thinking - Llama models don't expose thinking tokens by default
+#  "meta-llama/llama-2-13b-chat|Llama-13B" # Not thinking - Llama models don't expose thinking tokens by default
 #  "anthropic/claude-3.7-sonnet|Claude 3.7 Sonnet" # Not thinking
   "deepseek/deepseek-chat-v3-0324|DeepSeek V3 0324" # Not thinking
 #  "qwen/qwq-32b|QwQ 32B" # Thinking - QwQ is Qwen's reasoning model with thinking enabled by default
@@ -100,43 +102,49 @@ MODELS=(
 #  "anthropic/claude-3-sonnet|Claude 3 Sonnet" # Not thinking
 #  "openai/gpt-4-0314|GPT-4-0314" # Not thinking
 #  "anthropic/claude-1|Claude-1" # Not thinking
-#  "cohere/command-r-plus-04-2024|Command R (04-2024)" # Unsure thinking
+#  "cohere/command-r-plus-04-2024|Command R (04-2024)" # Not thinking - Command-R models don't expose thinking tokens by default
 #  "anthropic/claude-2.0|Claude-2.0" # Not thinking
-#  "qwen/qwen-32b-chat|Qwen1.5-32B-Chat" # Unsure thinking
-#  "microsoft/phi-3-medium-4k-instruct|Phi-3-Medium-4k-Instruct" # Unsure thinking
+#  "qwen/qwen-32b-chat|Qwen1.5-32B-Chat" # Thinking - Qwen models have thinking enabled by default with <think> tags
+#  "microsoft/phi-3-medium-4k-instruct|Phi-3-Medium-4k-Instruct" # Not thinking - Phi-3 models don't expose thinking tokens by default
 #  "anthropic/claude-2.1|Claude-2.1" # Not thinking
-#  "qwen/qwen-14b-chat|Qwen1.5-14B-Chat" # Unsure thinking
+#  "qwen/qwen-14b-chat|Qwen1.5-14B-Chat" # Thinking - Qwen models have thinking enabled by default with <think> tags
 #  "anthropic/claude-instant-1|Claude-Instant-1" # Not thinking
 #  "openai/gpt-3.5-turbo-0613|GPT-3.5-Turbo-0613" # Not thinking
-#  "meta-llama/llama-3.2-3b-instruct|Meta-Llama-3.2-3B-Instruct" # Unsure thinking
-#  "snowflake/snowflake-arctic-instruct|Snowflake Arctic Instruct" # Unsure thinking
-#  "nousresearch/nous-hermes-2-mixtral-8x7b-dpo|Nous-Hermes-2-Mixtral-8x7B-DPO" # Unsure thinking
-#  "teknium/openhermes-2.5-mistral-7b|OpenHermes-2.5-Mistral-7B" # Unsure thinking
+#  "meta-llama/llama-3.2-3b-instruct|Meta-Llama-3.2-3B-Instruct" # Not thinking - Llama models don't expose thinking tokens by default
+#  "snowflake/snowflake-arctic-instruct|Snowflake Arctic Instruct" # Not thinking - Arctic models don't expose thinking tokens by default
+#  "nousresearch/nous-hermes-2-mixtral-8x7b-dpo|Nous-Hermes-2-Mixtral-8x7B-DPO" # Not thinking - Nous-Hermes-2 doesn't expose thinking tokens by default
+#  "teknium/openhermes-2.5-mistral-7b|OpenHermes-2.5-Mistral-7B" # Not thinking - OpenHermes doesn't expose thinking tokens by default
 #  "qwen/qwen-7b-chat|Qwen1.5-7B-Chat" # Thinking - Qwen models have thinking enabled by default with <think> tags
-#  "meta-llama/codellama-34b-instruct|CodeLlama-34B-instruct" # Unsure thinking
-#  "meta-llama/codellama-70b-instruct|CodeLlama-70B-instruct" # Unsure thinking
-#  "microsoft/phi-3-mini-128k-instruct|Phi-3-Mini-128k-Instruct" # Unsure thinking
-#  "google/gemma-7b-it|Gemma-7B-it" # Unsure thinking
-#  "togethercomputer/stripedhyena-nous-7b|StripedHyena-Nous-7B" # Unsure thinking
-#  "allenai/olmo-7b-instruct|OLMo-7B-instruct" # Unsure thinking
+#  "meta-llama/codellama-34b-instruct|CodeLlama-34B-instruct" # Not thinking - Llama models don't expose thinking tokens by default
+#  "meta-llama/codellama-70b-instruct|CodeLlama-70B-instruct" # Not thinking - Llama models don't expose thinking tokens by default
+#  "microsoft/phi-3-mini-128k-instruct|Phi-3-Mini-128k-Instruct" # Not thinking - Phi-3 models don't expose thinking tokens by default
+#  "google/gemma-7b-it|Gemma-7B-it" # Not thinking - supports <think></think> tags but only when explicitly prompted
+#  "togethercomputer/stripedhyena-nous-7b|StripedHyena-Nous-7B" # Not thinking - StripedHyena models don't expose thinking tokens by default
+#  "allenai/olmo-7b-instruct|OLMo-7B-instruct" # Not thinking - OLMo models don't expose thinking tokens by default
 #  "mistralai/mistral-7b-instruct-v0.1|Mistral-7B-Instruct-v0.1" # Not thinking - Mistral models don't expose separate thinking tokens by default
 #  "google/gemini-flash-1.5|Gemini-1.5-Flash-002" # Not thinking
 #  "openai/gpt-4|GPT-4-0613" # Not thinking
 #  "mistralai/mixtral-8x7b-instruct|Mixtral-8x7B-Instruct-v0.1" # Not thinking - Mixtral models don't expose separate thinking tokens by default
 #  "openai/gpt-3.5-turbo-0125|GPT-3.5-Turbo-0125" # Not thinking
-#  "databricks/dbrx-instruct|DBRX-Instruct-Preview" # Unsure thinking
-#  "huggingfaceh4/zephyr-7b-beta|Zephyr-7B-beta" # Unsure thinking
-#  "google/palm-2-chat-bison|PaLM-Chat-Bison-001" # Unsure thinking
+#  "databricks/dbrx-instruct|DBRX-Instruct-Preview" # Not thinking - DBRX models don't expose thinking tokens by default
+#  "huggingfaceh4/zephyr-7b-beta|Zephyr-7B-beta" # Not thinking - Zephyr models don't expose thinking tokens by default
+#  "google/palm-2-chat-bison|PaLM-Chat-Bison-001" # Not thinking - PaLM-2 models don't expose thinking tokens by default
 #  "rwkv/rwkv-5-world-3b|RWKV-4-Raven-14B" # Not thinking - RWKV models don't implement thinking token capabilities
 #
 #  # Slow, put them last
 #  "qwen/qwen-72b-chat|Qwen 72B Chat" # Thinking - Qwen models have thinking enabled by default with <think> tags
-#  "deepseek/deepseek-r1|DeepSeek R1" # Unsure thinking - specialized for reasoning but unclear if thinking tokens are exposed by default
-#  "nvidia/llama-3.3-nemotron-super-49b-v1|Llama 3.3 Nemotron Super 49B" # Unsure thinking
-#  "x-ai/grok-2-1212|Grok 2 1212" # Unsure thinking - may have reasoning capabilities but documentation is unclear
-#  "nvidia/llama-3.1-nemotron-70b-instruct|Llama 3.1 Nemotron 70B" # Unsure thinking
-#  "meta-llama/llama-3.1-70b-instruct|Llama 3.1 70B Instruct" # Unsure thinking
+#  "deepseek/deepseek-r1|DeepSeek R1" # Thinking - DeepSeek R1 exposes thinking with <think> tags by default
+#  "nvidia/llama-3.3-nemotron-super-49b-v1|Llama 3.3 Nemotron Super 49B" # Not thinking - requires 'detailed thinking on' in system prompt to enable reasoning
+#  "x-ai/grok-2-1212|Grok 2 1212" # Not thinking - Grok-2 doesn't expose thinking tokens by default
+#  "nvidia/llama-3.1-nemotron-70b-instruct|Llama 3.1 Nemotron 70B" # Not thinking - requires 'detailed thinking on' in system prompt to enable reasoning
+#  "meta-llama/llama-3.1-70b-instruct|Llama 3.1 70B Instruct" # Not thinking - Llama models don't expose thinking tokens by default
 )
+
+if [ "$JUST_DEBUGGING" = true ]; then
+    MODELS=(
+      "anthropic/claude-3-haiku|Claude 3 Haiku"
+    )
+fi
 
 # Dataset is now provided as a command line argument
 # Try /home/keenan/Dev/etr_case_generator/datasets/reverse_largeset_open_ended.jsonl

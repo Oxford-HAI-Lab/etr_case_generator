@@ -91,6 +91,7 @@ def score_answer(question, model_answer):
         "is_logically_equivalent": 0.0,
         "model_answer": answer_text,
         "full_model_response": original_model_answer,
+        "recalculated_is_same": 0.0,
 
         # Full quadrants
         "correct_and_etr": 0.0,
@@ -123,7 +124,7 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
 
         # Exact ETR
         etr_strong_predicted_recalculated: View = default_inference_procedure(premises_view)
-        etr_strong_predicted: View = etr_predicted  # Use the cached ETR predicted conclusion
+        etr_strong_predicted: View = etr_predicted  # Use the cached ETR predicted conclusion, this matters in the 'reversed' case
 
         # Check if the ETR predicted conclusion is equivalent to the strong prediction
         recalculated_is_same: bool = etr_strong_predicted_recalculated.is_equivalent_under_arb_sub(etr_strong_predicted)
@@ -168,6 +169,7 @@ def attempt_score_answer(question: dict, answer_text: str, original_model_answer
             "parse_error": 0,
             "model_answer": model_answer,
             "full_model_response": original_model_answer,
+            "recalculated_is_same": float(recalculated_is_same),
 
             # Full quadrants
             "correct_and_etr": float(is_classically_correct and is_etr_predicted),
