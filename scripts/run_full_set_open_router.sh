@@ -71,26 +71,26 @@ fi
 # Define OpenRouter model configurations as an ordered list
 # Each entry is a string with format "model_id|model_name"
 MODELS=(
-  "mistralai/mistral-small-24b-instruct-2501|Mistral Small 24B Instruct" # Not thinking - Mistral models don't expose separate thinking tokens by default
-  "microsoft/phi-4|Phi 4" # Not thinking
-  "anthropic/claude-3-haiku|Claude 3 Haiku" # Not thinking
-  "01-ai/yi-34b-chat|Yi 34B Chat" # Not thinking - Yi models don't expose thinking tokens by default
-  "meta-llama/llama-3-8b-instruct|Llama 3 8B Instruct" # Not thinking
-  "mistralai/mixtral-8x22b-instruct|Mixtral 8x22B Instruct" # Not thinking - Mixtral models don't expose separate thinking tokens by default
-  "mistralai/mistral-medium|Mistral Medium" # Not thinking - Mistral models don't expose separate thinking tokens by default
-  "mistralai/mistral-7b-instruct-v0.2|Mistral 7B Instruct v0.2" # Not thinking - Mistral models don't expose separate thinking tokens by default
-  "qwen/qwen-4b-chat|Qwen 4B Chat" # Thinking - Qwen models have thinking enabled by default with <think> tags
-  "openai/gpt-4.5-preview|GPT-4.5 Preview" # Not thinking
-  "openai/chatgpt-4o-latest|ChatGPT-4o-latest" # Not thinking
-  "google/gemini-2.5-flash-preview|Gemini 2.5 Flash" # Not thinking
-  "google/gemma-3-27b-it|Gemma 3 27B" # Not thinking - supports <think></think> tags but only when explicitly prompted
-  "anthropic/claude-3.5-sonnet|Claude 3.5 Sonnet" # Not thinking
-  "anthropic/claude-3-opus|Claude 3 Opus" # Not thinking
-  "google/gemma-2-9b-it|Gemma 2 9B" # Not thinking - supports <think></think> tags but only when explicitly prompted
-  "openai/gpt-3.5-turbo-1106|GPT-3.5-Turbo-1106" # Not thinking
-  "meta-llama/llama-3.2-1b-instruct|Llama-3.2 1B" # Not thinking - Llama models don't expose thinking tokens by default
+#  "mistralai/mistral-small-24b-instruct-2501|Mistral Small 24B Instruct" # Not thinking - Mistral models don't expose separate thinking tokens by default
+#  "microsoft/phi-4|Phi 4" # Not thinking
+#  "anthropic/claude-3-haiku|Claude 3 Haiku" # Not thinking
+#  "01-ai/yi-34b-chat|Yi 34B Chat" # Not thinking - Yi models don't expose thinking tokens by default
+#  "meta-llama/llama-3-8b-instruct|Llama 3 8B Instruct" # Not thinking
+#  "mistralai/mixtral-8x22b-instruct|Mixtral 8x22B Instruct" # Not thinking - Mixtral models don't expose separate thinking tokens by default
+#  "mistralai/mistral-medium|Mistral Medium" # Not thinking - Mistral models don't expose separate thinking tokens by default
+#  "mistralai/mistral-7b-instruct-v0.2|Mistral 7B Instruct v0.2" # Not thinking - Mistral models don't expose separate thinking tokens by default
+#  "qwen/qwen-4b-chat|Qwen 4B Chat" # Thinking - Qwen models have thinking enabled by default with <think> tags
+#  "openai/gpt-4.5-preview|GPT-4.5 Preview" # Not thinking
+#  "openai/chatgpt-4o-latest|ChatGPT-4o-latest" # Not thinking
+#  "google/gemini-2.5-flash-preview|Gemini 2.5 Flash" # Not thinking
+#  "google/gemma-3-27b-it|Gemma 3 27B" # Not thinking - supports <think></think> tags but only when explicitly prompted
+#  "anthropic/claude-3.5-sonnet|Claude 3.5 Sonnet" # Not thinking
+#  "anthropic/claude-3-opus|Claude 3 Opus" # Not thinking
+#  "google/gemma-2-9b-it|Gemma 2 9B" # Not thinking - supports <think></think> tags but only when explicitly prompted
+#  "openai/gpt-3.5-turbo-1106|GPT-3.5-Turbo-1106" # Not thinking
+#  "meta-llama/llama-3.2-1b-instruct|Llama-3.2 1B" # Not thinking - Llama models don't expose thinking tokens by default
   "meta-llama/llama-2-13b-chat|Llama-13B" # Not thinking - Llama models don't expose thinking tokens by default
-  "anthropic/claude-3.7-sonnet|Claude 3.7 Sonnet" # Not thinking
+#  "anthropic/claude-3.7-sonnet|Claude 3.7 Sonnet" # Not thinking
   "deepseek/deepseek-chat-v3-0324|DeepSeek V3 0324" # Not thinking
   "qwen/qwq-32b|QwQ 32B" # Thinking - QwQ is Qwen's reasoning model with thinking enabled by default
   "openai/o1-mini|o1 Mini" # Not thinking
