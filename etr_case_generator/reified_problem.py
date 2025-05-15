@@ -1,4 +1,5 @@
 import json
+import random
 import textwrap
 from dataclasses import dataclass
 from typing import Optional, Literal, cast, get_args
@@ -165,7 +166,7 @@ class FullProblem:
     seed_id: Optional[str] = None  # The "base" problem that this problem was generated from, as documented in cases.py
 
     # Yes or No format
-    yes_or_no_conclusion_chosen_index: int = 0  # Indexes into possible_conclusions
+    yes_or_no_conclusion: Optional[Conclusion] = None
     yes_or_no_question_prose: Optional[str] = "Does the following conclusion necessarily follow from the given statements?"
     yes_or_no_answer_guidance_prose: Optional[str] = 'Does it follow? Answer in the form of "Answer: Yes" or "Answer: No".'
 
@@ -238,7 +239,7 @@ class FullProblem:
     chain_of_thought_prose: Optional[str] = "I want you to spend a few paragraphs thinking about your answer."
 
     def get_yes_no_conclusion(self) -> Conclusion:
-        return self.possible_conclusions[self.yes_or_no_conclusion_chosen_index]
+        return self.yes_or_no_conclusion
 
     def fill_out(self, ontology: Optional[Ontology] = None, partial_problem: PartialProblem = None):
         if self.views is not None:
@@ -252,6 +253,20 @@ class FullProblem:
                 partial_problem.fill_out_conclusion(conclusion, ontology)
         if self.etr_predicted_conclusion is not None:
             partial_problem.fill_out_conclusion(self.etr_predicted_conclusion, ontology)
+        if self.yes_or_no_conclusion is None:
+            correct_yes_no = random.random() < 0.5
+            if correct_yes_no:
+                # Get the one correct answer
+                for conclusion in self.possible_conclusions:
+                    if conclusion.is_classically_correct:
+                        self.yes_or_no_conclusion = conclusion
+                        break
+            else:
+                # Use the ETR predicted conclusion
+                if self.etr_predicted_conclusion is not None:
+                    self.yes_or_no_conclusion = self.etr_predicted_conclusion
+            assert self.yes_or_no_conclusion is not None, f"Error filling out yes_or_no_conclusion in condition {correct_yes_no}. Make sure to fill out the possible_conclusions and etr_predicted_conclusion." + str(self)
+            print(f"Filling out yes_or_no_conclusion: {self.yes_or_no_conclusion.view.logical_form_etr} {correct_yes_no} ({self.yes_or_no_conclusion.is_classically_correct}) ({self.yes_or_no_conclusion.is_etr_predicted})")
 
     def to_prompt(self, format: QuestionType = "yes_no", chain_of_thought: bool = False) -> str:
         s = self.introductory_prose
@@ -265,7 +280,7 @@ class FullProblem:
         if format == "yes_no":
             s += self.yes_or_no_question_prose
             s += "\n\n"
-            s += f"My Conclusion: {self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.english_form}"
+            s += f"My Conclusion: {self.yes_or_no_conclusion.view.english_form}"
         elif format == "multiple_choice":
             s += self.multiple_choice_question_prose
             s += "\n\n"
@@ -292,7 +307,7 @@ class FullProblem:
 
     def to_answer(self, format: QuestionType = "yes_no") -> str:
         if format == "yes_no":
-            return f"{'Yes' if self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_classically_correct else 'No'}"
+            return f"{'Yes' if self.yes_or_no_conclusion.is_classically_correct else 'No'}"
         elif format == "multiple_choice":
             correct_index: int = -1
             for i, conclusion in enumerate(self.multiple_choices):
@@ -341,17 +356,17 @@ class FullProblem:
         }
         if format == "yes_no":
             dict["scoring_guide"]["yes_no"] = {
-                "conclusion_etr": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.logical_form_etr,
-                "conclusion_is_classically_correct": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_classically_correct,
-                "conclusion_english": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].view.english_form,
-                "conclusion_is_etr_predicted": self.possible_conclusions[self.yes_or_no_conclusion_chosen_index].is_etr_predicted,
+                "conclusion_etr": self.yes_or_no_conclusion.view.logical_form_etr,
+                "conclusion_english": self.yes_or_no_conclusion.view.english_form,
+                "conclusion_is_classically_correct": self.yes_or_no_conclusion.is_classically_correct,
+                "conclusion_is_etr_predicted": self.yes_or_no_conclusion.is_etr_predicted,
             }
         elif format == "multiple_choice":
             dict["scoring_guide"]["multiple_choice"] = {"options": [
                 (conclusion.view.english_form if conclusion.view.english_form else conclusion.view.logical_form_etr, conclusion.is_classically_correct) for conclusion in self.multiple_choices
             ]}
         elif format == "open_ended":
-            yes_no_conclusion = self.possible_conclusions[self.yes_or_no_conclusion_chosen_index]
+            yes_no_conclusion = self.yes_or_no_conclusion
             dict["scoring_guide"]["open_ended"] = {
                 # This isn't really relevant for open ended questions, but it might be interesting.
                 "conclusion_agrees_in_yes_no_case": yes_no_conclusion.is_classically_correct == self.etr_predicted_conclusion.is_classically_correct,

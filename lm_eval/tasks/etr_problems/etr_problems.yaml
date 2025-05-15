@@ -23,6 +23,21 @@ metric_list:
   - metric: parse_error
     aggregation: mean
     higher_is_better: false
+  - metric: etr_is_same_as_correct
+    aggregation: mean
+    higher_is_better: true
+  - metric: correct_and_etr_agreement
+    aggregation: mean
+    higher_is_better: true
+  - metric: correct_and_etr_disagreement
+    aggregation: mean
+    higher_is_better: true
+  - metric: incorrect_and_etr_agreement
+    aggregation: mean
+    higher_is_better: false
+  - metric: incorrect_and_etr_disagreement
+    aggregation: mean
+    higher_is_better: false
 
 test_split: train
 fewshot_split: train

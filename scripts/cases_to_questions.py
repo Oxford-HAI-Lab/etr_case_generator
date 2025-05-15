@@ -437,8 +437,9 @@ def create_full_problem(case: Dict[str, Any], all_cases: List[Dict[str, Any]],
             # Set the yes_or_no_conclusion_chosen_index to the index of the correct conclusion
             for i, conclusion in enumerate(possible_conclusions):
                 if conclusion.is_classically_correct:
-                    problem.yes_or_no_conclusion_chosen_index = i
+                    problem.yes_or_no_conclusion = conclusion
                     break
+            assert problem.yes_or_no_conclusion is not None, "Yes/No conclusion is missing"
     
     # Generate a description from the ontology and problem
     problem.description = generate_problem_description(problem, case, ontology)
