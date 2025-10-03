@@ -134,3 +134,18 @@ Unlike other filters, the logic for this task is embedded in the function `ETRGe
 
 The function `generate_problem_list` in `generate_etr.py` directly handles the logic for filtering problems after they have been generated in order to balance between those with correct and those with fallacious ETR-predicted conclusions.
 As mentioned, the default behaviour is to pass through only those with fallacious ETR-predicted conclusions.
+
+## Acknowledgements
+
+Developed at [*the Laboratory for Human-Centered AI, at the Department of Philosophy, The University of Oxford*](https://hailab.ox.ac.uk/). with the support of the [*Cosmos Institute*](https://cosmos-institute.org/).
+
+### Development
+- Andrew Richardson
+- Ryan Kearns
+- Sean Moss
+- Mark Todd
+
+### Thanks
+- Vincent Wang-Mascianica
+- Philipp Koralus
+- Jules Desai
