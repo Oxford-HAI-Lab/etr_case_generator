@@ -29,6 +29,8 @@ For local development, this package should be installed in editable mode:
 pip install -e .
 ```
 
+If you also want to use `lm_eval`, please read and follow the instructions at [this README](lm_eval/tasks/README.md).
+
 ## Usage
 
 ### Generating Whole Reasoning Problems
@@ -36,7 +38,7 @@ pip install -e .
 To get started with the generator, try this call to the `generate_etr.py` script:
 
 ```bash
-python -m scripts.generate_etr --save_file_name dev --question_type=all --generate_function=random_etr_problem -n 10
+python -m scripts.generate_etr --save_file_name dev --question_type=all --generate_function=random_etr_problem -n 10 --etr_only_wrong
 ```
 
 This will generate 10 problems and save them to files like `datasets/dev_*.jsonl`:

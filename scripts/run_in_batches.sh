@@ -41,7 +41,7 @@ for batch_file in batch_files/${base_name}_batch_*.jsonl; do
     attempt=1
     
     while [ $attempt -le $max_attempts ]; do
-        if "$(dirname "$0")/run_evaluation.sh" --dataset "$batch_file" -m deepseek-r1; then
+        if "$(dirname "$0")/run_evaluation_open_router.sh" --dataset "$batch_file" -m deepseek-r1; then
             echo "Successfully processed $batch_file"
             break
         else

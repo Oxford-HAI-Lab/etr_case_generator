@@ -26,16 +26,17 @@ metric_list:
   - metric: etr_is_same_as_correct
     aggregation: mean
     higher_is_better: true
-  - metric: correct_and_etr_agreement
+  # 2x2 matrix metrics with consistent naming
+  - metric: correct_and_etr
     aggregation: mean
     higher_is_better: true
-  - metric: correct_and_etr_disagreement
+  - metric: correct_and_not_etr
     aggregation: mean
     higher_is_better: true
-  - metric: incorrect_and_etr_agreement
+  - metric: not_correct_and_etr
     aggregation: mean
     higher_is_better: false
-  - metric: incorrect_and_etr_disagreement
+  - metric: not_correct_and_not_etr
     aggregation: mean
     higher_is_better: false
 

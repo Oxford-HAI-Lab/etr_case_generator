@@ -3,6 +3,10 @@ from dataclasses import dataclass, field
 from pyetr.atoms import Predicate
 
 
+# These ontologies are used to convert logical problems into word problems. Each of the 12 ontologies
+# presented here is a different framing of a logical problem, and they are interchangeable.
+
+
 NameShorteningScheme = Literal["none", "short", "first"]
 
 
