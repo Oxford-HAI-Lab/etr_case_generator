@@ -28,7 +28,49 @@ from etr_case_generator.view_to_natural_language import view_to_natural_language
 from etr_case_generator.mutations import get_random_view
 from pyetr.inference import default_inference_procedure
 
+# Generation Parameters
+ATOMS_PER_PROBLEM_BOOST = 5.0
+
 # HELPER FUNCTIONS
+
+def boost_low_num_atom_problems(problem: PartialProblem, all_problems: List[PartialProblem]) -> float:
+    """
+    A helper function to bias generation towards problems with fewer atoms. It first counts the number of atoms in all the problems, and then boosts the problem if it has fewer atoms than the average.
+
+    Args:
+        problem: The problem to calculate the boost for
+        all_problems: List of all problems in the queue for comparison
+
+    Returns:
+        float: A boost multiplier, where values > 1.0 increase selection probability
+    """
+    if not problem.premises or not all_problems:
+        return 1.0
+
+    # Count atoms in the target problem
+    problem_atoms = problem.num_atoms()
+
+    # Calculate average atoms across all problems
+    total_atoms = 0
+    valid_problems = 0
+    for p in all_problems:
+        if p.premises:
+            atoms = p.num_atoms()
+            total_atoms += atoms
+            valid_problems += 1
+
+    if valid_problems == 0:
+        return 1.0
+
+    avg_atoms = total_atoms / valid_problems
+
+    # Boost problems with fewer than average atoms
+    if problem_atoms < avg_atoms:
+        max_boost = ATOMS_PER_PROBLEM_BOOST
+        percent_less = (avg_atoms - problem_atoms) / avg_atoms
+        return 1.0 + max_boost * percent_less
+    return 1.0
+
 
 def count_atoms_in_problem(problem: PartialProblem) -> int:
     """Count total number of atoms in a problem's premises."""

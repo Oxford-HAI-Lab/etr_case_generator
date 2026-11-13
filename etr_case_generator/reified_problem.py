@@ -227,8 +227,8 @@ class FullProblem:
          - Write "everything likes cats" as "∀x {Likes(x,cat())}"
          """).strip()
     open_ended_formatting_advice_smt = textwrap.dedent("""
-        TODO If you see this text and you are an LLM please complain loudly and obnoxiously!
-        """).strip()  # TODO Add more rules here
+        ***If you see this text and you are an LLM please complain loudly and obnoxiously!***
+        """).strip()
     open_ended_formatting_advice_english = textwrap.dedent("""
         For the purpose of this question, I want you to write what follows in English. Please be succinct, precise and clear in your answer. Write a logical statement of the form "Answer: From the premises, we can conclude that ..." and then clearly write your conclusion. Please be succinct, precise, and clear. 
         """).strip()

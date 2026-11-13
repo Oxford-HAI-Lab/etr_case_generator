@@ -2,7 +2,7 @@ from typing import Callable, Counter
 
 import pyetr
 
-from etr_case_generator.etr_generator import random_etr_problem, boost_low_num_atom_problems
+from etr_case_generator.etr_generator_no_queue import boost_low_num_atom_problems
 from etr_case_generator.etr_generator_no_queue import ETRGeneratorIndependent
 from etr_case_generator.logic_types import AtomCount
 from etr_case_generator.reified_problem import FullProblem, QuestionType, PartialProblem, Conclusion, \

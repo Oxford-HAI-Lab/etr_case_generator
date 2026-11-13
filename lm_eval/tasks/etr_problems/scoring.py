@@ -33,10 +33,10 @@ def score_answer(question, answer):
             "correct": 0.0,
             "etr_agreement": 0.0,
             "etr_is_same_as_correct": 0.0,
-            "correct_and_etr_agreement": 0.0,
-            "correct_and_etr_disagreement": 0.0,
-            "incorrect_and_etr_agreement": 0.0,
-            "incorrect_and_etr_disagreement": 0.0,
+            "correct_and_etr": 0.0,
+            "correct_and_not_etr": 0.0,
+            "not_correct_and_etr": 0.0,
+            "not_correct_and_not_etr": 0.0,
             "len_response": len(answer_text),
             "parse_error": 1.0,
         }
@@ -58,20 +58,21 @@ def score_answer(question, answer):
     is_correct = model_answer.lower() == logically_correct_str.lower()
     agrees_with_etr = model_answer.lower() == etr_predicted_str.lower()
     
-    # Calculate 2x2 matrix metrics
-    correct_and_etr_agreement = float(is_correct and agrees_with_etr)
-    correct_and_etr_disagreement = float(is_correct and not agrees_with_etr)
-    incorrect_and_etr_agreement = float(not is_correct and agrees_with_etr)
-    incorrect_and_etr_disagreement = float(not is_correct and not agrees_with_etr)
+    # Calculate 2x2 matrix metrics - using consistent naming with open_ended_scoring.py
+    correct_and_etr = float(is_correct and agrees_with_etr)
+    correct_and_not_etr = float(is_correct and not agrees_with_etr)
+    not_correct_and_etr = float(not is_correct and agrees_with_etr)
+    not_correct_and_not_etr = float(not is_correct and not agrees_with_etr)
     
     return {
         "correct": float(is_correct),
         "etr_agreement": float(agrees_with_etr),
         "etr_is_same_as_correct": float(etr_is_same_as_correct),
-        "correct_and_etr_agreement": correct_and_etr_agreement,
-        "correct_and_etr_disagreement": correct_and_etr_disagreement,
-        "incorrect_and_etr_agreement": incorrect_and_etr_agreement,
-        "incorrect_and_etr_disagreement": incorrect_and_etr_disagreement,
+        # Using the consistent naming with open_ended_scoring.py
+        "correct_and_etr": correct_and_etr,
+        "correct_and_not_etr": correct_and_not_etr, 
+        "not_correct_and_etr": not_correct_and_etr,
+        "not_correct_and_not_etr": not_correct_and_not_etr,
         "len_response": len(answer_text),
         "parse_error": 0.0,
     }
