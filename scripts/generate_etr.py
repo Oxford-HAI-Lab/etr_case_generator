@@ -7,7 +7,6 @@ from typing import get_args
 from collections import Counter
 from tqdm import tqdm
 
-from etr_case_generator.etr_generator import set_queue_sizes
 from etr_case_generator.etr_generator_no_queue import ETRGeneratorIndependent
 from etr_case_generator.generate_problem_from_logical import generate_problem
 from etr_case_generator.reified_problem import FullProblem, QuestionType, PartialProblem
@@ -240,7 +239,6 @@ def main():
     parser.add_argument("--balance_etr_agreement", help="Balance the dataset 50-50 for whether the ETR conclusion is classically correct or not.", action="store_true")
     # TODO(Ryan): Add parameters for problem generation here
     parser.add_argument("--num_atoms_set", nargs="+", type=int, default=[4, 5, 6], help="Set the number of atoms in the problem.")
-    parser.add_argument("--generator_max_queue_size", type=int, default=100, help="Maximum number of problems to generate at once, if using the generator with a queue.")
     parser.add_argument("--non_categorical_okay", action="store_true", help="If true, it's okay to generate non-categorical, aka problems whose ETR conclusion has disjunctions in it, or which is null.")
     parser.add_argument("--seed_bank", type=str, default=None, help="Name of the problem seed bank to default to.")
     multi_view_group = parser.add_mutually_exclusive_group(required=False)
@@ -259,8 +257,6 @@ def main():
     else:
         assert args.question_type in get_args(QuestionType), f"Invalid question type: {args.question_type}, must be in: {get_args(QuestionType)}"
         question_types = [args.question_type]
-
-    set_queue_sizes(args.generator_max_queue_size // 2, args.generator_max_queue_size)
 
     # Most of the logic occurs here!
     problems: list[FullProblem] = generate_problem_list(n_problems=args.n_problems, args=args, question_types=question_types)
